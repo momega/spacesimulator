@@ -4,112 +4,126 @@
 package com.momega.spacesimulator;
 
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Frame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import javax.media.opengl.GLAnimatorControl;
+import javax.media.opengl.GLCapabilities;
+import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
-import javax.swing.SwingUtilities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
-// GL constants
-// GL2 constants
 
 
 /**
  * @author martin
  *
  */
-public class MainWindow extends Frame {
+public class MainWindow  {
 	
-		private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
-	// Define constants for the top-level container
-	   private static String TITLE = "JOGL 2.0 Setup (GLCanvas)";  // window's title
-	   private static final int CANVAS_WIDTH = 640;  // width of the drawable
-	   private static final int CANVAS_HEIGHT = 480; // height of the drawable
-	   private static final int FPS = 60; // animator's target frames per second
+	private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
+	
+    private static String TITLE = "JOGL 2 with NEWT";  // window's title
+    private static final int WINDOW_WIDTH = 640;  // width of the drawable
+    private static final int WINDOW_HEIGHT = 480; // height of the drawable
+    
+    private static final int FPS = 60; // animator's target frames per second
+   
+	
+    public static void main(String[] args) {
+    	// Run the GUI codes in the event-dispatching thread for thread safety
+    	EventQueue.invokeLater(new Runnable() {
+           @Override
+           public void run() {
+	       // Get the default OpenGL profile, reflecting the best for your running platform
+	       GLProfile glp = GLProfile.getDefault();
+	       // Specifies a set of OpenGL capabilities, based on your profile.
+	       GLCapabilities caps = new GLCapabilities(glp);
+	       // Create the OpenGL rendering canvas
+	//       GLWindow window = GLWindow.create(caps);
+	       
+	       Frame frame = new Frame("Lesson 1: An OpenGL Window");
+	       frame.setLayout(new java.awt.BorderLayout());
+	       
+	       final GLCanvas canvas = new GLCanvas(caps);
+	       canvas.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+	       
+	       logger.info("Window created");
 	 
-	   /** Constructor to setup the top-level container and animator */
-	   public MainWindow() {
-	      // Create the OpenGL rendering canvas
-		  GLCanvas canvas = new MainRenderer();
-	      canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
-	 
-	      // Create a animator that drives canvas' display() at the specified FPS.
-	      final FPSAnimator animator = new FPSAnimator(canvas, FPS, true);
-	 
-	      // Create the top-level container frame
-	      this.add(canvas);
-	      this.addWindowListener(new WindowAdapter() {
-	         @Override
-	         public void windowClosing(WindowEvent e) {
-	            stopAnimator(animator);
-	         }
-	      });
-	      this.addKeyListener(new KeyAdapter() {
-	    	  @Override
-	    	public void keyPressed(KeyEvent e) {
-	    		  int keyCode = e.getKeyCode();
-	    	      switch (keyCode) {
-	    	         case KeyEvent.VK_ESCAPE: // quit
-	    	            stopAnimator(animator);
-	    	            break;
-	    	      }
-	    	}
-	    	  @Override
-	    	public void keyReleased(KeyEvent e) {
-	    		// TODO Auto-generated method stub
-	    		super.keyReleased(e);
-	    	}
-	      });
-	      this.setTitle(TITLE);
-	      this.pack();
-	      this.setVisible(true);
-	      animator.start(); // start the animation loop
-	   }
-	   
-	   protected void stopAnimator(final AnimatorBase animator) {
+	       // Create a animator that drives canvas' display() at the specified FPS.
+	       final FPSAnimator animator = new FPSAnimator(canvas, FPS, true);
+	
+	       frame.add(canvas);
+	       
+	       canvas.addGLEventListener(new MainRenderer());
+	
+	       logger.info("Render set to window");
+	       
+	       frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+	       frame.setTitle(TITLE);
+	       frame.setVisible(true);
+	       animator.start();
+	       
+	       logger.info("Animator started");
+	       canvas.requestFocus();
+	       
+	       frame.addWindowListener(new WindowAdapter() {
+	    	   @Override
+		    	public void windowClosing(WindowEvent e) {
+	    		   logger.info("Closing window");
+	    		   stopAnimator(canvas.getAnimator());
+		    	}
+	         });
+	        
+	        canvas.addKeyListener(new KeyAdapter() {
+	     	   	@Override
+	     	   	public void keyPressed(KeyEvent e) {
+		     	   	int keyCode = e.getKeyCode();
+		 	        switch (keyCode) {
+		 	           case KeyEvent.VK_ESCAPE: // quit
+		 	        	  logger.info("Escape pressed");
+		 	              stopAnimator(canvas.getAnimator());
+		 	              break;
+		 	        }
+	     	   	}
+	        });
+	        
+	        logger.info("Event queue inner method finished");
+        }});
+    	
+    	try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+     }		
+	
+	public static void stopAnimator(final GLAnimatorControl animator) {
 		// Use a dedicate thread to run the stop() to ensure that the
-           // animator stops before program exits.
-           new Thread("Stop Animator Thread") {
-              @Override
-              public void run() {
-            	  logger.info("stopping animator");
-                 if (animator.isStarted()) {
-               	  animator.stop();
-                 }
-                 System.exit(0);
+        // animator stops before program exits.
+        new Thread() {
+           @Override
+           public void run() {
+              if (animator.isStarted()) {
+              	animator.stop();
               }
-           }.start();
-	   }
-	 
-	   /** The entry main() method */
-	   public static void main(String[] args) {
-		   Thread appThread = new Thread("Main Thread") {
-			     public void run() {
-			         try {
-			             SwingUtilities.invokeAndWait(new Runnable() {
-						     @Override
-						     public void run() {
-						    	logger.info("Running main window");
-						        new MainWindow();  // run the constructor
-						     }
-						  });
-			         }
-			         catch (Exception e) {
-			             e.printStackTrace();
-			         }
-			         System.out.println("Finished on " + Thread.currentThread());
-			     }
-			 };
-			 appThread.start(); 
-	      logger.info("closing main window");
-	   }
+              
+              logger.info("animator stopped");
+              System.exit(0);
+           }
+        }.start();
+        
+        logger.info("Stopping animator thread");
+	}
 	   
 }
