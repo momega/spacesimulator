@@ -4,14 +4,17 @@
 package com.momega.spacesimulator;
 
 import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.media.opengl.awt.GLCanvas;
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
@@ -23,7 +26,9 @@ import com.jogamp.opengl.util.FPSAnimator;
  * @author martin
  *
  */
-public class MainWindow extends JFrame {
+public class MainWindow extends Frame {
+	
+		private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
 	// Define constants for the top-level container
 	   private static String TITLE = "JOGL 2.0 Setup (GLCanvas)";  // window's title
 	   private static final int CANVAS_WIDTH = 640;  // width of the drawable
@@ -33,14 +38,14 @@ public class MainWindow extends JFrame {
 	   /** Constructor to setup the top-level container and animator */
 	   public MainWindow() {
 	      // Create the OpenGL rendering canvas
-	      GLCanvas canvas = new MainRenderer();
+		  GLCanvas canvas = new MainRenderer();
 	      canvas.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
 	 
 	      // Create a animator that drives canvas' display() at the specified FPS.
 	      final FPSAnimator animator = new FPSAnimator(canvas, FPS, true);
 	 
 	      // Create the top-level container frame
-	      this.getContentPane().add(canvas);
+	      this.add(canvas);
 	      this.addWindowListener(new WindowAdapter() {
 	         @Override
 	         public void windowClosing(WindowEvent e) {
@@ -72,10 +77,10 @@ public class MainWindow extends JFrame {
 	   protected void stopAnimator(final AnimatorBase animator) {
 		// Use a dedicate thread to run the stop() to ensure that the
            // animator stops before program exits.
-           new Thread() {
+           new Thread("Stop Animator Thread") {
               @Override
               public void run() {
-           	   System.out.println("stopping...");
+            	  logger.info("stopping animator");
                  if (animator.isStarted()) {
                	  animator.stop();
                  }
@@ -86,13 +91,25 @@ public class MainWindow extends JFrame {
 	 
 	   /** The entry main() method */
 	   public static void main(String[] args) {
-	      // Run the GUI codes in the event-dispatching thread for thread safety
-	      SwingUtilities.invokeLater(new Runnable() {
-	         @Override
-	         public void run() {
-	            new MainWindow();  // run the constructor
-	         }
-	      });
+		   Thread appThread = new Thread("Main Thread") {
+			     public void run() {
+			         try {
+			             SwingUtilities.invokeAndWait(new Runnable() {
+						     @Override
+						     public void run() {
+						    	logger.info("Running main window");
+						        new MainWindow();  // run the constructor
+						     }
+						  });
+			         }
+			         catch (Exception e) {
+			             e.printStackTrace();
+			         }
+			         System.out.println("Finished on " + Thread.currentThread());
+			     }
+			 };
+			 appThread.start(); 
+	      logger.info("closing main window");
 	   }
 	   
 }
