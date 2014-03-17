@@ -19,7 +19,6 @@ import javax.media.opengl.awt.GLCanvas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jogamp.opengl.util.Animator;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
 
@@ -33,8 +32,8 @@ public class MainWindow  {
 	private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
 	
     private static String TITLE = "JOGL 2 with NEWT";  // window's title
-    private static final int WINDOW_WIDTH = 640;  // width of the drawable
-    private static final int WINDOW_HEIGHT = 480; // height of the drawable
+    private static final int WINDOW_WIDTH = 800;  // width of the drawable
+    private static final int WINDOW_HEIGHT = 600; // height of the drawable
     
     private static final int FPS = 60; // animator's target frames per second
    
@@ -61,11 +60,12 @@ public class MainWindow  {
 			   logger.info("Window created");
  
 			   // Create a animator that drives canvas' display() at the specified FPS.
-			   final AnimatorBase animator = new Animator(canvas);
+			   final AnimatorBase animator = new FPSAnimator(canvas, FPS, true);
 
 			   frame.add(canvas);
 			   
-			   canvas.addGLEventListener(new MainRenderer());
+			   final MainRenderer renderer = new MainRenderer();
+			   canvas.addGLEventListener(renderer);
 
 			   logger.info("Render set to window");
 			   
@@ -94,6 +94,38 @@ public class MainWindow  {
 			 	        	  logger.info("Escape pressed");
 			 	              stopAnimator(canvas.getAnimator());
 			 	              break;
+			 	              
+			 	          case KeyEvent.VK_W: // quit
+			 	        	  renderer.stepYDistance(+0.5f);
+			 	              break;
+			 	              
+			 	         case KeyEvent.VK_D: // quit
+			 	        	  renderer.stepXDistance(+0.5f);
+			 	              break;
+			 	              
+			 	        case KeyEvent.VK_A: // quit
+			 	        	  renderer.stepXDistance(-0.5f);
+			 	              break;
+			 	              
+			 	       case KeyEvent.VK_S: // quit
+			 	        	  renderer.stepYDistance(-0.5f);
+			 	              break;
+			 	              
+			 	      case KeyEvent.VK_O: // quit
+		 	        	  renderer.stepAngle(-0.5f);
+		 	              break;
+		 	              
+		 	       case KeyEvent.VK_P: // quit
+		 	        	  renderer.stepAngle(+0.5f);
+		 	              break;
+		 	              
+		 	      case KeyEvent.VK_H: // quit
+	 	        	  renderer.stepZDistance(-0.5f);
+	 	              break;
+	 	              
+	 	        case KeyEvent.VK_N: // quit
+	 	        	  renderer.stepZDistance(+0.5f);
+	 	              break;
 			 	        }
 			 	   	}
 			    });
