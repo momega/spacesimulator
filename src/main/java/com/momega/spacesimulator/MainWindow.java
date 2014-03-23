@@ -3,25 +3,19 @@
  */
 package com.momega.spacesimulator;
 
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
-import javax.media.opengl.GLAnimatorControl;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLCanvas;
-
+import org.apache.commons.io.FileUtils;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
+import org.lwjgl.opengl.GL11;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.jogamp.opengl.util.AnimatorBase;
-import com.jogamp.opengl.util.FPSAnimator;
-
 
 /**
  * @author martin
@@ -37,126 +31,143 @@ public class MainWindow  {
     
     private static final int FPS = 60; // animator's target frames per second
    
+    /** position of quad */
+	float x = 400, y = 300;
+	/** angle of quad rotation */
+	float rotation = 0;
 	
-    public static void main(String[] args) {
-    	// Run the GUI codes in the event-dispatching thread for thread safety
-    	try {
-			EventQueue.invokeAndWait(new Runnable() {
-			   @Override
-			   public void run() {
-			   // Get the default OpenGL profile, reflecting the best for your running platform
-			   GLProfile glp = GLProfile.getDefault();
-			   // Specifies a set of OpenGL capabilities, based on your profile.
-			   GLCapabilities caps = new GLCapabilities(glp);
-			   // Create the OpenGL rendering canvas
-//       GLWindow window = GLWindow.create(caps);
-			   
-			   Frame frame = new Frame("Lesson 1: An OpenGL Window");
-			   frame.setLayout(new java.awt.BorderLayout());
-			   
-			   final GLCanvas canvas = new GLCanvas(caps);
-			   canvas.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
-			   
-			   logger.info("Window created");
- 
-			   // Create a animator that drives canvas' display() at the specified FPS.
-			   final AnimatorBase animator = new FPSAnimator(canvas, FPS, true);
+	/** time at last frame */
+	long lastFrame;
+	
+	/** frames per second */
+	int fps;
+	/** last fps time */
+	long lastFPS;
 
-			   frame.add(canvas);
-			   
-			   final MainRenderer renderer = new MainRenderer();
-			   canvas.addGLEventListener(renderer);
-
-			   logger.info("Render set to window");
-			   
-			   frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-			   frame.setTitle(TITLE);
-			   frame.setVisible(true);
-			   animator.start();
-			   
-			   logger.info("Animator started");
-			   canvas.requestFocus();
-			   
-			   frame.addWindowListener(new WindowAdapter() {
-				   @Override
-			    	public void windowClosing(WindowEvent e) {
-					   logger.info("Closing window");
-					   stopAnimator(canvas.getAnimator());
-			    	}
-			     });
-			    
-			    canvas.addKeyListener(new KeyAdapter() {
-			 	   	@Override
-			 	   	public void keyPressed(KeyEvent e) {
-			     	   	int keyCode = e.getKeyCode();
-			 	        switch (keyCode) {
-			 	           case KeyEvent.VK_ESCAPE: // quit
-			 	        	  logger.info("Escape pressed");
-			 	              stopAnimator(canvas.getAnimator());
-			 	              break;
-			 	              
-			 	          case KeyEvent.VK_W: // quit
-			 	        	  renderer.stepYDistance(+0.5f);
-			 	              break;
-			 	              
-			 	         case KeyEvent.VK_D: // quit
-			 	        	  renderer.stepXDistance(+0.5f);
-			 	              break;
-			 	              
-			 	        case KeyEvent.VK_A: // quit
-			 	        	  renderer.stepXDistance(-0.5f);
-			 	              break;
-			 	              
-			 	       case KeyEvent.VK_S: // quit
-			 	        	  renderer.stepYDistance(-0.5f);
-			 	              break;
-			 	              
-			 	      case KeyEvent.VK_O: // quit
-		 	        	  renderer.stepAngle(-0.5f);
-		 	              break;
-		 	              
-		 	       case KeyEvent.VK_P: // quit
-		 	        	  renderer.stepAngle(+0.5f);
-		 	              break;
-		 	              
-		 	      case KeyEvent.VK_H: // quit
-	 	        	  renderer.stepZDistance(-0.5f);
-	 	              break;
-	 	              
-	 	        case KeyEvent.VK_N: // quit
-	 	        	  renderer.stepZDistance(+0.5f);
-	 	              break;
-			 	        }
-			 	   	}
-			    });
-			    
-			    logger.info("Event queue inner method finished");
-			}});
-
-    	} catch (Exception e1) {
-			e1.printStackTrace();
+	public void start() {
+		try {
+			Display.setDisplayMode(new DisplayMode(800, 600));
+			Display.create();
+		} catch (LWJGLException e) {
+			e.printStackTrace();
+			System.exit(0);
 		}
-    	
-    	sleep(1000);
-    	logger.info("main method finished");
-     }		
+
+		initGL(); // init OpenGL
+		getDelta(); // call once before loop to initialise lastFrame
+		lastFPS = getTime(); // call before loop to initialise fps timer
+
+		while (!Display.isCloseRequested()) {
+			int delta = getDelta();
+			
+			update(delta);
+			renderGL();
+
+			Display.update();
+			Display.sync(60); // cap fps to 60fps
+		}
+
+		Display.destroy();
+	}
 	
-	public static void stopAnimator(final GLAnimatorControl animator) {
-		// Use a dedicate thread to run the stop() to ensure that the
-        // animator stops before program exits.
-        new Thread() {
-           @Override
-           public void run() {
-              if (animator.isStarted()) {
-              	animator.stop();
-              }
-              
-              logger.info("animator stopped");
-              System.exit(0);
-           }
-        }.start();
-        
-        logger.info("Stopping animator thread");
+	public void update(int delta) {
+		// rotate quad
+		rotation += 0.15f * delta;
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) x -= 0.35f * delta;
+		if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) x += 0.35f * delta;
+		
+		if (Keyboard.isKeyDown(Keyboard.KEY_UP)) y -= 0.35f * delta;
+		if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) y += 0.35f * delta;
+		
+		// keep quad on the screen
+		if (x < 0) x = 0;
+		if (x > 800) x = 800;
+		if (y < 0) y = 0;
+		if (y > 600) y = 600;
+		
+		updateFPS(); // update FPS Counter
+	}
+	
+	/** 
+	 * Calculate how many milliseconds have passed 
+	 * since last frame.
+	 * 
+	 * @return milliseconds passed since last frame 
+	 */
+	public int getDelta() {
+	    long time = getTime();
+	    int delta = (int) (time - lastFrame);
+	    lastFrame = time;
+	 
+	    return delta;
+	}
+	
+	/**
+	 * Get the accurate system time
+	 * 
+	 * @return The system time in milliseconds
+	 */
+	public long getTime() {
+	    return (Sys.getTime() * 1000) / Sys.getTimerResolution();
+	}
+	
+	/**
+	 * Calculate the FPS and set it in the title bar
+	 */
+	public void updateFPS() {
+		if (getTime() - lastFPS > 1000) {
+			Display.setTitle("FPS: " + fps);
+			fps = 0;
+			lastFPS += 1000;
+		}
+		fps++;
+	}
+	
+	public void initGL() {
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glLoadIdentity();
+		GL11.glOrtho(0, 800, 0, 600, 1, -1);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	}
+
+	public void renderGL() {
+		// Clear The Screen And The Depth Buffer
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+
+		// R,G,B,A Set The Color To Blue One Time Only
+		GL11.glColor3f(0.5f, 0.5f, 1.0f);
+
+		// draw quad
+		GL11.glPushMatrix();
+			GL11.glTranslatef(x, y, 0);
+			GL11.glRotatef(rotation, 0f, 0f, 1f);
+			GL11.glTranslatef(-x, -y, 0);
+			
+			GL11.glBegin(GL11.GL_QUADS);
+				GL11.glVertex2f(x - 50, y - 50);
+				GL11.glVertex2f(x + 50, y - 50);
+				GL11.glVertex2f(x + 50, y + 50);
+				GL11.glVertex2f(x - 50, y + 50);
+			GL11.glEnd();
+		GL11.glPopMatrix();
+	}
+    
+    public static void prepareLibrary(String libname) {
+    	String s = System.mapLibraryName(libname);
+    	URL url = ClassLoader.getSystemResource(s);
+    	try {
+    		File temp = new File(new File(System.getProperty("user.dir"), "natives"), s); 
+			FileUtils.copyURLToFile(url, temp);
+		} catch (IOException e) {
+			throw new IllegalStateException(e);
+		}
+    }
+    
+    public static void main(String[] args) {
+    	prepareLibrary("lwjgl");
+    	MainWindow mw = new MainWindow();
+    	mw.start();
 	}
 	
 	public static void sleep(int timeout) {
