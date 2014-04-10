@@ -191,7 +191,7 @@ public class MainWindow {
 
                                 @Override
                                 public void mouseMoved(MouseEvent e) {
-                                   // canvas.requestFocusInWindow();
+                                    canvas.requestFocusInWindow();
                                 }
                             }
                     );

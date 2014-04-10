@@ -175,7 +175,7 @@ public class Camera
      */
     public void setView(GL2 gl, GLU glu)
     {
-       // gl.glLoadIdentity();
+        gl.glLoadIdentity();
         glu.gluLookAt(	position.x, position.y, position.z,
                 position.x + nVector.x, position.y + nVector.y, position.z + nVector.z,
                 vVector.x, vVector.y, vVector.z);

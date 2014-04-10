@@ -105,7 +105,6 @@ public class MainRenderer implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
-        gl.glLoadIdentity(); // reset
         camera.setView(gl, glu);
 
         textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
@@ -335,21 +334,6 @@ public class MainRenderer implements GLEventListener {
 
         gl.glFlush();
 
-//	     // logger.info("{}, {}", distance, moveIn);
-//	      if (moveIn)
-//	    	  distance += 0.01f;
-//	      else
-//	    	  distance -= 0.01f;
-//	      
-//	      if (distance>20) {
-//	    	  moveIn = false;
-//	      }
-//	      if (distance<-20) {
-//	    	  moveIn = true;
-//	      }
-
-        // angle += 0.05f;
-
     }
 
     /**
@@ -370,7 +354,6 @@ public class MainRenderer implements GLEventListener {
     public void stepAngleFi(float step) {
         camera.rotate(new Vector3d(0,0,1), step);
     }
-
 
     public void reset() {
         camera = new Camera(new Vector3d(0, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1));

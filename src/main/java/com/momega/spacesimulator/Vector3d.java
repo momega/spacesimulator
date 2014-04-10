@@ -138,11 +138,8 @@ public class Vector3d {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer("(");
-        sb.append(x + ", ");
-        sb.append(y + ", ");
-        sb.append(z + ")");
-        return sb.toString();
+        String result = String.format("( %.3f, %.3f, %.3f)", x, y, z);
+        return result;
     }
 
 }
