@@ -26,17 +26,10 @@ public class MainRenderer implements GLEventListener {
     private GLUT glut;
 
     private static final Logger logger = LoggerFactory.getLogger(MainRenderer.class);
-
-    private float angleZ = 0.0f;  // rotation angle of the triangle
-    private float angleY = 0.0f;
-    private float angleX = 0.0f;
-
-    private float xDistance;
-    private float yDistance;
-    private float zDistance;
     private float aspect;
-
     private TextRenderer textRenderer;
+
+    private Camera camera;
 
     public MainRenderer() {
     }
@@ -62,6 +55,7 @@ public class MainRenderer implements GLEventListener {
 
         textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 12));
 
+        reset();
         logger.info("renderer initializaed");
     }
 
@@ -80,6 +74,20 @@ public class MainRenderer implements GLEventListener {
 
         // Set the view port (display area) to cover the entire window
         gl.glViewport(0, 0, width, height);
+        gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
+        gl.glLoadIdentity();             // reset projection matrix
+        glu.gluPerspective(45, aspect, 1, 1000);
+        gl.glMatrixMode(GL_MODELVIEW);
+        gl.glLoadIdentity(); // reset
+
+        // Set up and enable a z-buffer.
+/*        gl.glClearDepth(1.0);
+        gl.glDepthFunc(GL.GL_LEQUAL);
+        gl.glEnable(GL.GL_DEPTH_TEST);
+
+        // Set up and enable back-face culling.
+        gl.glFrontFace(GL.GL_CCW);
+        gl.glEnable(GL.GL_CULL_FACE);*/
 
         logger.info("reshape finished");
     }
@@ -97,43 +105,22 @@ public class MainRenderer implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
-        gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
-        gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 1, 1000);
-        glu.gluLookAt(0, 0, 0, 0, -100.0f, 0, 0, 0, 1);
-
-        // Enable the model-view transform
-        gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
-
-/*        gl.glPushMatrix();
-
-        gl.glTranslatef(0, -100.0f, 0);
-        gl.glTranslatef(xDistance, yDistance, zDistance);
-        gl.glRotatef(angleZ, 0.0f, 0.0f, 1.0f);
-        gl.glRotatef(angleY, 0.0f, 1.0f, 0.0f);
-        gl.glRotatef(angleX, 1.0f, 0.0f, 0.0f);
-
-        gl.glPopMatrix();*/
+        camera.setView(gl, glu);
 
         textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
         // optionally set the color
         textRenderer.setColor(1.0f, 0.2f, 0.2f, 0.8f);
-        textRenderer.draw("X:" + xDistance + " Y:" + yDistance + " Z:" + zDistance, 10, 40);
-        textRenderer.draw("aX:" + angleX + " aY:" + angleY + " aZ:" + angleZ, 10, 10);
+        textRenderer.draw("Position:" + camera.getPosition().toString(), 10, 40);
+        textRenderer.draw("N:" + camera.getN().toString(), 10, 10);
+        textRenderer.draw("U:" + camera.getU().toString(), 400, 40);
+        textRenderer.draw("V:" + camera.getV().toString(), 400, 10);
         textRenderer.endRendering();
-
-        gl.glRotatef(angleZ, 0.0f, 0.0f, 1.0f);
-        gl.glRotatef(angleY, 0.0f, 1.0f, 0.0f);
-        gl.glRotatef(angleX, 1.0f, 0.0f, 0.0f);
-        gl.glTranslatef(xDistance, yDistance, zDistance);
 
 //        float xtran = (60.0f - yDistance) * (float) Math.sin(angleZ / 180 * Math.PI);
 //        float ytran = (60.0f - yDistance) - (60.0f - yDistance) * (float) Math.cos(angleZ / 180 * Math.PI);
 //
 //        gl.glTranslatef(xtran, ytran, 0.0f);
-
-
 
                    /*
           float SHINE_ALL_DIRECTIONS = 1;
@@ -272,9 +259,6 @@ public class MainRenderer implements GLEventListener {
 //
 	        gl.glPushMatrix();
 	        GLUquadric box = glu.gluNewQuadric();
-//	        gl.glRotatef(30f, 0.0f, 0f, 1.0f);
-//	        gl.glRotatef(30f, 0.0f, 1.0f, 00f);
-//	        gl.glRotatef(30f, 1.0f, 0f, 0f);
 	        gl.glColor3f(0.0f, 0.1f, 0.5f);
 	        gl.glTranslatef(-30.0f, -70f, 0f);
 	        glu.gluQuadricDrawStyle(box, GLU.GLU_FILL);
@@ -284,7 +268,16 @@ public class MainRenderer implements GLEventListener {
 	        glu.gluDeleteQuadric(box);
 	        gl.glPopMatrix();
 
-
+            gl.glPushMatrix();
+            GLUquadric cylinder = glu.gluNewQuadric();
+            gl.glColor3f(0.1f, 0.6f, 0.1f);
+            gl.glTranslatef(50.0f, 60f, -20f);
+            glu.gluQuadricDrawStyle(cylinder, GLU.GLU_FILL);
+            glu.gluQuadricNormals(cylinder, GLU.GLU_FLAT);
+            glu.gluQuadricOrientation(cylinder, GLU.GLU_OUTSIDE);
+            glut.glutSolidCylinder(15f, 15f, 24, 1);
+            glu.gluDeleteQuadric(cylinder);
+            gl.glPopMatrix();
 	        
 	      
 //	   // ----- Render the Color Cube -----
@@ -338,6 +331,8 @@ public class MainRenderer implements GLEventListener {
 //	 
 //	      gl.glEnd(); // of the color cube
 
+
+
         gl.glFlush();
 
 //	     // logger.info("{}, {}", distance, moveIn);
@@ -364,46 +359,24 @@ public class MainRenderer implements GLEventListener {
         logger.info("renderer disposed");
     }
 
-    public void stepXDistance(float step) {
-        this.xDistance += (step * Math.cos(angleZ * Math.PI/180.0));
-        this.yDistance -= (step * Math.sin(angleZ * Math.PI/180.0));
+    public void stepPosition(float step) {
+        camera.moveN(step);
     }
 
-    public void stepZDistance(float step) {
-        this.zDistance += step;
+    public void stepAngleTheta(float step) {
+        camera.rotate(camera.getU(), step);
     }
 
-    public void stepYDistance(float step) {
-        this.xDistance += (step * Math.sin(angleZ * Math.PI/180.0));
-        this.yDistance += (step * Math.cos(angleZ * Math.PI/180.0));
+    public void stepAngleFi(float step) {
+        camera.rotate(new Vector3d(0,0,1), step);
     }
 
-    public void stepAngleZ(float step) {
-        this.angleZ += step;
-        this.angleZ = normalizeAngle(this.angleZ);
-    }
-
-    public void stepAngleX(float step) {
-        this.angleX += step;
-        this.angleX = normalizeAngle(this.angleX);
-    }
-
-    public void stepAngleY(float step) {
-        this.angleY += step;
-        this.angleY= normalizeAngle(this.angleY);
-    }
-
-    private float normalizeAngle(float angle) {
-        if (angle<-180) {
-            angle += 360;
-        }
-        if (angle>180) {
-            angle -= 360;
-        }
-        return angle;
-    }
 
     public void reset() {
-        angleX = angleY = angleZ = xDistance = yDistance = zDistance =  0.0f;
+        camera = new Camera(new Vector3d(0, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1));
+    }
+
+    public void twist(float step) {
+        camera.rotate(camera.getN(), step);
     }
 }

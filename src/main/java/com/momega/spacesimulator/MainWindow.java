@@ -3,13 +3,8 @@
  */
 package com.momega.spacesimulator;
 
-import java.awt.Dimension;
-import java.awt.EventQueue;
-import java.awt.Frame;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.*;
+import java.awt.event.*;
 
 import javax.media.opengl.GLAnimatorControl;
 import javax.media.opengl.GLCapabilities;
@@ -36,6 +31,7 @@ public class MainWindow {
 
     private static final int FPS = 60; // animator's target frames per second
 
+    private static Point mouseLast;
 
     public static void main(String[] args) {
         // Run the GUI codes in the event-dispatching thread for thread safety
@@ -95,59 +91,110 @@ public class MainWindow {
                                     break;
 
                                 case KeyEvent.VK_W: // quit
-                                    renderer.stepYDistance(+0.5f);
+                                    renderer.stepPosition(+0.5f);
                                     break;
 
-                                case KeyEvent.VK_D: // quit
-                                    renderer.stepXDistance(+0.5f);
+                                case KeyEvent.VK_Q: // quit
+                                    renderer.twist(+0.5f);
                                     break;
 
-                                case KeyEvent.VK_A: // quit
-                                    renderer.stepXDistance(-0.5f);
+                                case KeyEvent.VK_E: // quit
+                                    renderer.twist(-0.5f);
                                     break;
 
-                                case KeyEvent.VK_S: // quit
-                                    renderer.stepYDistance(-0.5f);
+                                case KeyEvent.VK_S:
+                                    renderer.stepPosition(-0.5f);
                                     break;
 
                                 case KeyEvent.VK_O: // quit
-                                    renderer.stepAngleZ(-0.5f);
+                                    renderer.stepAngleFi(+0.5f);
                                     break;
 
-                                case KeyEvent.VK_P: // quit
-                                    renderer.stepAngleZ(+0.5f);
+                                case KeyEvent.VK_P:
+                                    renderer.stepAngleFi(-0.5f);
                                     break;
 
-                                case KeyEvent.VK_H: // quit
+/*                                case KeyEvent.VK_H: // quit
                                     renderer.stepZDistance(-0.5f);
-                                    break;
+                                    break;*/
 
-                                case KeyEvent.VK_N: // quit
+/*                                case KeyEvent.VK_N: // quit
                                     renderer.stepZDistance(+0.5f);
-                                    break;
+                                    break;*/
 
-                                case KeyEvent.VK_I: // quit
+/*                                case KeyEvent.VK_I:
                                     renderer.stepAngleY(-0.5f);
-                                    break;
+                                    break;*/
 
-                                case KeyEvent.VK_K: // quit
+/*                                case KeyEvent.VK_K:
                                     renderer.stepAngleY(+0.5f);
+                                    break;*/
+
+                                case KeyEvent.VK_H:
+                                    renderer.stepAngleTheta(+0.5f);
                                     break;
 
-                                case KeyEvent.VK_J: // quit
-                                    renderer.stepAngleX(-0.5f);
+                                case KeyEvent.VK_N:
+                                    renderer.stepAngleTheta(-0.5f);
                                     break;
 
-                                case KeyEvent.VK_L: // quit
-                                    renderer.stepAngleX(+0.5f);
-                                    break;
-
-                                case KeyEvent.VK_R: // quit
+                                case KeyEvent.VK_R:
                                     renderer.reset();
                                     break;
                             }
                         }
                     });
+
+                    canvas.addMouseListener(new MouseAdapter() {
+                        @Override
+                        public void mouseReleased(MouseEvent e) {
+                            mouseLast = null;
+                        }
+                    });
+
+                    canvas.addMouseMotionListener(
+                            new MouseMotionAdapter() {
+                                @Override
+                                public void mouseDragged(MouseEvent e) {
+                                    if(mouseLast == null)
+                                    {
+                                        mouseLast = new Point(e.getX(), e.getY());
+                                        return;
+                                    }
+
+                                    Point delta = new Point(e.getX() - mouseLast.x, e.getY() - mouseLast.y);
+
+                                    final float MOUSE_SPEED_MODIFIER = 0.25f;
+                                    float horizAngle = delta.x*MOUSE_SPEED_MODIFIER, vertAngle = delta.y*MOUSE_SPEED_MODIFIER;
+
+                                    // Turn horizontally by rotating about the standard up vector (0,0,1).
+                                    renderer.stepAngleFi(-horizAngle);
+
+                                    // Then look up or down by rotating about u. Note that which way we rotate
+                                    // depends entirely on whether the user wanted the y axis of the mouse
+                                    // inverted or not.
+                                    renderer.stepAngleTheta(vertAngle);
+
+/*                                  boolean anyDown = false;
+                                    for(boolean b: m_keysDown)
+                                    {
+                                        if(b)
+                                        {
+                                            anyDown = true;
+                                            break;
+                                        }
+                                    }*/
+                                    canvas.display();
+
+                                    mouseLast = new Point(e.getX(), e.getY());
+                                }
+
+                                @Override
+                                public void mouseMoved(MouseEvent e) {
+                                   // canvas.requestFocusInWindow();
+                                }
+                            }
+                    );
 
                     logger.info("Event queue inner method finished");
                 }
