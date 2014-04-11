@@ -26,7 +26,6 @@ public class MainRenderer implements GLEventListener {
     private GLUT glut;
 
     private static final Logger logger = LoggerFactory.getLogger(MainRenderer.class);
-    private float aspect;
     private TextRenderer textRenderer;
 
     private Camera camera;
@@ -70,7 +69,7 @@ public class MainRenderer implements GLEventListener {
         if (height == 0) {
             height = 1;   // prevent divide by zero
         }
-        aspect = (float) width / height;
+        float aspect = (float) width / height;
 
         // Set the view port (display area) to cover the entire window
         gl.glViewport(0, 0, width, height);
@@ -238,16 +237,10 @@ public class MainRenderer implements GLEventListener {
 	            */
 
 	      	gl.glPushMatrix();
-             gl.glColor3f(0.4f, 0.5f, 0.5f);
+            GLUquadric earth = glu.gluNewQuadric();
+            gl.glColor3f(0.4f, 0.5f, 0.5f);
 	      	gl.glTranslatef(30f, -50f, 0.0f);
-	        GLUquadric earth = glu.gluNewQuadric();
-	        glu.gluQuadricDrawStyle(earth, GLU.GLU_FILL);
-	        glu.gluQuadricNormals(earth, GLU.GLU_FLAT);
-	        glu.gluQuadricOrientation(earth, GLU.GLU_OUTSIDE);
-	        final float radius = 8f;
-	        final int slices = 32;
-	        final int stacks = 32;
-	        glu.gluSphere(earth, radius, slices, stacks);
+	        glu.gluSphere(earth, 20.0f, 32, 32);
 	        glu.gluDeleteQuadric(earth);
 	        gl.glPopMatrix();
 
@@ -259,11 +252,8 @@ public class MainRenderer implements GLEventListener {
 	        gl.glPushMatrix();
 	        GLUquadric box = glu.gluNewQuadric();
 	        gl.glColor3f(0.0f, 0.1f, 0.5f);
-	        gl.glTranslatef(-30.0f, -70f, 0f);
-	        glu.gluQuadricDrawStyle(box, GLU.GLU_FILL);
-	        glu.gluQuadricNormals(box, GLU.GLU_FLAT);
-	        glu.gluQuadricOrientation(box, GLU.GLU_OUTSIDE);
-	        glut.glutSolidCube((float) 20.0);
+	        gl.glTranslatef(-50.0f, -90f, 0f);
+	        glut.glutSolidCube((float) 35.0);
 	        glu.gluDeleteQuadric(box);
 	        gl.glPopMatrix();
 
@@ -271,14 +261,36 @@ public class MainRenderer implements GLEventListener {
             GLUquadric cylinder = glu.gluNewQuadric();
             gl.glColor3f(0.1f, 0.6f, 0.1f);
             gl.glTranslatef(50.0f, 60f, -20f);
-            glu.gluQuadricDrawStyle(cylinder, GLU.GLU_FILL);
-            glu.gluQuadricNormals(cylinder, GLU.GLU_FLAT);
-            glu.gluQuadricOrientation(cylinder, GLU.GLU_OUTSIDE);
-            glut.glutSolidCylinder(15f, 15f, 24, 1);
+            glut.glutSolidCylinder(15f, 30f, 24, 1);
             glu.gluDeleteQuadric(cylinder);
             gl.glPopMatrix();
-	        
-	      
+
+            gl.glPushMatrix();
+            GLUquadric jehlan = glu.gluNewQuadric();
+            gl.glColor3f(0.9f, 0.2f, 0.1f);
+            gl.glTranslatef(-60.0f, 40f, -20f);
+            glut.glutSolidCone(25f, 35f, 40, 1);
+            glu.gluDeleteQuadric(jehlan);
+            gl.glPopMatrix();
+
+            gl.glPushMatrix();
+            GLUquadric torus = glu.gluNewQuadric();
+            gl.glColor3f(0.9f, 0.9f, 0.0f);
+            gl.glTranslatef(-50.0f, 100f, 10f);
+            gl.glRotatef(90f, 0.0f, 1f, 0f);
+            glut.glutSolidTorus(5.0f, 20.f, 24, 60);
+            glu.gluDeleteQuadric(torus);
+            gl.glPopMatrix();
+
+            gl.glPushMatrix();
+            GLUquadric dodec = glu.gluNewQuadric();
+            gl.glColor3f(0.0f, 0.9f, 0.9f);
+            gl.glTranslatef(60.0f, 0f, 0f);
+            gl.glScalef(5.0f, 5.0f, 5.0f);
+            glut.glutWireDodecahedron();
+            glu.gluDeleteQuadric(dodec);
+            gl.glPopMatrix();
+
 //	   // ----- Render the Color Cube -----
 //	        gl.glPushMatrix();
 //	      gl.glTranslatef(-30.0f, 40f, 0f);// translate right and into the screen

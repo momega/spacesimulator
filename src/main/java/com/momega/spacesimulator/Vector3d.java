@@ -10,10 +10,7 @@ public class Vector3d {
 
     final private static double SMALL_EPSILON = 0.0001;
 
-    //################## PUBLIC VARIABLES ##################//
     public double x, y, z;
-
-    //################## CONSTRUCTORS ##################//
 
     /**
      * Constructs a new Vector3d.

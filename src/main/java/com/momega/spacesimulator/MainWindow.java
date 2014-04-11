@@ -114,22 +114,6 @@ public class MainWindow {
                                     renderer.stepAngleFi(-0.5f);
                                     break;
 
-/*                                case KeyEvent.VK_H: // quit
-                                    renderer.stepZDistance(-0.5f);
-                                    break;*/
-
-/*                                case KeyEvent.VK_N: // quit
-                                    renderer.stepZDistance(+0.5f);
-                                    break;*/
-
-/*                                case KeyEvent.VK_I:
-                                    renderer.stepAngleY(-0.5f);
-                                    break;*/
-
-/*                                case KeyEvent.VK_K:
-                                    renderer.stepAngleY(+0.5f);
-                                    break;*/
-
                                 case KeyEvent.VK_H:
                                     renderer.stepAngleTheta(+0.5f);
                                     break;
@@ -175,15 +159,6 @@ public class MainWindow {
                                     // inverted or not.
                                     renderer.stepAngleTheta(vertAngle);
 
-/*                                  boolean anyDown = false;
-                                    for(boolean b: m_keysDown)
-                                    {
-                                        if(b)
-                                        {
-                                            anyDown = true;
-                                            break;
-                                        }
-                                    }*/
                                     canvas.display();
 
                                     mouseLast = new Point(e.getX(), e.getY());
