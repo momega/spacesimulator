@@ -38,6 +38,7 @@ public class MainRenderer implements GLEventListener {
     private boolean fog = false;
 
     private Texture marsTexture;
+    private Texture earthTexture;
 
     public MainRenderer() {
     }
@@ -93,24 +94,29 @@ public class MainRenderer implements GLEventListener {
         gl.glFogf(GL_FOG_END, 10);
         gl.glFogf(GL_FOG_DENSITY, 0.03f);
 
+        this.marsTexture = loadTexture(gl, "mars_1k_color.jpg");
+        this.earthTexture = loadTexture(gl, "earthmap1k.jpg");
+
+        reset();
+        logger.info("renderer initializaed");
+    }
+
+    private Texture loadTexture(GL2 gl, String fileName) {
         try {
-            InputStream stream = getClass().getResourceAsStream("mars_1k_color.jpg");
+            InputStream stream = getClass().getResourceAsStream(fileName);
             TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, false, "jpg");
-            this.marsTexture = TextureIO.newTexture(data);
+            Texture result = TextureIO.newTexture(data);
 
-            marsTexture.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
-            marsTexture.setTexParameterf(gl, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+            result.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-            marsTexture.enable(gl);
-            marsTexture.bind(gl);
+            return result;
         }
         catch (IOException exc) {
             exc.printStackTrace();
             System.exit(1);
         }
 
-        reset();
-        logger.info("renderer initializaed");
+        return null;
     }
 
     /**
@@ -246,14 +252,14 @@ public class MainRenderer implements GLEventListener {
         }
 
 
-
+        this.marsTexture.enable(gl);
+        this.marsTexture.bind(gl);
         gl.glPushMatrix();
-        GLUquadric earth = glu.gluNewQuadric();
-        glu.gluQuadricTexture(earth, true);
-        //gl.glColor3f(1f, 1f, 1f);
+        GLUquadric mars = glu.gluNewQuadric();
+        glu.gluQuadricTexture(mars, true);
         gl.glTranslatef(30f, -50f, 0.0f);
-        glu.gluSphere(earth, 20.0f, 64, 64);
-        glu.gluDeleteQuadric(earth);
+        glu.gluSphere(mars, 20.0f, 64, 64);
+        glu.gluDeleteQuadric(mars);
         gl.glPopMatrix();
 
         gl.glPushMatrix();
@@ -289,13 +295,15 @@ public class MainRenderer implements GLEventListener {
         glu.gluDeleteQuadric(torus);
         gl.glPopMatrix();
 
+        this.earthTexture.enable(gl);
+        this.earthTexture.bind(gl);
         gl.glPushMatrix();
-        GLUquadric dodec = glu.gluNewQuadric();
-        gl.glColor3f(0.0f, 0.9f, 0.9f);
+        GLUquadric earth = glu.gluNewQuadric();
+        gl.glColor3f(1f, 1f, 1f);
+        glu.gluQuadricTexture(earth, true);
         gl.glTranslatef(40.0f, 0f, 0f);
-        gl.glScalef(5.0f, 5.0f, 5.0f);
-        glut.glutSolidDodecahedron();
-        glu.gluDeleteQuadric(dodec);
+        glu.gluSphere(earth, 20.0f, 64, 64);
+        glu.gluDeleteQuadric(earth);
         gl.glPopMatrix();
 
         textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
