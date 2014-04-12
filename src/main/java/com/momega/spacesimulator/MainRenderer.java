@@ -10,12 +10,17 @@ import javax.media.opengl.glu.GLUquadric;
 
 
 import com.jogamp.opengl.util.awt.TextRenderer;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureData;
+import com.jogamp.opengl.util.texture.TextureIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.gl2.GLUT;
 
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MainRenderer implements GLEventListener {
     private GLU glu;  // for the GL Utility
@@ -31,6 +36,8 @@ public class MainRenderer implements GLEventListener {
     private boolean diffuse = false;
     private boolean emmision = false;
     private boolean fog = false;
+
+    private Texture marsTexture;
 
     public MainRenderer() {
     }
@@ -85,6 +92,22 @@ public class MainRenderer implements GLEventListener {
         gl.glFogf(GL_FOG_START, 1);
         gl.glFogf(GL_FOG_END, 10);
         gl.glFogf(GL_FOG_DENSITY, 0.03f);
+
+        try {
+            InputStream stream = getClass().getResourceAsStream("mars_1k_color.jpg");
+            TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, false, "jpg");
+            this.marsTexture = TextureIO.newTexture(data);
+
+            marsTexture.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR );
+            marsTexture.setTexParameterf(gl, GL_TEXTURE_MAG_FILTER, GL_LINEAR );
+
+            marsTexture.enable(gl);
+            marsTexture.bind(gl);
+        }
+        catch (IOException exc) {
+            exc.printStackTrace();
+            System.exit(1);
+        }
 
         reset();
         logger.info("renderer initializaed");
@@ -222,11 +245,14 @@ public class MainRenderer implements GLEventListener {
             gl.glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, blank, 0);
         }
 
+
+
         gl.glPushMatrix();
         GLUquadric earth = glu.gluNewQuadric();
-        gl.glColor3f(0.4f, 0.5f, 0.5f);
+        glu.gluQuadricTexture(earth, true);
+        //gl.glColor3f(1f, 1f, 1f);
         gl.glTranslatef(30f, -50f, 0.0f);
-        glu.gluSphere(earth, 20.0f, 32, 32);
+        glu.gluSphere(earth, 20.0f, 64, 64);
         glu.gluDeleteQuadric(earth);
         gl.glPopMatrix();
 
@@ -290,6 +316,8 @@ public class MainRenderer implements GLEventListener {
      * Called back before the OpenGL context is destroyed. Release resource such as buffers.
      */
     public void dispose(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
+        marsTexture.destroy(gl);
         logger.info("renderer disposed");
     }
 
