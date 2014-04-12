@@ -3,11 +3,7 @@ package com.momega.spacesimulator;
 import static javax.media.opengl.GL.*;  // GL constants
 import static javax.media.opengl.GL2.*; // GL2 constants
 
-import javax.media.opengl.DebugGL2;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GL2ES1;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
+import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 // GL2 constants
@@ -29,6 +25,12 @@ public class MainRenderer implements GLEventListener {
     private TextRenderer textRenderer;
 
     private Camera camera;
+    private Vector3d lightPosition = new Vector3d();
+
+    private boolean specular = true;
+    private boolean diffuse = false;
+    private boolean emmision = false;
+    private boolean fog = false;
 
     public MainRenderer() {
     }
@@ -53,6 +55,36 @@ public class MainRenderer implements GLEventListener {
         gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
 
         textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 12));
+
+        // Set up and enable a z-buffer.
+        gl.glClearDepth(1.0);
+        //gl.glDepthFunc(GL.GL_LEQUAL);
+        gl.glEnable(GL.GL_DEPTH_TEST);
+        gl.glEnable(GL_LIGHTING);
+        gl.glEnable(GL_LIGHT0);
+        gl.glEnable(GL_COLOR_MATERIAL);
+
+        float[] blackAmbientLight = {0.0f, 0.0f, 0.0f};
+        float[] whiteSpecularLight = {1f, 1f, 1f, 1f};
+        float[] whiteDiffuseLight = {1f, 1f, 1f};
+
+        gl.glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight, 0);
+        gl.glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight, 0);
+        gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight, 0);
+
+        gl.glShadeModel(GL_SMOOTH);
+
+        // Set up and enable back-face culling.
+        //gl.glFrontFace(GL.GL_CCW);
+        //gl.glEnable(GL.GL_CULL_FACE);
+
+        gl.glEnable(GL_FOG);
+        gl.glFogi(GL_FOG_MODE, GL_EXP);
+        gl.glFogfv(GL_FOG_COLOR, new float[] {0.3f, 0.3f, 0.3f, 1f}, 0);
+        gl.glHint(GL_FOG_HINT, GL_NICEST);
+        gl.glFogf(GL_FOG_START, 1);
+        gl.glFogf(GL_FOG_END, 10);
+        gl.glFogf(GL_FOG_DENSITY, 0.03f);
 
         reset();
         logger.info("renderer initializaed");
@@ -79,15 +111,6 @@ public class MainRenderer implements GLEventListener {
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
 
-        // Set up and enable a z-buffer.
-/*        gl.glClearDepth(1.0);
-        gl.glDepthFunc(GL.GL_LEQUAL);
-        gl.glEnable(GL.GL_DEPTH_TEST);
-
-        // Set up and enable back-face culling.
-        gl.glFrontFace(GL.GL_CCW);
-        gl.glEnable(GL.GL_CULL_FACE);*/
-
         logger.info("reshape finished");
     }
 
@@ -106,78 +129,13 @@ public class MainRenderer implements GLEventListener {
 
         camera.setView(gl, glu);
 
-        textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
-        // optionally set the color
-        textRenderer.setColor(1.0f, 0.2f, 0.2f, 0.8f);
-        textRenderer.draw("Position:" + camera.getPosition().toString(), 10, 40);
-        textRenderer.draw("N:" + camera.getN().toString(), 10, 10);
-        textRenderer.draw("U:" + camera.getU().toString(), 400, 40);
-        textRenderer.draw("V:" + camera.getV().toString(), 400, 10);
-        textRenderer.endRendering();
+        gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPosition.toFloat(), 0);
 
-//        float xtran = (60.0f - yDistance) * (float) Math.sin(angleZ / 180 * Math.PI);
-//        float ytran = (60.0f - yDistance) - (60.0f - yDistance) * (float) Math.cos(angleZ / 180 * Math.PI);
-//
-//        gl.glTranslatef(xtran, ytran, 0.0f);
-
-                   /*
-          float SHINE_ALL_DIRECTIONS = 1;
-	      float[] lightPos = {0, 20, -5, SHINE_ALL_DIRECTIONS};
-	      float[] lightColorAmbient = {0.0f, 0.0f, 0.0f, 1.0f	};
-	      float[] lightColorSpecular = {1f, 1f, 1f, 1f};
-	      float[] whiteDiffuseLight = {1.0f, 1.0f, 1.0f, 1.0f};
-//
-//	        // Set light parameters.
-	        gl.glLightfv(GL_LIGHT1, GL_POSITION, lightPos, 0);
-	        gl.glLightfv(GL_LIGHT1, GL_AMBIENT, lightColorAmbient, 0);
-	        gl.glLightfv(GL_LIGHT1, GL_SPECULAR, lightColorSpecular, 0);
-	        gl.glLightfv(GL_LIGHT1, GL_DIFFUSE, whiteDiffuseLight, 0);
-
-	        // Enable lighting in GL.
-	        gl.glEnable(GL_LIGHT1);
-	        gl.glEnable(GL_LIGHTING);
-	        //gl.glEnable(GL_COLOR_MATERIAL);
-	        
-			float no_mat[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-			float mat_ambient[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-			float mat_ambient_color[] = { 0.8f, 0.8f, 0.2f, 1.0f };
-			float mat_diffuse[] = { 0.1f, 0.5f, 0.8f, 1.0f };
-			float mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-			float no_shininess[] = { 0.0f };
-			float low_shininess[] = { 5.0f };
-			float high_shininess[] = { 100.0f };
-			float mat_emission[] = { 0.3f, 0.2f, 0.2f, 0.0f };
-	               */
-        // ----- Your OpenGL rendering code here (Render a white triangle for testing) -----
-        // Draw a triangle
-        // Write triangle.
-
-//	        gl.glBegin(GL.GL_TRIANGLES);
-//	        float[] rgba = new float[] {0.3f, 0.5f, 1f};
-//	        gl.glMaterialfv(GL.GL_FRONT, GL_AMBIENT, rgba, 0);
-//	        gl.glMaterialfv(GL.GL_FRONT, GL_SPECULAR, rgba, 0);
-//	        gl.glMaterialf(GL.GL_FRONT, GL_SHININESS, 0.5f);
-//	        
-//	        gl.glVertex3f(-20, -10, 0);
-//	        gl.glVertex3f(0, 20, 0);
-//	        gl.glVertex3f(0, 0, 20);
-//	        
-//	       // gl.glColor3f(0.0f, 1.0f, 0.0f); // Green
-//	        gl.glVertex3f(+20, -10, 0);
-//	        gl.glVertex3f(0, 20, 0);
-//	        gl.glVertex3f(0, 0, 20);
-//	        
-//	       // gl.glColor3f(0.0f, 0.0f, 1.0f); // Blue
-//	        gl.glVertex3f(+20, -10, 0);
-//	        gl.glVertex3f(-20, -10, 0);
-//	        gl.glVertex3f(0, 20, 0);
-//	        
-//	       // gl.glColor3f(1.0f, 1.0f, 0.0f); // yellow
-//	        gl.glVertex3f(+20, -10, 0);
-//	        gl.glVertex3f(-20, -10, 0);
-//	        gl.glVertex3f(0, 0, 20);
-//	        
-//	        gl.glEnd();
+        if (fog) {
+            gl.glEnable(GL_FOG);
+        } else {
+            gl.glDisable(GL_FOG);
+        }
 
         gl.glLineWidth(2.5f);
         gl.glColor3f(1.0f, 0.0f, 0.0f);
@@ -228,124 +186,104 @@ public class MainRenderer implements GLEventListener {
         gl.glVertex3f(00.0f, 0.0f, -100.0f);
         gl.glEnd();
 
-           /*
-			gl.glMaterialfv(GL.GL_FRONT, GL_AMBIENT, no_mat, 0);
-	        gl.glMaterialfv(GL.GL_FRONT, GL_DIFFUSE, mat_diffuse, 0);
-	        gl.glMaterialfv(GL.GL_FRONT, GL_SPECULAR, mat_specular, 0);
-	        gl.glMaterialfv(GL.GL_FRONT, GL_SHININESS, low_shininess, 0);
-	        gl.glMaterialfv(GL.GL_FRONT, GL_EMISSION, no_mat, 0);
-	            */
+        gl.glPushMatrix();
+        GLUquadric light = glu.gluNewQuadric();
+        gl.glColor3f(1f, 1f, 1f);
+        gl.glTranslatef((float) lightPosition.x, (float) lightPosition.y, (float) lightPosition.z);
+        glu.gluSphere(light, 1f, 32, 32);
+        glu.gluDeleteQuadric(light);
+        gl.glPopMatrix();
 
-	      	gl.glPushMatrix();
-            GLUquadric earth = glu.gluNewQuadric();
-            gl.glColor3f(0.4f, 0.5f, 0.5f);
-	      	gl.glTranslatef(30f, -50f, 0.0f);
-	        glu.gluSphere(earth, 20.0f, 32, 32);
-	        glu.gluDeleteQuadric(earth);
-	        gl.glPopMatrix();
+        // ------------ Render Objects ----------------
 
-//	        rgba = new float[] {0.5f, 1f, 0.3f};
-//	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL_AMBIENT, rgba, 0);
-//	        gl.glMaterialfv(GL.GL_FRONT_AND_BACK, GL_SPECULAR, rgba, 0);
-//	        gl.glMaterialf(GL.GL_FRONT_AND_BACK, GL_SHININESS, 128f);
-//
-	        gl.glPushMatrix();
-	        GLUquadric box = glu.gluNewQuadric();
-	        gl.glColor3f(0.0f, 0.1f, 0.5f);
-	        gl.glTranslatef(-50.0f, -90f, 0f);
-	        glut.glutSolidCube((float) 35.0);
-	        glu.gluDeleteQuadric(box);
-	        gl.glPopMatrix();
+        float[] white = new float[] {1.0f, 1.0f, 1.0f};
+        float[] redDiffuse = new float[] {1.0f, 1.0f, 1.0f};
+        float[] greenEmmision = new float[] {0.0f, 0.1f, 0.0f};
+        float[] blank = new float[] {0.0f, 0.0f, 0.0f};
+        float[] mShininess = new float[] {128.0f};
 
-            gl.glPushMatrix();
-            GLUquadric cylinder = glu.gluNewQuadric();
-            gl.glColor3f(0.1f, 0.6f, 0.1f);
-            gl.glTranslatef(50.0f, 60f, -20f);
-            glut.glutSolidCylinder(15f, 30f, 24, 1);
-            glu.gluDeleteQuadric(cylinder);
-            gl.glPopMatrix();
+        if (specular) {
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mShininess, 0);
+        } else {
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blank, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, blank, 0);
+        }
 
-            gl.glPushMatrix();
-            GLUquadric jehlan = glu.gluNewQuadric();
-            gl.glColor3f(0.9f, 0.2f, 0.1f);
-            gl.glTranslatef(-60.0f, 40f, -20f);
-            glut.glutSolidCone(25f, 35f, 40, 1);
-            glu.gluDeleteQuadric(jehlan);
-            gl.glPopMatrix();
+        if (diffuse) {
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, redDiffuse, 0);
+        } else {
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blank, 0);
+        }
 
-            gl.glPushMatrix();
-            GLUquadric torus = glu.gluNewQuadric();
-            gl.glColor3f(0.9f, 0.9f, 0.0f);
-            gl.glTranslatef(-50.0f, 100f, 10f);
-            gl.glRotatef(90f, 0.0f, 1f, 0f);
-            glut.glutSolidTorus(5.0f, 20.f, 24, 60);
-            glu.gluDeleteQuadric(torus);
-            gl.glPopMatrix();
+        if (emmision) {
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, greenEmmision, 0);
+        } else {
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, blank, 0);
+        }
 
-            gl.glPushMatrix();
-            GLUquadric dodec = glu.gluNewQuadric();
-            gl.glColor3f(0.0f, 0.9f, 0.9f);
-            gl.glTranslatef(60.0f, 0f, 0f);
-            gl.glScalef(5.0f, 5.0f, 5.0f);
-            glut.glutWireDodecahedron();
-            glu.gluDeleteQuadric(dodec);
-            gl.glPopMatrix();
+        gl.glPushMatrix();
+        GLUquadric earth = glu.gluNewQuadric();
+        gl.glColor3f(0.4f, 0.5f, 0.5f);
+        gl.glTranslatef(30f, -50f, 0.0f);
+        glu.gluSphere(earth, 20.0f, 32, 32);
+        glu.gluDeleteQuadric(earth);
+        gl.glPopMatrix();
 
-//	   // ----- Render the Color Cube -----
-//	        gl.glPushMatrix();
-//	      gl.glTranslatef(-30.0f, 40f, 0f);// translate right and into the screen
-//	      //gl.glRotatef(angle, 1.0f, 1.0f, 1.0f); // rotate about the x, y and z-axes
-//	 
-//	      gl.glBegin(GL_QUADS); // of the color cube
-//	 
-//	      // Top-face
-//	      gl.glColor3f(0.0f, 10.0f, 0.0f); // green
-//	      gl.glVertex3f(10.0f, 10.0f, -10.0f);
-//	      gl.glVertex3f(-10.0f, 10.0f, -10.0f);
-//	      gl.glVertex3f(-10.0f, 10.0f, 10.0f);
-//	      gl.glVertex3f(10.0f, 10.0f, 10.0f);
-//	 
-//	      // Bottom-face
-//	      gl.glColor3f(10.0f, 5f, 0.0f); // orange
-//	      gl.glVertex3f(10.0f, -10.0f, 10.0f);
-//	      gl.glVertex3f(-10.0f, -10.0f, 10.0f);
-//	      gl.glVertex3f(-10.0f, -10.0f, -10.0f);
-//	      gl.glVertex3f(10.0f, -10.0f, -10.0f);
-//	 
-//	      // Front-face
-//	      gl.glColor3f(10.0f, 0.0f, 0.0f); // red
-//	      gl.glVertex3f(10.0f, 10.0f, 10.0f);
-//	      gl.glVertex3f(-10.0f, 10.0f, 10.0f);
-//	      gl.glVertex3f(-10.0f, -10.0f, 10.0f);
-//	      gl.glVertex3f(10.0f, -10.0f, 10.0f);
-//	 
-//	      // Back-face
-//	      gl.glColor3f(10.0f, 10.0f, 0.0f); // yellow
-//	      gl.glVertex3f(10.0f, -10.0f, -10.0f);
-//	      gl.glVertex3f(-10.0f, -10.0f, -10.0f);
-//	      gl.glVertex3f(-10.0f, 10.0f, -10.0f);
-//	      gl.glVertex3f(10.0f, 10.0f, -10.0f);
-//	 
-//	      // Left-face
-//	      gl.glColor3f(0.0f, 0.0f, 10.0f); // blue
-//	      gl.glVertex3f(-10.0f, 10.0f, 10.0f);
-//	      gl.glVertex3f(-10.0f, 10.0f, -10.0f);
-//	      gl.glVertex3f(-10.0f, -10.0f, -10.0f);
-//	      gl.glVertex3f(-10.0f, -10.0f, 10.0f);
-//	 
-//	      // Right-face
-//	      gl.glColor3f(10.0f, 0.0f, 10.0f); // magenta
-//	      gl.glVertex3f(10.0f, 10.0f, -10.0f);
-//	      gl.glVertex3f(10.0f, 10.0f, 10.0f);
-//	      gl.glVertex3f(10.0f, -10.0f, 10.0f);
-//	      gl.glVertex3f(10.0f, -10.0f, -10.0f);
-//	 
-//	      gl.glEnd(); // of the color cube
+        gl.glPushMatrix();
+        GLUquadric box = glu.gluNewQuadric();
+        gl.glColor3f(0.0f, 0.1f, 0.5f);
+        gl.glTranslatef(-50.0f, -90f, 0f);
+        glut.glutSolidCube(30f);
+        glu.gluDeleteQuadric(box);
+        gl.glPopMatrix();
 
+        gl.glPushMatrix();
+        GLUquadric cylinder = glu.gluNewQuadric();
+        gl.glColor3f(0.1f, 0.6f, 0.1f);
+        gl.glTranslatef(50.0f, 60f, -20f);
+        glut.glutSolidCylinder(15f, 30f, 24, 1);
+        glu.gluDeleteQuadric(cylinder);
+        gl.glPopMatrix();
 
+        gl.glPushMatrix();
+        GLUquadric jehlan = glu.gluNewQuadric();
+        gl.glColor3f(0.9f, 0.2f, 0.1f);
+        gl.glTranslatef(-60.0f, 40f, -20f);
+        glut.glutSolidCone(25f, 35f, 40, 1);
+        glu.gluDeleteQuadric(jehlan);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        GLUquadric torus = glu.gluNewQuadric();
+        gl.glColor3f(0.9f, 0.9f, 0.0f);
+        gl.glTranslatef(-50.0f, 100f, 10f);
+        gl.glRotatef(90f, 0.0f, 1f, 0f);
+        glut.glutSolidTorus(5.0f, 20.f, 24, 60);
+        glu.gluDeleteQuadric(torus);
+        gl.glPopMatrix();
+
+        gl.glPushMatrix();
+        GLUquadric dodec = glu.gluNewQuadric();
+        gl.glColor3f(0.0f, 0.9f, 0.9f);
+        gl.glTranslatef(40.0f, 0f, 0f);
+        gl.glScalef(5.0f, 5.0f, 5.0f);
+        glut.glutSolidDodecahedron();
+        glu.gluDeleteQuadric(dodec);
+        gl.glPopMatrix();
+
+        textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
+        // optionally set the color
+        textRenderer.setColor(1f, 1f, 1f, 1f);
+        textRenderer.draw("Position:" + camera.getPosition().toString(), 10, 40);
+        textRenderer.draw("N:" + camera.getN().toString(), 10, 10);
+        textRenderer.draw("U:" + camera.getU().toString(), 400, 40);
+        textRenderer.draw("V:" + camera.getV().toString(), 400, 10);
+        textRenderer.draw("Mat Specular:" + specular + " Diffuse:" + diffuse + " Emmision:" + emmision + " Fog:" + fog, 10, 70);
+        textRenderer.draw("Light:" + lightPosition.toString(), 400, 70);
+        textRenderer.endRendering();
 
         gl.glFlush();
-
     }
 
     /**
@@ -373,5 +311,26 @@ public class MainRenderer implements GLEventListener {
 
     public void twist(float step) {
         camera.rotate(camera.getN(), step);
+    }
+
+    public void switchDiuffuse() {
+        this.diffuse = !this.diffuse;
+    }
+
+    public void switchSpecular() {
+        this.specular = !this.specular;
+    }
+
+    public void moveLight(float stepX, float stepY) {
+       this.lightPosition.x += stepX;
+       this.lightPosition.y += stepY;
+    }
+
+    public void switchEmmision() {
+        this.emmision = !this.emmision;
+    }
+
+    public void switchFog() {
+        this.fog = !this.fog;
     }
 }

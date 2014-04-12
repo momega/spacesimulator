@@ -44,7 +44,6 @@ public class MainWindow {
                     // Specifies a set of OpenGL capabilities, based on your profile.
                     GLCapabilities caps = new GLCapabilities(glp);
                     // Create the OpenGL rendering canvas
-//       GLWindow window = GLWindow.create(caps);
 
                     Frame frame = new Frame("Lesson 1: An OpenGL Window");
                     frame.setLayout(new java.awt.BorderLayout());
@@ -125,6 +124,39 @@ public class MainWindow {
                                 case KeyEvent.VK_R:
                                     renderer.reset();
                                     break;
+
+                                case KeyEvent.VK_COMMA:
+                                    renderer.moveLight(-0.5f, 0f);
+                                    break;
+
+                                case KeyEvent.VK_SLASH:
+                                    renderer.moveLight(+0.5f, 0f);
+                                    break;
+
+                                case KeyEvent.VK_L:
+                                    renderer.moveLight(0, -0.5f);
+                                    break;
+
+                                case KeyEvent.VK_PERIOD:
+                                    renderer.moveLight(0f, 0.5f);
+                                    break;
+
+                                case KeyEvent.VK_1:
+                                    renderer.switchSpecular();
+                                    break;
+
+                                case KeyEvent.VK_2:
+                                    renderer.switchDiuffuse();
+                                    break;
+
+                                case KeyEvent.VK_3:
+                                    renderer.switchEmmision();
+                                    break;
+
+                                case KeyEvent.VK_4:
+                                    renderer.switchFog();
+                                    break;
+
                             }
                         }
                     });
