@@ -131,6 +131,12 @@ public class Vector3d {
         return new Vector3d(factor * u.x + v.x, factor * u.y + v.y, factor * u.z + v.z);
     }
 
+    public static double angleBetween(Vector3d a, Vector3d b) {
+        double cosAlpha = a.dot(b) / a.length() / b.length();
+        if(cosAlpha > 1) cosAlpha = 1;
+        return Math.acos(cosAlpha);
+    }
+
     public Vector3d subtract(final Vector3d rhs) {
         x -= rhs.x;
         y -= rhs.y;

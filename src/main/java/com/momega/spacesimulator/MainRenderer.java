@@ -8,19 +8,13 @@ import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 // GL2 constants
 
-
 import com.jogamp.opengl.util.awt.TextRenderer;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureData;
-import com.jogamp.opengl.util.texture.TextureIO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.gl2.GLUT;
 
 import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class MainRenderer implements GLEventListener {
     private GLU glu;  // for the GL Utility
@@ -30,6 +24,9 @@ public class MainRenderer implements GLEventListener {
     private TextRenderer textRenderer;
 
     private Camera camera;
+    private Planet earth;
+    private Planet mars;
+    private Planet venus;
     private Vector3d lightPosition = new Vector3d();
 
     private boolean specular = true;
@@ -37,10 +34,8 @@ public class MainRenderer implements GLEventListener {
     private boolean emmision = false;
     private boolean fog = false;
 
-    private Texture marsTexture;
-    private Texture earthTexture;
-
     public MainRenderer() {
+        super();
     }
 
     /**
@@ -94,30 +89,16 @@ public class MainRenderer implements GLEventListener {
         gl.glFogf(GL_FOG_END, 10);
         gl.glFogf(GL_FOG_DENSITY, 0.03f);
 
-        this.marsTexture = loadTexture(gl, "mars_1k_color.jpg");
-        this.earthTexture = loadTexture(gl, "earthmap1k.jpg");
-
         reset();
+
+        venus.loadTexture(gl);
+        earth.loadTexture(gl);
+        mars.loadTexture(gl);
+
         logger.info("renderer initializaed");
     }
 
-    private Texture loadTexture(GL2 gl, String fileName) {
-        try {
-            InputStream stream = getClass().getResourceAsStream(fileName);
-            TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, false, "jpg");
-            Texture result = TextureIO.newTexture(data);
 
-            result.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-            return result;
-        }
-        catch (IOException exc) {
-            exc.printStackTrace();
-            System.exit(1);
-        }
-
-        return null;
-    }
 
     /**
      * Call-back handler for window re-size event. Also called when the drawable is
@@ -251,17 +232,6 @@ public class MainRenderer implements GLEventListener {
             gl.glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, blank, 0);
         }
 
-
-        this.marsTexture.enable(gl);
-        this.marsTexture.bind(gl);
-        gl.glPushMatrix();
-        GLUquadric mars = glu.gluNewQuadric();
-        glu.gluQuadricTexture(mars, true);
-        gl.glTranslatef(30f, -50f, 0.0f);
-        glu.gluSphere(mars, 20.0f, 64, 64);
-        glu.gluDeleteQuadric(mars);
-        gl.glPopMatrix();
-
         gl.glPushMatrix();
         GLUquadric box = glu.gluNewQuadric();
         gl.glColor3f(0.0f, 0.1f, 0.5f);
@@ -295,16 +265,9 @@ public class MainRenderer implements GLEventListener {
         glu.gluDeleteQuadric(torus);
         gl.glPopMatrix();
 
-        this.earthTexture.enable(gl);
-        this.earthTexture.bind(gl);
-        gl.glPushMatrix();
-        GLUquadric earth = glu.gluNewQuadric();
-        gl.glColor3f(1f, 1f, 1f);
-        glu.gluQuadricTexture(earth, true);
-        gl.glTranslatef(40.0f, 0f, 0f);
-        glu.gluSphere(earth, 20.0f, 64, 64);
-        glu.gluDeleteQuadric(earth);
-        gl.glPopMatrix();
+        venus.draw(gl, glu);
+        earth.draw(gl, glu);
+        mars.draw(gl, glu);
 
         textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
         // optionally set the color
@@ -318,6 +281,10 @@ public class MainRenderer implements GLEventListener {
         textRenderer.endRendering();
 
         gl.glFlush();
+
+        earth.rotate(-0.01f);
+        mars.rotate(-0.01f);
+        venus.rotate(-0.01f);
     }
 
     /**
@@ -325,7 +292,9 @@ public class MainRenderer implements GLEventListener {
      */
     public void dispose(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        marsTexture.destroy(gl);
+        earth.dispose(gl);
+        mars.dispose(gl);
+        venus.dispose(gl);
         logger.info("renderer disposed");
     }
 
@@ -343,6 +312,10 @@ public class MainRenderer implements GLEventListener {
 
     public void reset() {
         camera = new Camera(new Vector3d(0, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1));
+
+        mars = new Planet(new Vector3d(30f, -50f, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 15f, "mars_1k_color.jpg");
+        earth = new Planet(new Vector3d(40f, 0f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 20f, "earthmap1k.jpg");
+        venus = new Planet(new Vector3d(-40f, -20f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 18f, "venusmap.jpg");
     }
 
     public void twist(float step) {

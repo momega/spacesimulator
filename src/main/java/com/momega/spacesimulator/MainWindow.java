@@ -122,7 +122,8 @@ public class MainWindow {
                                     break;
 
                                 case KeyEvent.VK_R:
-                                    renderer.reset();
+                                   // TODO: Fix load textures
+                                   // renderer.reset();
                                     break;
 
                                 case KeyEvent.VK_COMMA:
