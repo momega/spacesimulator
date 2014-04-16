@@ -12,8 +12,7 @@ import javax.media.opengl.glu.GLUquadric;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static javax.media.opengl.GL.GL_LINEAR;
-import static javax.media.opengl.GL.GL_TEXTURE_MIN_FILTER;
+import static javax.media.opengl.GL.*;
 
 /**
  * The class represents the planet. It is the 3d object with texture and displayed as shpere
@@ -51,9 +50,10 @@ public class Planet extends Object3d {
         InputStream stream = null;
         try {
             stream = getClass().getResourceAsStream(fileName);
-            TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, false, "jpg");
+            TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, true, "jpg");
             Texture result = TextureIO.newTexture(data);
-            result.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            result.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            //result.setTexParameteri(gl, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
             return result;
         }
         catch (IOException exc) {

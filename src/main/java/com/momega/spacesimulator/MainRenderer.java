@@ -213,23 +213,23 @@ public class MainRenderer implements GLEventListener {
         float[] mShininess = new float[] {128.0f};
 
         if (specular) {
-            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white, 0);
-            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mShininess, 0);
+            gl.glMaterialfv(GL_FRONT, GL_SPECULAR, white, 0);
+            gl.glMaterialfv(GL_FRONT, GL_SHININESS, mShininess, 0);
         } else {
-            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blank, 0);
-            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, blank, 0);
+            gl.glMaterialfv(GL_FRONT, GL_SPECULAR, blank, 0);
+            gl.glMaterialfv(GL_FRONT, GL_SHININESS, blank, 0);
         }
 
         if (diffuse) {
-            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, redDiffuse, 0);
+            gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, redDiffuse, 0);
         } else {
-            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blank, 0);
+            gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, blank, 0);
         }
 
         if (emmision) {
-            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, greenEmmision, 0);
+            gl.glMaterialfv(GL_FRONT, GL_EMISSION, greenEmmision, 0);
         } else {
-            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, blank, 0);
+            gl.glMaterialfv(GL_FRONT, GL_EMISSION, blank, 0);
         }
 
         gl.glPushMatrix();
@@ -313,9 +313,9 @@ public class MainRenderer implements GLEventListener {
     public void reset() {
         camera = new Camera(new Vector3d(0, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1));
 
-        mars = new Planet(new Vector3d(30f, -50f, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 15f, "mars_1k_color.jpg");
-        earth = new Planet(new Vector3d(40f, 0f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 20f, "earthmap1k.jpg");
-        venus = new Planet(new Vector3d(-40f, -20f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 18f, "venusmap.jpg");
+        mars = new Planet(new Vector3d(30f, -50f, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 15f, "mars.jpg");
+        earth = new Planet(new Vector3d(40f, 0f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 20f, "earth.jpg");
+        venus = new Planet(new Vector3d(-40f, -20f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 18f, "venus.jpg");
     }
 
     public void twist(float step) {
