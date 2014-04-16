@@ -34,6 +34,9 @@ public class MainWindow {
     private static Point mouseLast;
 
     public static void main(String[] args) {
+
+        System.setProperty("jogl.debug", "true");
+
         // Run the GUI codes in the event-dispatching thread for thread safety
         try {
             EventQueue.invokeAndWait(new Runnable() {
@@ -44,6 +47,8 @@ public class MainWindow {
                     // Specifies a set of OpenGL capabilities, based on your profile.
                     GLCapabilities caps = new GLCapabilities(glp);
                     // Create the OpenGL rendering canvas
+
+                    logger.info("GL {}", caps.toString());
 
                     Frame frame = new Frame("Lesson 1: An OpenGL Window");
                     frame.setLayout(new java.awt.BorderLayout());

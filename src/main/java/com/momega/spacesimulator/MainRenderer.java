@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import com.jogamp.opengl.util.gl2.GLUT;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainRenderer implements GLEventListener {
     private GLU glu;  // for the GL Utility
@@ -24,9 +26,7 @@ public class MainRenderer implements GLEventListener {
     private TextRenderer textRenderer;
 
     private Camera camera;
-    private Planet earth;
-    private Planet mars;
-    private Planet venus;
+    private List<Planet> planets = new ArrayList<Planet>();
     private Vector3d lightPosition = new Vector3d();
 
     private boolean specular = true;
@@ -91,9 +91,9 @@ public class MainRenderer implements GLEventListener {
 
         reset();
 
-        venus.loadTexture(gl);
-        earth.loadTexture(gl);
-        mars.loadTexture(gl);
+        for(Planet p : planets) {
+            p.loadTexture(gl);
+        }
 
         logger.info("renderer initializaed");
     }
@@ -213,23 +213,23 @@ public class MainRenderer implements GLEventListener {
         float[] mShininess = new float[] {128.0f};
 
         if (specular) {
-            gl.glMaterialfv(GL_FRONT, GL_SPECULAR, white, 0);
-            gl.glMaterialfv(GL_FRONT, GL_SHININESS, mShininess, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, white, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, mShininess, 0);
         } else {
-            gl.glMaterialfv(GL_FRONT, GL_SPECULAR, blank, 0);
-            gl.glMaterialfv(GL_FRONT, GL_SHININESS, blank, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, blank, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, blank, 0);
         }
 
         if (diffuse) {
-            gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, redDiffuse, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, redDiffuse, 0);
         } else {
-            gl.glMaterialfv(GL_FRONT, GL_DIFFUSE, blank, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blank, 0);
         }
 
         if (emmision) {
-            gl.glMaterialfv(GL_FRONT, GL_EMISSION, greenEmmision, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, greenEmmision, 0);
         } else {
-            gl.glMaterialfv(GL_FRONT, GL_EMISSION, blank, 0);
+            gl.glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, blank, 0);
         }
 
         gl.glPushMatrix();
@@ -265,9 +265,9 @@ public class MainRenderer implements GLEventListener {
         glu.gluDeleteQuadric(torus);
         gl.glPopMatrix();
 
-        venus.draw(gl, glu);
-        earth.draw(gl, glu);
-        mars.draw(gl, glu);
+        for(Planet p : planets) {
+            p.draw(gl, glu);
+        }
 
         textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
         // optionally set the color
@@ -282,9 +282,9 @@ public class MainRenderer implements GLEventListener {
 
         gl.glFlush();
 
-        earth.rotate(-0.01f);
-        mars.rotate(-0.01f);
-        venus.rotate(-0.01f);
+        for(Planet p : planets) {
+            p.rotate(-0.01f);
+        }
     }
 
     /**
@@ -292,9 +292,10 @@ public class MainRenderer implements GLEventListener {
      */
     public void dispose(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        earth.dispose(gl);
-        mars.dispose(gl);
-        venus.dispose(gl);
+        for(Planet p : planets) {
+            p.dispose(gl);
+        }
+        planets.clear();
         logger.info("renderer disposed");
     }
 
@@ -313,9 +314,11 @@ public class MainRenderer implements GLEventListener {
     public void reset() {
         camera = new Camera(new Vector3d(0, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1));
 
-        mars = new Planet(new Vector3d(30f, -50f, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 15f, "mars.jpg");
-        earth = new Planet(new Vector3d(40f, 0f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 20f, "earth.jpg");
-        venus = new Planet(new Vector3d(-40f, -20f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 18f, "venus.jpg");
+        planets.add(new Planet(new Vector3d(30f, -50f, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 15f, "mars.jpg"));
+        planets.add(new Planet(new Vector3d(40f, 0f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 20f, "earth.jpg"));
+        planets.add(new Planet(new Vector3d(-40f, -20f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 18f, "venus.jpg"));
+        planets.add(new Planet(new Vector3d(-100, -80f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 13f, "mercury.jpg"));
+        planets.add(new Planet(new Vector3d(0, 100f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 30f, "jupiter.jpg"));
     }
 
     public void twist(float step) {
