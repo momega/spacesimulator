@@ -4,7 +4,9 @@ import com.jogamp.common.util.IOUtil;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
+import com.momega.spacesimulator.model.Planet;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
@@ -15,35 +17,20 @@ import java.io.InputStream;
 import static javax.media.opengl.GL.*;
 
 /**
- * The class represents the planet. It is the 3d object with texture and displayed as shpere
- * The planet is the sphere with the given radius
- *
- * Created by martin on 4/15/14.
+ * Created by martin on 4/19/14.
  */
-public class Planet extends Object3d {
+public class PlanetRenderer {
 
+    private final Planet planet;
     private Texture texture;
-    private double fi = 0;
-    private float radius;
-    private String textureFileName;
     private int listIndex;
 
-
-    /**
-     Constructs a new camera.
-
-     @param position	The position of the camera
-     @param nVector		The direction the camera is looking
-     @param vVector		The "up" direction for the camera
-     */
-    public Planet(Vector3d position, Vector3d nVector, Vector3d vVector, float radius, String textureFileName) {
-        super(position, nVector, vVector);
-        this.radius = radius;
-        this.textureFileName = textureFileName;
+    public PlanetRenderer(Planet planet) {
+        this.planet = planet;
     }
 
     public void loadTexture(GL2 gl) {
-        this.texture = loadTexture(gl, this.textureFileName);
+        this.texture = loadTexture(gl, planet.getTextureFileName());
     }
 
     private Texture loadTexture(GL2 gl, String fileName) {
@@ -64,30 +51,6 @@ public class Planet extends Object3d {
         return null;
     }
 
-    public void draw(GL2 gl) {
-        gl.glPushMatrix();
-        gl.glTranslatef((float) position.x, (float) position.y, (float) position.z);
-        gl.glRotated(this.fi * 180 / Math.PI, 0, 0, 1);
-        gl.glCallList(this.listIndex);
-        gl.glPopMatrix();
-    }
-
-    public void prepareDraw(GL2 gl, GLU glu) {
-        gl.glPushMatrix();
-        texture.enable(gl);
-        texture.bind(gl);
-        GLUquadric quadric = glu.gluNewQuadric();
-        gl.glColor3f(1f, 1f, 1f);
-        glu.gluQuadricTexture(quadric, true);
-        glu.gluSphere(quadric, radius, 64, 64);
-        glu.gluDeleteQuadric(quadric);
-        gl.glPopMatrix();
-    }
-
-    public void rotate(float angle) {
-        this.fi += angle;
-    }
-
     public void dispose(GL2 gl) {
         gl.glDeleteLists(this.listIndex, 1);
         if (texture != null) {
@@ -96,7 +59,7 @@ public class Planet extends Object3d {
     }
 
     public void init(GL2 gl, GLU glu) {
-        this.listIndex= gl.glGenLists(1);
+        this.listIndex = gl.glGenLists(1);
         if (this.listIndex==0) {
             throw new IllegalStateException("gl list not created");
         }
@@ -104,5 +67,29 @@ public class Planet extends Object3d {
         gl.glNewList(this.listIndex, GL2.GL_COMPILE);
         prepareDraw(gl, glu);
         gl.glEndList();
+    }
+
+    public void prepareDraw(GL2 gl, GLU glu) {
+        texture.enable(gl);
+        texture.bind(gl);
+        gl.glPushMatrix();
+        gl.glPushAttrib(GL2.GL_CURRENT_BIT);
+        GLUquadric quadric = glu.gluNewQuadric();
+        gl.glColor3f(1f, 1f, 1f);
+        glu.gluQuadricTexture(quadric, true);
+        glu.gluSphere(quadric, planet.getRadius(), 64, 64);
+        glu.gluDeleteQuadric(quadric);
+        gl.glPopAttrib();
+        gl.glPopMatrix();
+    }
+
+    public void draw(GL2 gl) {
+        gl.glPushMatrix();
+        gl.glPushAttrib(GL2.GL_CURRENT_BIT);
+        gl.glTranslated(planet.getPosition().x, planet.getPosition().y, planet.getPosition().z);
+        gl.glRotated(planet.getFi() * 180 / Math.PI, 0, 0, 1);
+        gl.glCallList(this.listIndex);
+        gl.glPopAttrib();
+        gl.glPopMatrix();
     }
 }

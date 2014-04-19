@@ -4,36 +4,28 @@
 package com.momega.spacesimulator;
 
 import java.awt.*;
-import java.awt.event.*;
 
-import javax.media.opengl.GLAnimatorControl;
-import javax.media.opengl.GLCapabilities;
-import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLCanvas;
-
+import com.momega.spacesimulator.opengl.DefaultWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.jogamp.opengl.util.AnimatorBase;
-import com.jogamp.opengl.util.FPSAnimator;
 
 
 /**
  * @author martin
  */
-public class MainWindow {
+public class MainWindow extends DefaultWindow {
 
     private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
 
-    private static String TITLE = "JOGL 2 with NEWT";  // window's title
-    private static final int WINDOW_WIDTH = 800;  // width of the drawable
-    private static final int WINDOW_HEIGHT = 600; // height of the drawable
+    private static String TITLE = "Spece Simulator";  // window's title
 
-    private static final int FPS = 60; // animator's target frames per second
+    MainWindow() {
+        super(TITLE);
+    }
 
-    private static Point mouseLast;
 
-    public static void main(String[] args) {
+
+/*    public static void main(String[] args) {
 
         //System.setProperty("jogl.debug", "true");
 
@@ -90,43 +82,6 @@ public class MainWindow {
                         public void keyPressed(KeyEvent e) {
                             int keyCode = e.getKeyCode();
                             switch (keyCode) {
-                                case KeyEvent.VK_ESCAPE: // quit
-                                    logger.info("Escape pressed");
-                                    stopAnimator(canvas.getAnimator());
-                                    break;
-
-                                case KeyEvent.VK_W: // quit
-                                    renderer.stepPosition(+0.5f);
-                                    break;
-
-                                case KeyEvent.VK_Q: // quit
-                                    renderer.twist(+0.5f);
-                                    break;
-
-                                case KeyEvent.VK_E: // quit
-                                    renderer.twist(-0.5f);
-                                    break;
-
-                                case KeyEvent.VK_S:
-                                    renderer.stepPosition(-0.5f);
-                                    break;
-
-                                case KeyEvent.VK_O: // quit
-                                    renderer.stepAngleFi(+0.5f);
-                                    break;
-
-                                case KeyEvent.VK_P:
-                                    renderer.stepAngleFi(-0.5f);
-                                    break;
-
-                                case KeyEvent.VK_H:
-                                    renderer.stepAngleTheta(+0.5f);
-                                    break;
-
-                                case KeyEvent.VK_N:
-                                    renderer.stepAngleTheta(-0.5f);
-                                    break;
-
                                 case KeyEvent.VK_R:
                                    // TODO: Fix load textures
                                    // renderer.reset();
@@ -168,84 +123,11 @@ public class MainWindow {
                         }
                     });
 
-                    canvas.addMouseListener(new MouseAdapter() {
-                        @Override
-                        public void mouseReleased(MouseEvent e) {
-                            mouseLast = null;
-                        }
-                    });
-
-                    canvas.addMouseMotionListener(
-                            new MouseMotionAdapter() {
-                                @Override
-                                public void mouseDragged(MouseEvent e) {
-                                    if(mouseLast == null)
-                                    {
-                                        mouseLast = new Point(e.getX(), e.getY());
-                                        return;
-                                    }
-
-                                    Point delta = new Point(e.getX() - mouseLast.x, e.getY() - mouseLast.y);
-
-                                    final float MOUSE_SPEED_MODIFIER = 0.25f;
-                                    float horizAngle = delta.x*MOUSE_SPEED_MODIFIER, vertAngle = delta.y*MOUSE_SPEED_MODIFIER;
-
-                                    // Turn horizontally by rotating about the standard up vector (0,0,1).
-                                    renderer.stepAngleFi(-horizAngle);
-
-                                    // Then look up or down by rotating about u. Note that which way we rotate
-                                    // depends entirely on whether the user wanted the y axis of the mouse
-                                    // inverted or not.
-                                    renderer.stepAngleTheta(vertAngle);
-
-                                    canvas.display();
-
-                                    mouseLast = new Point(e.getX(), e.getY());
-                                }
-
-                                @Override
-                                public void mouseMoved(MouseEvent e) {
-                                    canvas.requestFocusInWindow();
-                                }
-                            }
-                    );
-
                     logger.info("Event queue inner method finished");
                 }
             });
 
-        } catch (Exception e1) {
-            e1.printStackTrace();
-        }
+    }*/
 
-        sleep(1000);
-        logger.info("main method finished");
-    }
-
-    public static void stopAnimator(final GLAnimatorControl animator) {
-        // Use a dedicate thread to run the stop() to ensure that the
-        // animator stops before program exits.
-        new Thread() {
-            @Override
-            public void run() {
-                if (animator.isStarted()) {
-                    animator.stop();
-                }
-
-                logger.info("animator stopped");
-                System.exit(0);
-            }
-        }.start();
-
-        logger.info("Stopping animator thread");
-    }
-
-    public static void sleep(int timeout) {
-        try {
-            Thread.sleep(timeout);
-        } catch (InterruptedException e) {
-            // do nothing
-        }
-    }
 
 }

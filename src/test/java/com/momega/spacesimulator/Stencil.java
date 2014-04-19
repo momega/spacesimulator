@@ -1,13 +1,11 @@
 package com.momega.spacesimulator;
 
-import com.jogamp.opengl.util.gl2.GLUT;
-import javax.swing.*;
-
-import java.awt.event.*;
+import com.momega.spacesimulator.opengl.AbstractRenderer;
+import com.momega.spacesimulator.opengl.DefaultWindow;
+import com.momega.spacesimulator.opengl.EventBusController;
+import com.momega.spacesimulator.opengl.QuitController;
 
 import javax.media.opengl.*;
-import javax.media.opengl.awt.GLJPanel;
-import javax.media.opengl.glu.GLU;
 
 /**
  * This program demonstrates use of the stencil buffer for masking
@@ -18,44 +16,13 @@ import javax.media.opengl.glu.GLU;
  *
  * @author Kiet Le (Java port) Ported to JOGL 2.x by Claudio Eduardo Goes
  */
-public class Stencil extends GLSkeleton<GLJPanel>
-        implements GLEventListener, KeyListener {
-    private GLU glu;
-    private GLUT glut;
+public class Stencil extends AbstractRenderer {
 
     private static final int YELLOWMAT = 1;
     private static final int BLUEMAT = 2;
 
     @Override
-    protected GLJPanel createDrawable() {
-        GLCapabilities caps = new GLCapabilities(null);
-        caps.setStencilBits(8);
-        //
-        GLJPanel panel = new GLJPanel(caps);
-        panel.addGLEventListener(this);
-        panel.addKeyListener(this);
-        return panel;
-    }
-
-    public static void main(String[] args) {
-        Stencil demo = new Stencil();
-        //
-        JFrame.setDefaultLookAndFeelDecorated(true);
-        JFrame frame = new JFrame("stencil");
-        frame.setSize(400, 400);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.getContentPane().add(demo.drawable);
-        frame.setVisible(true);
-        demo.drawable.requestFocusInWindow();
-    }
-
-    public void init(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2();
-        glu = new GLU();
-        glut = new GLUT();
-        //
+    protected void init(GL2 gl) {
         float yellow_diffuse[] = new float[] { 0.7f, 0.7f, 0.0f, 1.0f };
         float yellow_specular[] = new float[] { 1.0f, 1.0f, 1.0f, 1.0f };
         float blue_diffuse[] = new float[] { 0.1f, 0.1f, 0.7f, 1.0f };
@@ -83,17 +50,11 @@ public class Stencil extends GLSkeleton<GLJPanel>
 
         gl.glClearStencil(0x0);
         gl.glEnable(GL2.GL_STENCIL_TEST);
-
     }
 
-    /*
-     * Draw a sphere in a diamond-shaped section in the middle of a window with
-     * 2 torii.
-     */
-    public void display(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2();
-        //
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
+    @Override
+    protected void display(GL2 gl) {
+        gl.glClear(GL2.GL_STENCIL_BUFFER_BIT);
 
         /* draw blue sphere where the stencil is 1 */
         gl.glStencilFunc(GL.GL_EQUAL, 0x1, 0x1);
@@ -116,66 +77,17 @@ public class Stencil extends GLSkeleton<GLJPanel>
         gl.glPopMatrix();
     }
 
-    /*
-     * Whenever the window is reshaped, redefine the coordinate system and
-     * redraw the stencil area.
-     */
-    public void reshape(GLAutoDrawable drawable, int x, int y, int w, int h) {
-        GL2 gl = drawable.getGL().getGL2();
-        //
-        gl.glViewport(0, 0, w, h);
-        gl.glClear(GL2.GL_STENCIL_BUFFER_BIT);
-        /* create a diamond shaped stencil area */
-        //gl.glMatrixMode(GL2.GL_PROJECTION);
-        //gl.glLoadIdentity();
-        //gl.glOrtho(-3.0, 3.0, -3.0, 3.0, -1.0, 1.0);
-        // if (w <= h) glu.gluOrtho2D(-3.0, 3.0, -3.0 * (float) h / (float) w,
-        // 3.0 * (float) h / (float) w);
-        // else glu.gluOrtho2D(-3.0 * (float) w / (float) h, //
-        // 3.0 * (float) w / (float) h, -3.0, 3.0);
-        //gl.glMatrixMode(GL2.GL_MODELVIEW);
-       // gl.glLoadIdentity();
-
-//        gl.glStencilFunc(GL.GL_ALWAYS, 0x1, 0x1);
-//        gl.glStencilOp(GL2.GL_REPLACE, GL2.GL_REPLACE, GL2.GL_REPLACE);
-//        gl.glBegin(GL2.GL_QUADS);
-//        gl.glVertex2f(-1.0f, 0.0f);
-//        gl.glVertex2f(0.0f, 1.0f);
-//        gl.glVertex2f(1.0f, 0.0f);
-//        gl.glVertex2f(0.0f, -1.0f);
-//        gl.glEnd();
-
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glLoadIdentity();
-        glu.gluPerspective(45.0, (float) w / (float) h, 3.0, 7.0);
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glLoadIdentity();
-        gl.glTranslatef(0.0f, 0.0f, -5.0f);
-
+    @Override
+    public void setView() {
+        glu.gluLookAt(	0, 0, 5, 0, 0, 0, 0, 1, 0);
     }
 
-    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,
-                               boolean deviceChanged) {
-    }
-
-    public void keyTyped(KeyEvent key) {
-    }
-
-    public void keyPressed(KeyEvent key) {
-        switch (key.getKeyCode()) {
-            case KeyEvent.VK_ESCAPE:
-                System.exit(0);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void keyReleased(KeyEvent key) {
-    }
-
-    public void dispose(GLAutoDrawable arg0) {
-
+    public static void main(String[] args) {
+        Stencil demo = new Stencil();
+        DefaultWindow window = new DefaultWindow("Stencil");
+        EventBusController controller = new EventBusController();
+        controller.addController(new QuitController(window));
+        window.openWindow(demo, controller);
     }
 
 }

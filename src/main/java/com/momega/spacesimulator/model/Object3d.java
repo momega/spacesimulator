@@ -1,7 +1,4 @@
-package com.momega.spacesimulator;
-
-import javax.media.opengl.GL2;
-import javax.media.opengl.glu.GLU;
+package com.momega.spacesimulator.model;
 
 /**
  This class represents a 3d object. It is defined with

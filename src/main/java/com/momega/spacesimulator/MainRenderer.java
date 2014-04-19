@@ -9,6 +9,9 @@ import javax.media.opengl.glu.GLUquadric;
 // GL2 constants
 
 import com.jogamp.opengl.util.awt.TextRenderer;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,10 +90,9 @@ public class MainRenderer implements GLEventListener {
 
         reset();
 
-
-        for(Planet p : planets) {
+  /*      for(Planet p : planets) {
             p.init(gl, glu);
-        }
+        }*/
 
         logger.info("renderer initializaed");
     }
@@ -123,18 +125,11 @@ public class MainRenderer implements GLEventListener {
 
     @Override
     public void display(GLAutoDrawable drawable) {
-        render(drawable);
-    }
-
-    /**
-     * Called back by the animator to perform rendering.
-     */
-    private void render(GLAutoDrawable drawable) {
         // logger.info("render called");
         GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
-        camera.setView(gl, glu);
+        //camera.setView(gl, glu);
 
         gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPosition.toFloat(), 0);
 
@@ -262,9 +257,9 @@ public class MainRenderer implements GLEventListener {
         glu.gluDeleteQuadric(torus);
         gl.glPopMatrix();
 
-        for(Planet p : planets) {
+/*        for(Planet p : planets) {
             p.draw(gl);
-        }
+        }*/
 
         textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
         // optionally set the color
@@ -289,9 +284,9 @@ public class MainRenderer implements GLEventListener {
      */
     public void dispose(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        for(Planet p : planets) {
+/*        for(Planet p : planets) {
             p.dispose(gl);
-        }
+        }*/
         planets.clear();
         logger.info("renderer disposed");
     }

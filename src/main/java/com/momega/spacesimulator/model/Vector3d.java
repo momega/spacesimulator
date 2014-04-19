@@ -1,4 +1,4 @@
-package com.momega.spacesimulator;
+package com.momega.spacesimulator.model;
 
 /**
  * This class represents 3D vectors, storing their components as doubles.
