@@ -49,10 +49,10 @@ public class MainRenderer implements GLEventListener {
         drawable.setGL(new DebugGL2(gl));
         glu = new GLU();
         glut = new GLUT();
+
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
         gl.glClearDepth(1.0f);      // set clear depth value to farthest
-        gl.glEnable(GL_DEPTH_TEST); // enables depth testing
-//	      gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         gl.glDepthFunc(GL_LEQUAL);  // the type of depth test to do
         gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
@@ -60,9 +60,7 @@ public class MainRenderer implements GLEventListener {
         textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 12));
 
         // Set up and enable a z-buffer.
-        gl.glClearDepth(1.0);
-        //gl.glDepthFunc(GL.GL_LEQUAL);
-        gl.glEnable(GL.GL_DEPTH_TEST);
+        gl.glEnable(GL_DEPTH_TEST);
         gl.glEnable(GL_LIGHTING);
         gl.glEnable(GL_LIGHT0);
         gl.glEnable(GL_COLOR_MATERIAL);
@@ -74,8 +72,6 @@ public class MainRenderer implements GLEventListener {
         gl.glLightfv(GL_LIGHT0, GL_SPECULAR, whiteSpecularLight, 0);
         gl.glLightfv(GL_LIGHT0, GL_AMBIENT, blackAmbientLight, 0);
         gl.glLightfv(GL_LIGHT0, GL_DIFFUSE, whiteDiffuseLight, 0);
-
-        gl.glShadeModel(GL_SMOOTH);
 
         // Set up and enable back-face culling.
         //gl.glFrontFace(GL.GL_CCW);
@@ -91,8 +87,9 @@ public class MainRenderer implements GLEventListener {
 
         reset();
 
+
         for(Planet p : planets) {
-            p.loadTexture(gl);
+            p.init(gl, glu);
         }
 
         logger.info("renderer initializaed");
@@ -243,8 +240,8 @@ public class MainRenderer implements GLEventListener {
         gl.glPushMatrix();
         GLUquadric cylinder = glu.gluNewQuadric();
         gl.glColor3f(0.1f, 0.6f, 0.1f);
-        gl.glTranslatef(50.0f, 60f, -20f);
-        glut.glutSolidCylinder(15f, 30f, 24, 1);
+        gl.glTranslatef(0f, 40f, -10f);
+        glut.glutSolidCylinder(5f, 5f, 48, 1);
         glu.gluDeleteQuadric(cylinder);
         gl.glPopMatrix();
 
@@ -266,7 +263,7 @@ public class MainRenderer implements GLEventListener {
         gl.glPopMatrix();
 
         for(Planet p : planets) {
-            p.draw(gl, glu);
+            p.draw(gl);
         }
 
         textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());

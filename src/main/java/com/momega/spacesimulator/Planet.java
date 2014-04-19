@@ -26,6 +26,7 @@ public class Planet extends Object3d {
     private double fi = 0;
     private float radius;
     private String textureFileName;
+    private int listIndex;
 
 
     /**
@@ -53,7 +54,7 @@ public class Planet extends Object3d {
             TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, true, "jpg");
             Texture result = TextureIO.newTexture(data);
             result.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            //result.setTexParameteri(gl, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            result.setTexParameteri(gl, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             return result;
         }
         catch (IOException exc) {
@@ -63,15 +64,21 @@ public class Planet extends Object3d {
         return null;
     }
 
-    public void draw(GL2 gl, GLU glu) {
+    public void draw(GL2 gl) {
+        gl.glPushMatrix();
+        gl.glTranslatef((float) position.x, (float) position.y, (float) position.z);
+        gl.glRotated(this.fi * 180 / Math.PI, 0, 0, 1);
+        gl.glCallList(this.listIndex);
+        gl.glPopMatrix();
+    }
+
+    public void prepareDraw(GL2 gl, GLU glu) {
+        gl.glPushMatrix();
         texture.enable(gl);
         texture.bind(gl);
-        gl.glPushMatrix();
         GLUquadric quadric = glu.gluNewQuadric();
         gl.glColor3f(1f, 1f, 1f);
         glu.gluQuadricTexture(quadric, true);
-        gl.glTranslatef((float)position.x, (float)position.y, (float)position.z);
-        gl.glRotated(this.fi * 180 / Math.PI, 0, 0, 1);
         glu.gluSphere(quadric, radius, 64, 64);
         glu.gluDeleteQuadric(quadric);
         gl.glPopMatrix();
@@ -82,9 +89,20 @@ public class Planet extends Object3d {
     }
 
     public void dispose(GL2 gl) {
+        gl.glDeleteLists(this.listIndex, 1);
         if (texture != null) {
             texture.destroy(gl);
         }
     }
 
+    public void init(GL2 gl, GLU glu) {
+        this.listIndex= gl.glGenLists(1);
+        if (this.listIndex==0) {
+            throw new IllegalStateException("gl list not created");
+        }
+        loadTexture(gl);
+        gl.glNewList(this.listIndex, GL2.GL_COMPILE);
+        prepareDraw(gl, glu);
+        gl.glEndList();
+    }
 }

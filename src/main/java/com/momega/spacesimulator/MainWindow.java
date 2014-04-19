@@ -35,7 +35,7 @@ public class MainWindow {
 
     public static void main(String[] args) {
 
-        System.setProperty("jogl.debug", "true");
+        //System.setProperty("jogl.debug", "true");
 
         // Run the GUI codes in the event-dispatching thread for thread safety
         try {
@@ -46,6 +46,7 @@ public class MainWindow {
                     GLProfile glp = GLProfile.getDefault();
                     // Specifies a set of OpenGL capabilities, based on your profile.
                     GLCapabilities caps = new GLCapabilities(glp);
+                    caps.setStencilBits(8);
                     // Create the OpenGL rendering canvas
 
                     logger.info("GL {}", caps.toString());
