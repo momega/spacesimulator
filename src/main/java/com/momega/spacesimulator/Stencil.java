@@ -99,7 +99,7 @@ public class Stencil extends GLSkeleton<GLJPanel>
         gl.glStencilFunc(GL.GL_EQUAL, 0x1, 0x1);
         gl.glStencilOp(GL.GL_KEEP, GL.GL_KEEP, GL.GL_KEEP);
         gl.glCallList(BLUEMAT);
-        glut.glutSolidSphere(0.5, 20, 20);
+        glut.glutSolidSphere(0.1, 20, 20);
 
         /* draw the tori where the stencil is not 1 */
         gl.glStencilFunc(GL.GL_NOTEQUAL, 0x1, 0x1);
@@ -107,10 +107,11 @@ public class Stencil extends GLSkeleton<GLJPanel>
         gl.glRotatef(45.0f, 0.0f, 0.0f, 1.0f);
         gl.glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
         gl.glCallList(YELLOWMAT);
-        glut.glutSolidTorus(0.275, 0.85, 20, 20);
+        glut.glutSolidTorus(0.275, 0.85, 40, 20);
         gl.glPushMatrix();
-        gl.glRotatef(90.0f, 1.0f, 0.0f, 0.0f);
-        glut.glutSolidTorus(0.275, 0.85, 20, 20);
+        gl.glRotatef(60.0f, 1.0f, 0.0f, 0.0f);
+        gl.glTranslatef(0.1f, 0.4f, 0f);
+        glut.glutSolidTorus(0.1, 0.4, 40, 20);
         gl.glPopMatrix();
         gl.glPopMatrix();
     }
@@ -125,24 +126,24 @@ public class Stencil extends GLSkeleton<GLJPanel>
         gl.glViewport(0, 0, w, h);
         gl.glClear(GL2.GL_STENCIL_BUFFER_BIT);
         /* create a diamond shaped stencil area */
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glLoadIdentity();
-        gl.glOrtho(-3.0, 3.0, -3.0, 3.0, -1.0, 1.0);
+        //gl.glMatrixMode(GL2.GL_PROJECTION);
+        //gl.glLoadIdentity();
+        //gl.glOrtho(-3.0, 3.0, -3.0, 3.0, -1.0, 1.0);
         // if (w <= h) glu.gluOrtho2D(-3.0, 3.0, -3.0 * (float) h / (float) w,
         // 3.0 * (float) h / (float) w);
         // else glu.gluOrtho2D(-3.0 * (float) w / (float) h, //
         // 3.0 * (float) w / (float) h, -3.0, 3.0);
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
-        gl.glLoadIdentity();
+        //gl.glMatrixMode(GL2.GL_MODELVIEW);
+       // gl.glLoadIdentity();
 
-        gl.glStencilFunc(GL.GL_ALWAYS, 0x1, 0x1);
-        gl.glStencilOp(GL2.GL_REPLACE, GL2.GL_REPLACE, GL2.GL_REPLACE);
-        gl.glBegin(GL2.GL_QUADS);
-        gl.glVertex2f(-1.0f, 0.0f);
-        gl.glVertex2f(0.0f, 1.0f);
-        gl.glVertex2f(1.0f, 0.0f);
-        gl.glVertex2f(0.0f, -1.0f);
-        gl.glEnd();
+//        gl.glStencilFunc(GL.GL_ALWAYS, 0x1, 0x1);
+//        gl.glStencilOp(GL2.GL_REPLACE, GL2.GL_REPLACE, GL2.GL_REPLACE);
+//        gl.glBegin(GL2.GL_QUADS);
+//        gl.glVertex2f(-1.0f, 0.0f);
+//        gl.glVertex2f(0.0f, 1.0f);
+//        gl.glVertex2f(1.0f, 0.0f);
+//        gl.glVertex2f(0.0f, -1.0f);
+//        gl.glEnd();
 
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
