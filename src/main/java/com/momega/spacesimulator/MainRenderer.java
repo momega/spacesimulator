@@ -291,18 +291,6 @@ public class MainRenderer implements GLEventListener {
         logger.info("renderer disposed");
     }
 
-    public void stepPosition(float step) {
-        camera.moveN(step);
-    }
-
-    public void stepAngleTheta(float step) {
-        camera.rotate(camera.getU(), step);
-    }
-
-    public void stepAngleFi(float step) {
-        camera.rotate(new Vector3d(0,0,1), step);
-    }
-
     public void reset() {
         camera = new Camera(new Vector3d(0, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1));
 
@@ -311,10 +299,6 @@ public class MainRenderer implements GLEventListener {
         planets.add(new Planet(new Vector3d(-40f, -20f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 18f, "venus.jpg"));
         planets.add(new Planet(new Vector3d(-100, -80f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 13f, "mercury.jpg"));
         planets.add(new Planet(new Vector3d(0, 100f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 30f, "jupiter.jpg"));
-    }
-
-    public void twist(float step) {
-        camera.rotate(camera.getN(), step);
     }
 
     public void switchDiuffuse() {

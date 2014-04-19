@@ -7,10 +7,8 @@ import com.momega.spacesimulator.opengl.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2ES1;
-import javax.media.opengl.glu.GLUquadric;
 
 import static javax.media.opengl.GL.*;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SMOOTH;
@@ -27,12 +25,12 @@ public class Kepler extends AbstractRenderer {
     private float t = 0;
     private Camera camera = new Camera(new Vector3d(0, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1));
     private double a = 10;
-    private double b = 8;
+    private double b = 9;
     private double e = Math.sqrt(a*a - b*b);
     private Planet earth = new Planet(new Vector3d(e, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 1, "earth.jpg");
     private PlanetRenderer earthRender = new PlanetRenderer(earth);
 
-    private Planet moon = new Planet(new Vector3d(a, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 0.3, "mercury.jpg");
+    private Planet moon = new Planet(new Vector3d(a, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 0.3, "moon.jpg");
     private PlanetRenderer moonRender = new PlanetRenderer(moon);
 
     @Override
@@ -60,7 +58,7 @@ public class Kepler extends AbstractRenderer {
     protected void display(GL2 gl) {
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
-        gl.glColor3f(0f, 1f, 0f);
+        gl.glColor3f(1f, 1f, 1f);
         drawEllipse(gl, 0f, 0f, (float)a, (float)b, 360);
 
         double[] point = computerKelperEquation(a, b, t, PERIOD);
@@ -70,6 +68,8 @@ public class Kepler extends AbstractRenderer {
 
         earthRender.draw(gl);
         moonRender.draw(gl);
+
+        //gl.glDisable(GL2.GL_TEXTURE_2D);
 
         gl.glLineWidth(2.5f);
         gl.glColor3f(1.0f, 0.0f, 0.0f);

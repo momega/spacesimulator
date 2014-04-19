@@ -69,7 +69,7 @@ public class PlanetRenderer {
         gl.glEndList();
     }
 
-    public void prepareDraw(GL2 gl, GLU glu) {
+    private void prepareDraw(GL2 gl, GLU glu) {
         texture.enable(gl);
         texture.bind(gl);
         gl.glPushMatrix();
@@ -77,10 +77,13 @@ public class PlanetRenderer {
         GLUquadric quadric = glu.gluNewQuadric();
         gl.glColor3f(1f, 1f, 1f);
         glu.gluQuadricTexture(quadric, true);
+        glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
+        glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
         glu.gluSphere(quadric, planet.getRadius(), 64, 64);
         glu.gluDeleteQuadric(quadric);
         gl.glPopAttrib();
         gl.glPopMatrix();
+        texture.disable(gl);
     }
 
     public void draw(GL2 gl) {

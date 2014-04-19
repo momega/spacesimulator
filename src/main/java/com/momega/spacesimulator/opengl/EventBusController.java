@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The implementation of the controller that passes all method calls to the registred specific controller.
+ *
  * Created by martin on 4/19/14.
  */
 public class EventBusController extends AbstractController {

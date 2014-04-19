@@ -30,7 +30,7 @@ public abstract class AbstractRenderer implements GLEventListener {
     }
 
     /*
-     * Draw a sphere in a diamond-shaped section in the middle of a window with
+     * The default display method.
      * 2 torii.
      */
     public void display(GLAutoDrawable drawable) {
@@ -38,7 +38,6 @@ public abstract class AbstractRenderer implements GLEventListener {
 
         gl.glLoadIdentity();
         setView();
-        gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 
         display(gl);
 
@@ -51,26 +50,10 @@ public abstract class AbstractRenderer implements GLEventListener {
 
     protected abstract void init(GL2 gl);
 
-    public void displayChanged(GLAutoDrawable drawable, boolean modeChanged,
-                               boolean deviceChanged) {
-    }
-
-    public void keyTyped(KeyEvent key) {
-    }
-
-    public void keyPressed(KeyEvent key) {
-        switch (key.getKeyCode()) {
-            case KeyEvent.VK_ESCAPE:
-                System.exit(0);
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void keyReleased(KeyEvent key) {
-    }
-
+    /**
+     * The default implementation of the dispose method
+     * @param drawable
+     */
     public void dispose(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         dispose(gl);
