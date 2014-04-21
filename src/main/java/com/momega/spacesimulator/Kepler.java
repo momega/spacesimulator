@@ -2,6 +2,7 @@ package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.*;
+import com.momega.spacesimulator.renderer.PlanetRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,21 +26,24 @@ public class Kepler extends AbstractRenderer {
     private static float PERIOD = 2000f;
     private static double MINOR_ERROR = Math.pow(10, -10);
     private float t = 0;
-    private Camera camera = new Camera(new Vector3d(0, 0, 0), new Vector3d(0, 1, 0), new Vector3d(0, 0, 1));
     private double a = 10;
     private double b = 9;
+    private double ARGUMENT_OF_PERIAPSIS =  0* Math.PI / 180;
     private double e = Math.sqrt(a*a - b*b);
     private double epsilon = e / a;
+    private Camera camera = new Camera(new Vector3d(-a-e, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
 
     private List<Planet> planets = new ArrayList<Planet>();
     private List<PlanetRenderer> planetRenderers = new ArrayList<PlanetRenderer>();
 
     public void initModel() {
-        Planet earth = new Planet(new Vector3d(0, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new StaticTrajectory(new Vector3d(0,0,0)), 23.5, 1, "earth.jpg");
-        Planet moon = new Planet(new Vector3d(a, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new KeplerianTrajectory2d(a, epsilon, PERIOD), 6.687, 0.3, "moon.jpg");
+        Planet earth = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new StaticTrajectory(new Vector3d(0,0,0)), 23.5, 1, "earth.jpg");
+        Planet moon = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new KeplerianTrajectory2d(a, epsilon, ARGUMENT_OF_PERIAPSIS, PERIOD), 6.687, 0.3, "moon.jpg");
 
         planets.add(earth);
         planets.add(moon);
+
+        logger.info("model initialized");
     }
 
     @Override
@@ -58,6 +62,7 @@ public class Kepler extends AbstractRenderer {
             pr.init(gl, glu);
             planetRenderers.add(pr);
         }
+
     }
 
     @Override
@@ -69,11 +74,6 @@ public class Kepler extends AbstractRenderer {
 
     @Override
     protected void display(GL2 gl) {
-        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
-
-        gl.glColor3f(1f, 1f, 1f);
-        drawEllipse(gl, -e, 0, a, b, 360);
-
         for(Planet p : planets) {
             p.move(t);
             p.rotate(0.01);
@@ -83,20 +83,6 @@ public class Kepler extends AbstractRenderer {
         for(PlanetRenderer pr : planetRenderers) {
             pr.draw(gl);
         }
-
-        gl.glLineWidth(2.5f);
-        gl.glColor3f(1.0f, 0.0f, 0.0f);
-        gl.glBegin(GL_LINES);
-        gl.glVertex3d(-a-e, 0 , 0);
-        gl.glVertex3d(a-e, 0, 0);
-        gl.glEnd();
-
-        gl.glBegin(GL_LINES);
-        gl.glVertex3d(-e, -b, 0);
-        gl.glVertex3d(-e, b, 0);
-        gl.glEnd();
-
-
     }
 
     public static void main(String[] args) {

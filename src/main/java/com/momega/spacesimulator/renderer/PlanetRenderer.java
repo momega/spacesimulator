@@ -1,4 +1,4 @@
-package com.momega.spacesimulator;
+package com.momega.spacesimulator.renderer;
 
 import com.jogamp.common.util.IOUtil;
 import com.jogamp.opengl.util.texture.Texture;
@@ -25,9 +25,11 @@ public class PlanetRenderer {
     private final Planet planet;
     private Texture texture;
     private int listIndex;
+    private TrajectoryRenderer trajectoryRenderer;
 
     public PlanetRenderer(Planet planet) {
         this.planet = planet;
+        this.trajectoryRenderer = TrajectoryRenderer.createInstance(planet.getTrajectory());
     }
 
     public void loadTexture(GL2 gl) {
@@ -73,8 +75,6 @@ public class PlanetRenderer {
     private void prepareDraw(GL2 gl, GLU glu) {
         texture.enable(gl);
         texture.bind(gl);
-        gl.glPushMatrix();
-        gl.glPushAttrib(GL2.GL_CURRENT_BIT);
         GLUquadric quadric = glu.gluNewQuadric();
         gl.glColor3f(1f, 1f, 1f);
         glu.gluQuadricTexture(quadric, true);
@@ -89,19 +89,16 @@ public class PlanetRenderer {
         gl.glVertex3d(0, 0, planet.getRadius() * 2);
         gl.glVertex3d(0, 0, -planet.getRadius() * 2);
         gl.glEnd();
-
-        gl.glPopAttrib();
-        gl.glPopMatrix();
     }
 
     public void draw(GL2 gl) {
         gl.glPushMatrix();
-        gl.glPushAttrib(GL2.GL_CURRENT_BIT);
         gl.glTranslated(planet.getPosition().x, planet.getPosition().y, planet.getPosition().z);
         gl.glRotated(planet.getFi() * 180 / Math.PI, planet.getV().x, planet.getV().y, planet.getV().z);
         gl.glRotated(planet.getAxialTilt(), planet.getU().x, planet.getU().y, planet.getU().z);
         gl.glCallList(this.listIndex);
-        gl.glPopAttrib();
         gl.glPopMatrix();
+
+        trajectoryRenderer.draw(gl);
     }
 }

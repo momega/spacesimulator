@@ -1,8 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.model.Object3d;
-import com.momega.spacesimulator.model.Vector3d;
-
 /**
  * The class represents the planet. It is the 3d object with texture and displayed as shpere
  * The planet is the sphere with the given radius
@@ -19,14 +16,15 @@ public class Planet extends Object3d {
 
     /**
      Constructs a new camera.
-     * @param position    The position of the camera
-     * @param nVector        The direction the camera is looking
-     * @param vVector        The "up" direction for the camera
+     * @param nVector The direction the camera is looking
+     * @param vVector The "up" direction for the camera
      * @param trajectory planets trajectory
      * @param axialTilt axial tilt of the planet
+     * @param textureFileName the name of the texture file name
+     * @param radius the radius of the planet
      */
-    public Planet(Vector3d position, Vector3d nVector, Vector3d vVector, Trajectory trajectory, double axialTilt, double radius, String textureFileName) {
-        super(position, nVector, vVector);
+    public Planet(Vector3d nVector, Vector3d vVector, Trajectory trajectory, double axialTilt, double radius, String textureFileName) {
+        super(trajectory.computePosition(0), nVector, vVector);
         this.trajectory = trajectory;
         this.axialTilt = axialTilt;
         this.radius = radius;
@@ -35,6 +33,10 @@ public class Planet extends Object3d {
         rotate(getU(), axialTilt);
     }
 
+    /**
+     * Gets the radius of the planet
+     * @return the value of the radius
+     */
     public double getRadius() {
         return radius;
     }
@@ -61,5 +63,9 @@ public class Planet extends Object3d {
      */
     public void move(double t) {
         this.position = trajectory.computePosition(t);
+    }
+
+    public Trajectory getTrajectory() {
+        return this.trajectory;
     }
 }

@@ -4,52 +4,51 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The class computer keplerian trajector on and object along the elipse. It computer only in 2D
+ * The class computer keplerian trajector and object along the elipse. It computer only in 2D
  * Created by martin on 4/21/14.
  */
 public class KeplerianTrajectory2d implements Trajectory {
 
     private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectory2d.class);
 
-    private final double a;
-    private final double epsilon;
-    private final double period;
-    private final double b; // the semiminor axis
+    private final double semimajorAxis; // (a)
+    private final double eccentricity; // epsion
+    private final double period; // T
+    private final double argumentOfPeriapsis; // lowercase omega
+
+    private final double p; // semilatus rectum
 
     /**
-     * The
-     * @param a the semimajor axis
-     * @param epsilon numberic eccentricity
+     * Constructs the keplerian trajector solver in 2D
+     * @param semimajorAxis the semimajor axis
+     * @param eccentricity numberic eccentricity
      * @param period the orbital period
+     * @param argumentOfPeriapsis argument of peripsis
      */
-    public KeplerianTrajectory2d(double a, double epsilon, double period) {
-
-        this.a = a;
-        this.epsilon = epsilon;
+    public KeplerianTrajectory2d(double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period) {
+        this.semimajorAxis = semimajorAxis;
+        this.eccentricity = eccentricity;
+        this.argumentOfPeriapsis = argumentOfPeriapsis;
         this.period = period;
-
-        this.b = a* Math.sqrt(1 - epsilon* epsilon);
+        this.p = semimajorAxis* (1 - eccentricity* eccentricity);
     }
 
     @Override
     public Vector3d computePosition(double t) {
-        double e = Math.sqrt(a*a - b*b); //  eccentricity
         double E = Math.PI; //  eccentric anomaly
         double M = 2 * Math.PI * t / period;   // mean anomaly
         M = normalAngle(M);
 
-        double F = E - epsilon * Math.sin(M) - M;
+        double F = E - eccentricity * Math.sin(M) - M;
         for(int i=0; i<50; i++) {
-            E = E - F / (1.0f - epsilon * Math.cos(E));
-            F = E - epsilon * Math.sin(E) - M;
+            E = E - F / (1.0f - eccentricity * Math.cos(E));
+            F = E - eccentricity * Math.sin(E) - M;
 //            if (F<MINOR_ERROR) {
 //                break;
 //            }
         }
-        double x = (a * Math.cos(E)) - e;
-        double y = (b * Math.sin(E));
 
-        double cosTheta = (Math.cos(E) - epsilon) / ( 1 - epsilon * Math.cos(E));
+        double cosTheta = (Math.cos(E) - eccentricity) / ( 1 - eccentricity * Math.cos(E));
         double theta;
         if (E < Math.PI) {
             theta = Math.acos(cosTheta);
@@ -57,7 +56,12 @@ public class KeplerianTrajectory2d implements Trajectory {
             theta = 2*Math.PI - Math.acos(cosTheta);
         }
 
-        logger.info("" + t + "->[{},{}], theta:" + theta, x, y);
+        double r = p / (1 + eccentricity * cosTheta);
+
+        double x = (r * Math.cos(theta + argumentOfPeriapsis));
+        double y = (r * Math.sin(theta + argumentOfPeriapsis));
+
+        logger.debug("r = {}, theta = {}", r, theta);
 
         return new Vector3d(x, y, 0);
     }
@@ -66,5 +70,17 @@ public class KeplerianTrajectory2d implements Trajectory {
         int z = (int)(angle / (2 * Math.PI));
         angle = angle - z * 2 * Math.PI;
         return angle;
+    }
+
+    public double getSemimajorAxis() {
+        return this.semimajorAxis;
+    }
+
+    public double getEccentricity() {
+        return this.eccentricity;
+    }
+
+    public double getArgumentOfPeriapsis() {
+        return this.argumentOfPeriapsis;
     }
 }

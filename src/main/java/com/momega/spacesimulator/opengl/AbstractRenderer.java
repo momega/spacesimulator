@@ -10,14 +10,14 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
-import java.awt.event.KeyEvent;
 
-import static javax.media.opengl.GL.GL_DEPTH_TEST;
-import static javax.media.opengl.GL.GL_LINE_LOOP;
+import static javax.media.opengl.GL.*;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 
 /**
+ * The abstract render used render any OPENGL objects.
+ *
  * Created by martin on 4/19/14.
  */
 public abstract class AbstractRenderer implements GLEventListener {
@@ -29,22 +29,24 @@ public abstract class AbstractRenderer implements GLEventListener {
 
     /**
      * The default implementation of initializing of the renderer. It creates GLU and GLUT objects
-     * @param drawable
+     * @param drawable the OPENGL cancas
      */
     public void init(GLAutoDrawable drawable) {
-        logger.info("Renderer initializing");
+        logger.info("renderer initializing");
         GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
         glut = new GLUT();
         init(gl);
-        logger.info("Renderer initialized");
+        logger.info("renderer initialized");
     }
 
     /*
-     * The default display method.
+     * The default display method
+     * @param drawable the OPENGL cancas
      */
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
+        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
         gl.glLoadIdentity();
         setView();
@@ -62,7 +64,7 @@ public abstract class AbstractRenderer implements GLEventListener {
 
     /**
      * The default implementation of the dispose method
-     * @param drawable
+     * @param drawable the OPENGL cancas
      */
     public void dispose(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
@@ -112,38 +114,7 @@ public abstract class AbstractRenderer implements GLEventListener {
                 camera.getV().x, camera.getV().y, camera.getV().z);
     }
 
-    public void drawCircle(GL2 gl, float cx, float cy, float r, int num_segments) {
-        float theta = (float) (2 * Math.PI / num_segments);
-        float c = (float) Math.cos(theta);//precalculate the sine and cosine
-        float s = (float) Math.sin(theta);
-        float t;
 
-        float x = r;//we start at angle = 0
-        float y = 0;
 
-        gl.glBegin(GL.GL_LINE_LOOP);
-        for(int ii = 0; ii < num_segments; ii++)
-        {
-            gl.glVertex2f(x + cx, y + cy);//output vertex
-
-            //apply the rotation matrix
-            t = x;
-            x = c * x - s * y;
-            y = s * t + c * y;
-        }
-        gl.glEnd();
-    }
-
-    public void drawEllipse(GL2 gl, double cx, double cy, double a, double b, int num_segments) {
-        gl.glBegin(GL_LINE_LOOP);
-        double DEG2RAD = (Math.PI/180) * num_segments / 360;
-
-        for (int i=0; i <=num_segments ; i++) {
-            double degInRad = i*DEG2RAD;
-            gl.glVertex2d(cx + Math.cos(degInRad) * a, cy + Math.sin(degInRad) * b);
-        }
-
-        gl.glEnd();
-    }
 
 }
