@@ -34,4 +34,6 @@ public class Camera extends Object3d {
         rotate(getU(), step);
     }
 
+
+
 }

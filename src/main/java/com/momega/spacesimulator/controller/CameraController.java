@@ -1,6 +1,7 @@
-package com.momega.spacesimulator.opengl;
+package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.opengl.AbstractController;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -27,15 +28,15 @@ public class CameraController extends AbstractController {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
-            case KeyEvent.VK_W: // quit
+            case KeyEvent.VK_W:
                 camera.move(velocity);
                 break;
 
-            case KeyEvent.VK_Q: // quit
+            case KeyEvent.VK_Q:
                 camera.twist(+0.5f);
                 break;
 
-            case KeyEvent.VK_E: // quit
+            case KeyEvent.VK_E:
                 camera.twist(-0.5f);
                 break;
 
@@ -43,7 +44,7 @@ public class CameraController extends AbstractController {
                 camera.move(-velocity);
                 break;
 
-            case KeyEvent.VK_O: // quit
+            case KeyEvent.VK_O:
                 camera.lookLeft(+0.5f);
                 break;
 

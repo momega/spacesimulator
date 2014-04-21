@@ -3,7 +3,7 @@ package com.momega.spacesimulator;
 import com.momega.spacesimulator.opengl.AbstractRenderer;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.EventBusController;
-import com.momega.spacesimulator.opengl.QuitController;
+import com.momega.spacesimulator.controller.QuitController;
 
 import javax.media.opengl.*;
 

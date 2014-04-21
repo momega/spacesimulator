@@ -1,5 +1,8 @@
 package com.momega.spacesimulator;
 
+import com.momega.spacesimulator.controller.CameraController;
+import com.momega.spacesimulator.controller.QuitController;
+import com.momega.spacesimulator.controller.SwitchCameraController;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.*;
 import com.momega.spacesimulator.renderer.PlanetRenderer;
@@ -27,21 +30,23 @@ public class Kepler extends AbstractRenderer {
     private static double MINOR_ERROR = Math.pow(10, -10);
     private float t = 0;
     private double a = 10;
-    private double b = 9;
-    private double ARGUMENT_OF_PERIAPSIS =  0* Math.PI / 180;
-    private double e = Math.sqrt(a*a - b*b);
-    private double epsilon = e / a;
-    private Camera camera = new Camera(new Vector3d(-a-e, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
-
-    private List<Planet> planets = new ArrayList<Planet>();
-    private List<PlanetRenderer> planetRenderers = new ArrayList<PlanetRenderer>();
+    private double ARGUMENT_OF_PERIAPSIS =  30 * Math.PI / 180;
+    private final List<Camera> cameras = new ArrayList<Camera>();
+    private Camera camera = new Camera(new Vector3d(-a, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
+    private int cameraIndex = 0;
+    private final List<Planet> planets = new ArrayList<Planet>();
+    private final List<PlanetRenderer> planetRenderers = new ArrayList<PlanetRenderer>();
 
     public void initModel() {
         Planet earth = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new StaticTrajectory(new Vector3d(0,0,0)), 23.5, 1, "earth.jpg");
-        Planet moon = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new KeplerianTrajectory2d(a, epsilon, ARGUMENT_OF_PERIAPSIS, PERIOD), 6.687, 0.3, "moon.jpg");
+        Planet moon = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new KeplerianTrajectory2d(a, 0.0549, ARGUMENT_OF_PERIAPSIS, PERIOD), 6.687, 0.3, "moon.jpg");
 
         planets.add(earth);
         planets.add(moon);
+
+        cameras.add(new Camera(new Vector3d(-a, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        cameras.add(new Camera(new Vector3d(0, 0, 15), new Vector3d(0, 0, -1), new Vector3d(0, 1, 0)));
+        camera.copyFrom(cameras.get(0));
 
         logger.info("model initialized");
     }
@@ -92,6 +97,7 @@ public class Kepler extends AbstractRenderer {
         model.initModel();
         controller.addController(new QuitController(window));
         controller.addController(new CameraController(model.getCamera(), 0.1f));
+        controller.addController(new SwitchCameraController(model));
         window.openWindow(model, controller);
     }
 
@@ -102,5 +108,13 @@ public class Kepler extends AbstractRenderer {
 
     public Camera getCamera() {
         return camera;
+    }
+
+    public void incCameraIndex() {
+        this.cameraIndex++;
+        if (this.cameraIndex>=cameras.size()) {
+            this.cameraIndex = 0;
+        }
+        this.camera.copyFrom(this.cameras.get(this.cameraIndex));
     }
 }

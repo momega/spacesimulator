@@ -30,7 +30,7 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
 
     @Override
     public void draw(GL2 gl) {
-        //gl.glPushMatrix();
+        gl.glPushMatrix();
         gl.glRotated(this.omega * 180/ Math.PI, 0, 0, 1);
         gl.glColor3d(1, 1, 1);
         Utils.drawEllipse(gl, -e, 0, a, b, 360);
@@ -47,6 +47,6 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
         gl.glVertex3d(-e, b, 0);
         gl.glEnd();
 
-       // gl.glPopMatrix();
+        gl.glPopMatrix();
     }
 }
