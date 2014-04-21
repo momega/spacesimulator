@@ -21,6 +21,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @deprecated
+ */
 public class MainRenderer implements GLEventListener {
     private GLU glu;  // for the GL Utility
     private GLUT glut;
@@ -288,17 +291,11 @@ public class MainRenderer implements GLEventListener {
             p.dispose(gl);
         }*/
         planets.clear();
-        logger.info("renderer disposed");
+
     }
 
     public void reset() {
         camera = new Camera(new Vector3d(0, 0, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1));
-
-        planets.add(new Planet(new Vector3d(30f, -50f, 0), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 15f, "mars.jpg"));
-        planets.add(new Planet(new Vector3d(40f, 0f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 20f, "earth.jpg"));
-        planets.add(new Planet(new Vector3d(-40f, -20f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 18f, "venus.jpg"));
-        planets.add(new Planet(new Vector3d(-100, -80f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 13f, "mercury.jpg"));
-        planets.add(new Planet(new Vector3d(0, 100f, 0f), new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), 30f, "jupiter.jpg"));
     }
 
     public void switchDiuffuse() {

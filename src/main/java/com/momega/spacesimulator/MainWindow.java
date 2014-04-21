@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author martin
+ * @deprecated
  */
 public class MainWindow extends DefaultWindow {
 

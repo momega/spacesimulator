@@ -5,8 +5,8 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.Vector3d;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
@@ -17,6 +17,7 @@ import java.io.InputStream;
 import static javax.media.opengl.GL.*;
 
 /**
+ * The class renders the planet. It contains data from {#link Planet} class and contains logic for rendering.
  * Created by martin on 4/19/14.
  */
 public class PlanetRenderer {
@@ -81,16 +82,24 @@ public class PlanetRenderer {
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
         glu.gluSphere(quadric, planet.getRadius(), 64, 64);
         glu.gluDeleteQuadric(quadric);
+        texture.disable(gl);
+
+        gl.glLineWidth(2.5f);
+        gl.glBegin(GL_LINES);
+        gl.glVertex3d(0, 0, planet.getRadius() * 2);
+        gl.glVertex3d(0, 0, -planet.getRadius() * 2);
+        gl.glEnd();
+
         gl.glPopAttrib();
         gl.glPopMatrix();
-        texture.disable(gl);
     }
 
     public void draw(GL2 gl) {
         gl.glPushMatrix();
         gl.glPushAttrib(GL2.GL_CURRENT_BIT);
         gl.glTranslated(planet.getPosition().x, planet.getPosition().y, planet.getPosition().z);
-        gl.glRotated(planet.getFi() * 180 / Math.PI, 0, 0, 1);
+        gl.glRotated(planet.getFi() * 180 / Math.PI, planet.getV().x, planet.getV().y, planet.getV().z);
+        gl.glRotated(planet.getAxialTilt(), planet.getU().x, planet.getU().y, planet.getU().z);
         gl.glCallList(this.listIndex);
         gl.glPopAttrib();
         gl.glPopMatrix();

@@ -2,6 +2,8 @@ package com.momega.spacesimulator.opengl;
 
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.momega.spacesimulator.model.Camera;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -11,6 +13,7 @@ import javax.media.opengl.glu.GLU;
 import java.awt.event.KeyEvent;
 
 import static javax.media.opengl.GL.GL_DEPTH_TEST;
+import static javax.media.opengl.GL.GL_LINE_LOOP;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 
@@ -19,19 +22,26 @@ import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
  */
 public abstract class AbstractRenderer implements GLEventListener {
 
+    private static final Logger logger = LoggerFactory.getLogger(AbstractRenderer.class);
+
     protected GLU glu;
     protected GLUT glut;
 
+    /**
+     * The default implementation of initializing of the renderer. It creates GLU and GLUT objects
+     * @param drawable
+     */
     public void init(GLAutoDrawable drawable) {
+        logger.info("Renderer initializing");
         GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
         glut = new GLUT();
         init(gl);
+        logger.info("Renderer initialized");
     }
 
     /*
      * The default display method.
-     * 2 torii.
      */
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
@@ -57,6 +67,7 @@ public abstract class AbstractRenderer implements GLEventListener {
     public void dispose(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         dispose(gl);
+        logger.info("renderer disposed");
     }
 
     protected void dispose(GL2 gl) {
@@ -68,6 +79,7 @@ public abstract class AbstractRenderer implements GLEventListener {
      * redraw the stencil area.
      */
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+        logger.info("reshape called {}x{}", width, height);
         GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
 
         if (height == 0) {
@@ -82,6 +94,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         glu.gluPerspective(45, aspect, 0.05, 1000);
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
+        logger.info("reshape called done");
     }
 
     /**
@@ -118,6 +131,18 @@ public abstract class AbstractRenderer implements GLEventListener {
             x = c * x - s * y;
             y = s * t + c * y;
         }
+        gl.glEnd();
+    }
+
+    public void drawEllipse(GL2 gl, double cx, double cy, double a, double b, int num_segments) {
+        gl.glBegin(GL_LINE_LOOP);
+        double DEG2RAD = (Math.PI/180) * num_segments / 360;
+
+        for (int i=0; i <=num_segments ; i++) {
+            double degInRad = i*DEG2RAD;
+            gl.glVertex2d(cx + Math.cos(degInRad) * a, cy + Math.sin(degInRad) * b);
+        }
+
         gl.glEnd();
     }
 
