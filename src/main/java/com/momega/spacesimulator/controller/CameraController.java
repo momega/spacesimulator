@@ -16,10 +16,10 @@ import java.awt.event.MouseEvent;
 public class CameraController extends AbstractController {
 
     private Camera camera;
-    private float velocity;
+    private double velocity;
     private static Point mouseLast;
 
-    public CameraController(Camera camera, float velocity) {
+    public CameraController(Camera camera, double velocity) {
         this.camera = camera;
         this.velocity = velocity;
     }

@@ -18,19 +18,19 @@ public class Camera extends Object3d {
         super(position, nVector, vVector);
     }
 
-    public void move(float step) {
+    public void move(double step) {
         moveN(step);
     }
 
-    public void twist(float step) {
+    public void twist(double step) {
         rotate(getN(), step);
     }
 
-    public void lookLeft(float step) {
+    public void lookLeft(double step) {
         rotate(new Vector3d(0,0,1), step);
     }
 
-    public void lookUp(float step) {
+    public void lookUp(double step) {
         rotate(getU(), step);
     }
 

@@ -8,6 +8,7 @@ import javax.media.opengl.GL2;
 import static javax.media.opengl.GL.GL_LINES;
 
 /**
+ * The renderer of keplerian trajectory 2d
  * Created by martin on 4/21/14.
  */
 public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
@@ -35,8 +36,8 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
         gl.glColor3d(1, 1, 1);
         Utils.drawEllipse(gl, -e, 0, a, b, 360);
 
-        gl.glLineWidth(2.5f);
-        gl.glColor3f(1.0f, 0.0f, 0.0f);
+        gl.glLineWidth(2f);
+        gl.glColor3d(1, 0, 0);
         gl.glBegin(GL_LINES);
         gl.glVertex3d(-a-e, 0 , 0);
         gl.glVertex3d(a-e, 0, 0);
