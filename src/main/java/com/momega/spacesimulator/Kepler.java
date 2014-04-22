@@ -5,12 +5,14 @@ import com.momega.spacesimulator.controller.QuitController;
 import com.momega.spacesimulator.controller.SwitchCameraController;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.*;
+import com.momega.spacesimulator.renderer.CameraPositionRenderer;
 import com.momega.spacesimulator.renderer.PlanetRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2ES1;
+import javax.media.opengl.GLAutoDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,7 @@ public class Kepler extends AbstractRenderer {
     private int cameraIndex = 0;
     private final List<Planet> planets = new ArrayList<Planet>();
     private final List<PlanetRenderer> planetRenderers = new ArrayList<PlanetRenderer>();
+    private CameraPositionRenderer cameraPositionRenderer = new CameraPositionRenderer(camera);
 
     public void initModel() {
         Planet earth = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new StaticTrajectory(new Vector3d(0,0,0)), 23.5, 6378, "earth.jpg");
@@ -68,6 +71,8 @@ public class Kepler extends AbstractRenderer {
             planetRenderers.add(pr);
         }
 
+        cameraPositionRenderer.init();
+
     }
 
     @Override
@@ -88,6 +93,11 @@ public class Kepler extends AbstractRenderer {
         for(PlanetRenderer pr : planetRenderers) {
             pr.draw(gl);
         }
+    }
+
+    @Override
+    protected void additionalDisplay(GLAutoDrawable drawable) {
+        cameraPositionRenderer.draw(drawable);
     }
 
     public static void main(String[] args) {

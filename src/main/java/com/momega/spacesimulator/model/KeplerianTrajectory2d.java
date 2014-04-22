@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The class computer keplerian trajector and object along the elipse. It computes only in 2D
+ * The class computer keplerian trajectory and object along the eclipse. It computes only in 2D
  * Created by martin on 4/21/14.
  */
 public class KeplerianTrajectory2d implements Trajectory {
@@ -12,18 +12,18 @@ public class KeplerianTrajectory2d implements Trajectory {
     private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectory2d.class);
 
     private final double semimajorAxis; // (a)
-    private final double eccentricity; // epsion
+    private final double eccentricity; // epsilon
     private final double period; // T
     private final double argumentOfPeriapsis; // lowercase omega
 
     private final double p; // semilatus rectum
 
     /**
-     * Constructs the keplerian trajector solver in 2D
+     * Constructs the keplerian trajectory solver in 2D
      * @param semimajorAxis the semimajor axis
-     * @param eccentricity numberic eccentricity
+     * @param eccentricity numeric eccentricity
      * @param period the orbital period
-     * @param argumentOfPeriapsis argument of peripsis
+     * @param argumentOfPeriapsis argument of periapsis
      */
     public KeplerianTrajectory2d(double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period) {
         this.semimajorAxis = semimajorAxis;

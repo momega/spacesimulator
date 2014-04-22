@@ -1,10 +1,7 @@
 package com.momega.spacesimulator.model;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * The class computer keplerian trajector and object along the elipse. It computes in 3D
+ * The class computer keplerian trajectory and object along the eclipse. It computes in 3D
  * Created by martin on 4/22/14.
  */
 public class KeplerianTrajectory3d extends KeplerianTrajectory2d {

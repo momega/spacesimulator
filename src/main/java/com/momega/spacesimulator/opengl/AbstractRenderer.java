@@ -52,8 +52,13 @@ public abstract class AbstractRenderer implements GLEventListener {
         setView();
 
         display(gl);
+        additionalDisplay(drawable);
 
         gl.glFlush();
+    }
+
+    protected void additionalDisplay(GLAutoDrawable drawable) {
+        // do nothing
     }
 
     public abstract void setView();
