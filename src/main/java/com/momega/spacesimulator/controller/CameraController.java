@@ -9,8 +9,8 @@ import java.awt.event.MouseEvent;
 
 /**
  * The controller handles moving camera.
- * Keys A,S,D,W,O,P,H,N,Q,E are registred for moving with the camera.
- * Also the controller supports mouse move supports.
+ * Keys A,S,D,W,O,P,H,N,Q,E are registered for moving with the camera.
+ * Also the controller supports mouse moves.
  * Created by martin on 4/19/14.
  */
 public class CameraController extends AbstractController {

@@ -28,7 +28,7 @@ public class Utils {
         float x = r;//we start at angle = 0
         float y = 0;
 
-        gl.glBegin(GL.GL_LINE_LOOP);
+        gl.glBegin(GL_LINE_LOOP);
         for(int ii = 0; ii < num_segments; ii++)
         {
             gl.glVertex2f(x + cx, y + cy);//output vertex
@@ -43,10 +43,10 @@ public class Utils {
 
     public static void drawEllipse(GL2 gl, double cx, double cy, double a, double b, int num_segments) {
         gl.glBegin(GL_LINE_LOOP);
-        double DEG2RAD = (Math.PI/180) * num_segments / 360;
+        double DEG2RAD = 2.0 * Math.PI / num_segments;
 
-        for (int i=0; i <=num_segments ; i++) {
-            double degInRad = i*DEG2RAD;
+        for (int i=0; i<=num_segments ; i++) {
+            double degInRad = DEG2RAD * i;
             gl.glVertex2d(cx + Math.cos(degInRad) * a, cy + Math.sin(degInRad) * b);
         }
 

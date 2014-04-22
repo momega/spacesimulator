@@ -5,7 +5,6 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.model.Vector3d;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLProfile;
@@ -17,7 +16,7 @@ import java.io.InputStream;
 import static javax.media.opengl.GL.*;
 
 /**
- * The class renders the planet. It contains data from {#link Planet} class and contains logic for rendering.
+ * The class renders the planet. It holds the {#link Planet} instance and contains logic for rendering.
  * Created by martin on 4/19/14.
  */
 public class PlanetRenderer {

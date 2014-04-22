@@ -25,7 +25,7 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
         gl.glRotated(this.inclination * 180/ Math.PI, 1, 0, 0);
         gl.glRotated(this.omega * 180/ Math.PI, 0, 0, 1);
         gl.glColor3d(0, 0, 1);
-        Utils.drawEllipse(gl, -e, 0, a, b, 3600);
+        Utils.drawEllipse(gl, -e, 0, a, b, 7200);
         gl.glPopMatrix();
     }
 }

@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.event.KeyEvent;
 
 /**
- * The controler handles the escape key to close the window
+ * The controller handles the escape key to close the window
  * Created by martin on 4/19/14.
  */
 public class QuitController extends AbstractController {

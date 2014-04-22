@@ -14,7 +14,7 @@ import static javax.media.opengl.GL.GL_LINES;
 public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
 
     private final KeplerianTrajectory2d trajectory;
-    private final double epsion;
+    private final double epsilon;
     protected final double omega;
     protected final double a;
     protected final double b;
@@ -22,10 +22,10 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
 
     public KeplerianTrajectory2dRenderer(KeplerianTrajectory2d trajectory) {
         this.trajectory = trajectory;
-        this.epsion = trajectory.getEccentricity();
+        this.epsilon = trajectory.getEccentricity();
         this.omega = trajectory.getArgumentOfPeriapsis();
         this.a = trajectory.getSemimajorAxis();
-        this.b = a * Math.sqrt(1 - epsion*epsion);
+        this.b = a * Math.sqrt(1 - epsilon*epsilon);
         this.e = Math.sqrt(a*a - b*b);
     }
 
@@ -34,7 +34,7 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
         gl.glPushMatrix();
         gl.glRotated(this.omega * 180/ Math.PI, 0, 0, 1);
         gl.glColor3d(1, 1, 1);
-        Utils.drawEllipse(gl, -e, 0, a, b, 3600);
+        Utils.drawEllipse(gl, -e, 0, a, b, 7200);
 
         gl.glLineWidth(2f);
         gl.glColor3d(1, 0, 0);

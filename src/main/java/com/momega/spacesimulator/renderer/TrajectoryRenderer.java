@@ -24,6 +24,6 @@ public abstract class TrajectoryRenderer {
             return new KeplerianTrajectory2dRenderer((KeplerianTrajectory2d)trajectory);
         }
 
-        throw new IllegalArgumentException("unable to handle tracjector");
+        throw new IllegalArgumentException("unable to handle trajectory");
     }
 }
