@@ -15,10 +15,10 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
 
     private final KeplerianTrajectory2d trajectory;
     private final double epsion;
-    private final double omega;
-    private final double a;
-    private final double b;
-    private final double e;
+    protected final double omega;
+    protected final double a;
+    protected final double b;
+    protected final double e;
 
     public KeplerianTrajectory2dRenderer(KeplerianTrajectory2d trajectory) {
         this.trajectory = trajectory;
@@ -34,7 +34,7 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
         gl.glPushMatrix();
         gl.glRotated(this.omega * 180/ Math.PI, 0, 0, 1);
         gl.glColor3d(1, 1, 1);
-        Utils.drawEllipse(gl, -e, 0, a, b, 360);
+        Utils.drawEllipse(gl, -e, 0, a, b, 3600);
 
         gl.glLineWidth(2f);
         gl.glColor3d(1, 0, 0);

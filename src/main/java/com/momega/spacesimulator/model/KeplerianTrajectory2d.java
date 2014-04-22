@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The class computer keplerian trajector and object along the elipse. It computer only in 2D
+ * The class computer keplerian trajector and object along the elipse. It computes only in 2D
  * Created by martin on 4/21/14.
  */
 public class KeplerianTrajectory2d implements Trajectory {
@@ -35,6 +35,19 @@ public class KeplerianTrajectory2d implements Trajectory {
 
     @Override
     public Vector3d computePosition(double t) {
+        double[] solution = solveKeplerian(t);
+        double r = solution[0];
+        double theta = solution[1];
+
+        double x = r * Math.cos(theta + argumentOfPeriapsis);
+        double y = r * Math.sin(theta + argumentOfPeriapsis);
+
+        logger.debug("r = {}, theta = {}", r, theta);
+
+        return new Vector3d(x, y, 0);
+    }
+
+    protected double[] solveKeplerian(double t) {
         double E = Math.PI; //  eccentric anomaly
         double M = 2 * Math.PI * t / period;   // mean anomaly
         M = normalAngle(M);
@@ -57,13 +70,8 @@ public class KeplerianTrajectory2d implements Trajectory {
         }
 
         double r = p / (1 + eccentricity * cosTheta);
-
-        double x = (r * Math.cos(theta + argumentOfPeriapsis));
-        double y = (r * Math.sin(theta + argumentOfPeriapsis));
-
         logger.debug("r = {}, theta = {}", r, theta);
-
-        return new Vector3d(x, y, 0);
+        return new double[] {r, theta};
     }
 
     public double normalAngle(double angle) {

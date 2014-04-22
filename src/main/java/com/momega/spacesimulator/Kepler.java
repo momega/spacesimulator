@@ -26,7 +26,7 @@ public class Kepler extends AbstractRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(Kepler.class);
 
-    private static float PERIOD = 2000f;
+    private static float PERIOD = 5000f;
     private static double MINOR_ERROR = Math.pow(10, -10);
     private float t = 0;
     private double a = 384399;
@@ -39,7 +39,7 @@ public class Kepler extends AbstractRenderer {
 
     public void initModel() {
         Planet earth = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new StaticTrajectory(new Vector3d(0,0,0)), 23.5, 6378, "earth.jpg");
-        Planet moon = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new KeplerianTrajectory2d(a, 0.0549, ARGUMENT_OF_PERIAPSIS, PERIOD), 6.687, 1737, "moon.jpg");
+        Planet moon = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new KeplerianTrajectory3d(a, 0.0549, ARGUMENT_OF_PERIAPSIS, PERIOD, 5.145 * Math.PI / 180d, 0d), 6.687, 1737, "moon.jpg");
 
         planets.add(earth);
         planets.add(moon);

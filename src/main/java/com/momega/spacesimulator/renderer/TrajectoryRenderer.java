@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.KeplerianTrajectory2d;
+import com.momega.spacesimulator.model.KeplerianTrajectory3d;
 import com.momega.spacesimulator.model.StaticTrajectory;
 import com.momega.spacesimulator.model.Trajectory;
 
@@ -17,6 +18,8 @@ public abstract class TrajectoryRenderer {
     public static TrajectoryRenderer createInstance(Trajectory trajectory) {
         if (trajectory instanceof StaticTrajectory) {
             return new StaticTrajectoryRenderer();
+        } else if (trajectory instanceof KeplerianTrajectory3d) {
+            return new KeplerianTrajectory3dRenderer((KeplerianTrajectory3d)trajectory);
         } else if (trajectory instanceof KeplerianTrajectory2d) {
             return new KeplerianTrajectory2dRenderer((KeplerianTrajectory2d)trajectory);
         }
