@@ -126,7 +126,7 @@ public class MainRenderer implements GLEventListener {
 
         //camera.setView(gl, glu);
 
-        gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPosition.toFloat(), 0);
+        //gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPosition.toFloat(), 0);
 
         if (fog) {
             gl.glEnable(GL_FOG);

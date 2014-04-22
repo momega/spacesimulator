@@ -75,7 +75,7 @@ public class PlanetRenderer {
         texture.enable(gl);
         texture.bind(gl);
         GLUquadric quadric = glu.gluNewQuadric();
-        gl.glColor3f(1f, 1f, 1f);
+        gl.glColor3d(1, 1, 1);
         glu.gluQuadricTexture(quadric, true);
         glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);

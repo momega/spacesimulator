@@ -22,6 +22,9 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
     public void draw(GL2 gl) {
         super.draw(gl);
         gl.glPushMatrix();
+        gl.glTranslated(this.getTrajectory().getCentralObject().getPosition().x,
+                this.getTrajectory().getCentralObject().getPosition().y,
+                this.getTrajectory().getCentralObject().getPosition().z);
         gl.glRotated(this.inclination * 180/ Math.PI, 1, 0, 0);
         gl.glRotated(this.omega * 180/ Math.PI, 0, 0, 1);
         gl.glColor3d(0, 0, 1);

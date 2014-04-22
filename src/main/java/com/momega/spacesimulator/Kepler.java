@@ -2,7 +2,6 @@ package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.controller.CameraController;
 import com.momega.spacesimulator.controller.QuitController;
-import com.momega.spacesimulator.controller.SwitchCameraController;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.*;
 import com.momega.spacesimulator.renderer.CameraPositionRenderer;
@@ -10,6 +9,7 @@ import com.momega.spacesimulator.renderer.PlanetRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL2ES1;
 import javax.media.opengl.GLAutoDrawable;
@@ -28,28 +28,24 @@ public class Kepler extends AbstractRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(Kepler.class);
 
-    private static float PERIOD = 5000f;
-    private static double MINOR_ERROR = Math.pow(10, -10);
-    private float t = 0;
-    private double a = 384399;
-    private double ARGUMENT_OF_PERIAPSIS =  0 * Math.PI / 180;
-    private final List<Camera> cameras = new ArrayList<Camera>();
-    private Camera camera = new Camera(new Vector3d(-a, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
-    private int cameraIndex = 0;
+    private static double PERIOD = 20000.0;
+    private double t = 0;
+    private Camera camera = new Camera(new Vector3d(0, 0, 170696d), new Vector3d(0, 0, -1), new Vector3d(0, 1, 0));
     private final List<Planet> planets = new ArrayList<Planet>();
     private final List<PlanetRenderer> planetRenderers = new ArrayList<PlanetRenderer>();
     private CameraPositionRenderer cameraPositionRenderer = new CameraPositionRenderer(camera);
 
     public void initModel() {
-        Planet earth = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new StaticTrajectory(new Vector3d(0,0,0)), 23.5, 6378, "earth.jpg");
-        Planet moon = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1), new KeplerianTrajectory3d(a, 0.0549, ARGUMENT_OF_PERIAPSIS, PERIOD, 5.145 * Math.PI / 180d, 0d), 6.687, 1737, "moon.jpg");
+        Planet sun = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
+                new StaticTrajectory(new Vector3d(0,0,0)), 0, 696.342 * 10, "sun.jpg");
+        Planet earth = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
+                new KeplerianTrajectory3d(sun, 149598.261d, 0.01671123, 0 * Math.PI / 180, PERIOD * 12, 1.57869 * Math.PI / 180d, 0d), 23.5, 6.378 * 10, "earth.jpg");
+        Planet moon = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
+                new KeplerianTrajectory3d(earth, 384.399, 0.0549, 0d, PERIOD, 5.145 * Math.PI / 180d, 0d), 6.687, 1.737 * 10, "moon.jpg");
 
+        planets.add(sun);
         planets.add(earth);
         planets.add(moon);
-
-        cameras.add(new Camera(new Vector3d(-a, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
-        cameras.add(new Camera(new Vector3d(0, 0, a), new Vector3d(0, 0, -1), new Vector3d(0, 1, 0)));
-        camera.copyFrom(cameras.get(0));
 
         logger.info("model initialized");
     }
@@ -59,10 +55,11 @@ public class Kepler extends AbstractRenderer {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
         gl.glClearDepth(1.0f);      // set clear depth value to farthest
 
-        gl.glDepthFunc(GL_LEQUAL);  // the type of depth test to do
+        //gl.glDepthFunc(GL_LEQUAL);  // the type of depth test to do
         gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
 
+        gl.glDepthFunc(GL.GL_LESS);
         gl.glEnable(GL_DEPTH_TEST); // for textures
 
         for(Planet p : planets) {
@@ -107,7 +104,6 @@ public class Kepler extends AbstractRenderer {
         model.initModel();
         controller.addController(new QuitController(window));
         controller.addController(new CameraController(model.getCamera(), 1000));
-        controller.addController(new SwitchCameraController(model));
         window.openWindow(model, controller);
     }
 
@@ -120,11 +116,4 @@ public class Kepler extends AbstractRenderer {
         return camera;
     }
 
-    public void incCameraIndex() {
-        this.cameraIndex++;
-        if (this.cameraIndex>=cameras.size()) {
-            this.cameraIndex = 0;
-        }
-        this.camera.copyFrom(this.cameras.get(this.cameraIndex));
-    }
 }

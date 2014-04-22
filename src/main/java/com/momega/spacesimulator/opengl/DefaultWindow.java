@@ -18,8 +18,8 @@ import java.awt.event.WindowEvent;
  */
 public class DefaultWindow {
 
-    private static final int WINDOW_WIDTH = 800;  // width of the drawable
-    private static final int WINDOW_HEIGHT = 600; // height of the drawable
+    private static final int WINDOW_WIDTH = 1024;  // width of the drawable
+    private static final int WINDOW_HEIGHT = 768; // height of the drawable
     private static final int FPS = 60; // animator's target frames per second
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultWindow.class);

@@ -11,6 +11,9 @@ public class KeplerianTrajectory2d implements Trajectory {
 
     private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectory2d.class);
 
+    private static double MINOR_ERROR = Math.pow(10, -10);
+
+    private final Planet centralObject;
     private final double semimajorAxis; // (a)
     private final double eccentricity; // epsilon
     private final double period; // T
@@ -25,7 +28,8 @@ public class KeplerianTrajectory2d implements Trajectory {
      * @param period the orbital period
      * @param argumentOfPeriapsis argument of periapsis
      */
-    public KeplerianTrajectory2d(double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period) {
+    public KeplerianTrajectory2d(Planet centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period) {
+        this.centralObject = centralObject;
         this.semimajorAxis = semimajorAxis;
         this.eccentricity = eccentricity;
         this.argumentOfPeriapsis = argumentOfPeriapsis;
@@ -39,8 +43,8 @@ public class KeplerianTrajectory2d implements Trajectory {
         double r = solution[0];
         double theta = solution[1];
 
-        double x = r * Math.cos(theta + argumentOfPeriapsis);
-        double y = r * Math.sin(theta + argumentOfPeriapsis);
+        double x = centralObject.getPosition().x + r * Math.cos(theta + argumentOfPeriapsis);
+        double y = centralObject.getPosition().y + r * Math.sin(theta + argumentOfPeriapsis);
 
         logger.debug("r = {}, theta = {}", r, theta);
 
@@ -54,14 +58,14 @@ public class KeplerianTrajectory2d implements Trajectory {
 
         double F = E - eccentricity * Math.sin(M) - M;
         for(int i=0; i<50; i++) {
-            E = E - F / (1.0f - eccentricity * Math.cos(E));
+            E = E - F / (1.0 - eccentricity * Math.cos(E));
             F = E - eccentricity * Math.sin(E) - M;
 //            if (F<MINOR_ERROR) {
 //                break;
 //            }
         }
 
-        double cosTheta = (Math.cos(E) - eccentricity) / ( 1 - eccentricity * Math.cos(E));
+        double cosTheta = (Math.cos(E) - eccentricity) / ( 1.0 - eccentricity * Math.cos(E));
         double theta;
         if (E < Math.PI) {
             theta = Math.acos(cosTheta);
@@ -90,5 +94,9 @@ public class KeplerianTrajectory2d implements Trajectory {
 
     public double getArgumentOfPeriapsis() {
         return this.argumentOfPeriapsis;
+    }
+
+    public Planet getCentralObject() {
+        return centralObject;
     }
 }

@@ -100,10 +100,6 @@ public class Vector3d {
         return new Vector3d(-x, -y, -z);
     }
 
-    public float[] toFloat() {
-        return new float[] {(float)x, (float)y, (float)z, 1.0f};
-    }
-
     public Vector3d normalize() {
         double len = length();
         if (Math.abs(len) < SMALL_EPSILON) throw new java.lang.Error();

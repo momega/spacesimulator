@@ -9,8 +9,8 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
     private double inclination; // i
     private double ascendingNode; // uppercase omega
 
-    public KeplerianTrajectory3d(double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double inclination, double ascendingNode) {
-        super(semimajorAxis, eccentricity, argumentOfPeriapsis, period);
+    public KeplerianTrajectory3d(Planet centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double inclination, double ascendingNode) {
+        super(centralObject, semimajorAxis, eccentricity, argumentOfPeriapsis, period);
         this.inclination = inclination;
         this.ascendingNode = ascendingNode;
     }
@@ -29,9 +29,9 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
         double r = solution[0];
         double theta = solution[1];
 
-        double x = r * (Math.cos(theta + getArgumentOfPeriapsis()) * Math.cos(ascendingNode) - Math.cos(inclination) * Math.sin(theta + getArgumentOfPeriapsis()) * Math.sin(ascendingNode));
-        double y = r * (Math.sin(theta + getArgumentOfPeriapsis()) * Math.sin(ascendingNode) + Math.cos(inclination) * Math.sin(theta + getArgumentOfPeriapsis()) * Math.cos(ascendingNode));
-        double z = r * (Math.sin(theta + getArgumentOfPeriapsis()) * Math.sin(inclination));
+        double x = getCentralObject().getPosition().x + r * (Math.cos(theta + getArgumentOfPeriapsis()) * Math.cos(ascendingNode) - Math.cos(inclination) * Math.sin(theta + getArgumentOfPeriapsis()) * Math.sin(ascendingNode));
+        double y = getCentralObject().getPosition().y + r * (Math.sin(theta + getArgumentOfPeriapsis()) * Math.sin(ascendingNode) + Math.cos(inclination) * Math.sin(theta + getArgumentOfPeriapsis()) * Math.cos(ascendingNode));
+        double z = getCentralObject().getPosition().z + r * (Math.sin(theta + getArgumentOfPeriapsis()) * Math.sin(inclination));
 
         return new Vector3d(x, y, z);
     }

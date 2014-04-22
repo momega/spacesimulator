@@ -5,7 +5,6 @@ import com.momega.spacesimulator.model.Camera;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
@@ -92,13 +91,13 @@ public abstract class AbstractRenderer implements GLEventListener {
         if (height == 0) {
             height = 1;   // prevent divide by zero
         }
-        float aspect = (float) width / height;
+        double aspect = (double) width / height;
 
         // Set the view port (display area) to cover the entire window
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
         gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 0.5, 10000000);
+        glu.gluPerspective(45, aspect, 100, 20959861);
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");
