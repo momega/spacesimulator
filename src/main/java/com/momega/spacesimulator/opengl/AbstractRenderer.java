@@ -97,7 +97,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
         gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 100, 20959861);
+        glu.gluPerspective(45, aspect, 1, 20000000);
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");

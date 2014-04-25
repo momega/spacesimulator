@@ -32,7 +32,7 @@ public class KeplerianTrajectory2d implements Trajectory {
         this.centralObject = centralObject;
         this.semimajorAxis = semimajorAxis;
         this.eccentricity = eccentricity;
-        this.argumentOfPeriapsis = argumentOfPeriapsis;
+        this.argumentOfPeriapsis = argumentOfPeriapsis * Math.PI / 180;
         this.period = period;
         this.p = semimajorAxis* (1 - eccentricity* eccentricity);
     }

@@ -12,6 +12,7 @@ public class Planet extends Object3d {
     private double radius;
     private double axialTilt;  // axial tilt of the planet
     private String textureFileName;
+    private double[] trajectoryColor;
     private Trajectory trajectory; // planets trajector
 
     /**
@@ -20,16 +21,17 @@ public class Planet extends Object3d {
      * @param vVector The "up" direction for the camera
      * @param trajectory planets trajectory
      * @param axialTilt axial tilt of the planet
-     * @param textureFileName the name of the texture file name
      * @param radius the radius of the planet
+     * @param textureFileName the name of the texture file name
+     * @param trajectoryColor the color of trajectory
      */
-    public Planet(Vector3d nVector, Vector3d vVector, Trajectory trajectory, double axialTilt, double radius, String textureFileName) {
+    public Planet(Vector3d nVector, Vector3d vVector, Trajectory trajectory, double axialTilt, double radius, String textureFileName, double[] trajectoryColor) {
         super(trajectory.computePosition(0), nVector, vVector);
         this.trajectory = trajectory;
         this.axialTilt = axialTilt;
         this.radius = radius;
         this.textureFileName = textureFileName;
-
+        this.trajectoryColor = trajectoryColor;
         rotate(getU(), axialTilt);
     }
 
@@ -67,5 +69,9 @@ public class Planet extends Object3d {
 
     public Trajectory getTrajectory() {
         return this.trajectory;
+    }
+
+    public double[] getTrajectoryColor() {
+        return trajectoryColor;
     }
 }

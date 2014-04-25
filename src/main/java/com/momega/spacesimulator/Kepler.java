@@ -6,6 +6,7 @@ import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.*;
 import com.momega.spacesimulator.renderer.CameraPositionRenderer;
 import com.momega.spacesimulator.renderer.PlanetRenderer;
+import com.momega.spacesimulator.renderer.TrajectoryRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,24 +29,48 @@ public class Kepler extends AbstractRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(Kepler.class);
 
-    private static double PERIOD = 20000.0;
+    private static double PERIOD = 2000000.0;
     private double t = 0;
-    private Camera camera = new Camera(new Vector3d(0, 0, 170696d), new Vector3d(0, 0, -1), new Vector3d(0, 1, 0));
+    private final Camera camera = new Camera(new Vector3d(147800d, 0, 0), new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1));
     private final List<Planet> planets = new ArrayList<Planet>();
     private final List<PlanetRenderer> planetRenderers = new ArrayList<PlanetRenderer>();
-    private CameraPositionRenderer cameraPositionRenderer = new CameraPositionRenderer(camera);
+    private final CameraPositionRenderer cameraPositionRenderer = new CameraPositionRenderer(camera);
 
     public void initModel() {
         Planet sun = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
-                new StaticTrajectory(new Vector3d(0,0,0)), 0, 696.342 * 10, "sun.jpg");
+                new StaticTrajectory(new Vector3d(0,0,0)), 0, 696.342, "sun.jpg", new double[] {1,1,0});
+
         Planet earth = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
-                new KeplerianTrajectory3d(sun, 149598.261d, 0.01671123, 0 * Math.PI / 180, PERIOD * 12, 1.57869 * Math.PI / 180d, 0d), 23.5, 6.378 * 10, "earth.jpg");
+                new KeplerianTrajectory3d(sun, 149598.261d,
+                                                0.01671123,
+                                                0,
+                                                PERIOD * 12,
+                                                1.57869 ,
+                                                0d), 23.5, 6.378, "earth.jpg", new double[] {0,0.5,1}
+        );
+
         Planet moon = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
-                new KeplerianTrajectory3d(earth, 384.399, 0.0549, 0d, PERIOD, 5.145 * Math.PI / 180d, 0d), 6.687, 1.737 * 10, "moon.jpg");
+                new KeplerianTrajectory3d(earth, 384.399,
+                                                0.05490,
+                                                    84.7609,
+                                                    PERIOD,
+                                                  5.145,
+                        208.1199), 6.687, 1.737, "moon.jpg", new double[] {0.75,0.75,0.75}
+        );
+
+        Planet mars = new Planet(new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
+                new KeplerianTrajectory3d(sun, 227939.1d,
+                        0.093315,
+                        286.537,
+                        PERIOD * 12 * 1.88,
+                        1.84844 ,
+                        49.5147), 25.19, 3.389, "mars.jpg", new double[] {1,0,0}
+        );
 
         planets.add(sun);
         planets.add(earth);
         planets.add(moon);
+        planets.add(mars);
 
         logger.info("model initialized");
     }
@@ -83,7 +108,7 @@ public class Kepler extends AbstractRenderer {
     protected void display(GL2 gl) {
         for(Planet p : planets) {
             p.move(t);
-            p.rotate(0.01);
+            p.rotate(0.001);
         }
         t++;
 
@@ -103,7 +128,7 @@ public class Kepler extends AbstractRenderer {
         Kepler model = new Kepler();
         model.initModel();
         controller.addController(new QuitController(window));
-        controller.addController(new CameraController(model.getCamera(), 1000));
+        controller.addController(new CameraController(model.getCamera(), 100));
         window.openWindow(model, controller);
     }
 

@@ -14,16 +14,18 @@ import static javax.media.opengl.GL.GL_LINES;
 public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
 
     private final KeplerianTrajectory2d trajectory;
+    private final double[] color;
     private final double epsilon;
-    protected final double omega;
+    protected final double argumentOfPeriapsis;
     protected final double a;
     protected final double b;
     protected final double e;
 
-    public KeplerianTrajectory2dRenderer(KeplerianTrajectory2d trajectory) {
+    public KeplerianTrajectory2dRenderer(KeplerianTrajectory2d trajectory, double[] color) {
         this.trajectory = trajectory;
+        this.color = color;
         this.epsilon = trajectory.getEccentricity();
-        this.omega = trajectory.getArgumentOfPeriapsis();
+        this.argumentOfPeriapsis = trajectory.getArgumentOfPeriapsis();
         this.a = trajectory.getSemimajorAxis();
         this.b = a * Math.sqrt(1 - epsilon*epsilon);
         this.e = Math.sqrt(a*a - b*b);
@@ -53,5 +55,9 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
 
     public KeplerianTrajectory2d getTrajectory() {
         return trajectory;
+    }
+
+    public double[] getColor() {
+        return color;
     }
 }

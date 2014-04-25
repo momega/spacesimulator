@@ -28,7 +28,7 @@ public class PlanetRenderer {
 
     public PlanetRenderer(Planet planet) {
         this.planet = planet;
-        this.trajectoryRenderer = TrajectoryRenderer.createInstance(planet.getTrajectory());
+        this.trajectoryRenderer = TrajectoryRenderer.createInstance(planet);
     }
 
     public void loadTexture(GL2 gl) {
@@ -94,7 +94,7 @@ public class PlanetRenderer {
         gl.glPushMatrix();
         gl.glTranslated(planet.getPosition().x, planet.getPosition().y, planet.getPosition().z);
         gl.glRotated(planet.getFi() * 180 / Math.PI, planet.getV().x, planet.getV().y, planet.getV().z);
-        gl.glRotated(planet.getAxialTilt(), planet.getU().x, planet.getU().y, planet.getU().z);
+        gl.glRotated(-planet.getAxialTilt(), planet.getU().x, planet.getU().y, planet.getU().z);
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();
 
