@@ -26,6 +26,7 @@ public class CameraPositionRenderer {
         textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
         // optionally set the color
         textRenderer.setColor(1, 1, 1, 1);
+        textRenderer.draw("Velocity:" + camera.getVelocity(), 10, 70);
         textRenderer.draw("Position:" + camera.getPosition().toString(), 10, 40);
         textRenderer.draw("N:" + camera.getN().toString(), 10, 10);
         textRenderer.draw("U:" + camera.getU().toString(), 400, 40);

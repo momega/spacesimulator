@@ -158,11 +158,4 @@ public class Object3d {
         return ret;
     }
 
-    public void copyFrom(Camera from) {
-        position.copyFrom(from.getPosition());
-        nVector.copyFrom(from.getN());
-        vVector.copyFrom(from.getV());
-        uVector.copyFrom(from.getU());
-    }
-
 }

@@ -145,10 +145,4 @@ public class Vector3d {
         return result;
     }
 
-    public void copyFrom(Vector3d from) {
-        this.x = from.x;
-        this.y = from.y;
-        this.z = from.z;
-    }
-
 }

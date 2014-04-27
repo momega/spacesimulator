@@ -16,12 +16,10 @@ import java.awt.event.MouseEvent;
 public class CameraController extends AbstractController {
 
     private Camera camera;
-    private double velocity;
     private static Point mouseLast;
 
-    public CameraController(Camera camera, double velocity) {
+    public CameraController(Camera camera) {
         this.camera = camera;
-        this.velocity = velocity;
     }
 
     @Override
@@ -29,7 +27,7 @@ public class CameraController extends AbstractController {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_W:
-                camera.move(velocity);
+                camera.moveByVelocity(+1);
                 break;
 
             case KeyEvent.VK_Q:
@@ -41,7 +39,7 @@ public class CameraController extends AbstractController {
                 break;
 
             case KeyEvent.VK_S:
-                camera.move(-velocity);
+                camera.moveByVelocity(-1);
                 break;
 
             case KeyEvent.VK_O:

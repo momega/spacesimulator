@@ -36,16 +36,16 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
         gl.glColor3dv(getColor(), 0);
         Utils.drawEllipse(gl, -e, 0, a, b, 7200);
 
-        gl.glLineWidth(2f);
-        gl.glBegin(GL2.GL_LINES);
-        gl.glVertex3d(-a-e, 0 , 0);
-        gl.glVertex3d(a-e, 0, 0);
-        gl.glEnd();
-
-        gl.glBegin(GL2.GL_LINES);
-        gl.glVertex3d(-e, -b, 0);
-        gl.glVertex3d(-e, b, 0);
-        gl.glEnd();
+//        gl.glLineWidth(2f);
+//        gl.glBegin(GL2.GL_LINES);
+//        gl.glVertex3d(-a-e, 0 , 0);
+//        gl.glVertex3d(a-e, 0, 0);
+//        gl.glEnd();
+//
+//        gl.glBegin(GL2.GL_LINES);
+//        gl.glVertex3d(-e, -b, 0);
+//        gl.glVertex3d(-e, b, 0);
+//        gl.glEnd();
 
         gl.glPopMatrix();
     }
