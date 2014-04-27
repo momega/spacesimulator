@@ -6,35 +6,27 @@ package com.momega.spacesimulator.model;
  *
  * Created by martin on 4/15/14.
  */
-public class Planet extends Object3d {
+public class Planet extends DynamicalPoint {
 
     private double fi = 0;
     private double radius;
     private double axialTilt;  // axial tilt of the planet
     private String textureFileName;
-    private double[] trajectoryColor;
-    private final String name;
-    private Trajectory trajectory; // planets trajector
 
     /**
-     Constructs a new camera.
-     * @param nVector The direction the camera is looking
-     * @param vVector The "up" direction for the camera
+     Constructs a new planet.
      * @param trajectory planets trajectory
      * @param axialTilt axial tilt of the planet
      * @param radius the radius of the planet
      * @param textureFileName the name of the texture file name
      * @param trajectoryColor the color of trajectory
      */
-    public Planet(String name, Vector3d nVector, Vector3d vVector, Trajectory trajectory, double axialTilt, double radius, String textureFileName, double[] trajectoryColor) {
-        super(trajectory.computePosition(0), nVector, vVector);
-        this.name = name;
-        this.trajectory = trajectory;
+    public Planet(String name, Trajectory trajectory, double axialTilt, double radius, String textureFileName, double[] trajectoryColor) {
+        super(name, trajectory, trajectoryColor);
         this.axialTilt = axialTilt;
         this.radius = radius;
         this.textureFileName = textureFileName;
-        this.trajectoryColor = trajectoryColor;
-        rotate(getU(), axialTilt);
+        getObject().rotate(getObject().getV(), axialTilt);
     }
 
     /**
@@ -61,23 +53,4 @@ public class Planet extends Object3d {
         return this.axialTilt;
     }
 
-    /**
-     * Computers the planet position along the defined trajectory in the given time t
-     * @param t time
-     */
-    public void move(double t) {
-        this.position = trajectory.computePosition(t);
-    }
-
-    public Trajectory getTrajectory() {
-        return this.trajectory;
-    }
-
-    public double[] getTrajectoryColor() {
-        return trajectoryColor;
-    }
-
-    public String getName() {
-        return name;
-    }
 }

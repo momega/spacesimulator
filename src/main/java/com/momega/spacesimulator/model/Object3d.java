@@ -8,12 +8,12 @@ package com.momega.spacesimulator.model;
  */
 public class Object3d {
 
-    final public static double EPSILON = 0.0001;
+    public final static double EPSILON = 0.0001;
 
-    protected Vector3d position;
-    protected Vector3d nVector;
-    protected Vector3d uVector;
-    protected Vector3d vVector;
+    private Vector3d position;
+    private Vector3d nVector;
+    private Vector3d uVector;
+    private Vector3d vVector;
 
     //################## CONSTRUCTORS ##################//
     /**
@@ -74,6 +74,10 @@ public class Object3d {
     public Vector3d getV()
     {
         return vVector;
+    }
+
+    public void setPosition(Vector3d position) {
+        this.position = position;
     }
 
     /**
@@ -147,13 +151,13 @@ public class Object3d {
         // Main algorithm
         double radianAngle = degreeAngle*Math.PI/180.0;
         double cosAngle = Math.cos(radianAngle), sinAngle = Math.sin(radianAngle);
-        Vector3d aCROSSv = axis.cross(v);
+        Vector3d cross = axis.cross(v);
 
         // ret = v cos radianAngle + (axis x v) sin radianAngle + axis(axis . v)(1 - cos radianAngle)
         // (See Mathematics for 3D Game Programming and Computer Graphics, P.62, for details of why this is (it's not very hard)).
         Vector3d ret = v.clone();
         ret.scale(cosAngle);
-        ret = Vector3d.scaleAdd(sinAngle, aCROSSv, ret);
+        ret = Vector3d.scaleAdd(sinAngle, cross, ret);
         ret = Vector3d.scaleAdd(axis.dot(v) * (1 - cosAngle), axis, ret);
         return ret;
     }

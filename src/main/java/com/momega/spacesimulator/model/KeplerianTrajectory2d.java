@@ -13,7 +13,7 @@ public class KeplerianTrajectory2d implements Trajectory {
 
     private static double MINOR_ERROR = Math.pow(10, -10);
 
-    private final Planet centralObject;
+    private final DynamicalPoint centralObject;
     private final double semimajorAxis; // (a)
     private final double eccentricity; // epsilon
     private final double period; // T
@@ -28,7 +28,7 @@ public class KeplerianTrajectory2d implements Trajectory {
      * @param period the orbital period
      * @param argumentOfPeriapsis argument of periapsis
      */
-    public KeplerianTrajectory2d(Planet centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period) {
+    public KeplerianTrajectory2d(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period) {
         this.centralObject = centralObject;
         this.semimajorAxis = semimajorAxis;
         this.eccentricity = eccentricity;
@@ -96,7 +96,7 @@ public class KeplerianTrajectory2d implements Trajectory {
         return this.argumentOfPeriapsis;
     }
 
-    public Planet getCentralObject() {
+    public DynamicalPoint getCentralObject() {
         return centralObject;
     }
 }

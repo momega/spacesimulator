@@ -6,6 +6,8 @@ import com.momega.spacesimulator.controller.QuitController;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.*;
 import com.momega.spacesimulator.renderer.CameraPositionRenderer;
+import com.momega.spacesimulator.renderer.DynamicalPointRenderer;
+import com.momega.spacesimulator.renderer.ObjectRenderer;
 import com.momega.spacesimulator.renderer.PlanetRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,35 +32,45 @@ public class Kepler extends AbstractRenderer {
     private static final Logger logger = LoggerFactory.getLogger(Kepler.class);
 
     private double t = 0;
-    private final Camera camera = new Camera(new Vector3d(147800d, 0, 0), new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1), 10);
-    private final List<Planet> planets = new ArrayList<>();
-    private final List<PlanetRenderer> planetRenderers = new ArrayList<>();
+    private final Camera camera = new Camera(new Vector3d(-147800d, 0, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1), 10);
+    private final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
+    private final List<ObjectRenderer> objectRenderers = new ArrayList<>();
     private final CameraPositionRenderer cameraPositionRenderer = new CameraPositionRenderer(camera);
 
     public void initModel() {
-        Planet sun = new Planet("Sun", new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
+        Planet sun = new Planet("Sun",
                 new StaticTrajectory(new Vector3d(0,0,0)), 0, 696.342, "sun.jpg", new double[] {1,1,0});
 
         double PERIOD = 2000000.0;
-        Planet earth = new Planet("Earth", new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
+
+        DynamicalPoint earthMoonBarycenter = new DynamicalPoint("Earth-Moon Barycenter",
                 new KeplerianTrajectory3d(sun, 149598.261d,
-                                                0.01671123,
-                                                0,
-                                                PERIOD * 12,
-                                                1.57869 ,
-                                                0d), 23.5, 6.378, "earth.jpg", new double[] {0,0.5,1}
+                        0.0166739,
+                        0,
+                        PERIOD * 12,
+                        0d ,
+                        175.395d), new double[] {0,0.5,1}
         );
 
-        Planet moon = new Planet("Moon", new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
-                new KeplerianTrajectory3d(earth, 384.399,
-                                                0.05490,
-                                                    84.7609,
-                        PERIOD,
-                                                  5.145,
+        Planet earth = new Planet("Earth",
+                new KeplerianTrajectory3d(earthMoonBarycenter, 4.686955382086d,
+                                                0.055557,
+                                                264.7609,
+                                                PERIOD / 100,
+                                                5.241500 ,
+                                                208.1199), 23.5, 6.378, "earth.jpg", new double[] {0,0.5,1}
+        );
+
+        Planet moon = new Planet("Moon",
+                new KeplerianTrajectory3d(earthMoonBarycenter, 384.399,
+                        0.055557,
+                        84.7609,
+                        PERIOD /100,
+                        5.241500,
                         208.1199), 6.687, 1.737, "moon.jpg", new double[] {0.75,0.75,0.75}
         );
 
-        Planet mars = new Planet("Mars", new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
+        Planet mars = new Planet("Mars",
                 new KeplerianTrajectory3d(sun, 227939.1d,
                         0.093315,
                         286.537,
@@ -67,7 +79,7 @@ public class Kepler extends AbstractRenderer {
                         49.5147), 25.19, 3.389, "mars.jpg", new double[] {1,0,0}
         );
 
-        Planet venus = new Planet("Venus", new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
+        Planet venus = new Planet("Venus",
                 new KeplerianTrajectory3d(sun, 108208d,
                         0.0067,
                         55.186,
@@ -76,7 +88,7 @@ public class Kepler extends AbstractRenderer {
                         76.6408), 177.36, 6.0518, "venus.jpg", new double[] {1,1,0}
         );
 
-        Planet mercury = new Planet("Mercury", new Vector3d(1, 1, 0), new Vector3d(0, 0, 1),
+        Planet mercury = new Planet("Mercury",
                 new KeplerianTrajectory3d(sun, 57909.05d,
                         0.20563,
                         29.124,
@@ -85,12 +97,13 @@ public class Kepler extends AbstractRenderer {
                         48.313), 2.11/60d, 2.4397, "mercury.jpg", new double[] {0.2,0.2,0.2}
         );
 
-        planets.add(sun);
-        planets.add(earth);
-        planets.add(moon);
-        planets.add(mars);
-        planets.add(venus);
-        planets.add(mercury);
+        dynamicalPoints.add(sun);
+        dynamicalPoints.add(earthMoonBarycenter);
+        dynamicalPoints.add(earth);
+        dynamicalPoints.add(moon);
+        dynamicalPoints.add(mars);
+        dynamicalPoints.add(venus);
+        dynamicalPoints.add(mercury);
 
         logger.info("model initialized");
     }
@@ -107,10 +120,15 @@ public class Kepler extends AbstractRenderer {
         gl.glDepthFunc(GL.GL_LESS);
         gl.glEnable(GL_DEPTH_TEST); // for textures
 
-        for(Planet p : planets) {
-            PlanetRenderer pr = new PlanetRenderer(p, camera);
-            pr.init(gl, glu);
-            planetRenderers.add(pr);
+        for(DynamicalPoint dp : dynamicalPoints) {
+            DynamicalPointRenderer dpr;
+            if (dp instanceof  Planet) {
+                dpr = new PlanetRenderer((Planet) dp, camera);
+            } else {
+                dpr = new DynamicalPointRenderer(dp, camera);
+            }
+            dpr.init(gl);
+            objectRenderers.add(dpr);
         }
 
         cameraPositionRenderer.init();
@@ -118,20 +136,20 @@ public class Kepler extends AbstractRenderer {
 
     @Override
     public void dispose(GL2 gl) {
-        for(PlanetRenderer pr : planetRenderers) {
+        for(ObjectRenderer pr : objectRenderers) {
             pr.dispose(gl);
         }
     }
 
     @Override
     protected void display(GL2 gl) {
-        for(Planet p : planets) {
+        for(DynamicalPoint p : dynamicalPoints) {
             p.move(t);
-            p.rotate(0.001);
+            //p.rotate(0.01);
         }
         t++;
 
-        for(PlanetRenderer pr : planetRenderers) {
+        for(ObjectRenderer pr : objectRenderers) {
             pr.draw(gl);
         }
     }

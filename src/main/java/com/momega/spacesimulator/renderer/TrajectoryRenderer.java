@@ -12,14 +12,14 @@ public abstract class TrajectoryRenderer {
 
     public abstract void draw(GL2 gl);
 
-    public static TrajectoryRenderer createInstance(Planet planet) {
-        Trajectory trajectory = planet.getTrajectory();
+    public static TrajectoryRenderer createInstance(DynamicalPoint dynamicalPoint) {
+        Trajectory trajectory = dynamicalPoint.getTrajectory();
         if (trajectory instanceof StaticTrajectory) {
             return new StaticTrajectoryRenderer();
         } else if (trajectory instanceof KeplerianTrajectory3d) {
-            return new KeplerianTrajectory3dRenderer((KeplerianTrajectory3d)trajectory, planet.getTrajectoryColor());
+            return new KeplerianTrajectory3dRenderer((KeplerianTrajectory3d)trajectory, dynamicalPoint.getTrajectoryColor());
         } else if (trajectory instanceof KeplerianTrajectory2d) {
-            return new KeplerianTrajectory2dRenderer((KeplerianTrajectory2d)trajectory, planet.getTrajectoryColor());
+            return new KeplerianTrajectory2dRenderer((KeplerianTrajectory2d)trajectory, dynamicalPoint.getTrajectoryColor());
         }
 
         throw new IllegalArgumentException("unable to handle trajectory");
