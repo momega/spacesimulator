@@ -9,10 +9,9 @@ import java.awt.*;
 /**
  * Created by martin on 4/22/14.
  */
-public class CameraPositionRenderer {
+public class CameraPositionRenderer extends AbstractTextRenderer {
 
     private Camera camera;
-    private TextRenderer textRenderer;
 
     public CameraPositionRenderer(Camera camera) {
         this.camera = camera;

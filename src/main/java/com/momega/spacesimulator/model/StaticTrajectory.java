@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
- * The trajectory of the static object. The {#computePosition} method return alwayas the same position.
+ * The trajectory of the static object. The {#computePosition} method return always the same position.
  * Created by martin on 4/21/14.
  */
 public class StaticTrajectory implements Trajectory {
@@ -9,7 +9,7 @@ public class StaticTrajectory implements Trajectory {
     private Vector3d position;
 
     /**
-     * Construct static trajector with the given position
+     * Construct static trajectory with the given position
      * @param position
      */
     public StaticTrajectory(Vector3d position) {

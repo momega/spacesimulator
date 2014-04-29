@@ -58,7 +58,7 @@ public class MainRenderer implements GLEventListener {
         gl.glClearDepth(1.0f);      // set clear depth value to farthest
 
         gl.glDepthFunc(GL_LEQUAL);  // the type of depth test to do
-        gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
         gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
 
 

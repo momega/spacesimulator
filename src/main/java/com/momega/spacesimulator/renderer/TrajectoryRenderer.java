@@ -12,6 +12,11 @@ public abstract class TrajectoryRenderer {
 
     public abstract void draw(GL2 gl);
 
+    /**
+     * Creates the distance of trajectory renderer
+     * @param dynamicalPoint
+     * @return
+     */
     public static TrajectoryRenderer createInstance(DynamicalPoint dynamicalPoint) {
         Trajectory trajectory = dynamicalPoint.getTrajectory();
         if (trajectory instanceof StaticTrajectory) {

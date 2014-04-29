@@ -38,7 +38,7 @@ public class DynamicalPointRenderer extends ObjectRenderer {
 
     @Override
     public void dispose(GL2 gl) {
-        // do nothing
+        textRenderer.dispose();
     }
 
     protected void drawLabel(GL2 gl) {

@@ -9,12 +9,27 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
     private double inclination; // i
     private double ascendingNode; // uppercase omega
 
-    public KeplerianTrajectory3d(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double inclination, double ascendingNode) {
-        super(centralObject, semimajorAxis, eccentricity, argumentOfPeriapsis, period);
+    /**
+     *
+     * @param centralObject central object of the trajectory
+     * @param semimajorAxis (a)
+     * @param eccentricity  eccentricity (0..1)
+     * @param argumentOfPeriapsis
+     * @param period orbital period in days
+     * @param inclination inclination of the orbit in degrees
+     * @param timeOfPeriapsis time of periapsis (Tp) in JD
+     * @param ascendingNode
+     */
+    public KeplerianTrajectory3d(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
+        super(centralObject, semimajorAxis, eccentricity, argumentOfPeriapsis, period, timeOfPeriapsis);
         this.inclination = inclination * Math.PI / 180;
         this.ascendingNode = ascendingNode * Math.PI / 180;
     }
 
+    /**
+     * The inclination in radian
+     * @return
+     */
     public double getInclination() {
         return inclination;
     }

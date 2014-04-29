@@ -18,6 +18,10 @@ public class DynamicalPoint {
         this.object = new Object3d(trajectory.computePosition(0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
     }
 
+    /**
+     * The name of the object
+     * @return
+     */
     public String getName() {
         return this.name;
     }

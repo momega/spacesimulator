@@ -16,6 +16,7 @@ public class KeplerianTrajectory2d implements Trajectory {
     private final DynamicalPoint centralObject;
     private final double semimajorAxis; // (a)
     private final double eccentricity; // epsilon
+    private final double timeOfPeriapsis;
     private final double period; // T
     private final double argumentOfPeriapsis; // lowercase omega
 
@@ -25,18 +26,25 @@ public class KeplerianTrajectory2d implements Trajectory {
      * Constructs the keplerian trajectory solver in 2D
      * @param semimajorAxis the semimajor axis
      * @param eccentricity numeric eccentricity
-     * @param period the orbital period
      * @param argumentOfPeriapsis argument of periapsis
+     * @param period the orbital period
+     * @param timeOfPeriapsis time of periapsis (Tp)
      */
-    public KeplerianTrajectory2d(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period) {
+    public KeplerianTrajectory2d(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis) {
         this.centralObject = centralObject;
         this.semimajorAxis = semimajorAxis;
         this.eccentricity = eccentricity;
+        this.timeOfPeriapsis = timeOfPeriapsis;
         this.argumentOfPeriapsis = argumentOfPeriapsis * Math.PI / 180;
         this.period = period;
         this.p = semimajorAxis* (1 - eccentricity* eccentricity);
     }
 
+    /**
+     * Computes the position of the object in 2D for the given time
+     * @param t the time
+     * @return new position of the object
+     */
     @Override
     public Vector3d computePosition(double t) {
         double[] solution = solveKeplerian(t);
@@ -51,18 +59,23 @@ public class KeplerianTrajectory2d implements Trajectory {
         return new Vector3d(x, y, 0);
     }
 
+    /**
+     * Solves the keplerian problem for the given time
+     * @param t the time
+     * @return the array with the radius (r) and theta (real anomaly)
+     */
     protected double[] solveKeplerian(double t) {
         double E = Math.PI; //  eccentric anomaly
-        double M = 2 * Math.PI * t / period;   // mean anomaly
+        double M = 2 * Math.PI * (t - timeOfPeriapsis) / period;   // mean anomaly
         M = normalAngle(M);
 
         double F = E - eccentricity * Math.sin(M) - M;
         for(int i=0; i<50; i++) {
             E = E - F / (1.0 - eccentricity * Math.cos(E));
             F = E - eccentricity * Math.sin(E) - M;
-//            if (F<MINOR_ERROR) {
-//                break;
-//            }
+            if (F<MINOR_ERROR) {
+                break;
+            }
         }
 
         double cosTheta = (Math.cos(E) - eccentricity) / ( 1.0 - eccentricity * Math.cos(E));

@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.GL2ES1;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
@@ -28,20 +29,21 @@ public abstract class AbstractRenderer implements GLEventListener {
 
     /**
      * The default implementation of initializing of the renderer. It creates GLU and GLUT objects
-     * @param drawable the OPENGL cancas
+     * @param drawable the OPENGL canvas
      */
     public void init(GLAutoDrawable drawable) {
         logger.info("renderer initializing");
         GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
         glut = new GLUT();
+
         init(gl);
         logger.info("renderer initialized");
     }
 
     /*
      * The default display method
-     * @param drawable the OPENGL cancas
+     * @param drawable the OPENGL canvas
      */
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
@@ -97,7 +99,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
         gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 1, 20000000);
+        glu.gluPerspective(45, aspect, 1, 20000000); // TODO: fix perspective
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");

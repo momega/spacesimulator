@@ -3,6 +3,7 @@ package com.momega.spacesimulator.renderer;
 import javax.media.opengl.GL2;
 
 /**
+ * Renders the object
  * Created by martin on 4/28/14.
  */
 public abstract class ObjectRenderer {
