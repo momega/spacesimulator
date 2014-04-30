@@ -7,8 +7,8 @@ public interface Trajectory {
 
     /**
      * Computes the position of and object in the time t
-     * @param t the time
+     * @param time the time
      * @return the position of an object
      */
-    Vector3d computePosition(double t);
+    Vector3d computePosition(Time time);
 }

@@ -39,8 +39,8 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
     }
 
     @Override
-    public Vector3d computePosition(double t) {
-        double[] solution = solveKeplerian(t);
+    public Vector3d computePosition(Time time) {
+        double[] solution = solveKeplerian(time.getJulianDay());
         double r = solution[0];
         double theta = solution[1];
 

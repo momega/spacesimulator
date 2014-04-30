@@ -9,9 +9,9 @@ package com.momega.spacesimulator.model;
 public class Planet extends DynamicalPoint {
 
     private double fi = 0; // in degrees
-    private double radius;
+    private double radius; // radius of the planer in thousand kilometers
     private double axialTilt;  // axial tilt of the planet in degrees
-    private final double rotationPeriod;
+    private final double rotationPeriod; // rotation period in days
     private String textureFileName;
 
     /**
@@ -44,8 +44,8 @@ public class Planet extends DynamicalPoint {
         return textureFileName;
     }
 
-    public void rotate(double dt) {
-        this.fi += ((dt / rotationPeriod) * 360);
+    public void rotate(Time time) {
+        this.fi = ((time.getJulianDay() / rotationPeriod) * 360);
     }
 
     public double getFi() {

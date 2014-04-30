@@ -16,10 +16,9 @@ public class KeplerianTrajectory2d implements Trajectory {
     private final DynamicalPoint centralObject;
     private final double semimajorAxis; // (a)
     private final double eccentricity; // epsilon
-    private final double timeOfPeriapsis;
-    private final double period; // T
+    private final double timeOfPeriapsis; // julian day
+    private final double period; // T in days
     private final double argumentOfPeriapsis; // lowercase omega
-
     private final double p; // semilatus rectum
 
     /**
@@ -42,12 +41,12 @@ public class KeplerianTrajectory2d implements Trajectory {
 
     /**
      * Computes the position of the object in 2D for the given time
-     * @param t the time
+     * @param time the time
      * @return new position of the object
      */
     @Override
-    public Vector3d computePosition(double t) {
-        double[] solution = solveKeplerian(t);
+    public Vector3d computePosition(Time time) {
+        double[] solution = solveKeplerian(time.getJulianDay());
         double r = solution[0];
         double theta = solution[1];
 

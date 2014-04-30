@@ -17,7 +17,7 @@ public class StaticTrajectory implements Trajectory {
     }
 
     @Override
-    public Vector3d computePosition(double t) {
+    public Vector3d computePosition(Time time) {
         return position;
     }
 }

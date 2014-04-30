@@ -5,10 +5,7 @@ import com.momega.spacesimulator.controller.CameraVelocityController;
 import com.momega.spacesimulator.controller.QuitController;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.*;
-import com.momega.spacesimulator.renderer.CameraPositionRenderer;
-import com.momega.spacesimulator.renderer.DynamicalPointRenderer;
-import com.momega.spacesimulator.renderer.ObjectRenderer;
-import com.momega.spacesimulator.renderer.PlanetRenderer;
+import com.momega.spacesimulator.renderer.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +28,11 @@ public class Kepler extends AbstractRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(Kepler.class);
 
-    private double t = 2456760;
+    private Time time = new Time(2456760d);
     private final Camera camera = new Camera(new Vector3d(0, -147800d, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1), 10);
     private final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
     private final List<ObjectRenderer> objectRenderers = new ArrayList<>();
-    private final CameraPositionRenderer cameraPositionRenderer = new CameraPositionRenderer(camera);
+    private final List<AbstractTextRenderer> textRenderers = new ArrayList<AbstractTextRenderer>();
 
     public void initModel() {
         Planet sun = new Planet("Sun",
@@ -108,6 +105,9 @@ public class Kepler extends AbstractRenderer {
         dynamicalPoints.add(venus);
         dynamicalPoints.add(mercury);
 
+        textRenderers.add(new CameraPositionRenderer(camera));
+        textRenderers.add(new TimeRenderer(time));
+
         logger.info("model initialized");
     }
 
@@ -134,7 +134,9 @@ public class Kepler extends AbstractRenderer {
             objectRenderers.add(dpr);
         }
 
-        cameraPositionRenderer.init();
+        for(AbstractTextRenderer tr : textRenderers) {
+            tr.init();
+        }
     }
 
     @Override
@@ -142,18 +144,22 @@ public class Kepler extends AbstractRenderer {
         for(ObjectRenderer pr : objectRenderers) {
             pr.dispose(gl);
         }
+
+        for(AbstractTextRenderer tr : textRenderers) {
+            tr.dispose();
+        }
     }
 
     @Override
     protected void display(GL2 gl) {
         double dt = 0.0001;
         for(DynamicalPoint dp : dynamicalPoints) {
-            dp.move(t);
+            dp.move(time);
             if (dp instanceof Planet) {
-                ((Planet)dp).rotate(dt);
+                ((Planet)dp).rotate(time);
             }
         }
-        t = t + dt;
+        time.next();
 
         for(ObjectRenderer pr : objectRenderers) {
             pr.draw(gl);
@@ -162,7 +168,9 @@ public class Kepler extends AbstractRenderer {
 
     @Override
     protected void additionalDisplay(GLAutoDrawable drawable) {
-        cameraPositionRenderer.draw(drawable);
+        for(AbstractTextRenderer tr : textRenderers) {
+            tr.draw(drawable);
+        }
     }
 
     public static void main(String[] args) {

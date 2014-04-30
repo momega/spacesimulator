@@ -6,7 +6,7 @@ import javax.media.opengl.GL2;
 import static javax.media.opengl.GL.GL_LINE_LOOP;
 
 /**
- * The class contains static handfull methods to draw objects such as {#link drawCircle} or {#link drawEllipse}
+ * The class contains static handful methods to draw objects such as {#link drawCircle} or {#link drawEllipse}
  * Created by martin on 4/21/14.
  */
 public class Utils {
@@ -21,7 +21,7 @@ public class Utils {
      */
     public static void drawCircle(GL2 gl, float cx, float cy, float r, int num_segments) {
         float theta = (float) (2 * Math.PI / num_segments);
-        float c = (float) Math.cos(theta);//precalculate the sine and cosine
+        float c = (float) Math.cos(theta); //precalculate the sine and cosine
         float s = (float) Math.sin(theta);
         float t;
 

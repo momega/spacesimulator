@@ -11,16 +11,13 @@ import java.awt.*;
  */
 public class CameraPositionRenderer extends AbstractTextRenderer {
 
-    private Camera camera;
+    private final Camera camera;
 
     public CameraPositionRenderer(Camera camera) {
         this.camera = camera;
     }
 
-    public void init() {
-        textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 12));
-    }
-
+    @Override
     public void draw(GLAutoDrawable drawable) {
         textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
         // optionally set the color
@@ -32,4 +29,5 @@ public class CameraPositionRenderer extends AbstractTextRenderer {
         textRenderer.draw("V:" + camera.getV().toString(), 400, 10);
         textRenderer.endRendering();
     }
+
 }

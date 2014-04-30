@@ -15,7 +15,7 @@ public class DynamicalPoint {
         this.name = name;
         this.trajectory = trajectory;
         this.trajectoryColor = trajectoryColor;
-        this.object = new Object3d(trajectory.computePosition(0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
+        this.object = new Object3d(null, new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)); // TODO: the default position is not set
     }
 
     /**
@@ -30,8 +30,8 @@ public class DynamicalPoint {
         return this.trajectory;
     }
 
-    public void move(double t) {
-        object.setPosition(trajectory.computePosition(t));
+    public void move(Time time) {
+        object.setPosition(trajectory.computePosition(time));
     }
 
     public double[] getTrajectoryColor() {
