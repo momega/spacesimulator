@@ -6,7 +6,7 @@ package com.momega.spacesimulator.model;
  */
 public class DynamicalPoint {
 
-    private Object3d object;
+    private final Object3d object;
     private final String name;
     private final Trajectory trajectory;
     private final double[] trajectoryColor;
@@ -31,7 +31,7 @@ public class DynamicalPoint {
     }
 
     public void move(Time time) {
-        object.setPosition(trajectory.computePosition(time));
+        getObject().setPosition(trajectory.computePosition(time));
     }
 
     public double[] getTrajectoryColor() {

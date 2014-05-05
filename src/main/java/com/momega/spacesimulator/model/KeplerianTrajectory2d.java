@@ -77,15 +77,18 @@ public class KeplerianTrajectory2d implements Trajectory {
             }
         }
 
-        double cosTheta = (Math.cos(E) - eccentricity) / ( 1.0 - eccentricity * Math.cos(E));
-        double theta;
-        if (E < Math.PI) {
-            theta = Math.acos(cosTheta);
-        } else {
-            theta = 2*Math.PI - Math.acos(cosTheta);
-        }
+//        double cosTheta = (Math.cos(E) - eccentricity) / ( 1.0 - eccentricity * Math.cos(E));
+//        double theta;
+//        if (E < Math.PI) {
+//            theta = Math.acos(cosTheta);
+//        } else {
+//            theta = 2*Math.PI - Math.acos(cosTheta);
+//        }
 
-        double r = p / (1 + eccentricity * cosTheta);
+        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
+        double theta = 2*Math.atan(param * Math.tan(E/2));
+
+        double r = p / (1 + eccentricity * Math.cos(theta));
         logger.debug("r = {}, theta = {}", r, theta);
         return new double[] {r, theta};
     }

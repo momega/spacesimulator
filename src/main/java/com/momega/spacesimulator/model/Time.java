@@ -13,30 +13,29 @@ import java.util.Date;
 public class Time {
 
     private DateTime timestamp;
-    private Duration warpFactor = new Duration(1000);
+    private double warpFactor = 1000;
 
     public Time(double julianDay) {
         this.timestamp = new DateTime(DateTimeUtils.fromJulianDay(julianDay));
     }
 
     public double getJulianDay() {
-        return DateTimeUtils.fromJulianDay(timestamp.getMillis());
+        return DateTimeUtils.toJulianDay(timestamp.getMillis());
     }
 
     public DateTime getTimestamp() {
         return timestamp;
     }
 
-    public Duration getWarpFactor() {
-        return warpFactor;
-    }
-
-    public void setWarpFactor(Duration warpFactor) {
-        this.warpFactor = warpFactor;
+    public void changeWarpFactor(double ratio) {
+        this.warpFactor = this.warpFactor * ratio;
     }
 
     public void next() {
-        timestamp = timestamp.plus(warpFactor);
+        timestamp = timestamp.plus((long) warpFactor);
     }
 
+    public double getWarpFactor() {
+        return warpFactor;
+    }
 }

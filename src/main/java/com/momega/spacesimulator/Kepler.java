@@ -3,6 +3,7 @@ package com.momega.spacesimulator;
 import com.momega.spacesimulator.controller.CameraController;
 import com.momega.spacesimulator.controller.CameraVelocityController;
 import com.momega.spacesimulator.controller.QuitController;
+import com.momega.spacesimulator.controller.TimeController;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.*;
 import com.momega.spacesimulator.renderer.*;
@@ -28,8 +29,9 @@ public class Kepler extends AbstractRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(Kepler.class);
 
-    private Time time = new Time(2456760d);
-    private final Camera camera = new Camera(new Vector3d(0, -147800d, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1), 10);
+    private final Time time = new Time(2456760d);
+    //private final Camera camera = new Camera(new Vector3d(0, -147800d, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1), 10);
+    private final Camera camera = new Camera(new Vector3d(0, 0, 350000d * 5), new Vector3d(0, 0, -1), new Vector3d(0, 1, 0), 10);
     private final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
     private final List<ObjectRenderer> objectRenderers = new ArrayList<>();
     private final List<AbstractTextRenderer> textRenderers = new ArrayList<AbstractTextRenderer>();
@@ -41,9 +43,9 @@ public class Kepler extends AbstractRenderer {
         DynamicalPoint earthMoonBarycenter = new DynamicalPoint("Earth-Moon Barycenter",
                 new KeplerianTrajectory3d(sun, 149598.261d,
                         0.0166739,
-                        0,
+                        287.5824,
                         365.256814, 2456661.138788696378,
-                        0d ,
+                        0.0018601064,
                         175.395d), new double[] {0,0.5,1}
         );
 
@@ -80,8 +82,8 @@ public class Kepler extends AbstractRenderer {
         Planet venus = new Planet("Venus",
                 new KeplerianTrajectory3d(sun, 108208d,
                         0.0067,
-                        55.186,
-                        224.699, 2456681.501144300681,
+                        54.6820,
+                        224.699, 2456681.501144,
                         3.3945 ,
                         76.6408), 177.36, 6.0518, 243.0185, "venus.jpg",
                 new double[] {1,1,0}
@@ -93,8 +95,18 @@ public class Kepler extends AbstractRenderer {
                         29.124,
                         87.96890, 2456780.448693044949,
                         7.0 ,
-                        48.313), 2.11/60d, 2.4397, 58.646, "mercury.jpg",
+                        48.313), 2.11d/60d, 2.4397, 58.646, "mercury.jpg",
                 new double[] {0.2,0.2,0.2}
+        );
+
+        Planet jupiter = new Planet("Jupiter",
+                new KeplerianTrajectory3d(sun, 778547.2d,
+                        0.048775,
+                        274.008653,
+                        4332.59, 2455638.655976880342,
+                        1.303541 ,
+                        100.5118), 3.13, 69.911, 9.925d/24, "jupiter.jpg",
+                new double[] {1,0.65,0.0}
         );
 
         dynamicalPoints.add(sun);
@@ -104,6 +116,7 @@ public class Kepler extends AbstractRenderer {
         dynamicalPoints.add(mars);
         dynamicalPoints.add(venus);
         dynamicalPoints.add(mercury);
+        dynamicalPoints.add(jupiter);
 
         textRenderers.add(new CameraPositionRenderer(camera));
         textRenderers.add(new TimeRenderer(time));
@@ -152,7 +165,6 @@ public class Kepler extends AbstractRenderer {
 
     @Override
     protected void display(GL2 gl) {
-        double dt = 0.0001;
         for(DynamicalPoint dp : dynamicalPoints) {
             dp.move(time);
             if (dp instanceof Planet) {
@@ -181,6 +193,7 @@ public class Kepler extends AbstractRenderer {
         controller.addController(new QuitController(window));
         controller.addController(new CameraController(model.getCamera()));
         controller.addController(new CameraVelocityController(model.getCamera()));
+        controller.addController(new TimeController(model.getTime()));
         window.openWindow(model, controller);
     }
 
@@ -193,4 +206,7 @@ public class Kepler extends AbstractRenderer {
         return camera;
     }
 
+    public Time getTime() {
+        return time;
+    }
 }
