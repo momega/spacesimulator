@@ -32,7 +32,7 @@ public class Vector3d {
     }
 
     //################## PUBLIC METHODS ##################//
-    public Vector3d add(final Vector3d rhs) {
+        public Vector3d add(final Vector3d rhs) {
         x += rhs.x;
         y += rhs.y;
         z += rhs.z;
@@ -86,7 +86,7 @@ public class Vector3d {
     }
 
     public double lengthSquared() {
-        return x * x + y * y + z * z;                // note that dot(this); would do, but it's needlessly inefficient
+        return x * x + y * y + z * z; // note that dot(this); would do, but it's needlessly inefficient
     }
 
     public Vector3d negate() {
@@ -102,7 +102,9 @@ public class Vector3d {
 
     public Vector3d normalize() {
         double len = length();
-        if (Math.abs(len) < SMALL_EPSILON) throw new java.lang.Error();
+        if (Math.abs(len) < SMALL_EPSILON) {
+            throw new IllegalStateException("length to small");
+        }
 
         scale(1.0 / len);
         return this;

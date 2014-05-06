@@ -33,12 +33,13 @@ public class Kepler extends AbstractRenderer {
     //private final Camera camera = new Camera(new Vector3d(0, -147800d, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1), 10);
     private final Camera camera = new Camera(new Vector3d(0, 0, 350000d * 5), new Vector3d(0, 0, -1), new Vector3d(0, 1, 0), 10);
     private final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
+    private final List<Planet> planets = new ArrayList<>();
     private final List<ObjectRenderer> objectRenderers = new ArrayList<>();
     private final List<AbstractTextRenderer> textRenderers = new ArrayList<AbstractTextRenderer>();
 
     public void initModel() {
         Planet sun = new Planet("Sun",
-                new StaticTrajectory(new Vector3d(0,0,0)), 0, 696.342, 25.05, "sun.jpg", new double[] {1,1,0});
+                new StaticTrajectory(new Vector3d(0,0,0)), time,  0, 696.342, 25.05, 1.989*1E6, "sun.jpg", new double[] {1,1,0});
 
         DynamicalPoint earthMoonBarycenter = new DynamicalPoint("Earth-Moon Barycenter",
                 new KeplerianTrajectory3d(sun, 149598.261d,
@@ -46,7 +47,7 @@ public class Kepler extends AbstractRenderer {
                         287.5824,
                         365.256814, 2456661.138788696378,
                         0.0018601064,
-                        175.395d), new double[] {0,0.5,1}
+                        175.395d), time, new double[] {0,0.5,1}
         );
 
         Planet earth = new Planet("Earth",
@@ -55,7 +56,7 @@ public class Kepler extends AbstractRenderer {
                     264.7609,
                     27.427302, 2456796.39770,
                     5.241500 ,
-                    208.1199), 23.5, 6.378, 0.997269, "earth.jpg",
+                    208.1199), time, 23.5, 6.378, 0.997269, 5.97219, "earth.jpg",
                 new double[] {0,0.5,1}
         );
 
@@ -65,8 +66,8 @@ public class Kepler extends AbstractRenderer {
                         84.7609,
                         27.427302, 2456796.39770989,
                         5.241500,
-                        208.1199), 6.687, 1.737, 27.321, "moon.jpg",
-                new double[] {0.75,0.75,0.75}
+                        208.1199), time, 6.687, 1.737, 27.321, 0.07349, "moon.jpg",
+                new double[] {0.5,0.5,0.5}
         );
 
         Planet mars = new Planet("Mars",
@@ -75,7 +76,7 @@ public class Kepler extends AbstractRenderer {
                         286.537,
                         686.9363, 2457003.918154194020,
                         1.84844 ,
-                        49.5147), 25.19, 3.389, 1.02595, "mars.jpg",
+                        49.5147), time, 25.19, 3.389, 1.02595, 0.64185, "mars.jpg",
                 new double[] {1,0,0}
         );
 
@@ -85,7 +86,7 @@ public class Kepler extends AbstractRenderer {
                         54.6820,
                         224.699, 2456681.501144,
                         3.3945 ,
-                        76.6408), 177.36, 6.0518, 243.0185, "venus.jpg",
+                        76.6408), time, 177.36, 6.0518, 243.0185, 4.8685, "venus.jpg",
                 new double[] {1,1,0}
         );
 
@@ -95,7 +96,7 @@ public class Kepler extends AbstractRenderer {
                         29.124,
                         87.96890, 2456780.448693044949,
                         7.0 ,
-                        48.313), 2.11d/60d, 2.4397, 58.646, "mercury.jpg",
+                        48.313), time, 2.11d/60d, 2.4397, 58.646, 0.3302, "mercury.jpg",
                 new double[] {0.2,0.2,0.2}
         );
 
@@ -105,7 +106,7 @@ public class Kepler extends AbstractRenderer {
                         274.008653,
                         4332.59, 2455638.655976880342,
                         1.303541 ,
-                        100.5118), 3.13, 69.911, 9.925d/24, "jupiter.jpg",
+                        100.5118), time, 3.13, 69.911, 9.925d/24, 1898.13, "jupiter.jpg",
                 new double[] {1,0.65,0.0}
         );
 
@@ -118,8 +119,15 @@ public class Kepler extends AbstractRenderer {
         dynamicalPoints.add(mercury);
         dynamicalPoints.add(jupiter);
 
-        textRenderers.add(new CameraPositionRenderer(camera));
-        textRenderers.add(new TimeRenderer(time));
+        for(DynamicalPoint dp : dynamicalPoints) {
+            if (dp instanceof Planet) {
+                planets.add((Planet) dp);
+            }
+        }
+
+        //Object3d satillitePosition = new Object3d(earth.getPosition().clone().add())
+        //Satellite satellite = new Satellite("Satellite", new NewtonianTrajectory(planets, satillitePosition), time,  new double[] {1,1,1});
+        //dynamicalPoints.add(satellite);
 
         logger.info("model initialized");
     }
@@ -146,6 +154,9 @@ public class Kepler extends AbstractRenderer {
             dpr.init(gl);
             objectRenderers.add(dpr);
         }
+
+        textRenderers.add(new CameraPositionRenderer(camera));
+        textRenderers.add(new TimeRenderer(time));
 
         for(AbstractTextRenderer tr : textRenderers) {
             tr.init();

@@ -12,22 +12,26 @@ public class Planet extends DynamicalPoint {
     private double radius; // radius of the planer in thousand kilometers
     private double axialTilt;  // axial tilt of the planet in degrees
     private final double rotationPeriod; // rotation period in days
+    private final double mass;
     private String textureFileName;
 
     /**
      Constructs a new planet.
      * @param trajectory planets trajectory
+     * @param time the initial time
      * @param axialTilt axial tilt of the planet in degrees
      * @param radius the radius of the planet
+     * @param mass the mass of the object in 10E24 kg
      * @param rotationPeriod rotation period in days
      * @param textureFileName the name of the texture file name
      * @param trajectoryColor the color of trajectory
      */
-    public Planet(String name, Trajectory trajectory, double axialTilt, double radius, double rotationPeriod, String textureFileName, double[] trajectoryColor) {
-        super(name, trajectory, trajectoryColor);
+    public Planet(String name, Trajectory trajectory, Time time, double axialTilt, double radius, double rotationPeriod, double mass, String textureFileName, double[] trajectoryColor) {
+        super(name, trajectory, time, trajectoryColor);
         this.axialTilt = axialTilt;
         this.radius = radius;
         this.rotationPeriod = rotationPeriod;
+        this.mass = mass;
         this.textureFileName = textureFileName;
         getObject().rotate(getObject().getV(), axialTilt);
     }
@@ -45,15 +49,28 @@ public class Planet extends DynamicalPoint {
     }
 
     public void rotate(Time time) {
-        this.fi = ((time.getJulianDay() / rotationPeriod) * 360);
+        double z = time.getJulianDay() / getRotationPeriod();
+        z = z - Math.floor(z);
+        this.fi = z * 360;
     }
 
     public double getFi() {
         return fi;
     }
 
+    /**
+     * Axial Tilt of the planet in degrees
+     * @return the axial tilt in degrees
+     */
     public double getAxialTilt() {
         return this.axialTilt;
     }
 
+    public double getRotationPeriod() {
+        return rotationPeriod;
+    }
+
+    public double getMass() {
+        return mass;
+    }
 }

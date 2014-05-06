@@ -20,7 +20,7 @@ public class Object3d {
      Constructs a new 3d object.
 
      @param position	The position of the object3d
-     @param nVector		The direction the object3d is looking
+     @param nVector		The direction the object3d is looking (or moving)
      @param vVector		The "up" direction for the object3d
      */
     public Object3d(Vector3d position, Vector3d nVector, Vector3d vVector)
@@ -28,12 +28,8 @@ public class Object3d {
         this.position = position;
 
         this.nVector = nVector;
-        this.nVector.normalize();
-
         this.vVector = vVector;
-        this.vVector.normalize();
-
-        this.uVector = this.vVector.cross(this.nVector).normalize();
+        this.uVector = this.vVector.cross(this.nVector);
     }
 
     /**

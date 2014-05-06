@@ -22,8 +22,8 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
      */
     public KeplerianTrajectory3d(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
         super(centralObject, semimajorAxis, eccentricity, argumentOfPeriapsis, period, timeOfPeriapsis);
-        this.inclination = inclination * Math.PI / 180;
-        this.ascendingNode = ascendingNode * Math.PI / 180;
+        this.inclination = Math.toRadians(inclination);
+        this.ascendingNode = Math.toRadians(ascendingNode);
     }
 
     /**

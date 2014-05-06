@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.utils.MathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,7 +12,7 @@ public class KeplerianTrajectory2d implements Trajectory {
 
     private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectory2d.class);
 
-    private static double MINOR_ERROR = Math.pow(10, -10);
+    private static double MINOR_ERROR = Math.pow(10, -12);
 
     private final DynamicalPoint centralObject;
     private final double semimajorAxis; // (a)
@@ -20,6 +21,7 @@ public class KeplerianTrajectory2d implements Trajectory {
     private final double period; // T in days
     private final double argumentOfPeriapsis; // lowercase omega
     private final double p; // semilatus rectum
+    private final double thetaParam;
 
     /**
      * Constructs the keplerian trajectory solver in 2D
@@ -37,6 +39,7 @@ public class KeplerianTrajectory2d implements Trajectory {
         this.argumentOfPeriapsis = argumentOfPeriapsis * Math.PI / 180;
         this.period = period;
         this.p = semimajorAxis* (1 - eccentricity* eccentricity);
+        this.thetaParam = Math.sqrt((1+eccentricity)/(1-eccentricity));
     }
 
     /**
@@ -64,39 +67,38 @@ public class KeplerianTrajectory2d implements Trajectory {
      * @return the array with the radius (r) and theta (real anomaly)
      */
     protected double[] solveKeplerian(double t) {
+        logger.debug("time = {}", t);
+
         double E = Math.PI; //  eccentric anomaly
         double M = 2 * Math.PI * (t - timeOfPeriapsis) / period;   // mean anomaly
-        M = normalAngle(M);
+        M = MathUtils.normalizeAngle(M);
+
+        logger.debug("M = {}", M);
 
         double F = E - eccentricity * Math.sin(M) - M;
         for(int i=0; i<50; i++) {
             E = E - F / (1.0 - eccentricity * Math.cos(E));
             F = E - eccentricity * Math.sin(E) - M;
-            if (F<MINOR_ERROR) {
+            if (Math.abs(F)<MINOR_ERROR) {
                 break;
             }
         }
 
-//        double cosTheta = (Math.cos(E) - eccentricity) / ( 1.0 - eccentricity * Math.cos(E));
-//        double theta;
-//        if (E < Math.PI) {
-//            theta = Math.acos(cosTheta);
-//        } else {
-//            theta = 2*Math.PI - Math.acos(cosTheta);
-//        }
+        double cosTheta = (Math.cos(E) - eccentricity) / ( 1.0 - eccentricity * Math.cos(E));
+        logger.debug("E = {}, cosTheta = {}", E, cosTheta);
 
-        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
-        double theta = 2*Math.atan(param * Math.tan(E/2));
+        double theta;
+        if (E < Math.PI) {
+            theta = Math.acos(cosTheta);
+        } else {
+            theta = 2*Math.PI - Math.acos(cosTheta);
+        }
+
+//        double theta = 2*Math.atan(thetaParam * Math.tan(E/2));
 
         double r = p / (1 + eccentricity * Math.cos(theta));
         logger.debug("r = {}, theta = {}", r, theta);
         return new double[] {r, theta};
-    }
-
-    public double normalAngle(double angle) {
-        int z = (int)(angle / (2 * Math.PI));
-        angle = angle - z * 2 * Math.PI;
-        return angle;
     }
 
     public double getSemimajorAxis() {
