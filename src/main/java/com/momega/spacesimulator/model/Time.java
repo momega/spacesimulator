@@ -13,9 +13,10 @@ import java.util.Date;
 public class Time {
 
     private DateTime timestamp;
-    private double warpFactor = 1000;
+    private double warpFactor;
 
-    public Time(double julianDay) {
+    public Time(double julianDay, double warpFactor) {
+        this.warpFactor = warpFactor;
         this.timestamp = new DateTime(DateTimeUtils.fromJulianDay(julianDay));
     }
 

@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.KeplerianTrajectory2d;
+import com.momega.spacesimulator.model.Trajectory;
 import com.momega.spacesimulator.opengl.Utils;
 
 import javax.media.opengl.GL2;
@@ -13,8 +14,6 @@ import static javax.media.opengl.GL.GL_LINES;
  */
 public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
 
-    private final KeplerianTrajectory2d trajectory;
-    private final double[] color;
     private final double epsilon;
     protected final double argumentOfPeriapsis;
     protected final double a;
@@ -22,8 +21,7 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
     protected final double e;
 
     public KeplerianTrajectory2dRenderer(KeplerianTrajectory2d trajectory, double[] color) {
-        this.trajectory = trajectory;
-        this.color = color;
+        super(trajectory, color);
         this.epsilon = trajectory.getEccentricity();
         this.argumentOfPeriapsis = trajectory.getArgumentOfPeriapsis();
         this.a = trajectory.getSemimajorAxis();
@@ -54,10 +52,7 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
     }
 
     public KeplerianTrajectory2d getTrajectory() {
-        return trajectory;
+        return (KeplerianTrajectory2d) super.getTrajectory();
     }
 
-    public double[] getColor() {
-        return color;
-    }
 }
