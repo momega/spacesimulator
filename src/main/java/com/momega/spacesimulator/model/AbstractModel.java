@@ -11,7 +11,7 @@ import java.util.List;
  */
 public abstract class AbstractModel {
 
-    private static final Logger logger = LoggerFactory.getLogger(SolarSystemModel.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractModel.class);
 
     protected final Time time = new Time(2456760d, 1d);
     //private final Camera camera = new Camera(new Vector3d(0, -147800d, 0), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1), 10);

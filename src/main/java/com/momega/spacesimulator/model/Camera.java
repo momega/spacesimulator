@@ -15,26 +15,13 @@ public class Camera extends Object3d {
      @param nVector		The direction the camera is looking
      @param vVector		The "up" direction for the camera
      */
-    public Camera(Vector3d position, Vector3d nVector, Vector3d vVector, double velocity)
-    {
-        super(position, nVector, vVector);
+    public Camera(Vector3d position, Vector3d nVector, Vector3d vVector, double velocity) {
+        super(position, new Orientation(nVector, vVector));
         this.velocity = velocity;
     }
 
     public void move(double step) {
         moveN(step);
-    }
-
-    public void twist(double step) {
-        rotate(getN(), step);
-    }
-
-    public void lookLeft(double step) {
-        rotate(new Vector3d(0,0,1), step);
-    }
-
-    public void lookUp(double step) {
-        rotate(getU(), step);
     }
 
     /**

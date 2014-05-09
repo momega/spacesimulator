@@ -45,12 +45,12 @@ public class DefaultWindow {
                         GLProfile glp = GLProfile.getDefault();
                         // Specifies a set of OpenGL capabilities, based on your profile.
                         GLCapabilities caps = new GLCapabilities(glp);
-                        caps.setStencilBits(8);
+                        //caps.setStencilBits(8);
                         // Create the OpenGL rendering canvas
 
                         logger.info("GL {}", caps.toString());
 
-                        Frame frame = new Frame("Lesson 1: An OpenGL Window");
+                        Frame frame = new Frame(title);
                         frame.setLayout(new java.awt.BorderLayout());
 
                         canvas = new GLCanvas(caps);
@@ -67,7 +67,6 @@ public class DefaultWindow {
                         logger.info("Render set to window");
 
                         frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-                        frame.setTitle(title);
                         frame.setVisible(true);
                         animator.start();
 
