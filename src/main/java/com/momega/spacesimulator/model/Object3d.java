@@ -12,28 +12,25 @@ public class Object3d {
     private Orientation orientation;
 
     //################## CONSTRUCTORS ##################//
-    /**
-     Constructs a new 3d object.
-     @param position	The position of the object3d
-     @param orientation		The orientation of the objects
-     */
-    public Object3d(Vector3d position, Orientation orientation) {
-        this.position = position;
-        this.orientation = orientation;
-    }
 
     /**
-     Returns the position of the object3d.
-
-     @return	...think about it...
+     * Returns the position of the object
+     * @return
      */
-    public Vector3d getPosition()
-    {
+    public Vector3d getPosition() {
         return position;
     }
 
+    /**
+     * Gets the orientation of the 3d object
+     * @return
+     */
     public Orientation getOrientation() {
         return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
     }
 
     public void setPosition(Vector3d position) {

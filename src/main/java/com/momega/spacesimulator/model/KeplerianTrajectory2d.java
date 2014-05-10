@@ -8,36 +8,22 @@ import org.slf4j.LoggerFactory;
  * The class computer keplerian trajectory and object along the eclipse. It computes only in 2D
  * Created by martin on 4/21/14.
  */
-public class KeplerianTrajectory2d implements Trajectory {
+public class KeplerianTrajectory2d extends AbstractTrajectory {
 
     private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectory2d.class);
 
     private static double MINOR_ERROR = Math.pow(10, -12);
 
-    private final DynamicalPoint centralObject;
-    private final double semimajorAxis; // (a)
-    private final double eccentricity; // epsilon
-    private final double timeOfPeriapsis; // julian day
-    private final double period; // T in days
-    private final double argumentOfPeriapsis; // lowercase omega
-    private final double p; // semilatus rectum
-    private final double thetaParam;
+    private DynamicalPoint centralObject;
+    private double semimajorAxis; // (a)
+    private double eccentricity; // epsilon
+    private double timeOfPeriapsis; // julian day
+    private double period; // T in days
+    private double argumentOfPeriapsis; // lowercase omega
+    private double p; // semilatus rectum
+    private double thetaParam;
 
-    /**
-     * Constructs the keplerian trajectory solver in 2D
-     * @param semimajorAxis the semimajor axis
-     * @param eccentricity numeric eccentricity
-     * @param argumentOfPeriapsis argument of periapsis
-     * @param period the orbital period
-     * @param timeOfPeriapsis time of periapsis (Tp)
-     */
-    public KeplerianTrajectory2d(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis) {
-        this.centralObject = centralObject;
-        this.semimajorAxis = semimajorAxis;
-        this.eccentricity = eccentricity;
-        this.timeOfPeriapsis = timeOfPeriapsis;
-        this.argumentOfPeriapsis = argumentOfPeriapsis * Math.PI / 180;
-        this.period = period;
+    public void initialize() {
         this.p = semimajorAxis* (1 - eccentricity* eccentricity);
         this.thetaParam = Math.sqrt((1+eccentricity)/(1-eccentricity));
     }
@@ -48,7 +34,7 @@ public class KeplerianTrajectory2d implements Trajectory {
      * @return new position of the object
      */
     @Override
-    public Vector3d computePosition(Time time) {
+    public void computePosition(MovingObject movingObject, Time time) {
         double[] solution = solveKeplerian(time.getJulianDay());
         double r = solution[0];
         double theta = solution[1];
@@ -58,7 +44,7 @@ public class KeplerianTrajectory2d implements Trajectory {
 
         logger.debug("r = {}, theta = {}", r, theta);
 
-        return new Vector3d(x, y, 0);
+        movingObject.setPosition(new Vector3d(x, y, 0));
     }
 
     /**
@@ -115,5 +101,29 @@ public class KeplerianTrajectory2d implements Trajectory {
 
     public DynamicalPoint getCentralObject() {
         return centralObject;
+    }
+
+    public void setPeriod(double period) {
+        this.period = period;
+    }
+
+    public void setCentralObject(DynamicalPoint centralObject) {
+        this.centralObject = centralObject;
+    }
+
+    public void setEccentricity(double eccentricity) {
+        this.eccentricity = eccentricity;
+    }
+
+    public void setTimeOfPeriapsis(double timeOfPeriapsis) {
+        this.timeOfPeriapsis = timeOfPeriapsis;
+    }
+
+    public void setSemimajorAxis(double semimajorAxis) {
+        this.semimajorAxis = semimajorAxis;
+    }
+
+    public void setArgumentOfPeriapsis(double argumentOfPeriapsis) {
+        this.argumentOfPeriapsis = argumentOfPeriapsis;
     }
 }

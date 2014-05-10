@@ -10,23 +10,6 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
     private double ascendingNode; // uppercase omega
 
     /**
-     *
-     * @param centralObject central object of the trajectory
-     * @param semimajorAxis (a)
-     * @param eccentricity  eccentricity (0..1)
-     * @param argumentOfPeriapsis
-     * @param period orbital period in days
-     * @param inclination inclination of the orbit in degrees
-     * @param timeOfPeriapsis time of periapsis (Tp) in JD
-     * @param ascendingNode
-     */
-    public KeplerianTrajectory3d(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
-        super(centralObject, semimajorAxis, eccentricity, argumentOfPeriapsis, period, timeOfPeriapsis);
-        this.inclination = Math.toRadians(inclination);
-        this.ascendingNode = Math.toRadians(ascendingNode);
-    }
-
-    /**
      * The inclination in radian
      * @return
      */
@@ -39,7 +22,7 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
     }
 
     @Override
-    public Vector3d computePosition(Time time) {
+    public void computePosition(MovingObject movingObject, Time time) {
         double[] solution = solveKeplerian(time.getJulianDay());
         double r = solution[0];
         double theta = solution[1];
@@ -50,6 +33,14 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
         double y = getCentralObject().getPosition().y + r * (Math.cos(u) * Math.sin(ascendingNode) + Math.sin(u) * Math.cos(inclination) * Math.cos(ascendingNode));
         double z = getCentralObject().getPosition().z + r * (Math.sin(u) * Math.sin(inclination));
 
-        return new Vector3d(x, y, z);
+        movingObject.setPosition(new Vector3d(x, y, z));
+    }
+
+    public void setAscendingNode(double ascendingNode) {
+        this.ascendingNode = ascendingNode;
+    }
+
+    public void setInclination(double inclination) {
+        this.inclination = inclination;
     }
 }

@@ -24,9 +24,9 @@ public class CameraPositionRenderer extends AbstractTextRenderer {
         textRenderer.setColor(1, 1, 1, 1);
         textRenderer.draw("Velocity:" + camera.getVelocity(), 10, 70);
         textRenderer.draw("Position:" + camera.getPosition().toString(), 10, 40);
-        textRenderer.draw("N:" + camera.getN().toString(), 10, 10);
-        textRenderer.draw("U:" + camera.getU().toString(), 400, 40);
-        textRenderer.draw("V:" + camera.getV().toString(), 400, 10);
+        textRenderer.draw("N:" + camera.getOrientation().getN().toString(), 10, 10);
+        textRenderer.draw("U:" + camera.getOrientation().getU().toString(), 400, 40);
+        textRenderer.draw("V:" + camera.getOrientation().getV().toString(), 400, 10);
         textRenderer.endRendering();
     }
 

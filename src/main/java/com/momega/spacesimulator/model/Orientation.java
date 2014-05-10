@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
- * Created by Tomáš on 9.5.2014.
+ * Created by martin on 9.5.2014.
  */
 public class Orientation {
 

@@ -5,7 +5,4 @@ package com.momega.spacesimulator.model;
  */
 public class Satellite extends DynamicalPoint {
 
-    public Satellite(String name, Trajectory trajectory, Time time, double[] trajectoryColor) {
-        super(name, trajectory, time, trajectoryColor);
-    }
 }

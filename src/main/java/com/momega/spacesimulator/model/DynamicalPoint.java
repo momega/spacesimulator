@@ -6,41 +6,15 @@ package com.momega.spacesimulator.model;
  */
 public class DynamicalPoint extends MovingObject {
 
-    private final Object3d object;
-    private final Trajectory trajectory;
-    private final double[] trajectoryColor;
+    public double mass;
 
-    /**
-     * Dynamical point
-     * @param name the name of the point
-     * @param trajectory the trajectory
-     * @param time initial time
-     * @param trajectoryColor trajectory color // TODO: will be moved to trajectory
-     */
-    public DynamicalPoint(String name, Orientation orientation, Trajectory trajectory, Time time, double[] trajectoryColor) {
-        this.name = name;
-        this.trajectory = trajectory;
-        this.trajectoryColor = trajectoryColor;
-        this.object = new Object3d(trajectory.computePosition(time), new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
+    public double getMass() {
+        return mass;
     }
 
-    public Trajectory getTrajectory() {
-        return this.trajectory;
+    public void setMass(double mass) {
+        this.mass = mass;
     }
 
-    public void move(Time time) {
-        getObject().setPosition(trajectory.computePosition(time));
-    }
 
-    public double[] getTrajectoryColor() {
-        return trajectoryColor;
-    }
-
-    public Object3d getObject() {
-        return object;
-    }
-
-    public Vector3d getPosition() {
-        return getObject().getPosition();
-    }
 }

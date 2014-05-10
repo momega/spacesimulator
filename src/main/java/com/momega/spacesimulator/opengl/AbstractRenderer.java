@@ -116,8 +116,8 @@ public abstract class AbstractRenderer implements GLEventListener {
     public void setupCamera(Camera camera)
     {
         glu.gluLookAt(	camera.getPosition().x, camera.getPosition().y, camera.getPosition().z,
-                camera.getPosition().x + camera.getN().x, camera.getPosition().y + camera.getN().y, camera.getPosition().z + camera.getN().z,
-                camera.getV().x, camera.getV().y, camera.getV().z);
+                camera.getPosition().x + camera.getOrientation().getN().x, camera.getPosition().y + camera.getOrientation().getN().y, camera.getPosition().z + camera.getOrientation().getN().z,
+                camera.getOrientation().getV().x, camera.getOrientation().getV().y, camera.getOrientation().getV().z);
     }
 
 

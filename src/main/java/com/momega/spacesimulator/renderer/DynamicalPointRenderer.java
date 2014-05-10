@@ -42,21 +42,21 @@ public class DynamicalPointRenderer extends ObjectRenderer {
     }
 
     protected void drawLabel(GL2 gl) {
-        double modelview[] = new double[16];
+        double modelView[] = new double[16];
         double projection[] = new double[16];
         double[] my2DPoint = new double[4]; // will contain 2d window coordinates when done
         int viewport[] = new int[4];
-        gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, modelview, 0);
+        gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, modelView, 0);
         gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projection, 0 );
         gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
 
-        Vector3d viewVector = camera.getN();
+        Vector3d viewVector = camera.getOrientation().getN();
         Vector3d diffVector = camera.getPosition().clone().negate().add(dynamicalPoint.getPosition());
 
         if (viewVector.dot(diffVector) > 0) {  // object is in front of the camera
             GLU glu = new GLU();
             glu.gluProject(dynamicalPoint.getPosition().x, dynamicalPoint.getPosition().y, dynamicalPoint.getPosition().z,
-                            modelview, 0, projection, 0, viewport, 0, my2DPoint, 0);
+                            modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
 
             textRenderer.beginRendering(viewport[2], viewport[3]);
             textRenderer.setColor(1, 1, 1, 1);
