@@ -1,9 +1,24 @@
 package com.momega.spacesimulator.model;
 
 /**
- * Created by martin on 4/21/14.
+ * The abstract implementation of the trajectory
+ * Created by martin on 10.5.2014.
  */
-public interface Trajectory {
+public abstract class Trajectory {
+
+    private double[] trajectoryColor;
+
+    public void initialize() {
+        // ready for override
+    }
+
+    public double[] getTrajectoryColor() {
+        return trajectoryColor;
+    }
+
+    public void setTrajectoryColor(double[] trajectoryColor) {
+        this.trajectoryColor = trajectoryColor;
+    }
 
     /**
      * Computes the position of and object in the time t. The set new position, velocity and orientation
@@ -11,16 +26,5 @@ public interface Trajectory {
      * @param time the time
      * @return the position of an object
      */
-    void computePosition(MovingObject movingObject, Time time);
-
-    /**
-     * Initializes the trajectory
-     */
-    void initialize();
-
-    /**
-     * The color of the trajectory
-     * @return
-     */
-    double[] getTrajectoryColor();
+    public abstract void computePosition(MovingObject movingObject, Time time);
 }

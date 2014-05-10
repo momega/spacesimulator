@@ -37,9 +37,18 @@ public class Planet extends DynamicalPoint {
     }
 
     public void rotate(Time time) {
-        double z = time.getJulianDay() / getRotationPeriod();
-        z = z - Math.floor(z);
-        this.fi = z * 360;
+        // TODO: fix this
+//        double z = time.getJulianDay() / getRotationPeriod();
+//        z = z - Math.floor(z);
+//        this.fi = z * 360;
+    }
+
+    /**
+     * Sets the axial tilt of the planet
+     * @param angle the angle
+     */
+    public void setAxialTitle(double angle) {
+        getOrientation().lookUp(angle);
     }
 
     public double getRotationPeriod() {

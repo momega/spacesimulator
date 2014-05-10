@@ -13,9 +13,9 @@ public abstract class TrajectoryRenderer {
     private final Trajectory trajectory;
     private final double[] color;
 
-    protected TrajectoryRenderer(Trajectory trajectory, double[] color) {
+    protected TrajectoryRenderer(Trajectory trajectory) {
         this.trajectory = trajectory;
-        this.color = color;
+        this.color = trajectory.getTrajectoryColor();
     }
 
     public abstract void draw(GL2 gl);
@@ -28,13 +28,13 @@ public abstract class TrajectoryRenderer {
     public static TrajectoryRenderer createInstance(DynamicalPoint dynamicalPoint) {
         Trajectory trajectory = dynamicalPoint.getTrajectory();
         if (trajectory instanceof StaticTrajectory) {
-            return new StaticTrajectoryRenderer(trajectory, dynamicalPoint.getTrajectoryColor());
+            return new StaticTrajectoryRenderer(trajectory);
         } else if (trajectory instanceof KeplerianTrajectory3d) {
-            return new KeplerianTrajectory3dRenderer((KeplerianTrajectory3d)trajectory, dynamicalPoint.getTrajectoryColor());
+            return new KeplerianTrajectory3dRenderer((KeplerianTrajectory3d)trajectory);
         } else if (trajectory instanceof KeplerianTrajectory2d) {
-            return new KeplerianTrajectory2dRenderer((KeplerianTrajectory2d)trajectory, dynamicalPoint.getTrajectoryColor());
+            return new KeplerianTrajectory2dRenderer((KeplerianTrajectory2d)trajectory);
         } else if (trajectory instanceof NewtonianTrajectory) {
-            return new NewtonianTrajectoryRenderer(trajectory, dynamicalPoint.getTrajectoryColor());
+            return new NewtonianTrajectoryRenderer(trajectory);
         }
 
         throw new IllegalArgumentException("unable to handle trajectory");

@@ -1,6 +1,8 @@
 package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.utils.MathUtils;
+import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,7 +10,7 @@ import org.slf4j.LoggerFactory;
  * The class computer keplerian trajectory and object along the eclipse. It computes only in 2D
  * Created by martin on 4/21/14.
  */
-public class KeplerianTrajectory2d extends AbstractTrajectory {
+public class KeplerianTrajectory2d extends Trajectory {
 
     private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectory2d.class);
 
@@ -17,15 +19,14 @@ public class KeplerianTrajectory2d extends AbstractTrajectory {
     private DynamicalPoint centralObject;
     private double semimajorAxis; // (a)
     private double eccentricity; // epsilon
-    private double timeOfPeriapsis; // julian day
-    private double period; // T in days
+    private DateTime timeOfPeriapsis; // julian day
+    private Duration period; // T in seconds
     private double argumentOfPeriapsis; // lowercase omega
     private double p; // semilatus rectum
-    private double thetaParam;
 
     public void initialize() {
         this.p = semimajorAxis* (1 - eccentricity* eccentricity);
-        this.thetaParam = Math.sqrt((1+eccentricity)/(1-eccentricity));
+        //this.thetaParam = Math.sqrt((1+eccentricity)/(1-eccentricity));
     }
 
     /**
@@ -35,7 +36,7 @@ public class KeplerianTrajectory2d extends AbstractTrajectory {
      */
     @Override
     public void computePosition(MovingObject movingObject, Time time) {
-        double[] solution = solveKeplerian(time.getJulianDay());
+        double[] solution = solveKeplerian(time.getSeconds());
         double r = solution[0];
         double theta = solution[1];
 
@@ -56,7 +57,7 @@ public class KeplerianTrajectory2d extends AbstractTrajectory {
         logger.debug("time = {}", t);
 
         double E = Math.PI; //  eccentric anomaly
-        double M = 2 * Math.PI * (t - timeOfPeriapsis) / period;   // mean anomaly
+        double M = 2 * Math.PI * (t - Time.getSeconds(timeOfPeriapsis)) / period.getStandardSeconds();   // mean anomaly
         M = MathUtils.normalizeAngle(M);
 
         logger.debug("M = {}", M);
@@ -103,8 +104,12 @@ public class KeplerianTrajectory2d extends AbstractTrajectory {
         return centralObject;
     }
 
-    public void setPeriod(double period) {
+    public void setPeriod(Duration period) {
         this.period = period;
+    }
+
+    public Duration getPeriod() {
+        return period;
     }
 
     public void setCentralObject(DynamicalPoint centralObject) {
@@ -115,8 +120,12 @@ public class KeplerianTrajectory2d extends AbstractTrajectory {
         this.eccentricity = eccentricity;
     }
 
-    public void setTimeOfPeriapsis(double timeOfPeriapsis) {
+    public void setTimeOfPeriapsis(DateTime timeOfPeriapsis) {
         this.timeOfPeriapsis = timeOfPeriapsis;
+    }
+
+    public DateTime getTimeOfPeriapsis() {
+        return timeOfPeriapsis;
     }
 
     public void setSemimajorAxis(double semimajorAxis) {

@@ -23,7 +23,7 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
 
     @Override
     public void computePosition(MovingObject movingObject, Time time) {
-        double[] solution = solveKeplerian(time.getJulianDay());
+        double[] solution = solveKeplerian(Time.getSeconds(time.getTimestamp()));
         double r = solution[0];
         double theta = solution[1];
 

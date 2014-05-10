@@ -20,8 +20,8 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
     protected final double b;
     protected final double e;
 
-    public KeplerianTrajectory2dRenderer(KeplerianTrajectory2d trajectory, double[] color) {
-        super(trajectory, color);
+    public KeplerianTrajectory2dRenderer(KeplerianTrajectory2d trajectory) {
+        super(trajectory);
         this.epsilon = trajectory.getEccentricity();
         this.argumentOfPeriapsis = trajectory.getArgumentOfPeriapsis();
         this.a = trajectory.getSemimajorAxis();

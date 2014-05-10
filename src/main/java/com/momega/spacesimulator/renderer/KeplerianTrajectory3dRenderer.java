@@ -14,8 +14,8 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
     private double inclination;
     private double ascendingNode;
 
-    public KeplerianTrajectory3dRenderer(KeplerianTrajectory3d trajectory, double[] color) {
-        super(trajectory, color);
+    public KeplerianTrajectory3dRenderer(KeplerianTrajectory3d trajectory) {
+        super(trajectory);
         this.inclination = trajectory.getInclination();
         this.ascendingNode = trajectory.getAscendingNode();
     }
@@ -28,11 +28,10 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
                 this.getTrajectory().getCentralObject().getPosition().y,
                 this.getTrajectory().getCentralObject().getPosition().z);
 
-        gl.glRotated(this.ascendingNode * 180/ Math.PI, 0, 0, 1);
-        gl.glRotated(this.inclination * 180/ Math.PI, 1, 0, 0);
-        gl.glRotated(this.argumentOfPeriapsis * 180/ Math.PI, 0, 0, 1);
+        gl.glRotated(Math.toDegrees(this.ascendingNode), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(this.inclination), 1, 0, 0);
+        gl.glRotated(Math.toDegrees(this.argumentOfPeriapsis), 0, 0, 1);
 
-        //
         gl.glColor3dv(getColor(), 0);
         Utils.drawEllipse(gl, -e, 0, a, b, 7200);
 

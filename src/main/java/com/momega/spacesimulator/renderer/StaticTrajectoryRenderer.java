@@ -11,8 +11,8 @@ import static javax.media.opengl.GL.GL_LINES;
  */
 public class StaticTrajectoryRenderer extends TrajectoryRenderer {
 
-    protected StaticTrajectoryRenderer(Trajectory trajectory, double[] color) {
-        super(trajectory, color);
+    protected StaticTrajectoryRenderer(Trajectory trajectory) {
+        super(trajectory);
     }
 
     @Override

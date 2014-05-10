@@ -36,10 +36,8 @@ public class ModelRenderer extends AbstractRenderer {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
         gl.glClearDepth(1.0f);      // set clear depth value to farthest
 
-        //gl.glDepthFunc(GL_LEQUAL);  // the type of depth test to do
         gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
         gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
-
         gl.glDepthFunc(GL.GL_LESS);
         gl.glEnable(GL_DEPTH_TEST); // for textures
 

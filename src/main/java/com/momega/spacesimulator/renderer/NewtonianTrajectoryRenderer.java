@@ -11,12 +11,12 @@ import javax.media.opengl.GL2;
  */
 public class NewtonianTrajectoryRenderer extends TrajectoryRenderer {
 
-    protected NewtonianTrajectoryRenderer(Trajectory trajectory, double[] color) {
-        super(trajectory, color);
+    protected NewtonianTrajectoryRenderer(Trajectory trajectory) {
+        super(trajectory);
     }
 
     @Override
     public void draw(GL2 gl) {
-
+        //TODO: do nothing now
     }
 }

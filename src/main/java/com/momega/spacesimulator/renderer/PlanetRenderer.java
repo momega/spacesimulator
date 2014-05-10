@@ -96,8 +96,10 @@ public class PlanetRenderer extends DynamicalPointRenderer {
     public void draw(GL2 gl) {
         gl.glPushMatrix();
         gl.glTranslated(planet.getPosition().x, planet.getPosition().y, planet.getPosition().z);
-        gl.glRotated(planet.getAxialTilt(), planet.getObject().getU().x, planet.getObject().getU().y, planet.getObject().getU().z);
-        gl.glRotated(planet.getFi(), planet.getObject().getV().x, planet.getObject().getV().y, planet.getObject().getV().z);
+
+ // TODO: fix this
+ //       gl.glRotated(planet.getAxialTilt(), planet.getObject().getU().x, planet.getObject().getU().y, planet.getObject().getU().z);
+ //       gl.glRotated(planet.getFi(), planet.getObject().getV().x, planet.getObject().getV().y, planet.getObject().getV().z);
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();
 

@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by martin on 5/5/14.
  */
-public class NewtonianTrajectory extends AbstractTrajectory {
+public class NewtonianTrajectory extends Trajectory {
 
     public static final double G = 6.67384*1E-11;
 

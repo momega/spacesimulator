@@ -1,9 +1,6 @@
 package com.momega.spacesimulator.model;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
-import org.joda.time.Duration;
-import org.joda.time.Interval;
+import org.joda.time.*;
 
 import java.util.Date;
 
@@ -20,10 +17,6 @@ public class Time {
         this.timestamp = new DateTime(DateTimeUtils.fromJulianDay(julianDay));
     }
 
-    public double getJulianDay() {
-        return DateTimeUtils.toJulianDay(timestamp.getMillis());
-    }
-
     public DateTime getTimestamp() {
         return timestamp;
     }
@@ -33,10 +26,18 @@ public class Time {
     }
 
     public void next() {
-        timestamp = timestamp.plus((long) warpFactor);
+        timestamp = timestamp.plus((long) warpFactor * DateTimeConstants.MILLIS_PER_SECOND);
     }
 
     public double getWarpFactor() {
         return warpFactor;
+    }
+
+    public double getSeconds() {
+        return getSeconds(timestamp);
+    }
+
+    public static double getSeconds(DateTime datetime) {
+        return ((double) datetime.getMillis()) / 1000d;
     }
 }
