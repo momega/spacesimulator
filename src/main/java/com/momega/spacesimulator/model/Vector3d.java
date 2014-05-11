@@ -142,6 +142,10 @@ public class Vector3d {
         return this;
     }
 
+    public double[] asArray() {
+        return new double[] {x,y,z};
+    }
+
     public String toString() {
         String result = String.format("( %.3f, %.3f, %.3f)", x, y, z);
         return result;

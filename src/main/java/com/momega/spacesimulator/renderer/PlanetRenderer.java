@@ -6,6 +6,7 @@ import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.Vector3d;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLProfile;
@@ -82,20 +83,22 @@ public class PlanetRenderer extends DynamicalPointRenderer {
         glu.gluQuadricTexture(quadric, true);
         glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
-        glu.gluSphere(quadric, planet.getRadius(), 64, 64);
+        glu.gluSphere(quadric, planet.getRadius() / SCALE_FACTOR, 64, 64);
         glu.gluDeleteQuadric(quadric);
         texture.disable(gl);
 
         gl.glLineWidth(2.5f);
         gl.glBegin(GL_LINES);
-        gl.glVertex3d(0, 0, planet.getRadius() * 2);
-        gl.glVertex3d(0, 0, -planet.getRadius() * 2);
+        gl.glVertex3d(0, 0, planet.getRadius() / SCALE_FACTOR * 2);
+        gl.glVertex3d(0, 0, -planet.getRadius() / SCALE_FACTOR * 2);
         gl.glEnd();
     }
 
     public void draw(GL2 gl) {
         gl.glPushMatrix();
-        gl.glTranslated(planet.getPosition().x, planet.getPosition().y, planet.getPosition().z);
+
+        Vector3d p = planet.getPosition().clone().scale(1/SCALE_FACTOR);
+        gl.glTranslated(p.x, p.y, p.z);
 
  // TODO: fix this
  //       gl.glRotated(planet.getAxialTilt(), planet.getObject().getU().x, planet.getObject().getU().y, planet.getObject().getU().z);

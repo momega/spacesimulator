@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.KeplerianTrajectory3d;
+import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.Utils;
 
 import javax.media.opengl.GL2;
@@ -24,10 +25,9 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
     public void draw(GL2 gl) {
         super.draw(gl);
         gl.glPushMatrix();
-        gl.glTranslated(this.getTrajectory().getCentralObject().getPosition().x,
-                this.getTrajectory().getCentralObject().getPosition().y,
-                this.getTrajectory().getCentralObject().getPosition().z);
 
+        Vector3d p = getTrajectory().getCentralObject().getPosition().clone().scale(1/ObjectRenderer.SCALE_FACTOR);
+        gl.glTranslated(p.x, p.y, p.z);
         gl.glRotated(Math.toDegrees(this.ascendingNode), 0, 0, 1);
         gl.glRotated(Math.toDegrees(this.inclination), 1, 0, 0);
         gl.glRotated(Math.toDegrees(this.argumentOfPeriapsis), 0, 0, 1);

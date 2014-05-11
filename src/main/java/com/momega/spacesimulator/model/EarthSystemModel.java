@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import java.util.Arrays;
+
 /**
  * Created by martin on 5/6/14.
  */
@@ -36,16 +38,26 @@ public class EarthSystemModel extends AbstractModel {
         addDynamicalPoint(earth);
         addDynamicalPoint(moon);
 
-//        Object3d satellitePosition = new Object3d(new Vector3d(6.378 + 0.2,0,0), new Vector3d(0, 9000d, 0), new Vector3d(0, 0, 1d));
-//        Satellite satellite = new Satellite("Satellite", new NewtonianTrajectory(getPlanets(), satellitePosition), time,  new double[] {1,1,1});
-//        addDynamicalPoint(satellite);
+
+        Satellite satellite = new Satellite();
+        satellite.setName("Satellite");
+        satellite.setPosition(new Vector3d((6.378 + 0.2) * 1E6, 0, 0));
+        satellite.setOrientation(new Orientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
+        satellite.setVelocity(new Vector3d(0, 9000d, 0));
+        NewtonianTrajectory satelliteTrajectory = new NewtonianTrajectory();
+        satelliteTrajectory.setTrajectoryColor(new double[] {1,1,1});
+        satelliteTrajectory.setPlanets(Arrays.asList(earth, moon));
+        satellite.setTrajectory(satelliteTrajectory);
+        satellite.setMass(10 * 1E3);
+
+        addDynamicalPoint(satellite);
     }
 
     @Override
     protected void initCamera() {
         Camera c = new Camera();
-        c.setPosition(new Vector3d(0, 0, 15 * 1E6));
-        c.setOrientation(new Orientation(new Vector3d(0, 0, -1), new Vector3d(0, 1, 0)));
+        c.setPosition(new Vector3d(15 * 1E6, 0, 0));
+        c.setOrientation(new Orientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
         c.setVelocity(1*1E6);
         setCamera(c);
     }

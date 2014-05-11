@@ -21,12 +21,11 @@ public abstract class TrajectoryRenderer {
     public abstract void draw(GL2 gl);
 
     /**
-     * Creates the distance of trajectory renderer
-     * @param dynamicalPoint
+     * Creates the trajectory renderer
+     * @param trajectory the trajectory
      * @return
      */
-    public static TrajectoryRenderer createInstance(DynamicalPoint dynamicalPoint) {
-        Trajectory trajectory = dynamicalPoint.getTrajectory();
+    public static TrajectoryRenderer createInstance(Trajectory trajectory) {
         if (trajectory instanceof StaticTrajectory) {
             return new StaticTrajectoryRenderer(trajectory);
         } else if (trajectory instanceof KeplerianTrajectory3d) {

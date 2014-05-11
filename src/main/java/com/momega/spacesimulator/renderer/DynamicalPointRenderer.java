@@ -20,7 +20,7 @@ public class DynamicalPointRenderer extends ObjectRenderer {
     private TextRenderer textRenderer;
 
     public DynamicalPointRenderer(DynamicalPoint dynamicalPoint, Camera camera) {
-        this.trajectoryRenderer = TrajectoryRenderer.createInstance(dynamicalPoint);
+        this.trajectoryRenderer = TrajectoryRenderer.createInstance(dynamicalPoint.getTrajectory());
         this.dynamicalPoint = dynamicalPoint;
         this.camera = camera;
     }
@@ -51,11 +51,12 @@ public class DynamicalPointRenderer extends ObjectRenderer {
         gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
 
         Vector3d viewVector = camera.getOrientation().getN();
-        Vector3d diffVector = camera.getPosition().clone().negate().add(dynamicalPoint.getPosition());
+        Vector3d diffVector = camera.getPosition().clone().negate().add(dynamicalPoint.getPosition()).scale(1 / SCALE_FACTOR);
 
         if (viewVector.dot(diffVector) > 0) {  // object is in front of the camera
             GLU glu = new GLU();
-            glu.gluProject(dynamicalPoint.getPosition().x, dynamicalPoint.getPosition().y, dynamicalPoint.getPosition().z,
+            Vector3d p = dynamicalPoint.getPosition().clone().scale(1 / SCALE_FACTOR);
+            glu.gluProject(p.x, p.y, p.z,
                             modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
 
             textRenderer.beginRendering(viewport[2], viewport[3]);

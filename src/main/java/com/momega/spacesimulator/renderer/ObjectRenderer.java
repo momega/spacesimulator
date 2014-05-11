@@ -8,6 +8,8 @@ import javax.media.opengl.GL2;
  */
 public abstract class ObjectRenderer {
 
+    public static double SCALE_FACTOR = 1E6;
+
     public abstract void init(GL2 gl);
 
     public abstract void draw(GL2 gl);

@@ -2,6 +2,8 @@ package com.momega.spacesimulator.opengl;
 
 import com.jogamp.opengl.util.gl2.GLUT;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.renderer.ObjectRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,7 +101,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
         gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 10, 200 * 1E6); // TODO: fix perspective
+        glu.gluPerspective(45, aspect, 1, 1 * 1E4); // TODO: fix perspective
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");
@@ -115,9 +117,10 @@ public abstract class AbstractRenderer implements GLEventListener {
      */
     public void setupCamera(Camera camera)
     {
-        glu.gluLookAt(	camera.getPosition().x, camera.getPosition().y, camera.getPosition().z,
-                camera.getPosition().x + camera.getOrientation().getN().x, camera.getPosition().y + camera.getOrientation().getN().y, camera.getPosition().z + camera.getOrientation().getN().z,
-                camera.getOrientation().getV().x, camera.getOrientation().getV().y, camera.getOrientation().getV().z);
+        Vector3d p = camera.getPosition().clone().scale(1/ObjectRenderer.SCALE_FACTOR);
+        glu.gluLookAt(	p.x, p.y, p.z,
+                p.x + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().x, p.y + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().y, p.z + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().z,
+                ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().x, ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().y, ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().z);
     }
 
 

@@ -1,6 +1,8 @@
 package com.momega.spacesimulator.model;
 
 /**
+ * The implementation of the moving object. The moving object has the velocity defined and trajectory which can computer new position and velocity
+ * The moving object also has a name to distinguish the objects
  * Created by martin on 10.5.2014.
  */
 public class MovingObject extends Object3d {
@@ -15,10 +17,6 @@ public class MovingObject extends Object3d {
 
     public void setVelocity(Vector3d velocity) {
         this.velocity = velocity;
-    }
-
-    public void move(double delta) {
-        setPosition(Vector3d.scaleAdd(delta, velocity, getPosition()));
     }
 
     public String getName() {

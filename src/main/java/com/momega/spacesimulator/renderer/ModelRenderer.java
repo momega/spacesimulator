@@ -13,8 +13,7 @@ import javax.media.opengl.GLAutoDrawable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.media.opengl.GL.GL_DEPTH_TEST;
-import static javax.media.opengl.GL.GL_NICEST;
+import static javax.media.opengl.GL.*;
 import static javax.media.opengl.fixedfunc.GLLightingFunc.GL_SMOOTH;
 
 /**
@@ -36,9 +35,10 @@ public class ModelRenderer extends AbstractRenderer {
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
         gl.glClearDepth(1.0f);      // set clear depth value to farthest
 
+        gl.glDepthMask(true);
         gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-        gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
-        gl.glDepthFunc(GL.GL_LESS);
+//        gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
+//        gl.glDepthFunc(GL.GL_LESS);
         gl.glEnable(GL_DEPTH_TEST); // for textures
 
         for(DynamicalPoint dp : model.getDynamicalPoints()) {
@@ -46,7 +46,7 @@ public class ModelRenderer extends AbstractRenderer {
             if (dp instanceof  Planet) {
                 dpr = new PlanetRenderer((Planet) dp, model.getCamera());
             } else if (dp instanceof Satellite) {
-                dpr = new SatelliteRenderer(dp, model.getCamera());
+                dpr = new SatelliteRenderer((Satellite) dp, model.getCamera());
             } else {
                 dpr = new DynamicalPointRenderer(dp, model.getCamera());
             }
