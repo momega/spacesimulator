@@ -31,11 +31,11 @@ public class CameraController extends AbstractController {
                 break;
 
             case KeyEvent.VK_Q:
-                camera.getOrientation().twist(+0.5);
+                camera.getOrientation().twist(Math.toRadians(+0.5));
                 break;
 
             case KeyEvent.VK_E:
-                camera.getOrientation().twist(-0.5);
+                camera.getOrientation().twist(Math.toRadians(-0.5));
                 break;
 
             case KeyEvent.VK_S:
@@ -43,19 +43,19 @@ public class CameraController extends AbstractController {
                 break;
 
             case KeyEvent.VK_O:
-                camera.getOrientation().lookLeft(+0.5);
+                camera.getOrientation().lookLeft(Math.toRadians(+0.5));
                 break;
 
             case KeyEvent.VK_P:
-                camera.getOrientation().lookLeft(-0.5);
+                camera.getOrientation().lookLeft(Math.toRadians(-0.5));
                 break;
 
             case KeyEvent.VK_H:
-                camera.getOrientation().lookUp(+0.5);
+                camera.getOrientation().lookUp(Math.toRadians(+0.5));
                 break;
 
             case KeyEvent.VK_N:
-                camera.getOrientation().lookUp(-0.5);
+                camera.getOrientation().lookUp(Math.toRadians(-0.5));
                 break;
         }
     }
@@ -74,7 +74,7 @@ public class CameraController extends AbstractController {
 
         Point delta = new Point(e.getX() - mouseLast.x, e.getY() - mouseLast.y);
 
-        final double MOUSE_SPEED_MODIFIER = 0.25f;
+        final double MOUSE_SPEED_MODIFIER = 0.0025f;
         double horizAngle = delta.x*MOUSE_SPEED_MODIFIER, vertAngle = delta.y*MOUSE_SPEED_MODIFIER;
 
         // Turn horizontally by rotating about the standard up vector (0,0,1).

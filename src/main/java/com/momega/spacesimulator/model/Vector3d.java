@@ -117,6 +117,10 @@ public class Vector3d {
         return this;
     }
 
+    public Vector3d scaled(double factor) {
+        return new Vector3d( x * factor, y * factor, z * factor);
+    }
+
     /**
      * Returns the result of the operation factor*u + v.
      *

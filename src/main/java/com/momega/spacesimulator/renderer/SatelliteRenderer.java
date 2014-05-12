@@ -5,6 +5,7 @@ import com.momega.spacesimulator.model.Satellite;
 import com.momega.spacesimulator.model.Vector3d;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,24 +19,25 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
     public static final int maxHistory = 10000;
     private final Satellite satellite;
 
-    private List<Vector3d> history = new ArrayList<>();
+    private List<double[]> history = new ArrayList<>();
 
     public SatelliteRenderer(Satellite satellite, Camera camera) {
         super(satellite, camera);
         this.satellite = satellite;
     }
 
-    @Override
-    public void draw(GL2 gl) {
+    public void draw(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
         drawLabel(gl);
         if (history.size()> maxHistory) {
             history.remove(0);
         }
-        history.add(satellite.getPosition().clone().scale( 1/ ObjectRenderer.SCALE_FACTOR));
+        history.add(satellite.getPosition().scaled( 1/ ObjectRenderer.SCALE_FACTOR).asArray());
 
+        gl.glColor3dv(satellite.getTrajectory().getTrajectoryColor(), 0);
         gl.glBegin(GL_LINES);
-        for (Vector3d v : history) {
-            gl.glVertex3dv(v.asArray(), 0);
+        for (double[] v : history) {
+            gl.glVertex3dv(v, 0);
         }
         gl.glEnd();
     }

@@ -53,7 +53,8 @@ public class Stencil extends AbstractRenderer {
     }
 
     @Override
-    protected void display(GL2 gl) {
+    public void draw(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL2.GL_STENCIL_BUFFER_BIT);
 
         /* draw blue sphere where the stencil is 1 */

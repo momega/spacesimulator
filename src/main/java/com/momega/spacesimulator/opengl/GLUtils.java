@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.opengl;
 
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.renderer.ObjectRenderer;
+
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
@@ -9,7 +12,7 @@ import static javax.media.opengl.GL.GL_LINE_LOOP;
  * The class contains static handful methods to draw objects such as {#link drawCircle} or {#link drawEllipse}
  * Created by martin on 4/21/14.
  */
-public class Utils {
+public class GLUtils {
 
     /**
      * Draws the circle
@@ -51,6 +54,11 @@ public class Utils {
         }
 
         gl.glEnd();
+    }
+
+    public static void translate(GL2 gl, Vector3d position) {
+        Vector3d p = position.scaled(1 / ObjectRenderer.SCALE_FACTOR);
+        gl.glTranslated(p.x, p.y, p.y);
     }
 
 }

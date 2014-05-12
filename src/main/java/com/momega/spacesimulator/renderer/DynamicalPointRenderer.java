@@ -6,6 +6,7 @@ import com.momega.spacesimulator.model.DynamicalPoint;
 import com.momega.spacesimulator.model.Vector3d;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import java.awt.*;
 
@@ -31,7 +32,8 @@ public class DynamicalPointRenderer extends ObjectRenderer {
     }
 
     @Override
-    public void draw(GL2 gl) {
+    public void draw(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
         drawLabel(gl);
         trajectoryRenderer.draw(gl);
     }
@@ -41,6 +43,10 @@ public class DynamicalPointRenderer extends ObjectRenderer {
         textRenderer.dispose();
     }
 
+    /**
+     * Helper method to draw the label for th given object
+     * @param gl
+     */
     protected void drawLabel(GL2 gl) {
         double modelView[] = new double[16];
         double projection[] = new double[16];

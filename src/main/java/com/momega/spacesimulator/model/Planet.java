@@ -45,7 +45,7 @@ public class Planet extends DynamicalPoint {
 
     /**
      * Sets the axial tilt of the planet
-     * @param angle the angle
+     * @param angle the angle in radians
      */
     public void setAxialTitle(double angle) {
         getOrientation().lookUp(angle);

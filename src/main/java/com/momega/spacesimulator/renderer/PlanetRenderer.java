@@ -7,8 +7,10 @@ import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.opengl.GLUtils;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
@@ -94,18 +96,19 @@ public class PlanetRenderer extends DynamicalPointRenderer {
         gl.glEnd();
     }
 
-    public void draw(GL2 gl) {
+    public void draw(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
         gl.glPushMatrix();
 
-        Vector3d p = planet.getPosition().clone().scale(1/SCALE_FACTOR);
-        gl.glTranslated(p.x, p.y, p.z);
+        GLUtils.translate(gl, planet.getPosition());
+        double angle = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,0,1), planet.getOrientation().getV()));
 
  // TODO: fix this
- //       gl.glRotated(planet.getAxialTilt(), planet.getObject().getU().x, planet.getObject().getU().y, planet.getObject().getU().z);
+        gl.glRotated(angle, 0, 1, 0);
  //       gl.glRotated(planet.getFi(), planet.getObject().getV().x, planet.getObject().getV().y, planet.getObject().getV().z);
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();
 
-        super.draw(gl);
+        super.draw(drawable);
     }
 }

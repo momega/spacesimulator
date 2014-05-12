@@ -1,14 +1,10 @@
 package com.momega.spacesimulator.opengl;
 
 import com.jogamp.opengl.util.gl2.GLUT;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.renderer.ObjectRenderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.GL2ES1;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;
 import javax.media.opengl.glu.GLU;
@@ -54,19 +50,14 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glLoadIdentity();
         setView();
 
-        display(gl);
-        additionalDisplay(drawable);
+        draw(drawable);
 
         gl.glFlush();
     }
 
-    protected void additionalDisplay(GLAutoDrawable drawable) {
-        // do nothing
-    }
+    protected abstract void draw(GLAutoDrawable drawable);
 
     public abstract void setView();
-
-    protected abstract void display(GL2 gl);
 
     protected abstract void init(GL2 gl);
 
@@ -101,29 +92,11 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
         gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 1, 1 * 1E4); // TODO: fix perspective
+        glu.gluPerspective(45, aspect, 0.01, 1 * 1E4); // TODO: fix perspective
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");
     }
-
-    /**
-     Changes the view to be that of the camera.
-
-     <p><b>Preconditions:</b>
-     <dl>
-     <dd>The matrix-mode of the GL context passed in must be MODELVIEW
-     </dl>
-     */
-    public void setupCamera(Camera camera)
-    {
-        Vector3d p = camera.getPosition().clone().scale(1/ObjectRenderer.SCALE_FACTOR);
-        glu.gluLookAt(	p.x, p.y, p.z,
-                p.x + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().x, p.y + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().y, p.z + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().z,
-                ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().x, ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().y, ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().z);
-    }
-
-
 
 
 }

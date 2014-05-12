@@ -96,20 +96,21 @@ public class Orientation {
      </dl>
 
      @param v			The vector to rotate about the axis
-     @param degreeAngle	The angle by which to rotate it (in degrees)
+     @param angle	The angle by which to rotate it (in radians)
      @param axis			The axis about which to rotate it
      @return				A (new) vector containing the result of the rotation
      @throws java.lang.Error	If any of the preconditions are not met
      */
-    private static Vector3d rotateAboutAxis(final Vector3d v, final double degreeAngle, final Vector3d axis)
+    private static Vector3d rotateAboutAxis(final Vector3d v, final double angle, final Vector3d axis)
     {
         // Check the preconditions.
         if(v == null || axis == null) throw new java.lang.Error();
-        if(Math.abs(axis.length() - 1) >= EPSILON) throw new java.lang.Error();	// make sure axis is normalized
+        if(Math.abs(axis.length() - 1) >= EPSILON) {
+            throw new IllegalStateException("axis is not normalized");	// make sure axis is normalized
+        }
 
         // Main algorithm
-        double radianAngle = degreeAngle*Math.PI/180.0;
-        double cosAngle = Math.cos(radianAngle), sinAngle = Math.sin(radianAngle);
+        double cosAngle = Math.cos(angle), sinAngle = Math.sin(angle);
         Vector3d cross = axis.cross(v);
 
         // ret = v cos radianAngle + (axis x v) sin radianAngle + axis(axis . v)(1 - cos radianAngle)

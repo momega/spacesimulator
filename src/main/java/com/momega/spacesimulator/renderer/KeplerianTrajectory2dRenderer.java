@@ -1,12 +1,8 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.KeplerianTrajectory2d;
-import com.momega.spacesimulator.model.Trajectory;
-import com.momega.spacesimulator.opengl.Utils;
 
 import javax.media.opengl.GL2;
-
-import static javax.media.opengl.GL.GL_LINES;
 
 /**
  * The renderer of keplerian trajectory 2d

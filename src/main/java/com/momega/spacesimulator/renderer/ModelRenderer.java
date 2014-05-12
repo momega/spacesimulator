@@ -1,9 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.AbstractModel;
-import com.momega.spacesimulator.model.DynamicalPoint;
-import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.model.Satellite;
+import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.AbstractRenderer;
 
 import javax.media.opengl.GL;
@@ -24,7 +21,6 @@ public class ModelRenderer extends AbstractRenderer {
 
     private final AbstractModel model;
     private final List<ObjectRenderer> objectRenderers = new ArrayList<>();
-    private final List<AbstractTextRenderer> textRenderers = new ArrayList<AbstractTextRenderer>();
 
     public ModelRenderer(AbstractModel model) {
         this.model = model;
@@ -38,7 +34,7 @@ public class ModelRenderer extends AbstractRenderer {
         gl.glDepthMask(true);
         gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 //        gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
-//        gl.glDepthFunc(GL.GL_LESS);
+        gl.glDepthFunc(GL.GL_LESS);
         gl.glEnable(GL_DEPTH_TEST); // for textures
 
         for(DynamicalPoint dp : model.getDynamicalPoints()) {
@@ -50,15 +46,15 @@ public class ModelRenderer extends AbstractRenderer {
             } else {
                 dpr = new DynamicalPointRenderer(dp, model.getCamera());
             }
-            dpr.init(gl);
+
             objectRenderers.add(dpr);
         }
 
-        textRenderers.add(new CameraPositionRenderer(model.getCamera()));
-        textRenderers.add(new TimeRenderer(model.getTime()));
+        objectRenderers.add(new CameraPositionRenderer(model.getCamera()));
+        objectRenderers.add(new TimeRenderer(model.getTime()));
 
-        for(AbstractTextRenderer tr : textRenderers) {
-            tr.init();
+        for(ObjectRenderer or : objectRenderers) {
+            or.init(gl);
         }
     }
 
@@ -67,31 +63,24 @@ public class ModelRenderer extends AbstractRenderer {
         for(ObjectRenderer pr : objectRenderers) {
             pr.dispose(gl);
         }
-
-        for(AbstractTextRenderer tr : textRenderers) {
-            tr.dispose();
-        }
     }
 
     @Override
-    protected void display(GL2 gl) {
+    protected void draw(GLAutoDrawable drawable) {
         model.next();
 
-        for(ObjectRenderer pr : objectRenderers) {
-            pr.draw(gl);
-        }
-    }
-
-    @Override
-    protected void additionalDisplay(GLAutoDrawable drawable) {
-        for(AbstractTextRenderer tr : textRenderers) {
-            tr.draw(drawable);
+        for(ObjectRenderer or : objectRenderers) {
+            or.draw(drawable);
         }
     }
 
     @Override
     public void setView() {
-       setupCamera(model.getCamera());
+        Camera camera = model.getCamera();
+        Vector3d p = camera.getPosition().clone().scale(1/ObjectRenderer.SCALE_FACTOR);
+        glu.gluLookAt(	p.x, p.y, p.z,
+                p.x + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().x, p.y + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().y, p.z + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().z,
+                ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().x, ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().y, ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().z);
     }
 
 }
