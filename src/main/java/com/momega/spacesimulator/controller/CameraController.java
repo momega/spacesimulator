@@ -26,20 +26,12 @@ public class CameraController extends AbstractController {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
-            case KeyEvent.VK_W:
-                camera.moveByVelocity(+1);
-                break;
-
             case KeyEvent.VK_Q:
                 camera.getOrientation().twist(Math.toRadians(+0.5));
                 break;
 
             case KeyEvent.VK_E:
                 camera.getOrientation().twist(Math.toRadians(-0.5));
-                break;
-
-            case KeyEvent.VK_S:
-                camera.moveByVelocity(-1);
                 break;
 
             case KeyEvent.VK_O:

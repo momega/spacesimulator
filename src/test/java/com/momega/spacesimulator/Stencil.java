@@ -79,6 +79,11 @@ public class Stencil extends AbstractRenderer {
     }
 
     @Override
+    protected void computeScene() {
+
+    }
+
+    @Override
     public void setView() {
         glu.gluLookAt(	0, 0, 5, 0, 0, 0, 0, 1, 0);
     }

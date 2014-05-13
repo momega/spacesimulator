@@ -6,7 +6,7 @@ package com.momega.spacesimulator.model;
  */
 public class DynamicalPoint extends MovingObject {
 
-    public double mass;
+    private double mass;
 
     public double getMass() {
         return mass;

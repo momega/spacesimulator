@@ -29,4 +29,8 @@ public class NewtonianTrajectory extends Trajectory {
     public void setPlanets(List<Planet> planets) {
         this.planets = planets;
     }
+
+    public List<Planet> getPlanets() {
+        return planets;
+    }
 }

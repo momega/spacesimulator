@@ -61,7 +61,4 @@ public class Planet extends DynamicalPoint {
         return rotationPeriod;
     }
 
-    public double getMass() {
-        return mass;
-    }
 }

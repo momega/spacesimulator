@@ -53,12 +53,21 @@ public class EarthSystemModel extends AbstractModel {
         addDynamicalPoint(satellite);
     }
 
+//    @Override
+//    protected void initCamera() {
+//        FreeCamera c = new FreeCamera();
+//        c.setPosition(new Vector3d(15 * 1E6, 0, 0));
+//        c.setOrientation(new Orientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
+//        c.setVelocity(1*1E6);
+//        setCamera(c);
+//    }
+
     @Override
     protected void initCamera() {
-        Camera c = new Camera();
-        c.setPosition(new Vector3d(15 * 1E6, 0, 0));
+        SatelliteCamera c = new SatelliteCamera();
+        c.setSatellite(getSatellites().get(0));
+        c.setDistance(100);
         c.setOrientation(new Orientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
-        c.setVelocity(1*1E6);
         setCamera(c);
     }
 

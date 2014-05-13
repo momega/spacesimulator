@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ public abstract class AbstractModel {
 
     protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
     private final List<Planet> planets = new ArrayList<>();
+    private final List<Satellite> satellites = new ArrayList<>();
 
     /**
      * Initialize model
@@ -44,6 +46,9 @@ public abstract class AbstractModel {
         if (dp instanceof Planet) {
             planets.add((Planet) dp);
         }
+        if (dp instanceof  Satellite) {
+            satellites.add((Satellite) dp);
+        }
     }
 
     /**
@@ -52,10 +57,8 @@ public abstract class AbstractModel {
     public void next() {
         for(DynamicalPoint dp : getDynamicalPoints()) {
             dp.move(getTime());
-            if (dp instanceof Planet) {
-                ((Planet)dp).rotate(getTime());
-            }
         }
+        camera.updatePosition();
         getTime().next();
     }
 
@@ -70,6 +73,10 @@ public abstract class AbstractModel {
 
     public List<Planet> getPlanets() {
         return planets;
+    }
+
+    public List<Satellite> getSatellites() {
+        return satellites;
     }
 
     public Camera getCamera() {
@@ -90,7 +97,7 @@ public abstract class AbstractModel {
         trajectory.setSemimajorAxis(semimajorAxis);
         trajectory.setEccentricity(eccentricity);
         trajectory.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
-        trajectory.setPeriod(Duration.standardSeconds((long)(period * 86400)));
+        trajectory.setPeriod(Duration.standardSeconds((long) (period * DateTimeConstants.SECONDS_PER_DAY)));
         trajectory.setTimeOfPeriapsis(new DateTime(DateTimeUtils.fromJulianDay(timeOfPeriapsis)));
         trajectory.setInclination(Math.toRadians(inclination));
         trajectory.setAscendingNode(Math.toRadians(ascendingNode));

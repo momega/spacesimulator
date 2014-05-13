@@ -47,13 +47,19 @@ public abstract class AbstractRenderer implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
+        computeScene();
+
         gl.glLoadIdentity();
         setView();
-
         draw(drawable);
 
         gl.glFlush();
     }
+
+    /**
+     * Computes scene with all objects and cameras
+     */
+    protected abstract void computeScene();
 
     protected abstract void draw(GLAutoDrawable drawable);
 
@@ -92,7 +98,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
         gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 0.001, 1 * 1E4); // TODO: fix perspective
+        glu.gluPerspective(45, aspect, 0.00001, 1 * 1E5); // TODO: fix perspective
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");
