@@ -3,6 +3,7 @@ package com.momega.spacesimulator.model;
 import java.util.Arrays;
 
 /**
+ * Simple earth-moon model with the satellite
  * Created by martin on 5/6/14.
  */
 public class EarthSystemModel extends AbstractModel {
@@ -21,7 +22,7 @@ public class EarthSystemModel extends AbstractModel {
         earth.setTextureFileName("earth.jpg");
         earth.setRadius(6.378 * 1E6);
         earth.setOrientation(new Orientation(new Vector3d(1, 0, 0), new Vector3d(0,0, 1)));
-        earth.setAxialTitle(Math.toRadians(23.5));
+        earth.setAxialTilt(Math.toRadians(23.5));
 
         KeplerianTrajectory3d moonTrajectory = createKeplerianTrajectory(earth, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.241500, 208.1199);
         moonTrajectory.setTrajectoryColor(new double[] {0.5,0.5,0.5});
@@ -33,11 +34,10 @@ public class EarthSystemModel extends AbstractModel {
         moon.setTextureFileName("moon.jpg");
         moon.setRotationPeriod(27.321 * 86400);
         moon.setOrientation(new Orientation(new Vector3d(1, 0, 0), new Vector3d(0,0, 1)));
-        moon.setAxialTitle(Math.toRadians(6.687));
+        moon.setAxialTilt(Math.toRadians(6.687));
 
         addDynamicalPoint(earth);
         addDynamicalPoint(moon);
-
 
         Satellite satellite = new Satellite();
         satellite.setName("Satellite");

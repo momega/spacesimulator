@@ -4,12 +4,13 @@ import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Satellite;
 import com.momega.spacesimulator.model.Vector3d;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.media.opengl.GL.GL_LINES;
+import static javax.media.opengl.GL.GL_LINE_STRIP;
 
 /**
  * Created by martin on 5/6/14.
@@ -34,11 +35,13 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
         }
         history.add(satellite.getPosition().scaled( 1/ ObjectRenderer.SCALE_FACTOR).asArray());
 
+        gl.glPushMatrix();
         gl.glColor3dv(satellite.getTrajectory().getTrajectoryColor(), 0);
-        gl.glBegin(GL_LINES);
+        gl.glBegin(GL_LINE_STRIP);
         for (double[] v : history) {
             gl.glVertex3dv(v, 0);
         }
         gl.glEnd();
+        gl.glPopMatrix();
     }
 }

@@ -101,10 +101,11 @@ public class PlanetRenderer extends DynamicalPointRenderer {
         gl.glPushMatrix();
 
         GLUtils.translate(gl, planet.getPosition());
-        double angle = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,0,1), planet.getOrientation().getV()));
+        double axialTilt = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,0,1), planet.getOrientation().getV()));
+        gl.glRotated(axialTilt, 0, 1, 0);
 
  // TODO: fix this
-        gl.glRotated(angle, 0, 1, 0);
+
  //       gl.glRotated(planet.getFi(), planet.getObject().getV().x, planet.getObject().getV().y, planet.getObject().getV().z);
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();

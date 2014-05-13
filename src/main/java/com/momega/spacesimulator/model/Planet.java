@@ -9,7 +9,7 @@ package com.momega.spacesimulator.model;
 public class Planet extends DynamicalPoint {
 
     private double radius; // radius of the planer in thousand kilometers
-    private double rotationPeriod; // rotation period in days
+    private double rotationPeriod; // rotation period in seconds
     private String textureFileName;
 
     /**
@@ -37,17 +37,23 @@ public class Planet extends DynamicalPoint {
     }
 
     public void rotate(Time time) {
-        // TODO: fix this
-//        double z = time.getJulianDay() / getRotationPeriod();
-//        z = z - Math.floor(z);
-//        this.fi = z * 360;
+        double z = time.getSeconds() / getRotationPeriod();
+        z = z - Math.floor(z);
+        //getOrientation().
+        //getOrientation().lookLeft(z * 360);
+    }
+
+    @Override
+    public void move(Time time) {
+        super.move(time);
+        rotate(time);
     }
 
     /**
      * Sets the axial tilt of the planet
      * @param angle the angle in radians
      */
-    public void setAxialTitle(double angle) {
+    public void setAxialTilt(double angle) {
         getOrientation().lookUp(angle);
     }
 

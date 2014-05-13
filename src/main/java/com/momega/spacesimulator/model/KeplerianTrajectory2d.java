@@ -57,7 +57,7 @@ public class KeplerianTrajectory2d extends Trajectory {
         logger.debug("time = {}", t);
 
         double E = Math.PI; //  eccentric anomaly
-        double M = 2 * Math.PI * (t - Time.getSeconds(timeOfPeriapsis)) / period.getStandardSeconds();   // mean anomaly
+        double M = 2 * Math.PI * (t - Time.getSeconds(timeOfPeriapsis)) / getPeriod().getStandardSeconds();   // mean anomaly
         M = MathUtils.normalizeAngle(M);
 
         logger.debug("M = {}", M);
