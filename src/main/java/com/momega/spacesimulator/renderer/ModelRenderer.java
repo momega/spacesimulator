@@ -80,14 +80,14 @@ public class ModelRenderer extends AbstractRenderer {
     @Override
     public void setView() {
         Camera camera = model.getCamera();
-        Vector3d p = camera.getPosition().clone().scale(1/ObjectRenderer.SCALE_FACTOR);
-//        Satellite s = model.getSatellites().get(0);
-//        Vector3d p = s.getPosition();
-//        p = Vector3d.scaleAdd(100, new Vector3d(1, 0, 0), p);
-//        p = p.scale(1/ObjectRenderer.SCALE_FACTOR);
+        Vector3d p = camera.getPosition().scaled(1/ObjectRenderer.SCALE_FACTOR);
         glu.gluLookAt(	p.x, p.y, p.z,
-                p.x + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().x, p.y + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().y, p.z + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().z,
-                ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().x, ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().y, ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getV().z);
+                p.x + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().x,
+                p.y + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().y,
+                p.z + ObjectRenderer.SCALE_FACTOR * camera.getOrientation().getN().z,
+                camera.getOrientation().getV().x,
+                camera.getOrientation().getV().y,
+                camera.getOrientation().getV().z);
     }
 
 }

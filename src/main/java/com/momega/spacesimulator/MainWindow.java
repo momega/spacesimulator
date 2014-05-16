@@ -3,17 +3,13 @@
  */
 package com.momega.spacesimulator;
 
-import java.awt.*;
-
 import com.momega.spacesimulator.controller.*;
 import com.momega.spacesimulator.model.AbstractModel;
 import com.momega.spacesimulator.model.EarthSystemModel;
-import com.momega.spacesimulator.model.SolarSystemModel;
+import com.momega.spacesimulator.model.SatelliteCamera;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.EventBusController;
 import com.momega.spacesimulator.renderer.ModelRenderer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -35,8 +31,7 @@ public class MainWindow extends DefaultWindow {
 
         ModelRenderer renderer = new ModelRenderer(model);
         controller.addController(new QuitController(window));
-        controller.addController(new CameraController(model.getCamera()));
-        //controller.addController(new FreeCameraController((com.momega.spacesimulator.model.FreeCamera) model.getCamera()));
+        controller.addController(new CompositeCameraController((com.momega.spacesimulator.model.CompositeCamera) model.getCamera()));
         controller.addController(new TimeController(model.getTime()));
         window.openWindow(renderer, controller);
     }

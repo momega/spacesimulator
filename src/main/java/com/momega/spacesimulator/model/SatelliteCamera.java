@@ -13,7 +13,7 @@ public class SatelliteCamera extends Camera {
 
     @Override
     public void updatePosition() {
-        setPosition(Vector3d.scaleAdd(distance, new Vector3d(1d, 0d, 0d), satellite.getPosition()));
+        setPosition(Vector3d.scaleAdd(distance, new Vector3d(1d, 0d, 0d), getSatellite().getPosition()));
     }
 
     public Satellite getSatellite() {

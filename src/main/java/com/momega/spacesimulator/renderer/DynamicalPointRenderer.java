@@ -3,17 +3,23 @@ package com.momega.spacesimulator.renderer;
 import com.jogamp.opengl.util.awt.TextRenderer;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.DynamicalPoint;
+import com.momega.spacesimulator.model.Satellite;
 import com.momega.spacesimulator.model.Vector3d;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import java.awt.*;
+import java.util.Vector;
 
 /**
  * Created by martin on 4/28/14.
  */
 public class DynamicalPointRenderer extends ObjectRenderer {
+
+    private static final Logger logger = LoggerFactory.getLogger(DynamicalPointRenderer.class);
 
     private final DynamicalPoint dynamicalPoint;
     private final Camera camera;
@@ -61,11 +67,18 @@ public class DynamicalPointRenderer extends ObjectRenderer {
 
         if (viewVector.dot(diffVector) > 0) {  // object is in front of the camera
             GLU glu = new GLU();
-            Vector3d p = dynamicalPoint.getPosition().clone().scale(1 / SCALE_FACTOR);
+            Vector3d p = dynamicalPoint.getPosition().scaled(1 / SCALE_FACTOR);
             glu.gluProject(p.x, p.y, p.z,
                             modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
 
             textRenderer.beginRendering(viewport[2], viewport[3]);
+
+            if (dynamicalPoint instanceof Satellite) {
+                logger.info("pos = {} x {}", my2DPoint[0], my2DPoint[1]);
+                Satellite s = (Satellite) dynamicalPoint;
+                logger.info("modelView= {} ", modelView);
+            }
+
             textRenderer.setColor(1, 1, 1, 1);
             textRenderer.draw(dynamicalPoint.getName(), (int) my2DPoint[0] + 5, (int) my2DPoint[1] + 5);
             textRenderer.endRendering();

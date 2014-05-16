@@ -13,7 +13,7 @@ public class NewtonianTrajectory extends Trajectory {
 
     public void computePosition(MovingObject movingObject, Time time) {
         Vector3d a = new Vector3d(0d, 0d, 0d);
-        for(Planet planet : planets) {
+        for(Planet planet : getPlanets()) {
             Vector3d r = planet.getPosition().clone().subtract(movingObject.getPosition());
             double dist3 = r.lengthSquared() * r.length();
             r.scale(G * planet.getMass() / dist3);  // a(i) = G*M * r(i) / r^3

@@ -8,18 +8,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 /**
- * The controller handles moving camera.
- * Keys A,S,D,W,O,P,H,N,Q,E are registered for moving with the camera.
+ * The controller handles moving getCamera().
+ * Keys A,S,D,W,O,P,H,N,Q,E are registered for moving with the getCamera().
  * Also the controller supports mouse moves.
  * Created by martin on 4/19/14.
  */
-public class CameraController extends AbstractController {
+public abstract class AbstractCameraController extends AbstractController {
 
-    private Camera camera;
     private static Point mouseLast;
 
-    public CameraController(Camera camera) {
-        this.camera = camera;
+    public AbstractCameraController() {
+        super();
     }
 
     @Override
@@ -27,27 +26,27 @@ public class CameraController extends AbstractController {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_Q:
-                camera.getOrientation().twist(Math.toRadians(+0.5));
+                getCamera().getOrientation().twist(Math.toRadians(+0.5));
                 break;
 
             case KeyEvent.VK_E:
-                camera.getOrientation().twist(Math.toRadians(-0.5));
+                getCamera().getOrientation().twist(Math.toRadians(-0.5));
                 break;
 
             case KeyEvent.VK_O:
-                camera.getOrientation().lookLeft(Math.toRadians(+0.5));
+                getCamera().getOrientation().lookLeft(Math.toRadians(+0.5));
                 break;
 
             case KeyEvent.VK_P:
-                camera.getOrientation().lookLeft(Math.toRadians(-0.5));
+                getCamera().getOrientation().lookLeft(Math.toRadians(-0.5));
                 break;
 
             case KeyEvent.VK_H:
-                camera.getOrientation().lookUp(Math.toRadians(+0.5));
+                getCamera().getOrientation().lookUp(Math.toRadians(+0.5));
                 break;
 
             case KeyEvent.VK_N:
-                camera.getOrientation().lookUp(Math.toRadians(-0.5));
+                getCamera().getOrientation().lookUp(Math.toRadians(-0.5));
                 break;
         }
     }
@@ -59,7 +58,7 @@ public class CameraController extends AbstractController {
 
     @Override
     public void mouseDragged(MouseEvent e) {
-        if(mouseLast == null) {
+        if (mouseLast == null) {
             mouseLast = new Point(e.getX(), e.getY());
             return;
         }
@@ -70,12 +69,12 @@ public class CameraController extends AbstractController {
         double horizAngle = delta.x*MOUSE_SPEED_MODIFIER, vertAngle = delta.y*MOUSE_SPEED_MODIFIER;
 
         // Turn horizontally by rotating about the standard up vector (0,0,1).
-        camera.getOrientation().lookLeft(-horizAngle);
+        getCamera().getOrientation().lookLeft(-horizAngle);
 
         // Then look up or down by rotating about u. Note that which way we rotate
         // depends entirely on whether the user wanted the y axis of the mouse
         // inverted or not.
-        camera.getOrientation().lookUp(vertAngle);
+        getCamera().getOrientation().lookUp(vertAngle);
 
         //canvas.display();
 
@@ -86,5 +85,7 @@ public class CameraController extends AbstractController {
     public void mouseMoved(MouseEvent e) {
         //canvas.requestFocusInWindow();
     }
+
+    protected abstract Camera getCamera();
 
 }

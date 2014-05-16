@@ -34,16 +34,16 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
         if (history.size()> maxHistory) {
             history.remove(0);
         }
-        history.add(satellite.getPosition().scaled( 1/ ObjectRenderer.SCALE_FACTOR).asArray());
+        history.add(satellite.getPosition().scaled(1/ ObjectRenderer.SCALE_FACTOR).asArray());
 
-//        gl.glPushMatrix();
-//        gl.glColor3dv(satellite.getTrajectory().getTrajectoryColor(), 0);
-//        gl.glBegin(GL_LINE_STRIP);
-//        for (double[] v : history) {
-//            gl.glVertex3dv(v, 0);
-//        }
-//        gl.glEnd();
-//        gl.glPopMatrix();
+        gl.glPushMatrix();
+        gl.glColor3dv(satellite.getTrajectory().getTrajectoryColor(), 0);
+        gl.glBegin(GL.GL_LINE_STRIP);
+        for (double[] v : history) {
+            gl.glVertex3dv(v, 0);
+        }
+        gl.glEnd();
+        gl.glPopMatrix();
 
         GLU glu = new GLU();
 
@@ -54,6 +54,7 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
 
         //TODO: there is no structure of the satellite yet
         // Draw satellite body.
+        gl.glColor3d(0.4d, 0.4d, 0.4d);
         final double cylinderRadius = 1d * size;
         final double cylinderHeight = 3d * size;
         GLUquadric body = glu.gluNewQuadric();
