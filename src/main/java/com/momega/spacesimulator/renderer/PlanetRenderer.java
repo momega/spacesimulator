@@ -60,6 +60,7 @@ public class PlanetRenderer extends DynamicalPointRenderer {
         if (texture != null) {
             texture.destroy(gl);
         }
+        super.dispose(gl);
     }
 
     public void init(GL2 gl) {
@@ -104,9 +105,8 @@ public class PlanetRenderer extends DynamicalPointRenderer {
         double axialTilt = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,0,1), planet.getOrientation().getV()));
         gl.glRotated(axialTilt, 0, 1, 0);
 
- // TODO: fix this
-
- //       gl.glRotated(planet.getFi(), planet.getObject().getV().x, planet.getObject().getV().y, planet.getObject().getV().z);
+// TODO: fix this
+//       gl.glRotated(planet.getFi(), planet.getObject().getV().x, planet.getObject().getV().y, planet.getObject().getV().z);
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();
 

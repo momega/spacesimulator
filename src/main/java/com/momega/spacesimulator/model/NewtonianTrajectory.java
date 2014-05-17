@@ -1,11 +1,16 @@
 package com.momega.spacesimulator.model;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 
 /**
  * Created by martin on 5/5/14.
  */
 public class NewtonianTrajectory extends Trajectory {
+
+    private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectory2d.class);
 
     public static final double G = 6.67384*1E-11;
 
@@ -21,6 +26,8 @@ public class NewtonianTrajectory extends Trajectory {
         }
         Vector3d velocity = Vector3d.scaleAdd(time.getWarpFactor(), a, movingObject.getVelocity()); // velocity: v(i) = v(i) + a(i) * dt
         Vector3d position = Vector3d.scaleAdd(time.getWarpFactor(), velocity, movingObject.getPosition()); // position: r(i) = r(i) * v(i) * dt
+
+        logger.debug("diff = {}", Vector3d.diff(position, movingObject.getPosition()));
 
         movingObject.setPosition(position);
         movingObject.setVelocity(velocity);

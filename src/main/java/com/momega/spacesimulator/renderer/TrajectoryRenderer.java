@@ -1,14 +1,16 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.opengl.Renderer;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
 
 /**
  * Interface contains methods to draw the trajectories
  * Created by martin on 4/21/14.
  */
-public abstract class TrajectoryRenderer {
+public abstract class TrajectoryRenderer implements Renderer {
 
     private final Trajectory trajectory;
     private final double[] color;
@@ -18,12 +20,22 @@ public abstract class TrajectoryRenderer {
         this.color = trajectory.getTrajectoryColor();
     }
 
+    @Override
+    public void init(GL2 gl) {
+        // do nothing
+    }
+
+    public void draw(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
+        draw(gl);
+    }
+
     public abstract void draw(GL2 gl);
 
     /**
      * Creates the trajectory renderer
      * @param trajectory the trajectory
-     * @return
+     * @return the trajectory renderer
      */
     public static TrajectoryRenderer createInstance(Trajectory trajectory) {
         if (trajectory instanceof StaticTrajectory) {
@@ -45,5 +57,10 @@ public abstract class TrajectoryRenderer {
 
     public double[] getColor() {
         return color;
+    }
+
+    @Override
+    public void dispose(GL2 gl) {
+        // do nothing
     }
 }

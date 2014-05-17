@@ -124,7 +124,7 @@ public class MainRenderer implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
 
-        //camera.setView(gl, glu);
+        //camera.setCamera(gl, glu);
 
         //gl.glLightfv(GL_LIGHT0, GL_POSITION, lightPosition.toFloat(), 0);
 

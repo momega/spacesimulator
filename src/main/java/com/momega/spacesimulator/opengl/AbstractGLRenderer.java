@@ -4,9 +4,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
+import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
 
 import static javax.media.opengl.GL.*;
@@ -18,9 +16,9 @@ import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
  *
  * Created by martin on 4/19/14.
  */
-public abstract class AbstractRenderer implements GLEventListener {
+public abstract class AbstractGLRenderer implements GLEventListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractRenderer.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractGLRenderer.class);
 
     protected GLU glu;
     protected GLUT glut;
@@ -34,6 +32,15 @@ public abstract class AbstractRenderer implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
         glut = new GLUT();
+
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
+        gl.glClearDepth(1.0f);      // set clear depth value to farthest
+
+        gl.glDepthMask(true);
+        gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+//        gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
+        gl.glDepthFunc(GL.GL_LESS);
+        gl.glEnable(GL_DEPTH_TEST); // for textures
 
         init(gl);
         logger.info("renderer initialized");
@@ -50,7 +57,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         computeScene();
 
         gl.glLoadIdentity();
-        setView();
+        setCamera();
         draw(drawable);
 
         gl.glFlush();
@@ -63,7 +70,9 @@ public abstract class AbstractRenderer implements GLEventListener {
 
     protected abstract void draw(GLAutoDrawable drawable);
 
-    public abstract void setView();
+    protected abstract void setCamera();
+
+    protected abstract void setPerspective(GL2 gl, double aspect);
 
     protected abstract void init(GL2 gl);
 
@@ -74,12 +83,9 @@ public abstract class AbstractRenderer implements GLEventListener {
     public void dispose(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         dispose(gl);
-        logger.info("renderer disposed");
     }
 
-    protected void dispose(GL2 gl) {
-        // do nothing, ready for override
-    }
+    protected abstract void dispose(GL2 gl);
 
     /*
      * Whenever the window is reshaped, redefine the coordinate system and
@@ -88,21 +94,22 @@ public abstract class AbstractRenderer implements GLEventListener {
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         logger.info("reshape called {}x{}", width, height);
         GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
-
+//
         if (height == 0) {
             height = 1;   // prevent divide by zero
         }
         double aspect = (double) width / height;
-
-        // Set the view port (display area) to cover the entire window
         gl.glViewport(0, 0, width, height);
-        gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
-        gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 0.00001, 1 * 1E5); // TODO: fix perspective
-        gl.glMatrixMode(GL_MODELVIEW);
-        gl.glLoadIdentity(); // reset
+        setProjection(gl, aspect);
+
         logger.info("reshape called done");
     }
 
-
+    protected void setProjection(GL2 gl, double aspect) {
+        gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
+        gl.glLoadIdentity();             // reset projection matrix
+        setPerspective(gl, aspect);
+        gl.glMatrixMode(GL_MODELVIEW);
+        gl.glLoadIdentity(); // reset
+    }
 }

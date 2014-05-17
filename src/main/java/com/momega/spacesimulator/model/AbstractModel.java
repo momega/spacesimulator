@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.opengl.Model;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by martin on 5/6/14.
  */
-public abstract class AbstractModel {
+public abstract class AbstractModel implements Model {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModel.class);
 

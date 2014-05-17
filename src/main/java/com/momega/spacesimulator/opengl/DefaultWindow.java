@@ -23,7 +23,7 @@ public class DefaultWindow {
     private static final int FPS = 20; // animator's target frames per second
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultWindow.class);
-    private AbstractRenderer renderer;
+    private AbstractGLRenderer renderer;
     private AbstractController controller;
     private GLCanvas canvas;
     private AnimatorBase animator;
@@ -33,7 +33,7 @@ public class DefaultWindow {
         this.title = title;
     }
 
-    public void openWindow(final AbstractRenderer renderer, final AbstractController controller) {
+    public void openWindow(final AbstractGLRenderer renderer, final AbstractController controller) {
         this.renderer = renderer;
         this.controller = controller;
         // Run the GUI codes in the event-dispatching thread for thread safety
@@ -55,6 +55,7 @@ public class DefaultWindow {
 
                         canvas = new GLCanvas(caps);
                         canvas.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+                        canvas.setAutoSwapBufferMode(true);
 
                         logger.info("Window created");
 
@@ -79,7 +80,12 @@ public class DefaultWindow {
                                 logger.info("Closing window");
                                 stopAnimator();
                             }
+                            @Override
+                            public void windowActivated(WindowEvent e) {
+                                canvas.requestFocusInWindow();
+                            }
                         });
+
 
                         canvas.addMouseListener(controller);
                         canvas.addKeyListener(controller);
@@ -122,4 +128,7 @@ public class DefaultWindow {
         }
     }
 
+    public GLCanvas getCanvas() {
+        return canvas;
+    }
 }

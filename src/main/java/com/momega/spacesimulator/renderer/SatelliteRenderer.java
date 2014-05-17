@@ -3,6 +3,7 @@ package com.momega.spacesimulator.renderer;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Satellite;
 import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.opengl.Renderer;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -34,7 +35,7 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
         if (history.size()> maxHistory) {
             history.remove(0);
         }
-        history.add(satellite.getPosition().scaled(1/ ObjectRenderer.SCALE_FACTOR).asArray());
+        history.add(satellite.getPosition().scaled(1/ Renderer.SCALE_FACTOR).asArray());
 
         gl.glPushMatrix();
         gl.glColor3dv(satellite.getTrajectory().getTrajectoryColor(), 0);
@@ -105,6 +106,6 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
 
         gl.glPopMatrix();
 
-        drawLabel(gl);
+        super.draw(drawable);
     }
 }

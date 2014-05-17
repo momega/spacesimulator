@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.KeplerianTrajectory2d;
+import com.momega.spacesimulator.opengl.Renderer;
 
 import javax.media.opengl.GL2;
 
@@ -20,7 +21,7 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
         super(trajectory);
         this.epsilon = trajectory.getEccentricity();
         this.argumentOfPeriapsis = trajectory.getArgumentOfPeriapsis();
-        this.a = trajectory.getSemimajorAxis() / ObjectRenderer.SCALE_FACTOR;
+        this.a = trajectory.getSemimajorAxis() / Renderer.SCALE_FACTOR;
         this.b = a * Math.sqrt(1 - epsilon*epsilon);
         this.e = Math.sqrt(a*a - b*b);
     }

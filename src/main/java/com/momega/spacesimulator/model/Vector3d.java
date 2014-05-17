@@ -133,6 +133,16 @@ public class Vector3d {
         return new Vector3d(factor * u.x + v.x, factor * u.y + v.y, factor * u.z + v.z);
     }
 
+    /**
+     * Diff vector between 2 vectors (u-v)
+     * @param u
+     * @param v
+     * @return
+     */
+    public static Vector3d diff(Vector3d u, Vector3d v) {
+        return scaleAdd(-1d, v, u);
+    }
+
     public static double angleBetween(Vector3d a, Vector3d b) {
         double cosAlpha = a.dot(b) / a.length() / b.length();
         if(cosAlpha > 1) cosAlpha = 1;
@@ -151,7 +161,7 @@ public class Vector3d {
     }
 
     public String toString() {
-        String result = String.format("( %.3f, %.3f, %.3f)", x, y, z);
+        String result = String.format("( %6.3f, %6.3f, %6.3f)", x, y, z);
         return result;
     }
 
