@@ -16,7 +16,7 @@ import java.awt.*;
 /**
  * Created by martin on 4/28/14.
  */
-public class DynamicalPointRenderer implements Renderer {
+public class DynamicalPointRenderer extends CompositeRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicalPointRenderer.class);
 
@@ -29,22 +29,26 @@ public class DynamicalPointRenderer implements Renderer {
         this.trajectoryRenderer = TrajectoryRenderer.createInstance(dynamicalPoint.getTrajectory());
         this.dynamicalPoint = dynamicalPoint;
         this.camera = camera;
+
+        addRenderer(trajectoryRenderer);
     }
 
     @Override
     public void init(GL2 gl) {
+        super.init(gl);
         this.textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 12));
     }
 
     @Override
     public void draw(GLAutoDrawable drawable) {
+        super.draw(drawable);
         GL2 gl = drawable.getGL().getGL2();
         drawLabel(gl);
-        trajectoryRenderer.draw(gl);
     }
 
     @Override
     public void dispose(GL2 gl) {
+        super.dispose(gl);
         textRenderer.dispose();
     }
 

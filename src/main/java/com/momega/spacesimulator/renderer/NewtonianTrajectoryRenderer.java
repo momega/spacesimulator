@@ -15,8 +15,4 @@ public class NewtonianTrajectoryRenderer extends TrajectoryRenderer {
         super(trajectory);
     }
 
-    @Override
-    public void draw(GL2 gl) {
-        //TODO: do nothing now
-    }
 }

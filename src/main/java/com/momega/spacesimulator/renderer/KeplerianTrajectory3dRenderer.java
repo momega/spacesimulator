@@ -5,6 +5,8 @@ import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLDrawable;
 
 /**
  * The renderer of keplerian trajectory 2d
@@ -22,8 +24,9 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
     }
 
     @Override
-    public void draw(GL2 gl) {
-        super.draw(gl);
+    public void draw(GLAutoDrawable drawable) {
+        super.draw(drawable);
+        GL2 gl = drawable.getGL().getGL2();
         gl.glPushMatrix();
 
         GLUtils.translate(gl, getTrajectory().getCentralObject().getPosition());

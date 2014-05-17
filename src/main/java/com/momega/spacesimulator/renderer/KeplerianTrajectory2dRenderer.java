@@ -25,28 +25,6 @@ public class KeplerianTrajectory2dRenderer extends TrajectoryRenderer {
         this.e = Math.sqrt(a*a - b*b);
     }
 
-    @Override
-    public void draw(GL2 gl) {
-//        gl.glPushMatrix();
-//        gl.glRotated(this.omega * 180/ Math.PI, 0, 0, 1);
-//        gl.glColor3d(1, 1, 1);
-//        Utils.drawEllipse(gl, -e, 0, a, b, 7200);
-//
-//        gl.glLineWidth(2f);
-//        gl.glColor3d(1, 0, 0);
-//        gl.glBegin(GL_LINES);
-//        gl.glVertex3d(-a-e, 0 , 0);
-//        gl.glVertex3d(a-e, 0, 0);
-//        gl.glEnd();
-//
-//        gl.glBegin(GL_LINES);
-//        gl.glVertex3d(-e, -b, 0);
-//        gl.glVertex3d(-e, b, 0);
-//        gl.glEnd();
-//
-//        gl.glPopMatrix();
-    }
-
     public KeplerianTrajectory2d getTrajectory() {
         return (KeplerianTrajectory2d) super.getTrajectory();
     }
