@@ -2,7 +2,7 @@ package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.opengl.AbstractRenderer;
 import com.momega.spacesimulator.opengl.DefaultWindow;
-import com.momega.spacesimulator.opengl.EventBusController;
+import com.momega.spacesimulator.controller.EventBusController;
 import com.momega.spacesimulator.controller.QuitController;
 
 import javax.media.opengl.*;
@@ -84,7 +84,7 @@ public class Stencil extends AbstractRenderer {
     }
 
     @Override
-    public void setView() {
+    public void setCamera() {
         glu.gluLookAt(	0, 0, 5, 0, 0, 0, 0, 1, 0);
     }
 

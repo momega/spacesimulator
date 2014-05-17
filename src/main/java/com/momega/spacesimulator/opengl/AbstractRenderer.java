@@ -4,9 +4,7 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLEventListener;
+import javax.media.opengl.*;
 import javax.media.opengl.glu.GLU;
 
 import static javax.media.opengl.GL.*;
@@ -35,6 +33,15 @@ public abstract class AbstractRenderer implements GLEventListener {
         glu = new GLU();
         glut = new GLUT();
 
+        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
+        gl.glClearDepth(1.0f);      // set clear depth value to farthest
+
+        gl.glDepthMask(true);
+        gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+//        gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
+        gl.glDepthFunc(GL.GL_LESS);
+        gl.glEnable(GL_DEPTH_TEST); // for textures
+
         init(gl);
         logger.info("renderer initialized");
     }
@@ -50,7 +57,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         computeScene();
 
         gl.glLoadIdentity();
-        setView();
+        setCamera();
         draw(drawable);
 
         gl.glFlush();
@@ -63,7 +70,7 @@ public abstract class AbstractRenderer implements GLEventListener {
 
     protected abstract void draw(GLAutoDrawable drawable);
 
-    public abstract void setView();
+    public abstract void setCamera();
 
     protected abstract void init(GL2 gl);
 
@@ -98,7 +105,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
         gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 0.00001, 1 * 1E5); // TODO: fix perspective
+        glu.gluPerspective(45, aspect, 0.1, 1 * 1E5); // TODO: fix perspective
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");

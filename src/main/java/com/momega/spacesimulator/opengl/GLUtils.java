@@ -1,9 +1,8 @@
 package com.momega.spacesimulator.opengl;
 
 import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.renderer.ObjectRenderer;
+import com.momega.spacesimulator.renderer.Renderer;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 
 import static javax.media.opengl.GL.GL_LINE_LOOP;
@@ -57,7 +56,7 @@ public class GLUtils {
     }
 
     public static void translate(GL2 gl, Vector3d position) {
-        Vector3d p = position.scaled(1 / ObjectRenderer.SCALE_FACTOR);
+        Vector3d p = position.scaled(1 / Renderer.SCALE_FACTOR);
         gl.glTranslated(p.x, p.y, p.z);
     }
 

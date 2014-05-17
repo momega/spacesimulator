@@ -1,4 +1,4 @@
-package com.momega.spacesimulator.opengl;
+package com.momega.spacesimulator.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;

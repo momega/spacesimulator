@@ -1,10 +1,8 @@
 package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.CompositeCamera;
 import com.momega.spacesimulator.model.FreeCamera;
 import com.momega.spacesimulator.model.SatelliteCamera;
-import com.momega.spacesimulator.opengl.AbstractController;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;

@@ -6,9 +6,8 @@ package com.momega.spacesimulator;
 import com.momega.spacesimulator.controller.*;
 import com.momega.spacesimulator.model.AbstractModel;
 import com.momega.spacesimulator.model.EarthSystemModel;
-import com.momega.spacesimulator.model.SatelliteCamera;
 import com.momega.spacesimulator.opengl.DefaultWindow;
-import com.momega.spacesimulator.opengl.EventBusController;
+import com.momega.spacesimulator.controller.EventBusController;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 
 

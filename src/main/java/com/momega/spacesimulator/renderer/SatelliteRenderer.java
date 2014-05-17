@@ -34,7 +34,7 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
         if (history.size()> maxHistory) {
             history.remove(0);
         }
-        history.add(satellite.getPosition().scaled(1/ ObjectRenderer.SCALE_FACTOR).asArray());
+        history.add(satellite.getPosition().scaled(1/ Renderer.SCALE_FACTOR).asArray());
 
         gl.glPushMatrix();
         gl.glColor3dv(satellite.getTrajectory().getTrajectoryColor(), 0);

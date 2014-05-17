@@ -12,12 +12,11 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import java.awt.*;
-import java.util.Vector;
 
 /**
  * Created by martin on 4/28/14.
  */
-public class DynamicalPointRenderer extends ObjectRenderer {
+public class DynamicalPointRenderer implements Renderer {
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicalPointRenderer.class);
 
@@ -74,9 +73,9 @@ public class DynamicalPointRenderer extends ObjectRenderer {
             textRenderer.beginRendering(viewport[2], viewport[3]);
 
             if (dynamicalPoint instanceof Satellite) {
-                logger.info("pos = {} x {}", my2DPoint[0], my2DPoint[1]);
+                logger.debug("pos = {} x {}", my2DPoint[0], my2DPoint[1]);
                 Satellite s = (Satellite) dynamicalPoint;
-                logger.info("modelView= {} ", modelView);
+                logger.debug("modelView= {} ", modelView);
             }
 
             textRenderer.setColor(1, 1, 1, 1);

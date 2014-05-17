@@ -2,6 +2,7 @@ package com.momega.spacesimulator.opengl;
 
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
+import com.momega.spacesimulator.controller.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +25,7 @@ public class DefaultWindow {
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultWindow.class);
     private AbstractRenderer renderer;
-    private AbstractController controller;
+    private Controller controller;
     private GLCanvas canvas;
     private AnimatorBase animator;
     private String title;
@@ -33,7 +34,7 @@ public class DefaultWindow {
         this.title = title;
     }
 
-    public void openWindow(final AbstractRenderer renderer, final AbstractController controller) {
+    public void openWindow(final AbstractRenderer renderer, final Controller controller) {
         this.renderer = renderer;
         this.controller = controller;
         // Run the GUI codes in the event-dispatching thread for thread safety

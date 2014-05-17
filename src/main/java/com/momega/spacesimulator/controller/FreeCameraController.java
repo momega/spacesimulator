@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.model.FreeCamera;
-import com.momega.spacesimulator.opengl.AbstractController;
 
 import java.awt.event.KeyEvent;
 

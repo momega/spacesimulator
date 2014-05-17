@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.opengl.AbstractController;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
