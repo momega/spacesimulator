@@ -13,7 +13,7 @@ public interface Renderer {
 
     void init(GL2 gl);
 
-    void draw(GLAutoDrawable gl);
+    void draw(GLAutoDrawable drawable);
 
     void dispose(GL2 gl);
 }
