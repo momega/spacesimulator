@@ -26,7 +26,7 @@ public class MainRenderer extends AbstractRenderer {
     private final ModelRenderer renderer;
 
     private GLU glu;
-    public double znear = 0.0001;
+    public double znear = 0.1;
     protected boolean reshape = false;
 
     public MainRenderer(AbstractModel model) {
@@ -79,7 +79,7 @@ public class MainRenderer extends AbstractRenderer {
     }
 
     protected void setPerspective(GL2 gl, double aspect) {
-        glu.gluPerspective(45, aspect, znear, 1 * 1E5);
+        glu.gluPerspective(45, aspect, znear, 1 * 1E8);
     }
 
     public double getZnear() {

@@ -49,6 +49,7 @@ public class EarthSystemModel extends AbstractModel {
         satelliteTrajectory.setPlanets(Arrays.asList(earth, moon));
         satellite.setTrajectory(satelliteTrajectory);
         satellite.setMass(10 * 1E3);
+        satellite.setRadius(10);
 
         addDynamicalPoint(satellite);
     }

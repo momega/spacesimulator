@@ -46,6 +46,7 @@ public class DefaultWindow {
                         GLProfile glp = GLProfile.getDefault();
                         // Specifies a set of OpenGL capabilities, based on your profile.
                         GLCapabilities caps = new GLCapabilities(glp);
+                        caps.setAlphaBits(8);
                         caps.setStencilBits(8);
                         // Create the OpenGL rendering canvas
 

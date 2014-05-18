@@ -9,7 +9,7 @@ import javax.media.opengl.GLAutoDrawable;
  */
 public interface Renderer {
 
-    public static final double SCALE_FACTOR = 1E6;
+    public static final double SCALE_FACTOR = 1E3;
 
     void init(GL2 gl);
 

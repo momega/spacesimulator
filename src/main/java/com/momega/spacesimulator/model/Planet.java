@@ -8,21 +8,8 @@ package com.momega.spacesimulator.model;
  */
 public class Planet extends DynamicalPoint {
 
-    private double radius; // radius of the planer in thousand kilometers
     private double rotationPeriod; // rotation period in seconds
     private String textureFileName;
-
-    /**
-     * Gets the radius of the planet
-     * @return the value of the radius
-     */
-    public double getRadius() {
-        return radius;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
-    }
 
     public void setRotationPeriod(double rotationPeriod) {
         this.rotationPeriod = rotationPeriod;

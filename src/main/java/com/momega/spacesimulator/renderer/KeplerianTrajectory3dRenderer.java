@@ -35,6 +35,7 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
         gl.glRotated(Math.toDegrees(this.argumentOfPeriapsis), 0, 0, 1);
 
         gl.glColor3dv(getColor(), 0);
+        gl.glLineWidth(1);
         GLUtils.drawEllipse(gl, -e, 0, a, b, 7200);
 
 //        gl.glLineWidth(2f);

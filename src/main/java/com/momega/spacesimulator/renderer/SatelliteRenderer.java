@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class SatelliteRenderer extends DynamicalPointRenderer {
 
-    public double size = 0.000001;
+    private final double size = 1d / Renderer.SCALE_FACTOR;
 
     public static final int maxHistory = 10000;
     private final Satellite satellite;
