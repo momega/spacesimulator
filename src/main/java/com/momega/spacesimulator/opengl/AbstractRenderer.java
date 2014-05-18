@@ -35,12 +35,15 @@ public abstract class AbstractRenderer implements GLEventListener {
 
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
         gl.glClearDepth(1.0f);      // set clear depth value to farthest
-
         gl.glDepthMask(true);
         gl.glHint(GL2ES1.GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-//        gl.glShadeModel(GL_SMOOTH); // blends colors nicely, and smoothes out lighting
         gl.glDepthFunc(GL.GL_LESS);
         gl.glEnable(GL_DEPTH_TEST); // for textures
+
+        gl.glShadeModel(GL2.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
+        gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glEnable(GL.GL_BLEND);
+        gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
 
         init(gl);
         logger.info("renderer initialized");
@@ -61,6 +64,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         draw(drawable);
 
         gl.glFlush();
+        drawable.swapBuffers();
     }
 
     /**
@@ -105,11 +109,12 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glViewport(0, 0, width, height);
         gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
         gl.glLoadIdentity();             // reset projection matrix
-        glu.gluPerspective(45, aspect, 0.0001, 1 * 1E5); // TODO: fix perspective
+        setPerspective(gl, aspect);
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");
     }
 
+    protected abstract void setPerspective(GL2 gl, double aspect);
 
 }

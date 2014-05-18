@@ -64,5 +64,6 @@ public class DynamicalPointLabelRenderer extends AbstractTextRenderer {
     protected void renderTexts(GL2 gl, int width, int height) {
         setColor(255, 255, 255);
         drawText(dynamicalPoint.getName(), (int) my2DPoint[0] + 5, (int) my2DPoint[1] + 5);
+        drawText(dynamicalPoint.getPosition().toString(), (int) my2DPoint[0] + 5, (int) my2DPoint[1] - 8);
     }
 }

@@ -151,7 +151,7 @@ public class Vector3d {
     }
 
     public String toString() {
-        String result = String.format("( %.3f, %.3f, %.3f)", x, y, z);
+        String result = String.format("(%6.2f, %6.2f, %6.2f)", x, y, z);
         return result;
     }
 

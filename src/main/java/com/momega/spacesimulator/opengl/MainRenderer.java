@@ -19,6 +19,9 @@ public class MainRenderer extends AbstractRenderer {
     private final AbstractModel model;
     private final ModelRenderer renderer;
 
+    public double znear = 0.0001;
+    public boolean reshape = false;
+
     public MainRenderer(AbstractModel model) {
         this.model = model;
         this.renderer = new ModelRenderer(model);
@@ -57,4 +60,16 @@ public class MainRenderer extends AbstractRenderer {
                 camera.getOrientation().getV().z);
     }
 
+    protected void setPerspective(GL2 gl, double aspect) {
+        glu.gluPerspective(45, aspect, znear, 1 * 1E5); // TODO: fix perspective
+    }
+
+    public double getZnear() {
+        return znear;
+    }
+
+    public void changeZnear(double factor) {
+        znear *= factor;
+        reshape = true;
+    }
 }

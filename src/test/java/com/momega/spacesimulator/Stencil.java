@@ -96,4 +96,8 @@ public class Stencil extends AbstractRenderer {
         window.openWindow(demo, controller);
     }
 
+    @Override
+    protected void setPerspective(GL2 gl, double aspect) {
+
+    }
 }

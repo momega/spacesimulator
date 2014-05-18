@@ -14,7 +14,7 @@ public abstract class AbstractTextRenderer implements Renderer {
     private TextRenderer textRenderer;
 
     public void init(GL2 gl) {
-        textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 12));
+        textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 10));
     }
 
     @Override
