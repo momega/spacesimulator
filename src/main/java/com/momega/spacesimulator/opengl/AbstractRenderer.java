@@ -20,9 +20,6 @@ public abstract class AbstractRenderer implements GLEventListener {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractRenderer.class);
 
-    protected GLU glu;
-    protected GLUT glut;
-
     /**
      * The default implementation of initializing of the renderer. It creates GLU and GLUT objects
      * @param drawable the OPENGL canvas
@@ -30,8 +27,6 @@ public abstract class AbstractRenderer implements GLEventListener {
     public void init(GLAutoDrawable drawable) {
         logger.info("renderer initializing");
         GL2 gl = drawable.getGL().getGL2();
-        glu = new GLU();
-        glut = new GLUT();
 
         gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // set background (clear) color
         gl.glClearDepth(1.0f);      // set clear depth value to farthest
@@ -54,8 +49,10 @@ public abstract class AbstractRenderer implements GLEventListener {
      * @param drawable the OPENGL canvas
      */
     public void display(GLAutoDrawable drawable) {
+        reshapeRequired(drawable);
+
         GL2 gl = drawable.getGL().getGL2();
-        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
+        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ); // clear color and depth buffers
 
         computeScene();
 
@@ -66,6 +63,8 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glFlush();
         drawable.swapBuffers();
     }
+
+    protected abstract void reshapeRequired(GLAutoDrawable drawable);
 
     /**
      * Computes scene with all objects and cameras
