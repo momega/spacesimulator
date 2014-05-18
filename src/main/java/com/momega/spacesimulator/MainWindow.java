@@ -8,6 +8,7 @@ import com.momega.spacesimulator.model.AbstractModel;
 import com.momega.spacesimulator.model.EarthSystemModel;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.controller.EventBusController;
+import com.momega.spacesimulator.opengl.MainRenderer;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 
 
@@ -28,11 +29,11 @@ public class MainWindow extends DefaultWindow {
         AbstractModel model = new EarthSystemModel();
         model.init();
 
-        ModelRenderer renderer = new ModelRenderer(model);
+        MainRenderer mr = new MainRenderer(model);
         controller.addController(new QuitController(window));
         controller.addController(new CompositeCameraController((com.momega.spacesimulator.model.CompositeCamera) model.getCamera()));
         controller.addController(new TimeController(model.getTime()));
-        window.openWindow(renderer, controller);
+        window.openWindow(mr, controller);
     }
 
 }

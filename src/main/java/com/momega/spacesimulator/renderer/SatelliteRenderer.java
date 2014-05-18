@@ -104,7 +104,6 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
         gl.glEnd();
 
         gl.glPopMatrix();
-
-        drawLabel(gl);
+        super.draw(drawable);
     }
 }

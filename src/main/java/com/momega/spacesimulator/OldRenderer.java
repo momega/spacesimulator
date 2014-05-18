@@ -8,27 +8,20 @@ import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 // GL2 constants
 
-import com.jogamp.opengl.util.awt.TextRenderer;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.opengl.util.gl2.GLUT;
 
-import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @deprecated
  */
-public class MainRenderer implements GLEventListener {
+public class OldRenderer implements GLEventListener {
     private GLU glu;  // for the GL Utility
     private GLUT glut;
 
-    private static final Logger logger = LoggerFactory.getLogger(MainRenderer.class);
+    private static final Logger logger = LoggerFactory.getLogger(OldRenderer.class);
 
 
     private Vector3d lightPosition = new Vector3d();
@@ -38,7 +31,7 @@ public class MainRenderer implements GLEventListener {
     private boolean emmision = false;
     private boolean fog = false;
 
-    public MainRenderer() {
+    public OldRenderer() {
         super();
     }
 
