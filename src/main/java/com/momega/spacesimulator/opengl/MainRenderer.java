@@ -30,6 +30,11 @@ public class MainRenderer extends AbstractRenderer {
     }
 
     @Override
+    protected void draw(GLAutoDrawable drawable) {
+        renderer.draw(drawable);
+    }
+
+    @Override
     public void dispose(GL2 gl) {
         renderer.dispose(gl);
     }
@@ -37,11 +42,6 @@ public class MainRenderer extends AbstractRenderer {
     @Override
     protected void computeScene() {
         model.next();
-    }
-
-    @Override
-    protected void draw(GLAutoDrawable drawable) {
-        renderer.draw(drawable);
     }
 
     @Override
