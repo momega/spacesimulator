@@ -26,7 +26,7 @@ public class MainRenderer extends AbstractRenderer {
     private final ModelRenderer renderer;
 
     private GLU glu;
-    public double znear = 0.1;
+    public double znear = 100 / Renderer.SCALE_FACTOR;
     protected boolean reshape = false;
 
     public MainRenderer(AbstractModel model) {
@@ -61,8 +61,24 @@ public class MainRenderer extends AbstractRenderer {
     }
 
     @Override
-    protected void computeScene() {
+    protected void computeScene(GLAutoDrawable drawable) {
         model.next();
+
+        double x = drawable.getWidth();
+        double y = drawable.getHeight();
+        double aratio = Math.sqrt( x * x + y * y) / y;
+        double z = model.computeZNear(aratio);
+        z = z / Renderer.SCALE_FACTOR / 5.0d;
+        if (z < znear/2) {
+            znear = z;
+            reshape = true;
+            logger.info("new znear = {}", znear);
+        }
+        if (z > znear*2) {
+            znear = z;
+            reshape =true;
+            logger.info("new znear = {}", znear);
+        }
     }
 
     @Override
@@ -79,7 +95,7 @@ public class MainRenderer extends AbstractRenderer {
     }
 
     protected void setPerspective(GL2 gl, double aspect) {
-        glu.gluPerspective(45, aspect, znear, 1 * 1E8);
+        glu.gluPerspective(45, aspect, znear, 1 * 1E11 / Renderer.SCALE_FACTOR);
     }
 
     public double getZnear() {

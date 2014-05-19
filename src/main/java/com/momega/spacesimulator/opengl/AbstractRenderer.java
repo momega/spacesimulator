@@ -54,7 +54,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ); // clear color and depth buffers
 
-        computeScene();
+        computeScene(drawable);
 
         gl.glLoadIdentity();
         setCamera();
@@ -69,7 +69,7 @@ public abstract class AbstractRenderer implements GLEventListener {
     /**
      * Computes scene with all objects and cameras
      */
-    protected abstract void computeScene();
+    protected abstract void computeScene(GLAutoDrawable drawable);
 
     protected abstract void draw(GLAutoDrawable drawable);
 

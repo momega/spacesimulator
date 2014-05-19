@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.renderer;
 
-import com.jogamp.opengl.util.awt.TextRenderer;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.DynamicalPoint;
 import com.momega.spacesimulator.model.Satellite;
@@ -11,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
-import java.awt.*;
 
 /**
  * Created by martin on 4/28/14.
@@ -42,7 +40,7 @@ public class DynamicalPointLabelRenderer extends AbstractTextRenderer {
         gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
 
         Vector3d viewVector = camera.getOrientation().getN();
-        Vector3d diffVector = camera.getPosition().clone().negate().add(dynamicalPoint.getPosition()).scale(1 / SCALE_FACTOR);
+        Vector3d diffVector = Vector3d.subtract(dynamicalPoint.getPosition(), camera.getPosition()).scale(1 / SCALE_FACTOR);
 
         if (viewVector.dot(diffVector) > 0) {  // object is in front of the camera
             GLU glu = new GLU();

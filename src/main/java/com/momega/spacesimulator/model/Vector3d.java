@@ -133,6 +133,16 @@ public class Vector3d {
         return new Vector3d(factor * u.x + v.x, factor * u.y + v.y, factor * u.z + v.z);
     }
 
+    /**
+     * Creates the subtract vector as u-v
+     * @param u
+     * @param v
+     * @return
+     */
+    public static Vector3d subtract(Vector3d u, Vector3d v) {
+        return scaleAdd(-1, v, u);
+    }
+
     public static double angleBetween(Vector3d a, Vector3d b) {
         double cosAlpha = a.dot(b) / a.length() / b.length();
         if(cosAlpha > 1) cosAlpha = 1;
