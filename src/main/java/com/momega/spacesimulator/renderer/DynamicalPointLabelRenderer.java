@@ -50,7 +50,6 @@ public class DynamicalPointLabelRenderer extends AbstractTextRenderer {
 
             if (dynamicalPoint instanceof Satellite) {
                 logger.debug("pos = {} x {}", my2DPoint[0], my2DPoint[1]);
-                Satellite s = (Satellite) dynamicalPoint;
                 logger.debug("modelView= {} ", modelView);
             }
 

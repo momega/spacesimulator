@@ -23,7 +23,7 @@ public class GLUtils {
      */
     public static void drawCircle(GL2 gl, float cx, float cy, float r, int num_segments) {
         float theta = (float) (2 * Math.PI / num_segments);
-        float c = (float) Math.cos(theta); //precalculate the sine and cosine
+        float c = (float) Math.cos(theta); //calculates the sine and cosine
         float s = (float) Math.sin(theta);
         float t;
 

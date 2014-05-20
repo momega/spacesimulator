@@ -92,4 +92,14 @@ public class SolarSystemModel extends AbstractModel {
         //Satellite satellite = new Satellite("Satellite", new NewtonianTrajectory(planets, satillitePosition), time,  new double[] {1,1,1});
         //addDynamicalPoint(satellite);
     }
+
+    @Override
+    protected void initTime() {
+
+    }
+
+    @Override
+    protected void initCamera() {
+
+    }
 }

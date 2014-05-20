@@ -1,8 +1,9 @@
 package com.momega.spacesimulator.model;
 
+import org.joda.time.DateTime;
+
 /**
- * The class represents the planet. It is the 3d object with texture and displayed as sphere
- * The planet is the sphere with the given radius
+ * The class represents the planet. It is the dynamical point with defined texture and rotation period
  *
  * Created by martin on 4/15/14.
  */
@@ -24,17 +25,16 @@ public class Planet extends DynamicalPoint {
     }
 
     //TODO: remove this method to the service package
-    public void rotate(Time time) {
-        double z = time.getSeconds() / getRotationPeriod();
-        z = z - Math.floor(z);
-        //getOrientation().
-        //getOrientation().lookLeft(z * 360);
+    public void rotate(DateTime newTimestamp) {
+        double phi = Time.getSeconds(newTimestamp, getTimestamp())/ getRotationPeriod();
+        phi *= (2*Math.PI);
+        getOrientation().lookLeft(phi);
     }
 
     @Override
-    public void move(Time time) {
-        super.move(time);
-        rotate(time);
+    public void move(DateTime newTimestamp) {
+        rotate(newTimestamp);
+        super.move(newTimestamp);
     }
 
     /**

@@ -32,12 +32,11 @@ public class KeplerianTrajectory2d extends Trajectory {
 
     /**
      * Computes the position of the object in 2D for the given time
-     * @param time the time
-     * @return new position of the object
+     * @param newTimestamp the time
      */
     @Override
-    public void computePosition(MovingObject movingObject, Time time) {
-        double[] solution = solveKeplerian(time.getSeconds());
+    public void computePosition(MovingObject movingObject, DateTime newTimestamp) {
+        double[] solution = solveKeplerian(Time.getSeconds(newTimestamp));
         double r = solution[0];
         double theta = solution[1];
 

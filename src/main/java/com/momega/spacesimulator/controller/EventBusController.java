@@ -12,7 +12,7 @@ import java.util.List;
  */
 public class EventBusController extends AbstractController {
 
-    private final List<Controller> controllers = new ArrayList<Controller>();
+    private final List<Controller> controllers = new ArrayList<>();
 
     @Override
     public void keyTyped(KeyEvent e) {

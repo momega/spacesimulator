@@ -8,6 +8,8 @@ import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -24,6 +26,8 @@ import static javax.media.opengl.GL.*;
  * Created by martin on 4/19/14.
  */
 public class PlanetRenderer extends DynamicalPointRenderer {
+
+    private static final Logger logger = LoggerFactory.getLogger(PlanetRenderer.class);
 
     private final Planet planet;
     private Texture texture;
@@ -102,11 +106,16 @@ public class PlanetRenderer extends DynamicalPointRenderer {
 
         GLUtils.translate(gl, planet.getPosition());
         double axialTilt = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,0,1), planet.getOrientation().getV()));
-        gl.glRotated(axialTilt, 0, 1, 0);
+        gl.glRotated(axialTilt, 1, 0, 0);
+        double phi = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,1,0), planet.getOrientation().getU()));
+        gl.glRotated(phi, 0, 0, 1);
+
+        if ("Earth".equals(planet.getName())) {
+            logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);
+        }
 
  // TODO: fix this
 
- //       gl.glRotated(planet.getFi(), planet.getObject().getV().x, planet.getObject().getV().y, planet.getObject().getV().z);
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();
 

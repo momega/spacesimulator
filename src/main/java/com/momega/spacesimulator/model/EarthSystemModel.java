@@ -25,6 +25,7 @@ public class EarthSystemModel extends AbstractModel {
         earth.setRadius(6.378 * 1E6);
         earth.setOrientation(new Orientation(new Vector3d(1, 0, 0), new Vector3d(0,0, 1)));
         earth.setAxialTilt(Math.toRadians(23.5));
+        earth.setTimestamp(getTime().getTimestamp());
 
         KeplerianTrajectory3d moonTrajectory = createKeplerianTrajectory(earth, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.241500, 208.1199);
         moonTrajectory.setTrajectoryColor(new double[] {0.5,0.5,0.5});
@@ -37,6 +38,7 @@ public class EarthSystemModel extends AbstractModel {
         moon.setRotationPeriod(27.321 * 86400);
         moon.setOrientation(new Orientation(new Vector3d(1, 0, 0), new Vector3d(0,0, 1)));
         moon.setAxialTilt(Math.toRadians(6.687));
+        moon.setTimestamp(getTime().getTimestamp());
 
         addDynamicalPoint(earth);
         addDynamicalPoint(moon);
@@ -45,15 +47,21 @@ public class EarthSystemModel extends AbstractModel {
         satellite.setName("Satellite");
         satellite.setPosition(new Vector3d((6.378 + 0.2) * 1E6, 0, 0));
         satellite.setOrientation(new Orientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
-        satellite.setVelocity(new Vector3d(0, 9000d, 0));
+        satellite.setVelocity(new Vector3d(0, 9500d, 0));
         NewtonianTrajectory satelliteTrajectory = new NewtonianTrajectory();
         satelliteTrajectory.setTrajectoryColor(new double[] {1,1,1});
         satelliteTrajectory.setPlanets(Arrays.asList(earth, moon));
         satellite.setTrajectory(satelliteTrajectory);
         satellite.setMass(10 * 1E3);
         satellite.setRadius(10);
+        satellite.setTimestamp(getTime().getTimestamp());
 
         addDynamicalPoint(satellite);
+    }
+
+    @Override
+    protected void initTime() {
+        setTime(new Time(2456760d, 1d));
     }
 
     @Override

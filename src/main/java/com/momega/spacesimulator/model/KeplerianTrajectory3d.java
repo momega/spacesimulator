@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import org.joda.time.DateTime;
+
 /**
  * The class computer keplerian trajectory and object along the eclipse. It computes in 3D
  * Created by martin on 4/22/14.
@@ -11,7 +13,7 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
 
     /**
      * The inclination in radian
-     * @return
+     * @return returns the inclination of the keplerian 3d trajectory
      */
     public double getInclination() {
         return inclination;
@@ -23,8 +25,8 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
 
     @Override
     //TODO: remove this method to the service package
-    public void computePosition(MovingObject movingObject, Time time) {
-        double[] solution = solveKeplerian(Time.getSeconds(time.getTimestamp()));
+    public void computePosition(MovingObject movingObject, DateTime newTimestamp) {
+        double[] solution = solveKeplerian(Time.getSeconds(newTimestamp));
         double r = solution[0];
         double theta = solution[1];
 

@@ -1,10 +1,11 @@
 package com.momega.spacesimulator.model;
 
-import org.joda.time.*;
-
-import java.util.Date;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeConstants;
+import org.joda.time.DateTimeUtils;
 
 /**
+ * The wrapper object which holds the current time and warp factor
  * Created by martin on 4/29/14.
  */
 public class Time {
@@ -35,11 +36,12 @@ public class Time {
         return warpFactor;
     }
 
-    public double getSeconds() {
-        return getSeconds(timestamp);
+    public static double getSeconds(DateTime t1, DateTime t2) {
+        return getSeconds(t1) - getSeconds(t2);
     }
 
     public static double getSeconds(DateTime datetime) {
-        return ((double) datetime.getMillis()) / 1000d;
+        return ((double) datetime.getMillis()) / DateTimeConstants.MILLIS_PER_SECOND;
     }
+
 }

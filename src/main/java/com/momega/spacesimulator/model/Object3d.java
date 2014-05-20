@@ -12,7 +12,7 @@ public class Object3d {
 
     /**
      * Returns the position of the object
-     * @return
+     * @return the [x,y,z] coordinates
      */
     public Vector3d getPosition() {
         return position;

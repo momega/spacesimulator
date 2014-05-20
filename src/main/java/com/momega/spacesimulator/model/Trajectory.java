@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import org.joda.time.DateTime;
+
 /**
  * The abstract implementation of the trajectory
  * Created by martin on 10.5.2014.
@@ -22,10 +24,9 @@ public abstract class Trajectory {
     }
 
     /**
-     * Computes the position of and object in the time t. The set new position, velocity and orientation
+     * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation
      * @param movingObject the moving objects
-     * @param time the time
-     * @return the position of an object
+     * @param newTimestamp new timestamp
      */
-    public abstract void computePosition(MovingObject movingObject, Time time);
+    public abstract void computePosition(MovingObject movingObject, DateTime newTimestamp);
 }

@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import org.joda.time.DateTime;
+
 /**
  * The trajectory of the static object. The {#computePosition} method return always the same position.
  * Created by martin on 4/21/14.
@@ -17,7 +19,7 @@ public class StaticTrajectory extends Trajectory {
     }
 
     @Override
-    public void computePosition(MovingObject movingObject, Time time) {
+    public void computePosition(MovingObject movingObject, DateTime newTimestamp) {
         movingObject.setPosition(getPosition());
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by martin on 5/6/14.
  *
- * //TODO: remove this method to the service package
+ * //TODO: remove this class to the service package
  */
 public abstract class AbstractModel {
 
@@ -21,7 +21,7 @@ public abstract class AbstractModel {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModel.class);
 
-    protected final Time time = new Time(2456760d, 1d);
+    protected Time time;
     protected Camera camera;
 
     protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
@@ -32,15 +32,16 @@ public abstract class AbstractModel {
      * Initialize model
      */
     public final void init() {
+        initTime();
         initDynamicalPoints();
         initCamera();
         next();
         logger.info("model initialized");
     }
 
-    protected void initCamera() {
-        // do nothing
-    }
+    protected abstract void initTime();
+
+    protected abstract void initCamera();
 
     protected void addDynamicalPoint(DynamicalPoint dp) {
         getDynamicalPoints().add(dp);
@@ -58,7 +59,7 @@ public abstract class AbstractModel {
     public void next() {
         getTime().next();
         for(DynamicalPoint dp : getDynamicalPoints()) {
-            dp.move(getTime());
+            dp.move(getTime().getTimestamp());
         }
         camera.updatePosition();
     }
@@ -139,6 +140,10 @@ public abstract class AbstractModel {
 
     public Time getTime() {
         return time;
+    }
+
+    public void setTime(Time time) {
+        this.time = time;
     }
 
     public KeplerianTrajectory3d createKeplerianTrajectory(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {

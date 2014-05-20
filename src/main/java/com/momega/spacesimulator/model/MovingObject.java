@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import org.joda.time.DateTime;
+
 /**
  * The implementation of the moving object. The moving object has the defined velocity and a trajectory which can compute new position and velocity
  * The moving object also has a name to distinguish the objects
@@ -10,6 +12,7 @@ public class MovingObject extends Object3d {
     private String name;
     private Vector3d velocity;
     private Trajectory trajectory;
+    private DateTime timestamp;
 
     public Vector3d getVelocity() {
         return velocity;
@@ -36,7 +39,17 @@ public class MovingObject extends Object3d {
     }
 
     //TODO: remove this method to the service package
-    public void move(Time time) {
-        trajectory.computePosition(this, time);
+    public void move(DateTime newTimestamp) {
+        trajectory.computePosition(this, newTimestamp);
+        setTimestamp(newTimestamp);
+    }
+
+    public DateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(DateTime timestamp) {
+        this.timestamp = timestamp;
     }
 }
+

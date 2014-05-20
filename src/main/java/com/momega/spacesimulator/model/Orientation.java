@@ -74,10 +74,9 @@ public class Orientation {
 
 
     /**
-     Rotates the object3d anticlockwise by the specified angle about the specified axis.
-
-     @param axis		The axis about which to rotate
-     @param angle	The angle by which to rotate (in radians)
+     * Rotates the object3d anticlockwise by the specified angle about the specified axis.
+     * @param axis	The axis about which to rotate
+     * @param angle	The angle by which to rotate (in radians)
      */
     public void rotate(Vector3d axis, double angle)
     {
