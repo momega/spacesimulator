@@ -1,7 +1,8 @@
 package com.momega.spacesimulator.opengl;
 
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.opengl.AbstractRenderer;
+import com.momega.spacesimulator.model.AbstractModel;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
 import com.momega.spacesimulator.renderer.Renderer;
@@ -11,11 +12,10 @@ import org.slf4j.LoggerFactory;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * The class contains renderer for any abstract model
+ * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
+ * for all my OPENGL implementation
  * Created by martin on 4/19/14.
  */
 public class MainRenderer extends AbstractRenderer {
@@ -66,7 +66,7 @@ public class MainRenderer extends AbstractRenderer {
 
         double x = drawable.getWidth();
         double y = drawable.getHeight();
-        double aratio = Math.sqrt( x * x + y * y) / y;
+        double aratio = Math.sqrt(x * x + y * y) / y;
         double z = model.computeZNear(aratio);
         z = z / Renderer.SCALE_FACTOR / 5.0d;
         if (z < znear/2) {
@@ -86,9 +86,9 @@ public class MainRenderer extends AbstractRenderer {
         Camera camera = model.getCamera();
         Vector3d p = camera.getPosition().scaled(1/ Renderer.SCALE_FACTOR);
         glu.gluLookAt(p.x, p.y, p.z,
-                p.x + Renderer.SCALE_FACTOR * camera.getOrientation().getN().x,
-                p.y + Renderer.SCALE_FACTOR * camera.getOrientation().getN().y,
-                p.z + Renderer.SCALE_FACTOR * camera.getOrientation().getN().z,
+                p.x + Renderer.SCALE_FACTOR * camera.getOrientation().getN().x * 1000000,
+                p.y + Renderer.SCALE_FACTOR * camera.getOrientation().getN().y * 1000000,
+                p.z + Renderer.SCALE_FACTOR * camera.getOrientation().getN().z * 1000000,
                 camera.getOrientation().getV().x,
                 camera.getOrientation().getV().y,
                 camera.getOrientation().getV().z);

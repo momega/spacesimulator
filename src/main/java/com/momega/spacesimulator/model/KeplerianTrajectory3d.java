@@ -22,6 +22,7 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
     }
 
     @Override
+    //TODO: remove this method to the service package
     public void computePosition(MovingObject movingObject, Time time) {
         double[] solution = solveKeplerian(Time.getSeconds(time.getTimestamp()));
         double r = solution[0];

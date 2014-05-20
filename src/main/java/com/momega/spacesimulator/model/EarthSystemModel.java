@@ -5,6 +5,8 @@ import java.util.Arrays;
 /**
  * Simple earth-moon model with the satellite
  * Created by martin on 5/6/14.
+ *
+ * //TODO: remove this method to the service package
  */
 public class EarthSystemModel extends AbstractModel {
 

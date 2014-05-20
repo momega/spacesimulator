@@ -1,10 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
- This class represents a 3d object. It is defined with
- a position and three mutually-orthogonal axes, namely n (points in the
- direction faced by the object), u (points to the left of the object)
- and v (points to the top of the object).
+ This class represents a 3d object. It is defined with the position as {@link com.momega.spacesimulator.model.Vector3d} and its {@link com.momega.spacesimulator.model.Orientation}.
  */
 public class Object3d {
 

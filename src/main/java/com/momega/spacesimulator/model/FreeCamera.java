@@ -16,11 +16,14 @@ public class FreeCamera extends Camera {
     /**
      * Moves the camera forward or backward with the current velocity
      * @param direction the direction
+     *
+     * //TODO: remove this method to the service package
      */
     public void moveByVelocity(double direction) {
         moveN(getVelocity() * direction);
     }
 
+    //TODO: remove this method to the service package
     public void changeVelocity(double factor) {
         setVelocity(getVelocity() * factor);
     }
@@ -33,6 +36,7 @@ public class FreeCamera extends Camera {
         return velocity;
     }
 
+    //TODO: remove this method to the service package
     public void updatePosition() {
         // do nothing
     }

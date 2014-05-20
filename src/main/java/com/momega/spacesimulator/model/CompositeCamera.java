@@ -22,6 +22,7 @@ public class CompositeCamera extends Camera {
         this.current = current;
     }
 
+    //TODO: remove this method to the service package
     public void updateCurrent(int direction) {
         int size = cameras.size();
         int c = (getCurrent() + 1) % size;

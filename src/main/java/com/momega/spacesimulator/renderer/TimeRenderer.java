@@ -5,9 +5,9 @@ import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
 
 /**
+ * Renders the time with the given format
  * Created by martin on 4/30/14.
  */
 public class TimeRenderer extends AbstractTextRenderer {
@@ -21,7 +21,7 @@ public class TimeRenderer extends AbstractTextRenderer {
 
     @Override
     public void renderTexts(GL2 gl, int width, int height) {
-        drawText("Time:" + formatter.print(time.getTimestamp().getMillis()), width - 250, height - 20);
-        drawText("Warp:" + time.getWarpFactor(), width - 250, height - 40);
+        drawText("Time:" + formatter.print(time.getTimestamp().getMillis()), width - 200, height - 20);
+        drawText("Warp:" + time.getWarpFactor(), width - 200, height - 35);
     }
 }

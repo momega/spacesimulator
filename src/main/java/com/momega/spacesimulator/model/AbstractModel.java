@@ -12,8 +12,12 @@ import java.util.List;
 
 /**
  * Created by martin on 5/6/14.
+ *
+ * //TODO: remove this method to the service package
  */
 public abstract class AbstractModel {
+
+    private final static double UNIVERSE_RADIUS = 1E12;
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModel.class);
 
@@ -59,12 +63,8 @@ public abstract class AbstractModel {
         camera.updatePosition();
     }
 
-    private final static double UNIVERSE_RADIUS = 1E12;
-
     public double computeZNear(double aratio) {
-        Vector3d c = camera.getPosition();
         Vector3d viewVector = camera.getOrientation().getN();
-
         double znear = UNIVERSE_RADIUS * 2;
 
         for(DynamicalPoint dp : getDynamicalPoints()) {
@@ -74,17 +74,20 @@ public abstract class AbstractModel {
                 continue;
             }
 
-            // check whether the dynamic point is visible
-            Vector3d diffVector = Vector3d.subtract(dp.getPosition(), c).normalize();
-            double a = viewVector.dot(diffVector);
-
-            double distance = dp.getPosition().distance(c);
+            double distance = dp.getPosition().distance(camera.getPosition());
             double distanceFactor = distance / dp.getRadius();
             if (distanceFactor > UNIVERSE_RADIUS * 0.001) {
                 continue; // If it's too far to be visible discard it
             }
 
-            double eyeAngle = Math.acos(a);
+            // check whether the dynamic point is visible
+            Vector3d diffVector = Vector3d.subtract(dp.getPosition(), camera.getPosition()).normalize();
+            double dot = viewVector.dot(diffVector);
+            if (Math.abs(dot) < 0.01) {
+                continue;
+            }
+            double eyeAngle = Math.acos(dot);
+
             double radiusAngle = Math.atan2(dp.getRadius(), distance);
 
             double diffAngle = Math.abs(eyeAngle) -  Math.abs(radiusAngle);
@@ -102,7 +105,7 @@ public abstract class AbstractModel {
             }
         }
 
-        if (znear > UNIVERSE_RADIUS) {
+        if (znear > UNIVERSE_RADIUS * 0.001) {
             znear = UNIVERSE_RADIUS * 0.001;
         }
 

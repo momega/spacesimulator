@@ -1,6 +1,10 @@
 package com.momega.spacesimulator.model;
 
 /**
+ * Orientation class is used to define 3D orientation. It is defined with
+ the three mutually-orthogonal axes, namely {@link #nVector} (points in the
+ direction faced by the object), {@link #uVector}  (points to the left of the object)
+ and {@link #vVector}  (points to the top of the object).
  * Created by martin on 9.5.2014.
  */
 public class Orientation {

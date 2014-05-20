@@ -21,10 +21,12 @@ public class Time {
         return timestamp;
     }
 
+    //TODO: remove this method to the service package
     public void changeWarpFactor(double ratio) {
         this.warpFactor = this.warpFactor * ratio;
     }
 
+    //TODO: remove this method to the service package
     public void next() {
         timestamp = timestamp.plus((long) warpFactor * DateTimeConstants.MILLIS_PER_SECOND);
     }

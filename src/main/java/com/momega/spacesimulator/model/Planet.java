@@ -23,6 +23,7 @@ public class Planet extends DynamicalPoint {
         this.textureFileName = textureFileName;
     }
 
+    //TODO: remove this method to the service package
     public void rotate(Time time) {
         double z = time.getSeconds() / getRotationPeriod();
         z = z - Math.floor(z);
@@ -40,6 +41,7 @@ public class Planet extends DynamicalPoint {
      * Sets the axial tilt of the planet
      * @param angle the angle in radians
      */
+    //TODO: remove this method to the service package
     public void setAxialTilt(double angle) {
         getOrientation().lookUp(angle);
     }

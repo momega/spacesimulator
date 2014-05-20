@@ -7,6 +7,8 @@ import javax.media.opengl.GLAutoDrawable;
 import java.awt.*;
 
 /**
+ * AbstractTextRenderer is superclass for the renderer which contains OPEN GL text renderer. It overrides the {@link #draw(javax.media.opengl.GLAutoDrawable)}, starts and closes
+ * text rendering "transaction". The {@link #renderTexts(javax.media.opengl.GL2, int, int)} in declared to override by any subclass to render text
  * Created by martin on 4/29/14.
  */
 public abstract class AbstractTextRenderer implements Renderer {

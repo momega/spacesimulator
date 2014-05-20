@@ -26,16 +26,16 @@ public class CameraPositionRenderer extends AbstractTextRenderer {
             c = ((CompositeCamera) c).getCurrentCamera();
         }
         if (c instanceof FreeCamera) {
-            drawText("Velocity:" + ((FreeCamera)c).getVelocity(), 10, 20);
+            drawText("Velocity:" + ((FreeCamera)c).getVelocity(), 10, 70);
         }
         if (c instanceof SatelliteCamera) {
             SatelliteCamera sc = (SatelliteCamera) c;
-            drawText("Distance:" + sc.getDistance(), 10, 20);
+            drawText("Distance:" + sc.getDistance(), 10, 70);
         }
-        drawText("Position:" + c.getPosition().toString(), 10, 6);
-        drawText("N:" + c.getOrientation().getN().toString(), 400, 34);
-        drawText("U:" + c.getOrientation().getU().toString(), 400, 20);
-        drawText("V:" + c.getOrientation().getV().toString(), 400, 6);
+        drawText("Position:" + c.getPosition().toString(), 10, 55);
+        drawText("N:" + c.getOrientation().getN().toString(), 10, 40);
+        drawText("U:" + c.getOrientation().getU().toString(), 10, 25);
+        drawText("V:" + c.getOrientation().getV().toString(), 10, 10);
     }
 
 }

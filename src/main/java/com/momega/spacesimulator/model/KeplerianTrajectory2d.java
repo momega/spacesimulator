@@ -24,6 +24,7 @@ public class KeplerianTrajectory2d extends Trajectory {
     private double argumentOfPeriapsis; // lowercase omega
     private double p; // semilatus rectum
 
+    //TODO: remove this method to the service package
     public void initialize() {
         this.p = semimajorAxis* (1 - eccentricity* eccentricity);
         //this.thetaParam = Math.sqrt((1+eccentricity)/(1-eccentricity));

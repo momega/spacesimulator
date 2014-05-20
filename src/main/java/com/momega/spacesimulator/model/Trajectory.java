@@ -8,6 +8,7 @@ public abstract class Trajectory {
 
     private double[] trajectoryColor;
 
+    //TODO: remove this method to the service package
     public void initialize() {
         // ready for override
     }

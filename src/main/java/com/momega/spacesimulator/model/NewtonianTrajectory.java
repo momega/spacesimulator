@@ -11,6 +11,7 @@ public class NewtonianTrajectory extends Trajectory {
 
     private List<Planet> planets;
 
+    //TODO: remove this method to the service package
     public void computePosition(MovingObject movingObject, Time time) {
         Vector3d a = new Vector3d(0d, 0d, 0d);
         for(Planet planet : getPlanets()) {
