@@ -38,12 +38,6 @@ public class MovingObject extends Object3d {
         this.trajectory = trajectory;
     }
 
-    //TODO: remove this method to the service package
-    public void move(DateTime newTimestamp) {
-        trajectory.computePosition(this, newTimestamp);
-        setTimestamp(newTimestamp);
-    }
-
     public DateTime getTimestamp() {
         return timestamp;
     }

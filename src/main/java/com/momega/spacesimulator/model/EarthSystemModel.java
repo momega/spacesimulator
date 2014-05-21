@@ -50,7 +50,6 @@ public class EarthSystemModel extends AbstractModel {
         satellite.setVelocity(new Vector3d(0, 9500d, 0));
         NewtonianTrajectory satelliteTrajectory = new NewtonianTrajectory();
         satelliteTrajectory.setTrajectoryColor(new double[] {1,1,1});
-        satelliteTrajectory.setPlanets(Arrays.asList(earth, moon));
         satellite.setTrajectory(satelliteTrajectory);
         satellite.setMass(10 * 1E3);
         satellite.setRadius(10);

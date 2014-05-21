@@ -1,5 +1,9 @@
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.service.KeplerianTrajectoryManager;
+import com.momega.spacesimulator.service.NewtonianTrajectoryManager;
+import com.momega.spacesimulator.service.StaticTrajectoryManager;
+import com.momega.spacesimulator.service.TrajectoryService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
@@ -8,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,6 +29,8 @@ public abstract class AbstractModel {
     protected Time time;
     protected Camera camera;
 
+    protected TrajectoryService trajectoryService;
+
     protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
     private final List<Planet> planets = new ArrayList<>();
     private final List<Satellite> satellites = new ArrayList<>();
@@ -35,8 +42,18 @@ public abstract class AbstractModel {
         initTime();
         initDynamicalPoints();
         initCamera();
+        initServices();
         next();
         logger.info("model initialized");
+    }
+
+    private void initServices() {
+        trajectoryService = new TrajectoryService();
+        KeplerianTrajectoryManager ktm = new KeplerianTrajectoryManager();
+        NewtonianTrajectoryManager ntm = new NewtonianTrajectoryManager();
+        StaticTrajectoryManager stm = new StaticTrajectoryManager();
+        ntm.setPlanets(getPlanets());
+        trajectoryService.setTrajectoryManagers(Arrays.asList(ktm, ntm, stm));
     }
 
     protected abstract void initTime();
@@ -59,7 +76,7 @@ public abstract class AbstractModel {
     public void next() {
         getTime().next();
         for(DynamicalPoint dp : getDynamicalPoints()) {
-            dp.move(getTime().getTimestamp());
+            trajectoryService.move(dp, getTime().getTimestamp());
         }
         camera.updatePosition();
     }
@@ -156,7 +173,10 @@ public abstract class AbstractModel {
         trajectory.setTimeOfPeriapsis(new DateTime(DateTimeUtils.fromJulianDay(timeOfPeriapsis)));
         trajectory.setInclination(Math.toRadians(inclination));
         trajectory.setAscendingNode(Math.toRadians(ascendingNode));
-        trajectory.initialize();
         return trajectory;
+    }
+
+    public TrajectoryService getTrajectoryService() {
+        return trajectoryService;
     }
 }

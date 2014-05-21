@@ -10,11 +10,6 @@ public abstract class Trajectory {
 
     private double[] trajectoryColor;
 
-    //TODO: remove this method to the service package
-    public void initialize() {
-        // ready for override
-    }
-
     public double[] getTrajectoryColor() {
         return trajectoryColor;
     }
@@ -23,10 +18,4 @@ public abstract class Trajectory {
         this.trajectoryColor = trajectoryColor;
     }
 
-    /**
-     * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation
-     * @param movingObject the moving objects
-     * @param newTimestamp new timestamp
-     */
-    public abstract void computePosition(MovingObject movingObject, DateTime newTimestamp);
 }

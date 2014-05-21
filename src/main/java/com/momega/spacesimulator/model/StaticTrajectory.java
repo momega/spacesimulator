@@ -18,8 +18,4 @@ public class StaticTrajectory extends Trajectory {
         return position;
     }
 
-    @Override
-    public void computePosition(MovingObject movingObject, DateTime newTimestamp) {
-        movingObject.setPosition(getPosition());
-    }
 }

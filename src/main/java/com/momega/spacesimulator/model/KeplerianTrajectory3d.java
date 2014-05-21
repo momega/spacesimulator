@@ -23,22 +23,6 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
         return ascendingNode;
     }
 
-    @Override
-    //TODO: remove this method to the service package
-    public void computePosition(MovingObject movingObject, DateTime newTimestamp) {
-        double[] solution = solveKeplerian(Time.getSeconds(newTimestamp));
-        double r = solution[0];
-        double theta = solution[1];
-
-        double u =  theta + getArgumentOfPeriapsis();
-
-        double x = getCentralObject().getPosition().x + r * (Math.cos(u) * Math.cos(ascendingNode) - Math.sin(u) * Math.cos(inclination) * Math.sin(ascendingNode));
-        double y = getCentralObject().getPosition().y + r * (Math.cos(u) * Math.sin(ascendingNode) + Math.sin(u) * Math.cos(inclination) * Math.cos(ascendingNode));
-        double z = getCentralObject().getPosition().z + r * (Math.sin(u) * Math.sin(inclination));
-
-        movingObject.setPosition(new Vector3d(x, y, z));
-    }
-
     public void setAscendingNode(double ascendingNode) {
         this.ascendingNode = ascendingNode;
     }

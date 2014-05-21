@@ -31,12 +31,6 @@ public class Planet extends DynamicalPoint {
         getOrientation().lookLeft(phi);
     }
 
-    @Override
-    public void move(DateTime newTimestamp) {
-        rotate(newTimestamp);
-        super.move(newTimestamp);
-    }
-
     /**
      * Sets the axial tilt of the planet
      * @param angle the angle in radians
