@@ -114,8 +114,6 @@ public class PlanetRenderer extends DynamicalPointRenderer {
             logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);
         }
 
- // TODO: fix this
-
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();
 

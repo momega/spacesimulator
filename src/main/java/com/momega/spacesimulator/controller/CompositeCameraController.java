@@ -1,8 +1,8 @@
 package com.momega.spacesimulator.controller;
 
+import com.momega.spacesimulator.model.AttachedCamera;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.FreeCamera;
-import com.momega.spacesimulator.model.SatelliteCamera;
 
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ public class CompositeCameraController extends AbstractCameraController {
         for(Camera c : compositeCamera.getCameras()) {
             if (c instanceof FreeCamera) {
                 cameraControllers.add(new FreeCameraController((FreeCamera) c));
-            } else if (c instanceof SatelliteCamera) {
-                cameraControllers.add(new SatelliteCameraController((SatelliteCamera) c));
+            } else if (c instanceof AttachedCamera) {
+                cameraControllers.add(new SatelliteCameraController((AttachedCamera) c));
             }
         }
     }

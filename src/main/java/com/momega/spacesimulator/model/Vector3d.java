@@ -135,8 +135,8 @@ public class Vector3d {
 
     /**
      * Creates the subtract vector as u-v
-     * @param u
-     * @param v
+     * @param u the vector u
+     * @param v the vector v
      * @return
      */
     public static Vector3d subtract(Vector3d u, Vector3d v) {

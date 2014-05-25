@@ -7,14 +7,9 @@ import org.joda.time.DateTime;
  *
  * Created by martin on 4/15/14.
  */
-public class Planet extends DynamicalPoint {
+public class Planet extends RotatingObject {
 
-    private double rotationPeriod; // rotation period in seconds
     private String textureFileName;
-
-    public void setRotationPeriod(double rotationPeriod) {
-        this.rotationPeriod = rotationPeriod;
-    }
 
     public String getTextureFileName() {
         return textureFileName;
@@ -22,26 +17,6 @@ public class Planet extends DynamicalPoint {
 
     public void setTextureFileName(String textureFileName) {
         this.textureFileName = textureFileName;
-    }
-
-    //TODO: remove this method to the service package
-    public void rotate(DateTime newTimestamp) {
-        double phi = Time.getSeconds(newTimestamp, getTimestamp())/ getRotationPeriod();
-        phi *= (2*Math.PI);
-        getOrientation().lookLeft(phi);
-    }
-
-    /**
-     * Sets the axial tilt of the planet
-     * @param angle the angle in radians
-     */
-    //TODO: remove this method to the service package
-    public void setAxialTilt(double angle) {
-        getOrientation().lookUp(angle);
-    }
-
-    public double getRotationPeriod() {
-        return rotationPeriod;
     }
 
 }

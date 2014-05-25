@@ -3,25 +3,25 @@ package com.momega.spacesimulator.model;
 /**
  * Created by martin on 5/8/14.
  */
-public class SatelliteCamera extends Camera {
+public class AttachedCamera extends Camera {
 
-    private Satellite satellite;
+    private DynamicalPoint dynamicalPoint;
     private double distance;
 
-    public SatelliteCamera() {
+    public AttachedCamera() {
     }
 
     @Override
     public void updatePosition() {
-        setPosition(Vector3d.scaleAdd(distance, new Vector3d(1d, 0d, 0d), getSatellite().getPosition()));
+        setPosition(Vector3d.scaleAdd(distance, new Vector3d(1d, 0d, 0d), getDynamicalPoint().getPosition()));
     }
 
-    public Satellite getSatellite() {
-        return satellite;
+    public DynamicalPoint getDynamicalPoint() {
+        return dynamicalPoint;
     }
 
-    public void setSatellite(Satellite satellite) {
-        this.satellite = satellite;
+    public void setDynamicalPoint(DynamicalPoint dynamicalPoint) {
+        this.dynamicalPoint = dynamicalPoint;
     }
 
     public void changeDistance(double factor) {

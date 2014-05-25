@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.model.SatelliteCamera;
+import com.momega.spacesimulator.model.AttachedCamera;
 
 import java.awt.event.KeyEvent;
 
@@ -9,9 +9,9 @@ import java.awt.event.KeyEvent;
  */
 public class SatelliteCameraController extends AbstractController {
 
-    private final SatelliteCamera camera;
+    private final AttachedCamera camera;
 
-    public SatelliteCameraController(SatelliteCamera camera) {
+    public SatelliteCameraController(AttachedCamera camera) {
         this.camera = camera;
     }
 

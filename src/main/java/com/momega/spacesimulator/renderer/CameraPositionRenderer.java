@@ -1,11 +1,8 @@
 package com.momega.spacesimulator.renderer;
 
-import com.jogamp.opengl.util.awt.TextRenderer;
 import com.momega.spacesimulator.model.*;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import java.awt.*;
 
 /**
  * Created by martin on 4/22/14.
@@ -28,8 +25,8 @@ public class CameraPositionRenderer extends AbstractTextRenderer {
         if (c instanceof FreeCamera) {
             drawText("Velocity:" + ((FreeCamera)c).getVelocity(), 10, 70);
         }
-        if (c instanceof SatelliteCamera) {
-            SatelliteCamera sc = (SatelliteCamera) c;
+        if (c instanceof AttachedCamera) {
+            AttachedCamera sc = (AttachedCamera) c;
             drawText("Distance:" + sc.getDistance(), 10, 70);
         }
         drawText("Position:" + c.getPosition().toString(), 10, 55);

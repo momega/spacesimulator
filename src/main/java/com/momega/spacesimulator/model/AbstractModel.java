@@ -1,9 +1,6 @@
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.service.KeplerianTrajectoryManager;
-import com.momega.spacesimulator.service.NewtonianTrajectoryManager;
-import com.momega.spacesimulator.service.StaticTrajectoryManager;
-import com.momega.spacesimulator.service.TrajectoryService;
+import com.momega.spacesimulator.service.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
@@ -31,6 +28,8 @@ public abstract class AbstractModel {
 
     protected TrajectoryService trajectoryService;
 
+    protected MotionService motionService;
+
     protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
     private final List<Planet> planets = new ArrayList<>();
     private final List<Satellite> satellites = new ArrayList<>();
@@ -54,6 +53,11 @@ public abstract class AbstractModel {
         StaticTrajectoryManager stm = new StaticTrajectoryManager();
         ntm.setPlanets(getPlanets());
         trajectoryService.setTrajectoryManagers(Arrays.asList(ktm, ntm, stm));
+
+        RotationService rotationService = new RotationService();
+        this.motionService = new MotionService();
+        this.motionService.setRotationService(rotationService);
+        this.motionService.setTrajectoryService(trajectoryService);
     }
 
     protected abstract void initTime();
@@ -74,10 +78,7 @@ public abstract class AbstractModel {
      * Next step of the model iteration
      */
     public void next() {
-        getTime().next();
-        for(DynamicalPoint dp : getDynamicalPoints()) {
-            trajectoryService.move(dp, getTime().getTimestamp());
-        }
+        motionService.move(getDynamicalPoints(), getTime());
         camera.updatePosition();
     }
 
@@ -176,7 +177,4 @@ public abstract class AbstractModel {
         return trajectory;
     }
 
-    public TrajectoryService getTrajectoryService() {
-        return trajectoryService;
-    }
 }
