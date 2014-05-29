@@ -19,7 +19,7 @@ import java.util.List;
  */
 public abstract class AbstractModel {
 
-    private final static double UNIVERSE_RADIUS = 1E12;
+    private final static double UNIVERSE_RADIUS = 1E18;
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModel.class);
 
@@ -140,6 +140,15 @@ public abstract class AbstractModel {
         return dynamicalPoints;
     }
 
+    protected DynamicalPoint findDynamicalPoint(String name) {
+        for(DynamicalPoint dp : getDynamicalPoints()) {
+            if (name.equals(dp.getName())) {
+                return dp;
+            }
+        }
+        return null;
+    }
+
     public List<Planet> getPlanets() {
         return planets;
     }
@@ -175,6 +184,18 @@ public abstract class AbstractModel {
         trajectory.setInclination(Math.toRadians(inclination));
         trajectory.setAscendingNode(Math.toRadians(ascendingNode));
         return trajectory;
+    }
+
+    public void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
+        dp.setRadius(radius * 1E6);
+        dp.setName(name);
+        dp.setMass(mass * 1E24);
+        dp.setOrientation(new Orientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        dp.getOrientation().lookUp(Math.toRadians(axialTilt));
+        if (dp instanceof RotatingObject) {
+            RotatingObject ro = (RotatingObject) dp;
+            ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
+        }
     }
 
 }

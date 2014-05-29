@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
+import java.util.Vector;
 
 /**
  * Created by martin on 4/28/14.
@@ -61,6 +62,8 @@ public class DynamicalPointLabelRenderer extends AbstractTextRenderer {
     protected void renderTexts(GL2 gl, int width, int height) {
         setColor(255, 255, 255);
         drawText(dynamicalPoint.getName(), (int) my2DPoint[0] + 5, (int) my2DPoint[1] + 5);
-        drawText(dynamicalPoint.getPosition().toString(), (int) my2DPoint[0] + 5, (int) my2DPoint[1] - 8);
+        drawText("P:" + dynamicalPoint.getPosition().toString(), (int) my2DPoint[0] + 5, (int) my2DPoint[1] - 8);
+        double distance = Vector3d.subtract(dynamicalPoint.getPosition(), this.camera.getPosition()).length()/1E9;
+        drawText("D:" + String.format("%6.2f", distance), (int) my2DPoint[0] + 5, (int) my2DPoint[1] - 18);
     }
 }

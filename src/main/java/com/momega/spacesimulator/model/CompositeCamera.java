@@ -51,6 +51,7 @@ public class CompositeCamera extends Camera {
     }
 
     @Override
+    //TODO: remove this method to the service package
     public void updatePosition() {
         getCurrentCamera().updatePosition();
     }
