@@ -27,7 +27,7 @@ public class MainWindow extends DefaultWindow {
         MainWindow window = new MainWindow("Space Simulator");
         EventBusController controller = new EventBusController();
 
-        AbstractModel model = new SolarSystemModel();
+        AbstractModel model = new EarthSystemModel();
         model.init();
 
         MainRenderer mr = new MainRenderer(model);

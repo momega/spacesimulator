@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Computes the position of the {@link com.momega.spacesimulator.model.MovingObject} along the keplerian trajectory.
+ * The manager does not compute the velocity
  * Created by martin on 5/21/14.
  */
 public class KeplerianTrajectoryManager implements TrajectoryManager {

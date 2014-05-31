@@ -32,10 +32,17 @@ public class Vector3d {
     }
 
     //################## PUBLIC METHODS ##################//
-        public Vector3d add(final Vector3d rhs) {
+    public Vector3d add(final Vector3d rhs) {
         x += rhs.x;
         y += rhs.y;
         z += rhs.z;
+        return this;
+    }
+
+    public Vector3d scaleAdd(double factor, Vector3d u) {
+        x += factor * u.x;
+        y += factor * u.y;
+        z += factor * u.z;
         return this;
     }
 
