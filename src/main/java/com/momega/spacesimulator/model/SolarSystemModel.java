@@ -55,43 +55,32 @@ public class SolarSystemModel extends AbstractModel {
         venus.setTrajectory(venusTrajectory);
         venus.setTextureFileName("venus.jpg");
 
-//
-//        Planet mercury = new Planet("Mercury",
-//                new KeplerianTrajectory3d(sun, 57909.05d,
-//                        0.20563,
-//                        29.124,
-//                        87.96890, 2456780.448693044949,
-//                        7.0 ,
-//                        48.313), time, 2.11d/60d, 2.4397, 58.646, 0.3302, "mercury.jpg",
-//                new double[] {0.2,0.2,0.2}
-//        );
-//
-//        Planet jupiter = new Planet("Jupiter",
-//                new KeplerianTrajectory3d(sun, 778547.2d,
-//                        0.048775,
-//                        274.008653,
-//                        4332.59, 2455638.655976880342,
-//                        1.303541 ,
-//                        100.5118), time, 3.13, 69.911, 9.925d/24, 1898.13, "jupiter.jpg",
-//                new double[] {1,0.65,0.0}
-//        );
-//
+        KeplerianTrajectory3d mercuryTrajectory = createKeplerianTrajectory(sun, 57909.05d * 1E6, 0.20563, 29.124, 87.96890, 2456780.448693044949, 7.0, 48.313);
+        mercuryTrajectory.setTrajectoryColor(new double[]{0.2,0.2,0.2});
+        Planet mercury = new Planet();
+        updateDynamicalPoint(mercury, "Mercury", 0.3302, 58.646, 2.4397, 2.11d/60d);
+        mercury.setTrajectory(mercuryTrajectory);
+        mercury.setTextureFileName("mercury.jpg");
+
+        KeplerianTrajectory3d jupiterTrajectory = createKeplerianTrajectory(sun, 778547.2d * 1E6, 0.048775, 274.008653, 4332.59, 2455638.655976880342, 1.303541, 100.5118);
+        jupiterTrajectory.setTrajectoryColor(new double[]{1,0.65,0.0});
+        Planet jupiter = new Planet();
+        updateDynamicalPoint(jupiter, "Jupiter", 1898.13, 9.925d/24, 69.911, 3.13);
+        jupiter.setTrajectory(jupiterTrajectory);
+        jupiter.setTextureFileName("jupiter.jpg");
+
         addDynamicalPoint(sun);
         addDynamicalPoint(earthMoonBarycenter);
         addDynamicalPoint(earth);
         addDynamicalPoint(moon);
         addDynamicalPoint(mars);
         addDynamicalPoint(venus);
+        addDynamicalPoint(mercury);
+        addDynamicalPoint(jupiter);
 
         for(DynamicalPoint dp : getDynamicalPoints()) {
             dp.setTimestamp(getTime().getTimestamp());
         }
-//        addDynamicalPoint(mercury);
-//        addDynamicalPoint(jupiter);
-
-        //Object3d satillitePosition = new Object3d(earth.getPosition().clone().add())
-        //Satellite satellite = new Satellite("Satellite", new NewtonianTrajectory(planets, satillitePosition), time,  new double[] {1,1,1});
-        //addDynamicalPoint(satellite);
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.List;
  */
 public abstract class AbstractModel {
 
-    private final static double UNIVERSE_RADIUS = 1E18;
+    public final static double UNIVERSE_RADIUS = 1E19;
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModel.class);
 
