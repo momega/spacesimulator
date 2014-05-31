@@ -19,7 +19,7 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
 
     private final double size = 1d / Renderer.SCALE_FACTOR;
 
-    public static final int maxHistory = 10000;
+    public static final int maxHistory = 100000;
     private final Satellite satellite;
 
     private List<double[]> history = new ArrayList<>();

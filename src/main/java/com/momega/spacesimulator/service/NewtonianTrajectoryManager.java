@@ -23,12 +23,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Vector3d velocity = movingObject.getVelocity().clone();
         Vector3d position = movingObject.getPosition().clone();
 
-//        double step = dt/8;
-//        for(int i=0; i<4; i++) {
-//            Vector3d[] result = rk4Solver(position, velocity, step);
-//            movingObject.setVelocity(result[0]);
-//            movingObject.setPosition(result[1]);
-//        }
+//        Vector3d[] result = rk4Solver(position, velocity, dt);
+//        movingObject.setVelocity(result[0]);
+//        movingObject.setPosition(result[1]);
 
         Vector3d[] result = eulerSolver(position, velocity, dt);
         movingObject.setVelocity(result[0]);
@@ -36,7 +33,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     }
 
     /**
-     * Solves the velocity and positon by the simple Euler method
+     * Solves the velocity and position by the simple Euler method
      * @param position
      * @param velocity
      * @param dt
