@@ -1,10 +1,8 @@
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.utils.MathUtils;
-import org.joda.time.DateTime;
 import org.joda.time.Duration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.math.BigDecimal;
 
 /**
  * The class computer keplerian trajectory and object along the eclipse. It computes only in 2D
@@ -15,7 +13,7 @@ public class KeplerianTrajectory2d extends Trajectory {
     private DynamicalPoint centralObject;
     private double semimajorAxis; // (a)
     private double eccentricity; // epsilon
-    private DateTime timeOfPeriapsis; // julian day
+    private BigDecimal timeOfPeriapsis; // seconds
     private Duration period; // T in seconds
     private double argumentOfPeriapsis; // lowercase omega
 
@@ -51,12 +49,12 @@ public class KeplerianTrajectory2d extends Trajectory {
         this.eccentricity = eccentricity;
     }
 
-    public void setTimeOfPeriapsis(DateTime timeOfPeriapsis) {
-        this.timeOfPeriapsis = timeOfPeriapsis;
+    public BigDecimal getTimeOfPeriapsis() {
+        return timeOfPeriapsis;
     }
 
-    public DateTime getTimeOfPeriapsis() {
-        return timeOfPeriapsis;
+    public void setTimeOfPeriapsis(BigDecimal timeOfPeriapsis) {
+        this.timeOfPeriapsis = timeOfPeriapsis;
     }
 
     public void setSemimajorAxis(double semimajorAxis) {

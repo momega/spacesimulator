@@ -3,7 +3,8 @@ package com.momega.spacesimulator.model;
 import org.joda.time.DateTime;
 
 /**
- * The class represents the planet. It is the dynamical point with defined texture and rotation period
+ * The class represents the planet. It is the {@link com.momega.spacesimulator.model.RotatingObject}
+ * with defined texture
  *
  * Created by martin on 4/15/14.
  */

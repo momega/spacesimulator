@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.service.*;
+import com.momega.spacesimulator.utils.TimeUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
@@ -198,22 +199,44 @@ public abstract class AbstractModel {
         trajectory.setEccentricity(eccentricity);
         trajectory.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
         trajectory.setPeriod(Duration.standardSeconds((long) (period * DateTimeConstants.SECONDS_PER_DAY)));
-        trajectory.setTimeOfPeriapsis(new DateTime(DateTimeUtils.fromJulianDay(timeOfPeriapsis)));
+        trajectory.setTimeOfPeriapsis(TimeUtils.julianDayAsTimestamp(timeOfPeriapsis));
         trajectory.setInclination(Math.toRadians(inclination));
         trajectory.setAscendingNode(Math.toRadians(ascendingNode));
         return trajectory;
+    }
+
+    public Satellite createSatellite(DynamicalPoint centralPoint, String name, double height, Vector3d velocity) {
+        Satellite satellite = new Satellite();
+        satellite.setName(name);
+        satellite.setPosition(new Vector3d(centralPoint.getRadius() + height*1E3, 0, 0));
+        satellite.setOrientation(createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
+        satellite.setVelocity(velocity);
+        NewtonianTrajectory satelliteTrajectory = new NewtonianTrajectory();
+        satelliteTrajectory.setTrajectoryColor(new double[]{1, 1, 1});
+        satellite.setTrajectory(satelliteTrajectory);
+        satellite.setMass(10 * 1E3);
+        satellite.setRadius(10);
+        return satellite;
     }
 
     public void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
         dp.setRadius(radius * 1E6);
         dp.setName(name);
         dp.setMass(mass * 1E24);
-        dp.setOrientation(new Orientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        dp.setOrientation(createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
         dp.getOrientation().lookUp(Math.toRadians(axialTilt));
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
             ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
         }
+    }
+
+    protected Orientation createOrientation(Vector3d nVector, Vector3d vVector) {
+        Orientation o = new Orientation();
+        o.setN(nVector.normalize());
+        o.setV(vVector.normalize());
+        o.setU(vVector.cross(nVector));
+        return o;
     }
 
     public DynamicalPoint getSelectedDynamicalPoint() {

@@ -2,7 +2,6 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +20,7 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
     @Override
     public void computePosition(MovingObject movingObject, BigDecimal newTimestamp) {
         KeplerianTrajectory3d trajectory = (KeplerianTrajectory3d) movingObject.getTrajectory();
-        double[] solution = solveKeplerian(trajectory, newTimestamp.doubleValue());
+        double[] solution = solveKeplerian(trajectory, newTimestamp);
         double r = solution[0];
         double theta = solution[1];
 
@@ -43,14 +42,15 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
 
     /**
      * Solves the keplerian problem for the given time
-     * @param t the time
+     * @param time the time
      * @return the array with the radius (r) and theta (real anomaly)
      */
-    protected double[] solveKeplerian(KeplerianTrajectory2d trajectory, double t) {
-        logger.debug("time = {}", t);
+    protected double[] solveKeplerian(KeplerianTrajectory2d trajectory, BigDecimal time) {
+        logger.debug("time = {}", time);
 
         double E = Math.PI; //  eccentric anomaly
-        double M = 2 * Math.PI * (t - TimeUtils.getSeconds(trajectory.getTimeOfPeriapsis())) / trajectory.getPeriod().getStandardSeconds();   // mean anomaly
+        double dt = time.subtract(trajectory.getTimeOfPeriapsis()).doubleValue();
+        double M = 2 * Math.PI * dt / trajectory.getPeriod().getStandardSeconds();   // mean anomaly
         M = MathUtils.normalizeAngle(M);
 
         logger.debug("M = {}", M);

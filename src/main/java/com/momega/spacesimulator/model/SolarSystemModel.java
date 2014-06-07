@@ -94,11 +94,11 @@ public class SolarSystemModel extends AbstractModel {
         AttachedCamera s = new AttachedCamera();
         s.setDynamicalPoint(findDynamicalPoint("Earth"));
         s.setDistance(15 * 1E6);
-        s.setOrientation(new Orientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
+        s.setOrientation(createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
 
         FreeCamera f = new FreeCamera();
         f.setPosition(new Vector3d(15 * 1E9, 0, 0));
-        f.setOrientation(new Orientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
+        f.setOrientation(createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
         f.setVelocity(1 * 1E6);
         setCamera(f);
 

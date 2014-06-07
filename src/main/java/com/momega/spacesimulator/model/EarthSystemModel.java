@@ -35,17 +35,10 @@ public class EarthSystemModel extends AbstractModel {
         addDynamicalPoint(earth);
         addDynamicalPoint(moon);
 
-        Satellite satellite = new Satellite();
-        satellite.setName("Satellite");
-        satellite.setPosition(new Vector3d((6.378 + 0.2) * 1E6, 0, 0));
-        satellite.setOrientation(new Orientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
-        satellite.setVelocity(new Vector3d(0, 9500d, 0));
-        NewtonianTrajectory satelliteTrajectory = new NewtonianTrajectory();
-        satelliteTrajectory.setTrajectoryColor(new double[]{1, 1, 1});
-        satellite.setTrajectory(satelliteTrajectory);
-        satellite.setMass(10 * 1E3);
-        satellite.setRadius(10);
+        Satellite satellite = createSatellite(earth, "Satellite 1", 200, new Vector3d(0d, 10000d, 0d));
+        addDynamicalPoint(satellite);
 
+        satellite = createSatellite(earth, "Satellite 2", 300, new Vector3d(0d, 0d, 9000d));
         addDynamicalPoint(satellite);
 
         for(DynamicalPoint dp : getDynamicalPoints()) {
@@ -65,11 +58,11 @@ public class EarthSystemModel extends AbstractModel {
         AttachedCamera s = new AttachedCamera();
         s.setDynamicalPoint(getSatellites().get(0));
         s.setDistance(100);
-        s.setOrientation(new Orientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
+        s.setOrientation(createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
 
         FreeCamera f = new FreeCamera();
         f.setPosition(new Vector3d(15 * 1E6, 0, 0));
-        f.setOrientation(new Orientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
+        f.setOrientation(createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
         f.setVelocity(1 * 1E6);
         setCamera(f);
 

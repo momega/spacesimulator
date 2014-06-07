@@ -15,24 +15,8 @@ public class Orientation {
     private Vector3d uVector;
     private Vector3d vVector;
 
-    //################## CONSTRUCTORS ##################//
     /**
-     Constructs a new 3d object.
-
-     @param nVector		The direction the object3d is looking (or moving)
-     @param vVector		The "up" direction for the object3d
-     */
-    public Orientation(Vector3d nVector, Vector3d vVector)
-    {
-        this.nVector = nVector.normalize();
-        this.vVector = vVector.normalize();
-        this.uVector = this.vVector.cross(this.nVector);
-    }
-
-    /**
-     Returns the n vector of the object3d.
-
-     @return	...think about it...
+     * Returns the n vector of the object3d.
      */
     public Vector3d getN()
     {
@@ -40,9 +24,7 @@ public class Orientation {
     }
 
     /**
-     Returns the u vector of the object3d.
-
-     @return	...think about it...
+     * Returns the u vector of the object3d.
      */
     public Vector3d getU()
     {
@@ -50,15 +32,24 @@ public class Orientation {
     }
 
     /**
-     Returns the v vector of the object3d.
-
-     @return	...think about it...
+     * Returns the v vector of the object3d.
      */
     public Vector3d getV()
     {
         return vVector;
     }
 
+    public void setN(Vector3d nVector) {
+        this.nVector = nVector;
+    }
+
+    public void setU(Vector3d uVector) {
+        this.uVector = uVector;
+    }
+
+    public void setV(Vector3d vVector) {
+        this.vVector = vVector;
+    }
 
     public void twist(double step) {
         rotate(getN(), step);
