@@ -8,6 +8,7 @@ import org.joda.time.DateTimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -26,9 +27,9 @@ public class MotionService {
     private RotationService rotationService;
 
     public void move(List<DynamicalPoint> dynamicalPoints, Time time) {
-        double timestamp = time.getTimestamp() + time.getWarpFactor();
+        BigDecimal timestamp = time.getTimestamp().add(time.getWarpFactor());
         time.setTimestamp(timestamp);
-        logger.info("time={}", timestamp);
+        logger.debug("time={}", timestamp);
         for(DynamicalPoint dp : dynamicalPoints) {
             trajectoryService.move(dp, timestamp);
             if (dp instanceof RotatingObject) {

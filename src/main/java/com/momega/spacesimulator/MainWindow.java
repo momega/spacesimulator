@@ -34,7 +34,7 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new QuitController(window));
         controller.addController(new TargetController(model));
         controller.addController(new CompositeCameraController((com.momega.spacesimulator.model.CompositeCamera) model.getCamera()));
-        controller.addController(new TimeController(model.getTime()));
+        controller.addController(new TimeController(model));
         controller.addController(new PerspectiveController(mr));
         window.openWindow(mr, controller);
     }

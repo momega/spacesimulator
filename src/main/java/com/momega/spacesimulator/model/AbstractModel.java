@@ -29,6 +29,7 @@ public abstract class AbstractModel {
     protected Camera camera;
     private DynamicalPoint selectedDynamicalPoint;
     protected TrajectoryService trajectoryService;
+    private CameraService cameraService;
 
     protected MotionService motionService;
 
@@ -60,6 +61,8 @@ public abstract class AbstractModel {
         this.motionService = new MotionService();
         this.motionService.setRotationService(rotationService);
         this.motionService.setTrajectoryService(trajectoryService);
+
+        this.cameraService = new CameraService();
     }
 
     protected abstract void initTime();
@@ -81,7 +84,7 @@ public abstract class AbstractModel {
      */
     public void next() {
         motionService.move(getDynamicalPoints(), getTime());
-        camera.updatePosition();
+        cameraService.updatePosition(camera);
     }
 
     public double computeZNear(double aratio) {

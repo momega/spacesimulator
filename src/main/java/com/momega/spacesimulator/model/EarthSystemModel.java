@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.utils.TimeUtils;
+
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
@@ -54,7 +57,7 @@ public class EarthSystemModel extends AbstractModel {
 
     @Override
     protected void initTime() {
-        setTime(new Time(2456790d, 0.001d));
+        setTime(TimeUtils.createTime(2456790d, 0.001d));
     }
 
     @Override

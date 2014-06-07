@@ -6,6 +6,8 @@ import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
+
 /**
  * Computes the position of the {@link com.momega.spacesimulator.model.MovingObject} along the keplerian trajectory.
  * The manager does not compute the velocity
@@ -17,9 +19,9 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
     private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectoryManager.class);
 
     @Override
-    public void computePosition(MovingObject movingObject, double newTimestamp) {
+    public void computePosition(MovingObject movingObject, BigDecimal newTimestamp) {
         KeplerianTrajectory3d trajectory = (KeplerianTrajectory3d) movingObject.getTrajectory();
-        double[] solution = solveKeplerian(trajectory, newTimestamp);
+        double[] solution = solveKeplerian(trajectory, newTimestamp.doubleValue());
         double r = solution[0];
         double theta = solution[1];
 

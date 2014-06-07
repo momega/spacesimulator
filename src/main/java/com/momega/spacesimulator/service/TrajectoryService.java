@@ -5,6 +5,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class TrajectoryService {
      * @param movingObject the moving objects
      * @param newTimestamp new timestamp
      */
-    public void move(MovingObject movingObject, double newTimestamp) {
+    public void move(MovingObject movingObject, BigDecimal newTimestamp) {
         for(TrajectoryManager m : trajectoryManagers) {
             if (m.supports(movingObject.getTrajectory())) {
                 m.computePosition(movingObject, newTimestamp);

@@ -11,11 +11,6 @@ public class AttachedCamera extends Camera {
     public AttachedCamera() {
     }
 
-    @Override
-    public void updatePosition() {
-        setPosition(Vector3d.scaleAdd(distance, new Vector3d(1d, 0d, 0d), getDynamicalPoint().getPosition()));
-    }
-
     public DynamicalPoint getDynamicalPoint() {
         return dynamicalPoint;
     }
@@ -24,6 +19,7 @@ public class AttachedCamera extends Camera {
         this.dynamicalPoint = dynamicalPoint;
     }
 
+    //TODO: move outside the model
     public void changeDistance(double factor) {
         distance = distance * factor;
     }

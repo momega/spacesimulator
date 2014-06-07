@@ -3,6 +3,7 @@ package com.momega.spacesimulator.model;
 import java.util.List;
 
 /**
+ * // TODO: Composite Camera is not good concept, change it do something else
  * Created by martin on 5/15/14.
  */
 public class CompositeCamera extends Camera {
@@ -50,9 +51,4 @@ public class CompositeCamera extends Camera {
         return cameras;
     }
 
-    @Override
-    //TODO: remove this method to the service package
-    public void updatePosition() {
-        getCurrentCamera().updatePosition();
-    }
 }

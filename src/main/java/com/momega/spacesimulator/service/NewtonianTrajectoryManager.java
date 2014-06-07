@@ -2,6 +2,7 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -15,9 +16,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     private List<Planet> planets;
 
     @Override
-    public void computePosition(MovingObject movingObject, double newTimestamp) {
+    public void computePosition(MovingObject movingObject, BigDecimal newTimestamp) {
 
-        double dt = newTimestamp - movingObject.getTimestamp();
+        double dt = newTimestamp.subtract(movingObject.getTimestamp()).doubleValue();
 
         Vector3d velocity = movingObject.getVelocity().clone();
         Vector3d position = movingObject.getPosition().clone();

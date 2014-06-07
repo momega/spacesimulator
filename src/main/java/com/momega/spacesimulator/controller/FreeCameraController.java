@@ -20,21 +20,35 @@ public class FreeCameraController extends AbstractController {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_W:
-                camera.moveByVelocity(+1);
+                moveByVelocity(+1);
                 break;
 
             case KeyEvent.VK_S:
-                camera.moveByVelocity(-1);
+                moveByVelocity(-1);
                 break;
 
             case KeyEvent.VK_OPEN_BRACKET :
-                camera.changeVelocity(0.1);
+                changeVelocity(0.1);
                 break;
 
             case KeyEvent.VK_CLOSE_BRACKET:
-                camera.changeVelocity(10);
+                changeVelocity(10);
                 break;
         }
+    }
+
+
+    /**
+     * Moves the camera forward or backward with the current velocity
+     * @param direction the direction
+     *
+     */
+    public void moveByVelocity(double direction) {
+        camera.moveN(camera.getVelocity() * direction);
+    }
+
+    public void changeVelocity(double factor) {
+        camera.setVelocity(camera.getVelocity() * factor);
     }
 
 }
