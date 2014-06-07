@@ -9,6 +9,10 @@ public class DynamicalPoint extends MovingObject {
     private double mass;
     private double radius;
 
+    /**
+     * Gets the mass of the dynamical point in kilograms
+     * @return the mass in kilograms
+     */
     public double getMass() {
         return mass;
     }
@@ -18,7 +22,7 @@ public class DynamicalPoint extends MovingObject {
     }
 
     /**
-     * Gets the radius of the planet
+     * Gets the radius in meters of the planet
      * @return the value of the radius
      */
     public double getRadius() {

@@ -20,14 +20,18 @@ public class SatelliteCameraController extends AbstractController {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_W:
-                camera.changeDistance(0.5);
+                changeDistance(0.5);
                 break;
 
             case KeyEvent.VK_S:
-                camera.changeDistance(2);
+                changeDistance(2);
                 break;
         }
 
+    }
+
+    public void changeDistance(double factor) {
+        camera.setDistance(camera.getDistance() * factor);
     }
 
 }

@@ -21,10 +21,10 @@ public class SelectedTargetRenderer extends AbstractTextRenderer {
     protected void renderTexts(GL2 gl, int width, int height) {
         DynamicalPoint sp = model.getSelectedDynamicalPoint();
         if (sp != null) {
-            drawText(sp.getName(), width - 250, 25);
-            drawText("P:" + sp.getPosition().toString(), width - 250, 15);
+            drawText(sp.getName(), width - 250, 40);
+            drawText("P:" + sp.getPosition().toString(), width - 250, 25);
             double distance = Vector3d.subtract(sp.getPosition(), model.getCamera().getPosition()).length() / 1E9;
-            drawText("D:" + String.format("%6.2f", distance), width - 250, 5);
+            drawText("D:" + String.format("%6.2f", distance), width - 250, 10);
         }
     }
 

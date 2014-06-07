@@ -17,7 +17,7 @@ public class RotationService {
      */
     public void rotate(RotatingObject rotatingObject, BigDecimal newTimestamp) {
         double dt = newTimestamp.subtract(rotatingObject.getTimestamp()).doubleValue();
-        double phi = dt/ rotatingObject.getRotationPeriod();
+        double phi = dt / rotatingObject.getRotationPeriod();
         phi *= (2*Math.PI);
         rotatingObject.getOrientation().lookLeft(phi);
     }

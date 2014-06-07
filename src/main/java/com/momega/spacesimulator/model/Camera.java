@@ -7,6 +7,4 @@ package com.momega.spacesimulator.model;
  */
 public abstract class Camera extends Object3d {
 
-
-
 }

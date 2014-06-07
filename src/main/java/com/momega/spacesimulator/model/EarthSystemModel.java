@@ -57,7 +57,7 @@ public class EarthSystemModel extends AbstractModel {
 
     @Override
     protected void initTime() {
-        setTime(TimeUtils.createTime(2456790d, 0.001d));
+        setTime(TimeUtils.createTime(2456820d, 1d));
     }
 
     @Override

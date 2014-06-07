@@ -10,9 +10,6 @@ public class FreeCamera extends Camera {
      */
     private double velocity;
 
-    public FreeCamera() {
-    }
-
     public void setVelocity(double velocity) {
         this.velocity = velocity;
     }
