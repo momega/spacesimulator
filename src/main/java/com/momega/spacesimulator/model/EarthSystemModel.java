@@ -48,11 +48,13 @@ public class EarthSystemModel extends AbstractModel {
         for(DynamicalPoint dp : getDynamicalPoints()) {
             dp.setTimestamp(getTime().getTimestamp());
         }
+
+        setSelectedDynamicalPoint(earth);
     }
 
     @Override
     protected void initTime() {
-        setTime(new Time(2456790d, 1d));
+        setTime(new Time(2456790d, 0.001d));
     }
 
     @Override

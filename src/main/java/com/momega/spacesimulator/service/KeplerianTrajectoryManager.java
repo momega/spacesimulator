@@ -2,7 +2,7 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
-import org.joda.time.DateTime;
+import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +17,9 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
     private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectoryManager.class);
 
     @Override
-    public void computePosition(MovingObject movingObject, DateTime newTimestamp) {
+    public void computePosition(MovingObject movingObject, double newTimestamp) {
         KeplerianTrajectory3d trajectory = (KeplerianTrajectory3d) movingObject.getTrajectory();
-        double[] solution = solveKeplerian(trajectory, Time.getSeconds(newTimestamp));
+        double[] solution = solveKeplerian(trajectory, newTimestamp);
         double r = solution[0];
         double theta = solution[1];
 
@@ -48,7 +48,7 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
         logger.debug("time = {}", t);
 
         double E = Math.PI; //  eccentric anomaly
-        double M = 2 * Math.PI * (t - Time.getSeconds(trajectory.getTimeOfPeriapsis())) / trajectory.getPeriod().getStandardSeconds();   // mean anomaly
+        double M = 2 * Math.PI * (t - TimeUtils.getSeconds(trajectory.getTimeOfPeriapsis())) / trajectory.getPeriod().getStandardSeconds();   // mean anomaly
         M = MathUtils.normalizeAngle(M);
 
         logger.debug("M = {}", M);

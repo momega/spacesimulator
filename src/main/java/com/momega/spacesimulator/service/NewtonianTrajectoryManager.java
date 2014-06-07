@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
-import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -16,9 +15,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     private List<Planet> planets;
 
     @Override
-    public void computePosition(MovingObject movingObject, DateTime newTimestamp) {
+    public void computePosition(MovingObject movingObject, double newTimestamp) {
 
-        double dt = Time.getSeconds(newTimestamp, movingObject.getTimestamp());
+        double dt = newTimestamp - movingObject.getTimestamp();
 
         Vector3d velocity = movingObject.getVelocity().clone();
         Vector3d position = movingObject.getPosition().clone();

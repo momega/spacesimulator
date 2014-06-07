@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.DynamicalPoint;
-import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.model.Time;
 import org.joda.time.DateTime;
@@ -12,6 +11,10 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
+ * The motion service is responsible for computing new position of dynamical points such as planets and satellites.
+ * Generally it computes new time and then call two services {@link com.momega.spacesimulator.service.TrajectoryService}
+ * and {@link com.momega.spacesimulator.service.RotationService} to compute new position and rotation of all registered
+ * dynamical points
  * Created by martin on 5/25/14.
  */
 public class MotionService {
@@ -23,11 +26,9 @@ public class MotionService {
     private RotationService rotationService;
 
     public void move(List<DynamicalPoint> dynamicalPoints, Time time) {
-        DateTime timestamp = time.getTimestamp();
-        long warp = (long) time.getWarpFactor();
-        timestamp = timestamp.plus(warp * DateTimeConstants.MILLIS_PER_SECOND);
+        double timestamp = time.getTimestamp() + time.getWarpFactor();
         time.setTimestamp(timestamp);
-        logger.debug("time={}", timestamp);
+        logger.info("time={}", timestamp);
         for(DynamicalPoint dp : dynamicalPoints) {
             trajectoryService.move(dp, timestamp);
             if (dp instanceof RotatingObject) {

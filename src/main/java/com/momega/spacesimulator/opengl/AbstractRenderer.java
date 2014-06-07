@@ -55,8 +55,8 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ); // clear color and depth buffers
 
         computeScene(drawable);
-
         gl.glLoadIdentity();
+
         setCamera();
         draw(drawable);
 

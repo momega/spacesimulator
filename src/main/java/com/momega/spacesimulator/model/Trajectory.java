@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import org.joda.time.DateTime;
-
 /**
  * The abstract implementation of the trajectory
  * Created by martin on 10.5.2014.

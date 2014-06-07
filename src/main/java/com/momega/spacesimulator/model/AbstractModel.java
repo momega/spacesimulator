@@ -21,11 +21,13 @@ public abstract class AbstractModel {
 
     public final static double UNIVERSE_RADIUS = 1E19;
 
+    private final static int MIN_TARGET_SIZE = 5;
+
     private static final Logger logger = LoggerFactory.getLogger(AbstractModel.class);
 
     protected Time time;
     protected Camera camera;
-
+    private DynamicalPoint selectedDynamicalPoint;
     protected TrajectoryService trajectoryService;
 
     protected MotionService motionService;
@@ -149,6 +151,19 @@ public abstract class AbstractModel {
         return null;
     }
 
+    public DynamicalPoint selectDynamicalPoint(int x, int y) {
+        for(DynamicalPoint dp : getDynamicalPoints()) {
+            ViewCoordinates viewCoordinates = dp.getViewCoordinates();
+            if (viewCoordinates!= null && viewCoordinates.isVisible()) {
+                if ((Math.abs(x - viewCoordinates.getX())< MIN_TARGET_SIZE) && (Math.abs(y - viewCoordinates.getY())< MIN_TARGET_SIZE)) {
+                    setSelectedDynamicalPoint(dp);
+                    logger.info("selected dynamical point changed to {}", this.selectedDynamicalPoint.getName());
+                }
+            }
+        }
+        return this.selectedDynamicalPoint;
+    }
+
     public List<Planet> getPlanets() {
         return planets;
     }
@@ -198,4 +213,11 @@ public abstract class AbstractModel {
         }
     }
 
+    public DynamicalPoint getSelectedDynamicalPoint() {
+        return selectedDynamicalPoint;
+    }
+
+    public void setSelectedDynamicalPoint(DynamicalPoint selectedDynamicalPoint) {
+        this.selectedDynamicalPoint = selectedDynamicalPoint;
+    }
 }

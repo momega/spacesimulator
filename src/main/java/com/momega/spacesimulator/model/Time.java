@@ -10,20 +10,28 @@ import org.joda.time.DateTimeUtils;
  */
 public class Time {
 
-    private DateTime timestamp;
+    private double timestamp;
     private double warpFactor;
 
     public Time(double julianDay, double warpFactor) {
         this.warpFactor = warpFactor;
-        this.timestamp = new DateTime(DateTimeUtils.fromJulianDay(julianDay));
+        this.timestamp = (double) DateTimeUtils.fromJulianDay(julianDay);
     }
 
-    public DateTime getTimestamp() {
+    /**
+     * The timestamp is a double number which can be computed as linux time / 1000
+     * @return
+     */
+    public double getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(DateTime timestamp) {
+    public void setTimestamp(double timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public void setWarpFactor(double warpFactor) {
+        this.warpFactor = warpFactor;
     }
 
     //TODO: remove this method to the service package
@@ -33,14 +41,6 @@ public class Time {
 
     public double getWarpFactor() {
         return warpFactor;
-    }
-
-    public static double getSeconds(DateTime t1, DateTime t2) {
-        return getSeconds(t1) - getSeconds(t2);
-    }
-
-    public static double getSeconds(DateTime datetime) {
-        return ((double) datetime.getMillis()) / DateTimeConstants.MILLIS_PER_SECOND;
     }
 
 }

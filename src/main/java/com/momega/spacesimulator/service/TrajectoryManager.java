@@ -14,7 +14,7 @@ public interface TrajectoryManager {
      * @param movingObject
      * @param newTimestamp new timestamp
      */
-    void computePosition(MovingObject movingObject, DateTime newTimestamp);
+    void computePosition(MovingObject movingObject, double newTimestamp);
 
     /**
      * Indicates whether or not the service supports the trajectory

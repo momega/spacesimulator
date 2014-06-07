@@ -22,7 +22,7 @@ public class TrajectoryService {
      * @param movingObject the moving objects
      * @param newTimestamp new timestamp
      */
-    public void move(MovingObject movingObject, DateTime newTimestamp) {
+    public void move(MovingObject movingObject, double newTimestamp) {
         for(TrajectoryManager m : trajectoryManagers) {
             if (m.supports(movingObject.getTrajectory())) {
                 m.computePosition(movingObject, newTimestamp);
