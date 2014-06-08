@@ -99,7 +99,7 @@ public class MainRenderer extends AbstractRenderer {
         gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
 
         Vector3d viewVector = camera.getOrientation().getN();
-        Vector3d diffVector = Vector3d.subtract(dynamicalPoint.getPosition(), camera.getPosition());
+        Vector3d diffVector = dynamicalPoint.getPosition().subtract(camera.getPosition());
 
         ViewCoordinates result = new ViewCoordinates();
         result.setVisible(false);

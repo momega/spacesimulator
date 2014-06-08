@@ -98,21 +98,22 @@ public class Orientation {
     private static Vector3d rotateAboutAxis(final Vector3d v, final double angle, final Vector3d axis)
     {
         // Check the preconditions.
-        if(v == null || axis == null) throw new java.lang.Error();
+        if(v == null || axis == null) {
+            throw new IllegalArgumentException("axis or vector is null");
+        }
         if(Math.abs(axis.length() - 1) >= EPSILON) {
             throw new IllegalStateException("axis is not normalized");	// make sure axis is normalized
         }
 
         // Main algorithm
-        double cosAngle = Math.cos(angle), sinAngle = Math.sin(angle);
+        double cosAngle = Math.cos(angle);
         Vector3d cross = axis.cross(v);
 
         // ret = v cos radianAngle + (axis x v) sin radianAngle + axis(axis . v)(1 - cos radianAngle)
         // (See Mathematics for 3D Game Programming and Computer Graphics, P.62, for details of why this is (it's not very hard)).
-        Vector3d ret = v.clone();
-        ret.scale(cosAngle);
-        ret = Vector3d.scaleAdd(sinAngle, cross, ret);
-        ret = Vector3d.scaleAdd(axis.dot(v) * (1 - cosAngle), axis, ret);
+        Vector3d ret = v.scale(cosAngle);
+        ret = ret.scaleAdd(Math.sin(angle), cross);
+        ret = ret.scaleAdd(axis.dot(v) * (1 - cosAngle), axis);
         return ret;
     }
 }

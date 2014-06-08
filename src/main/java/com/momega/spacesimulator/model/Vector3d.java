@@ -10,10 +10,10 @@ public class Vector3d {
 
     final private static double SMALL_EPSILON = 0.0001;
 
-    public double x, y, z;
+    public double x = 0, y = 0, z = 0;
 
     /**
-     * Constructs a new Vector3d.
+     * Constructs a new Vector3d, all coordinates are set to zero
      */
     public Vector3d() {
     }
@@ -31,19 +31,12 @@ public class Vector3d {
         this.z = z;
     }
 
-    //################## PUBLIC METHODS ##################//
-    public Vector3d add(final Vector3d rhs) {
-        x += rhs.x;
-        y += rhs.y;
-        z += rhs.z;
-        return this;
+    public Vector3d add(final Vector3d u) {
+        return scaleAdd(1, u);
     }
 
     public Vector3d scaleAdd(double factor, Vector3d u) {
-        x += factor * u.x;
-        y += factor * u.y;
-        z += factor * u.z;
-        return this;
+        return new Vector3d(x + factor * u.x, y + factor * u.y, z + factor * u.z);
     }
 
     public Vector3d clone() {
@@ -58,17 +51,6 @@ public class Vector3d {
      */
     public Vector3d cross(final Vector3d rhs) {
         return new Vector3d(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x);
-    }
-
-    /**
-     * Returns the result of the cross product lhs x rhs.
-     *
-     * @param lhs The left-hand operand of the cross product
-     * @param rhs The right-hand operand of the cross product
-     * @return The cross product of the two vectors as a Vector3d
-     */
-    public static Vector3d cross(final Vector3d lhs, final Vector3d rhs) {
-        return lhs.cross(rhs);
     }
 
     public double distance(final Vector3d rhs) {
@@ -96,14 +78,7 @@ public class Vector3d {
         return x * x + y * y + z * z; // note that dot(this); would do, but it's needlessly inefficient
     }
 
-    public Vector3d negate() {
-        x = -x;
-        y = -y;
-        z = -z;
-        return this;
-    }
-
-    public Vector3d negated() {
+     public Vector3d negate() {
         return new Vector3d(-x, -y, -z);
     }
 
@@ -113,18 +88,10 @@ public class Vector3d {
             throw new IllegalStateException("length to small");
         }
 
-        scale(1.0 / len);
-        return this;
+        return scale(1.0 / len);
     }
 
     public Vector3d scale(double factor) {
-        x *= factor;
-        y *= factor;
-        z *= factor;
-        return this;
-    }
-
-    public Vector3d scaled(double factor) {
         return new Vector3d( x * factor, y * factor, z * factor);
     }
 
@@ -140,27 +107,14 @@ public class Vector3d {
         return new Vector3d(factor * u.x + v.x, factor * u.y + v.y, factor * u.z + v.z);
     }
 
-    /**
-     * Creates the subtract vector as u-v
-     * @param u the vector u
-     * @param v the vector v
-     * @return
-     */
-    public static Vector3d subtract(Vector3d u, Vector3d v) {
-        return scaleAdd(-1, v, u);
-    }
-
     public static double angleBetween(Vector3d a, Vector3d b) {
         double cosAlpha = a.dot(b) / a.length() / b.length();
         if(cosAlpha > 1) cosAlpha = 1;
         return Math.acos(cosAlpha);
     }
 
-    public Vector3d subtract(final Vector3d rhs) {
-        x -= rhs.x;
-        y -= rhs.y;
-        z -= rhs.z;
-        return this;
+    public Vector3d subtract(final Vector3d u) {
+        return new Vector3d( x - u.x, y - u.y, z - u.z);
     }
 
     public double[] asArray() {

@@ -46,7 +46,7 @@ public class EarthSystemModel extends AbstractModel {
         satellite = createSatellite(earth, "Satellite 2", 300, new Vector3d(0d, 0d, 9000d));
         addDynamicalPoint(satellite);
 
-        satellite = createSatellite(moon, "Satellite 3", 50, new Vector3d(0d, 1800d, 0d));
+        satellite = createSatellite(moon, "Satellite 3", 50, Vector3d.scaleAdd(1, moon.getVelocity(), new Vector3d(0d, 1800d, 0d)));
         addDynamicalPoint(satellite);
 
         for(DynamicalPoint dp : getSatellites()) {

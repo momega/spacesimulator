@@ -21,8 +21,8 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         double dt = newTimestamp.subtract(movingObject.getTimestamp()).doubleValue();
 
-        Vector3d velocity = movingObject.getVelocity().clone();
-        Vector3d position = movingObject.getPosition().clone();
+        Vector3d velocity = movingObject.getVelocity();
+        Vector3d position = movingObject.getPosition();
 
 //        Vector3d[] result = rk4Solver(position, velocity, dt);
 //        movingObject.setVelocity(result[0]);
@@ -60,7 +60,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         // k[i]x are position
 
         Vector3d k1v = getAcceleration(position).scale(dt);
-        Vector3d k1x = velocity.scaled(dt);
+        Vector3d k1x = velocity.scale(dt);
         Vector3d k2v = getAcceleration(Vector3d.scaleAdd(dt/2, k1x, position)).scale(dt);
         Vector3d k2x = Vector3d.scaleAdd(1.0/2, k1v, velocity).scale(dt);
         Vector3d k3v = getAcceleration(Vector3d.scaleAdd(dt/2, k2x, position)).scale(dt);
@@ -74,16 +74,15 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     }
 
     protected Vector3d rk4(Vector3d u1, Vector3d u2, Vector3d u3, Vector3d u4) {
-        return u1.scaleAdd(2, u2).scaleAdd(2, u3).add(u4).scale(1.0/6);
+        return u1.scaleAdd(2, u2).scaleAdd(2, u3).add(u4).scale(1.0 / 6);
     }
 
     protected Vector3d getAcceleration(Vector3d position) {
-        Vector3d a = new Vector3d(0d, 0d, 0d);
+        Vector3d a = new Vector3d();
         for(Planet planet : getPlanets()) {
-            Vector3d r = planet.getPosition().clone().subtract(position);
+            Vector3d r = planet.getPosition().subtract(position);
             double dist3 = r.lengthSquared() * r.length();
-            r.scale(G * planet.getMass() / dist3);  // a(i) = G*M * r(i) / r^3
-            a.add(r);
+            a = a.scaleAdd(G * planet.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
         }
         return a;
     }

@@ -32,11 +32,11 @@ public abstract class AbstractCameraController extends AbstractController {
                 getCamera().getOrientation().twist(Math.toRadians(-0.5));
                 break;
 
-            case KeyEvent.VK_O:
+            case KeyEvent.VK_A:
                 getCamera().getOrientation().lookLeft(Math.toRadians(+0.5));
                 break;
 
-            case KeyEvent.VK_P:
+            case KeyEvent.VK_D:
                 getCamera().getOrientation().lookLeft(Math.toRadians(-0.5));
                 break;
 

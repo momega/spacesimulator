@@ -56,13 +56,13 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
                 Math.cos(omega) * Math.sin(i)
         );
 
-        Vector3d r = P.scaled(a * (Math.cos(E) - e));
+        Vector3d r = P.scale(a * (Math.cos(E) - e));
         r = Vector3d.scaleAdd(a * Math.sqrt(1 - e*e) * Math.sin(E), Q,  r);
 
         double n = 2 * Math.PI / trajectory.getPeriod().doubleValue();
         double derE = n / (1 - e* Math.cos(E));
 
-        Vector3d v = P.scaled(-a * Math.sin(E) * derE);
+        Vector3d v = P.scale(-a * Math.sin(E) * derE);
         v = Vector3d.scaleAdd(a * Math.sqrt(1 - e*e) * Math.cos(E) * derE, Q, v);
 
         return new Vector3d[] { r, v };

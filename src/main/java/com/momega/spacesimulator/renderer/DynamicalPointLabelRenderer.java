@@ -9,9 +9,11 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
 /**
+ * Renderer displays the attributes of the dynamical point's trajectory such as position, velocity and
+ * distance from the camera.
  * Created by martin on 4/28/14.
  */
-public class DynamicalPointLabelRenderer extends AbstractTextRenderer {
+public class DynamicalPointLabelRenderer extends AbstractDynamicalPointRenderer {
 
     private final DynamicalPoint dynamicalPoint;
     private final Camera camera;
@@ -35,11 +37,7 @@ public class DynamicalPointLabelRenderer extends AbstractTextRenderer {
             setColor(255, 255, 255);
             int x = dynamicalPoint.getViewCoordinates().getX();
             int y = dynamicalPoint.getViewCoordinates().getY();
-            drawText(dynamicalPoint.getName(), x + 5, y + 5);
-            drawText("P:" + dynamicalPoint.getPosition().toString(), x + 5, y - 8);
-            drawText("V:" + String.format("%6.2f", dynamicalPoint.getVelocity().length()), x + 5, y - 18);
-            double distance = Vector3d.subtract(dynamicalPoint.getPosition(), this.camera.getPosition()).length() / 1E9;
-            drawText("D:" + String.format("%6.2f", distance), x + 5, y - 28);
+            drawData(dynamicalPoint, camera, x, y);
         }
     }
 }

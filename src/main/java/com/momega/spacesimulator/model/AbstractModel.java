@@ -104,7 +104,7 @@ public abstract class AbstractModel {
             }
 
             // check whether the dynamic point is visible
-            Vector3d diffVector = Vector3d.subtract(dp.getPosition(), camera.getPosition()).normalize();
+            Vector3d diffVector = dp.getPosition().subtract(camera.getPosition()).normalize();
             double dot = viewVector.dot(diffVector);
             if (Math.abs(dot) < 0.01) {
                 continue;
