@@ -6,7 +6,8 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along newtonian trajectory
+ * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along newtonian trajectory. The
+ * implementation can use either Euler's or Runge-Kutta's method to computer the next iteration of the velocity and position
  * Created by martin on 5/21/14.
  */
 public class NewtonianTrajectoryManager implements TrajectoryManager {

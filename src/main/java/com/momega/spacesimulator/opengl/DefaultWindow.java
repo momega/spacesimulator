@@ -14,7 +14,8 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * This abstract class provides basic open window, with the animator.
+ * This abstract class provides basic OPENGL window, with the animator. It also registered the {@link com.momega.spacesimulator.opengl.AbstractRenderer}
+ * and {@link com.momega.spacesimulator.controller.Controller}
  * Created by martin on 4/19/14.
  */
 public class DefaultWindow {

@@ -50,7 +50,8 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
 
         double E = Math.PI; //  eccentric anomaly
         double dt = time.subtract(trajectory.getTimeOfPeriapsis()).doubleValue();
-        double M = 2 * Math.PI * dt / trajectory.getPeriod().getStandardSeconds();   // mean anomaly
+        double n = 2 * Math.PI / trajectory.getPeriod().doubleValue();
+        double M = n * dt;   // mean anomaly
         M = MathUtils.normalizeAngle(M);
 
         logger.debug("M = {}", M);

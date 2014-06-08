@@ -82,6 +82,8 @@ public class SolarSystemModel extends AbstractModel {
         for(DynamicalPoint dp : getDynamicalPoints()) {
             dp.setTimestamp(getTime().getTimestamp());
         }
+
+        next();
     }
 
     @Override

@@ -2,13 +2,12 @@ package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.service.*;
 import com.momega.spacesimulator.utils.TimeUtils;
-import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
-import org.joda.time.DateTimeUtils;
 import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,11 +41,10 @@ public abstract class AbstractModel {
      * Initialize model
      */
     public final void init() {
+        initServices();
         initTime();
         initDynamicalPoints();
         initCamera();
-        initServices();
-        next();
         logger.info("model initialized");
     }
 
@@ -54,8 +52,8 @@ public abstract class AbstractModel {
         trajectoryService = new TrajectoryService();
         KeplerianTrajectoryManager ktm = new KeplerianTrajectoryManager();
         NewtonianTrajectoryManager ntm = new NewtonianTrajectoryManager();
-        StaticTrajectoryManager stm = new StaticTrajectoryManager();
         ntm.setPlanets(getPlanets());
+        StaticTrajectoryManager stm = new StaticTrajectoryManager();
         trajectoryService.setTrajectoryManagers(Arrays.asList(ktm, ntm, stm));
 
         RotationService rotationService = new RotationService();
@@ -198,7 +196,7 @@ public abstract class AbstractModel {
         trajectory.setSemimajorAxis(semimajorAxis);
         trajectory.setEccentricity(eccentricity);
         trajectory.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
-        trajectory.setPeriod(Duration.standardSeconds((long) (period * DateTimeConstants.SECONDS_PER_DAY)));
+        trajectory.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
         trajectory.setTimeOfPeriapsis(TimeUtils.julianDayAsTimestamp(timeOfPeriapsis));
         trajectory.setInclination(Math.toRadians(inclination));
         trajectory.setAscendingNode(Math.toRadians(ascendingNode));
@@ -208,7 +206,8 @@ public abstract class AbstractModel {
     public Satellite createSatellite(DynamicalPoint centralPoint, String name, double height, Vector3d velocity) {
         Satellite satellite = new Satellite();
         satellite.setName(name);
-        satellite.setPosition(new Vector3d(centralPoint.getRadius() + height*1E3, 0, 0));
+        Vector3d p = Vector3d.scaleAdd(1, centralPoint.getPosition(), new Vector3d(centralPoint.getRadius() + height*1E3, 0, 0));
+        satellite.setPosition(p);
         satellite.setOrientation(createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
         satellite.setVelocity(velocity);
         NewtonianTrajectory satelliteTrajectory = new NewtonianTrajectory();

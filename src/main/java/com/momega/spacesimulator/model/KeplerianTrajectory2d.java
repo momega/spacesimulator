@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import org.joda.time.Duration;
-
 import java.math.BigDecimal;
 
 /**
@@ -14,7 +12,7 @@ public class KeplerianTrajectory2d extends Trajectory {
     private double semimajorAxis; // (a)
     private double eccentricity; // epsilon
     private BigDecimal timeOfPeriapsis; // seconds
-    private Duration period; // T in seconds
+    private BigDecimal period; // T in seconds
     private double argumentOfPeriapsis; // lowercase omega
 
     public double getSemimajorAxis() {
@@ -33,12 +31,12 @@ public class KeplerianTrajectory2d extends Trajectory {
         return centralObject;
     }
 
-    public void setPeriod(Duration period) {
-        this.period = period;
+    public BigDecimal getPeriod() {
+        return period;
     }
 
-    public Duration getPeriod() {
-        return period;
+    public void setPeriod(BigDecimal period) {
+        this.period = period;
     }
 
     public void setCentralObject(DynamicalPoint centralObject) {
