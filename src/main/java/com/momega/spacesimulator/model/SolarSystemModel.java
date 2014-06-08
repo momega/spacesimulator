@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.utils.TimeUtils;
-import org.joda.time.DateTimeConstants;
 
 import java.util.Arrays;
 
@@ -88,7 +87,7 @@ public class SolarSystemModel extends AbstractModel {
 
     @Override
     protected void initTime() {
-        setTime(TimeUtils.createTime(2456790d, 1d));
+        setTime(TimeUtils.createTime(2456820d, 1d));
     }
 
     @Override

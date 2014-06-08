@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import org.joda.time.DateTime;
-
 /**
  * The class computer keplerian trajectory and object along the eclipse. It computes in 3D
  * Created by martin on 4/22/14.
@@ -19,6 +17,10 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
         return inclination;
     }
 
+    /**
+     * Gets the Ascending node (upper omega)
+     * @return ascending node in radians
+     */
     public double getAscendingNode() {
         return ascendingNode;
     }

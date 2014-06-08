@@ -9,8 +9,6 @@ import javax.media.opengl.GLAutoDrawable;
  */
 public interface Renderer {
 
-    public static final double SCALE_FACTOR = 1d;
-
     void init(GL2 gl);
 
     void draw(GLAutoDrawable drawable);

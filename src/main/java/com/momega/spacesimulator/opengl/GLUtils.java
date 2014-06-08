@@ -56,8 +56,7 @@ public class GLUtils {
     }
 
     public static void translate(GL2 gl, Vector3d position) {
-        Vector3d p = position.scaled(1 / Renderer.SCALE_FACTOR);
-        gl.glTranslated(p.x, p.y, p.z);
+        gl.glTranslated(position.x, position.y, position.z);
     }
 
 }

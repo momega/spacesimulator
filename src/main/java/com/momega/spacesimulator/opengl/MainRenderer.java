@@ -24,7 +24,7 @@ public class MainRenderer extends AbstractRenderer {
     private final ModelRenderer renderer;
 
     private GLU glu;
-    public double znear = 100 / Renderer.SCALE_FACTOR;
+    public double znear = 100;
     protected boolean reshape = false;
 
     public MainRenderer(AbstractModel model) {
@@ -68,7 +68,7 @@ public class MainRenderer extends AbstractRenderer {
         double y = drawable.getHeight();
         double aratio = Math.sqrt(x * x + y * y) / y;
         double z = model.computeZNear(aratio);
-        z = z / Renderer.SCALE_FACTOR / 10.0d;
+        z = z / 10.0d;
         if (z < znear/2) {
             znear = z;
             reshape = true;
@@ -99,14 +99,14 @@ public class MainRenderer extends AbstractRenderer {
         gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
 
         Vector3d viewVector = camera.getOrientation().getN();
-        Vector3d diffVector = Vector3d.subtract(dynamicalPoint.getPosition(), camera.getPosition()).scale(1 / Renderer.SCALE_FACTOR);
+        Vector3d diffVector = Vector3d.subtract(dynamicalPoint.getPosition(), camera.getPosition());
 
         ViewCoordinates result = new ViewCoordinates();
         result.setVisible(false);
         if (viewVector.dot(diffVector) > 0) {  // object is in front of the camera
             double[] my2DPoint = new double[4];
             GLU glu = new GLU();
-            Vector3d p = dynamicalPoint.getPosition().scaled(1 / Renderer.SCALE_FACTOR);
+            Vector3d p = dynamicalPoint.getPosition();
             glu.gluProject(p.x, p.y, p.z,
                     modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
 
@@ -125,18 +125,18 @@ public class MainRenderer extends AbstractRenderer {
     @Override
     public void setCamera() {
         Camera camera = model.getCamera();
-        Vector3d p = camera.getPosition().scaled(1/ Renderer.SCALE_FACTOR);
+        Vector3d p = camera.getPosition();
         glu.gluLookAt(p.x, p.y, p.z,
-                p.x + Renderer.SCALE_FACTOR * camera.getOrientation().getN().x * 1000000,
-                p.y + Renderer.SCALE_FACTOR * camera.getOrientation().getN().y * 1000000,
-                p.z + Renderer.SCALE_FACTOR * camera.getOrientation().getN().z * 1000000,
+                p.x + camera.getOrientation().getN().x * 1000000,
+                p.y + camera.getOrientation().getN().y * 1000000,
+                p.z + camera.getOrientation().getN().z * 1000000,
                 camera.getOrientation().getV().x,
                 camera.getOrientation().getV().y,
                 camera.getOrientation().getV().z);
     }
 
     protected void setPerspective(GL2 gl, double aspect) {
-        glu.gluPerspective(45, aspect, znear, AbstractModel.UNIVERSE_RADIUS * 10 / Renderer.SCALE_FACTOR);
+        glu.gluPerspective(45, aspect, znear, AbstractModel.UNIVERSE_RADIUS * 10);
     }
 
     public double getZnear() {

@@ -89,14 +89,14 @@ public class PlanetRenderer extends DynamicalPointRenderer {
         glu.gluQuadricTexture(quadric, true);
         glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
-        glu.gluSphere(quadric, planet.getRadius() / SCALE_FACTOR, 64, 64);
+        glu.gluSphere(quadric, planet.getRadius(), 64, 64);
         glu.gluDeleteQuadric(quadric);
         texture.disable(gl);
 
         gl.glLineWidth(2.5f);
         gl.glBegin(GL_LINES);
-        gl.glVertex3d(0, 0, planet.getRadius() / SCALE_FACTOR * 2);
-        gl.glVertex3d(0, 0, -planet.getRadius() / SCALE_FACTOR * 2);
+        gl.glVertex3d(0, 0, planet.getRadius() * 2);
+        gl.glVertex3d(0, 0, -planet.getRadius() * 2);
         gl.glEnd();
     }
 

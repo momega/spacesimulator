@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class SatelliteRenderer extends DynamicalPointRenderer {
 
-    private final double size = 1d / Renderer.SCALE_FACTOR;
+    private final double size = 1d;
 
     public static final int maxHistory = 100000;
     private final Satellite satellite;
@@ -34,7 +34,7 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
         if (history.size()> maxHistory) {
             history.remove(0);
         }
-        history.add(satellite.getPosition().scaled(1/ Renderer.SCALE_FACTOR).asArray());
+        history.add(satellite.getPosition().asArray());
 
         gl.glPushMatrix();
         gl.glColor3dv(satellite.getTrajectory().getTrajectoryColor(), 0);
