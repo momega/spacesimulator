@@ -81,7 +81,7 @@ public class MainRenderer extends AbstractRenderer {
     }
 
     protected void computeViewCoordinates(GLAutoDrawable drawable) {
-        for(DynamicalPoint dp : model.getDynamicalPoints()) {
+        for(DynamicalPoint dp : model.getUniverseService().getDynamicalPoints()) { // TODO: getting service from model it is not well
             ViewCoordinates viewCoordinates = createViewCoordinates(drawable, dp, model.getCamera());
             dp.setViewCoordinates(viewCoordinates);
         }

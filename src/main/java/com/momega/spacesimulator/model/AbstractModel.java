@@ -31,10 +31,7 @@ public abstract class AbstractModel {
     private CameraService cameraService;
 
     protected MotionService motionService;
-
-    protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
-    private final List<Planet> planets = new ArrayList<>();
-    private final List<Satellite> satellites = new ArrayList<>();
+    protected UniverseService universeService;
 
     /**
      * Initialize model
@@ -48,10 +45,12 @@ public abstract class AbstractModel {
     }
 
     private void initServices() {
+        universeService = new UniverseService();
+
         trajectoryService = new TrajectoryService();
         KeplerianTrajectoryManager ktm = new KeplerianTrajectoryManager();
         NewtonianTrajectoryManager ntm = new NewtonianTrajectoryManager();
-        ntm.setPlanets(getPlanets());
+        ntm.setUniverseService(universeService);
         StaticTrajectoryManager stm = new StaticTrajectoryManager();
         trajectoryService.setTrajectoryManagers(Arrays.asList(ktm, ntm, stm));
 
@@ -67,21 +66,13 @@ public abstract class AbstractModel {
 
     protected abstract void initCamera();
 
-    protected void addDynamicalPoint(DynamicalPoint dp) {
-        getDynamicalPoints().add(dp);
-        if (dp instanceof Planet) {
-            planets.add((Planet) dp);
-        }
-        if (dp instanceof  Satellite) {
-            satellites.add((Satellite) dp);
-        }
-    }
+
 
     /**
      * Next step of the model iteration
      */
     public void next() {
-        motionService.move(getDynamicalPoints(), getTime());
+        motionService.move(universeService.getDynamicalPoints(), getTime());
         cameraService.updatePosition(camera);
     }
 
@@ -89,7 +80,7 @@ public abstract class AbstractModel {
         Vector3d viewVector = camera.getOrientation().getN();
         double znear = UNIVERSE_RADIUS * 2;
 
-        for(DynamicalPoint dp : getDynamicalPoints()) {
+        for(DynamicalPoint dp : universeService.getDynamicalPoints()) {
 
             // only valid for object with radius
             if (dp.getRadius() <= 0) {
@@ -139,21 +130,10 @@ public abstract class AbstractModel {
      */
     protected abstract void initDynamicalPoints();
 
-    public List<DynamicalPoint> getDynamicalPoints() {
-        return dynamicalPoints;
-    }
 
-    protected DynamicalPoint findDynamicalPoint(String name) {
-        for(DynamicalPoint dp : getDynamicalPoints()) {
-            if (name.equals(dp.getName())) {
-                return dp;
-            }
-        }
-        return null;
-    }
 
     public DynamicalPoint selectDynamicalPoint(int x, int y) {
-        for(DynamicalPoint dp : getDynamicalPoints()) {
+        for(DynamicalPoint dp : universeService.getDynamicalPoints()) {
             ViewCoordinates viewCoordinates = dp.getViewCoordinates();
             if (viewCoordinates!= null && viewCoordinates.isVisible()) {
                 if ((Math.abs(x - viewCoordinates.getX())< MIN_TARGET_SIZE) && (Math.abs(y - viewCoordinates.getY())< MIN_TARGET_SIZE)) {
@@ -163,14 +143,6 @@ public abstract class AbstractModel {
             }
         }
         return this.selectedDynamicalPoint;
-    }
-
-    public List<Planet> getPlanets() {
-        return planets;
-    }
-
-    public List<Satellite> getSatellites() {
-        return satellites;
     }
 
     public Camera getCamera() {
@@ -189,59 +161,15 @@ public abstract class AbstractModel {
         this.time = time;
     }
 
-    public KeplerianTrajectory3d createKeplerianTrajectory(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
-        KeplerianTrajectory3d trajectory = new KeplerianTrajectory3d();
-        trajectory.setCentralObject(centralObject);
-        trajectory.setSemimajorAxis(semimajorAxis);
-        trajectory.setEccentricity(eccentricity);
-        trajectory.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
-        trajectory.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
-        trajectory.setTimeOfPeriapsis(TimeUtils.julianDayAsTimestamp(timeOfPeriapsis));
-        trajectory.setInclination(Math.toRadians(inclination));
-        trajectory.setAscendingNode(Math.toRadians(ascendingNode));
-        return trajectory;
-    }
-
-    public Satellite createSatellite(DynamicalPoint centralPoint, String name, double height, Vector3d velocity) {
-        Satellite satellite = new Satellite();
-        satellite.setName(name);
-        Vector3d p = Vector3d.scaleAdd(1, centralPoint.getPosition(), new Vector3d(centralPoint.getRadius() + height*1E3, 0, 0));
-        satellite.setPosition(p);
-        satellite.setOrientation(createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
-        satellite.setVelocity(velocity);
-        NewtonianTrajectory satelliteTrajectory = new NewtonianTrajectory();
-        satelliteTrajectory.setTrajectoryColor(new double[]{1, 1, 1});
-        satellite.setTrajectory(satelliteTrajectory);
-        satellite.setMass(10 * 1E3);
-        satellite.setRadius(10);
-        return satellite;
-    }
-
-    public void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
-        dp.setRadius(radius * 1E6);
-        dp.setName(name);
-        dp.setMass(mass * 1E24);
-        dp.setOrientation(createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
-        dp.getOrientation().lookUp(Math.toRadians(axialTilt));
-        if (dp instanceof RotatingObject) {
-            RotatingObject ro = (RotatingObject) dp;
-            ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
-        }
-    }
-
-    protected Orientation createOrientation(Vector3d nVector, Vector3d vVector) {
-        Orientation o = new Orientation();
-        o.setN(nVector.normalize());
-        o.setV(vVector.normalize());
-        o.setU(vVector.cross(nVector));
-        return o;
-    }
-
     public DynamicalPoint getSelectedDynamicalPoint() {
         return selectedDynamicalPoint;
     }
 
     public void setSelectedDynamicalPoint(DynamicalPoint selectedDynamicalPoint) {
         this.selectedDynamicalPoint = selectedDynamicalPoint;
+    }
+
+    public UniverseService getUniverseService() {
+        return universeService;
     }
 }

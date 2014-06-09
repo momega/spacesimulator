@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.utils;
 
+import com.momega.spacesimulator.model.Orientation;
+import com.momega.spacesimulator.model.Vector3d;
+
 /**
  * Set of mathematical helper functions
  *
@@ -20,5 +23,13 @@ public class MathUtils {
      */
     public static double normalizeAngle(double angle) {
         return fmod(angle, 2* Math.PI);
+    }
+
+    public static Orientation createOrientation(Vector3d nVector, Vector3d vVector) {
+        Orientation o = new Orientation();
+        o.setN(nVector.normalize());
+        o.setV(vVector.normalize());
+        o.setU(vVector.cross(nVector));
+        return o;
     }
 }

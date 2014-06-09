@@ -14,7 +14,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     public static final double G = 6.67384*1E-11;
 
-    private List<Planet> planets;
+    private UniverseService universeService;
 
     @Override
     public void computePosition(MovingObject movingObject, BigDecimal newTimestamp) {
@@ -79,7 +79,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     protected Vector3d getAcceleration(Vector3d position) {
         Vector3d a = new Vector3d();
-        for(Planet planet : getPlanets()) {
+        for(Planet planet : universeService.getPlanets()) {
             Vector3d r = planet.getPosition().subtract(position);
             double dist3 = r.lengthSquared() * r.length();
             a = a.scaleAdd(G * planet.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
@@ -92,13 +92,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         return trajectory instanceof NewtonianTrajectory;
     }
 
-    public void setPlanets(List<Planet> planets) {
-        this.planets = planets;
+    public void setUniverseService(UniverseService universeService) {
+        this.universeService = universeService;
     }
-
-    public List<Planet> getPlanets() {
-        return planets;
-    }
-
-
 }

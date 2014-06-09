@@ -21,7 +21,7 @@ public class ModelRenderer extends CompositeRenderer {
         this.model = model;
 
         logger.info("initializing renderers");
-        for(DynamicalPoint dp : model.getDynamicalPoints()) {
+        for(DynamicalPoint dp : model.getUniverseService().getDynamicalPoints()) { // TODO: getting service from model it is not well
             DynamicalPointRenderer dpr;
             if (dp instanceof  Planet) {
                 dpr = new PlanetRenderer((Planet) dp, model.getCamera());
