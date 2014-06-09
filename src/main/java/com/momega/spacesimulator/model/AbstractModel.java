@@ -3,7 +3,6 @@ package com.momega.spacesimulator.model;
 import com.momega.spacesimulator.service.*;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.joda.time.DateTimeConstants;
-import org.joda.time.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

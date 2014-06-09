@@ -1,11 +1,9 @@
 package com.momega.spacesimulator.opengl;
 
-import com.jogamp.opengl.util.gl2.GLUT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.*;
-import javax.media.opengl.glu.GLU;
 
 import static javax.media.opengl.GL.*;
 import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_MODELVIEW;
@@ -36,7 +34,7 @@ public abstract class AbstractRenderer implements GLEventListener {
         gl.glEnable(GL_DEPTH_TEST); // for textures
 
         gl.glShadeModel(GL2.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
-        gl.glBlendFunc(gl.GL_SRC_ALPHA, gl.GL_ONE_MINUS_SRC_ALPHA);
+        gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
         gl.glEnable(GL.GL_BLEND);
         gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
 
@@ -52,16 +50,13 @@ public abstract class AbstractRenderer implements GLEventListener {
         reshapeRequired(drawable);
 
         GL2 gl = drawable.getGL().getGL2();
-        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT ); // clear color and depth buffers
+        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear color and depth buffers
 
         computeScene(drawable);
-        gl.glLoadIdentity();
 
+        gl.glLoadIdentity();
         setCamera();
         draw(drawable);
-
-        gl.glFlush();
-        drawable.swapBuffers();
     }
 
     protected abstract void reshapeRequired(GLAutoDrawable drawable);

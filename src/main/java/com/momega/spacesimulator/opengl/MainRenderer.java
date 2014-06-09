@@ -3,7 +3,6 @@ package com.momega.spacesimulator.opengl;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
-import com.momega.spacesimulator.renderer.Renderer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -117,6 +116,11 @@ public class MainRenderer extends AbstractRenderer {
             result.setVisible(true);
             result.setX((int)my2DPoint[0]);
             result.setY((int)my2DPoint[1]);
+
+            double distance = dynamicalPoint.getPosition().distance(camera.getPosition());
+            double radiusAngle = Math.atan2(dynamicalPoint.getRadius(), distance);
+
+            result.setRadius(radiusAngle);
         }
 
         return result;

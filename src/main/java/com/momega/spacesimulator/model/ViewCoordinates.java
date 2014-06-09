@@ -8,6 +8,7 @@ public class ViewCoordinates {
     private int x;
     private int y;
     private boolean visible;
+    private double radius;
 
     public int getX() {
         return x;
@@ -33,4 +34,11 @@ public class ViewCoordinates {
         this.visible = visible;
     }
 
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
+    }
 }
