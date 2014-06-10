@@ -66,7 +66,7 @@ public class UniverseService {
         trajectory.setEccentricity(eccentricity);
         trajectory.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
         trajectory.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
-        trajectory.setTimeOfPeriapsis(TimeUtils.julianDayAsTimestamp(timeOfPeriapsis));
+        trajectory.setTimeOfPeriapsis(TimeUtils.createTime(timeOfPeriapsis));
         trajectory.setInclination(Math.toRadians(inclination));
         trajectory.setAscendingNode(Math.toRadians(ascendingNode));
         return trajectory;

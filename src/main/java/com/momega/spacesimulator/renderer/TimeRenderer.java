@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.Time;
+import com.momega.spacesimulator.model.AbstractModel;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -13,16 +13,16 @@ import javax.media.opengl.GL2;
  */
 public class TimeRenderer extends AbstractTextRenderer {
 
-    private final Time time;
-    private DateTimeFormatter formatter = ISODateTimeFormat.dateTimeNoMillis();
+    private final AbstractModel model;
+    private DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
 
-    public TimeRenderer(Time time) {
-        this.time = time;
+    public TimeRenderer(AbstractModel model) {
+        this.model = model;
     }
 
     @Override
     public void renderTexts(GL2 gl, int width, int height) {
-        drawText("Time:" + formatter.print(TimeUtils.getDateTime(time.getTimestamp())), width - 200, height - 20);
-        drawText("Warp:" + String.format("%3.5f", time.getWarpFactor()), width - 200, height - 35);
+        drawText("Time:" + formatter.print(TimeUtils.getDateTime(model.getTime().getValue())), width - 200, height - 20);
+        drawText("Warp:" + String.format("%3.5f", model.getWarpFactor()), width - 200, height - 35);
     }
 }

@@ -11,7 +11,7 @@ public class KeplerianTrajectory2d extends Trajectory {
     private DynamicalPoint centralObject;
     private double semimajorAxis; // (a)
     private double eccentricity; // epsilon
-    private BigDecimal timeOfPeriapsis; // seconds
+    private Timestamp timeOfPeriapsis; // seconds
     private BigDecimal period; // T in seconds
     private double argumentOfPeriapsis; // lowercase omega
 
@@ -47,11 +47,11 @@ public class KeplerianTrajectory2d extends Trajectory {
         this.eccentricity = eccentricity;
     }
 
-    public BigDecimal getTimeOfPeriapsis() {
+    public Timestamp getTimeOfPeriapsis() {
         return timeOfPeriapsis;
     }
 
-    public void setTimeOfPeriapsis(BigDecimal timeOfPeriapsis) {
+    public void setTimeOfPeriapsis(Timestamp timeOfPeriapsis) {
         this.timeOfPeriapsis = timeOfPeriapsis;
     }
 

@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import java.math.BigDecimal;
-
 /**
  * The implementation of the moving object. The moving object has the defined velocity and a trajectory which can compute new position and velocity
  * The moving object also has a name to distinguish the objects
@@ -12,7 +10,7 @@ public class MovingObject extends Object3d {
     private String name;
     private Vector3d velocity;
     private Trajectory trajectory;
-    private BigDecimal timestamp;
+    private Timestamp timestamp;
 
     // TODO: has to be moved outside the model
     private ViewCoordinates viewCoordinates;
@@ -41,11 +39,11 @@ public class MovingObject extends Object3d {
         this.trajectory = trajectory;
     }
 
-    public BigDecimal getTimestamp() {
+    public Timestamp getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(BigDecimal timestamp) {
+    public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
 

@@ -1,15 +1,11 @@
 package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.service.*;
-import com.momega.spacesimulator.utils.TimeUtils;
-import org.joda.time.DateTimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by martin on 5/6/14.
@@ -24,7 +20,8 @@ public abstract class AbstractModel {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModel.class);
 
-    protected Time time;
+    protected Timestamp time;
+    protected BigDecimal warpFactor;
     protected Camera camera;
     private DynamicalPoint selectedDynamicalPoint;
     protected TrajectoryService trajectoryService;
@@ -72,7 +69,8 @@ public abstract class AbstractModel {
      * Next step of the model iteration
      */
     public void next() {
-        motionService.move(universeService.getDynamicalPoints(), getTime());
+        Timestamp t = motionService.move(universeService.getDynamicalPoints(), getTime(),getWarpFactor());
+        setTime(t);
         cameraService.updatePosition(camera);
     }
 
@@ -153,12 +151,20 @@ public abstract class AbstractModel {
         this.camera = camera;
     }
 
-    public Time getTime() {
+    public Timestamp getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(Timestamp time) {
         this.time = time;
+    }
+
+    public void setWarpFactor(BigDecimal warpFactor) {
+        this.warpFactor = warpFactor;
+    }
+
+    public BigDecimal getWarpFactor() {
+        return warpFactor;
     }
 
     public DynamicalPoint getSelectedDynamicalPoint() {

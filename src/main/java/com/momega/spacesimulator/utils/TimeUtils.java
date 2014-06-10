@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.utils;
 
-import com.momega.spacesimulator.model.Time;
+import com.momega.spacesimulator.model.Timestamp;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
@@ -13,11 +13,25 @@ import java.math.BigDecimal;
  */
 public class TimeUtils {
 
-    public static Time createTime(double julianDay, double warpFactor) {
-        Time time = new Time();
-        time.setWarpFactor(BigDecimal.valueOf(warpFactor));
-        time.setTimestamp(julianDayAsTimestamp(julianDay));
+    /**
+     * Creates the time from julian day
+     * @param julianDay julian day as double value
+     * @return new instance of the time
+     */
+    public static Timestamp createTime(double julianDay) {
+        Timestamp time = new Timestamp();
+        time.setValue(julianDayAsTimestamp(julianDay));
         return time;
+    }
+
+    public static Timestamp newTime(BigDecimal value) {
+        Timestamp t = new Timestamp();
+        t.setValue(value);
+        return t;
+    }
+
+    public static Timestamp subtract(Timestamp u, Timestamp v) {
+        return newTime(u.getValue().subtract(v.getValue()));
     }
 
     public static BigDecimal julianDayAsTimestamp(double julianDay) {

@@ -3,6 +3,7 @@ package com.momega.spacesimulator.model;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
@@ -80,7 +81,7 @@ public class SolarSystemModel extends AbstractModel {
         universeService.addDynamicalPoint(jupiter);
 
         for(DynamicalPoint dp : universeService.getDynamicalPoints()) {
-            dp.setTimestamp(getTime().getTimestamp());
+            dp.setTimestamp(getTime());
         }
 
         next();
@@ -88,7 +89,8 @@ public class SolarSystemModel extends AbstractModel {
 
     @Override
     protected void initTime() {
-        setTime(TimeUtils.createTime(2456820d, 1d));
+        setTime(TimeUtils.createTime(2456820d));
+        setWarpFactor(BigDecimal.ONE);
     }
 
     @Override

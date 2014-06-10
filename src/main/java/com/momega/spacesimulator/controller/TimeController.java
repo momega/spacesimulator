@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.model.AbstractModel;
-import com.momega.spacesimulator.model.Time;
 
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
@@ -33,9 +32,9 @@ public class TimeController extends AbstractController {
     }
 
     public void changeWarpFactor(double ratio) {
-        Time time = model.getTime();
-        BigDecimal warpFactor = time.getWarpFactor().multiply(BigDecimal.valueOf(ratio));
-        time.setWarpFactor(warpFactor);
+        BigDecimal warpFactor = model.getWarpFactor();
+        warpFactor = warpFactor.multiply(BigDecimal.valueOf(ratio));
+        model.setWarpFactor(warpFactor);
     }
 
 

@@ -3,6 +3,7 @@ package com.momega.spacesimulator.model;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 
 /**
@@ -36,7 +37,7 @@ public class EarthSystemModel extends AbstractModel {
         universeService.addDynamicalPoint(moon);
 
         for(DynamicalPoint dp : universeService.getDynamicalPoints()) {
-            dp.setTimestamp(getTime().getTimestamp());
+            dp.setTimestamp(getTime());
         }
 
         next();
@@ -51,7 +52,7 @@ public class EarthSystemModel extends AbstractModel {
         universeService.addDynamicalPoint(satellite);
 
         for(DynamicalPoint dp : universeService.getSatellites()) {
-            dp.setTimestamp(getTime().getTimestamp());
+            dp.setTimestamp(getTime());
         }
 
         setSelectedDynamicalPoint(earth);
@@ -59,7 +60,8 @@ public class EarthSystemModel extends AbstractModel {
 
     @Override
     protected void initTime() {
-        setTime(TimeUtils.createTime(2456820d, 1d));
+        setTime(TimeUtils.createTime(2456820d));
+        setWarpFactor(BigDecimal.ONE);
     }
 
     @Override

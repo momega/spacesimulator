@@ -1,10 +1,8 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.model.Trajectory;
-import org.joda.time.DateTime;
-
-import java.math.BigDecimal;
 
 /**
  * Created by martin on 5/21/14.
@@ -16,7 +14,7 @@ public interface TrajectoryManager {
      * @param movingObject
      * @param newTimestamp new timestamp
      */
-    void computePosition(MovingObject movingObject, BigDecimal newTimestamp);
+    void computePosition(MovingObject movingObject, Timestamp newTimestamp);
 
     /**
      * Indicates whether or not the service supports the trajectory

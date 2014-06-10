@@ -1,9 +1,7 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
-
-import java.math.BigDecimal;
-import java.util.List;
+import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
  * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along newtonian trajectory. The
@@ -17,9 +15,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     private UniverseService universeService;
 
     @Override
-    public void computePosition(MovingObject movingObject, BigDecimal newTimestamp) {
+    public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
 
-        double dt = newTimestamp.subtract(movingObject.getTimestamp()).doubleValue();
+        double dt = TimeUtils.subtract(newTimestamp, movingObject.getTimestamp()).getValue().doubleValue();
 
         Vector3d velocity = movingObject.getVelocity();
         Vector3d position = movingObject.getPosition();

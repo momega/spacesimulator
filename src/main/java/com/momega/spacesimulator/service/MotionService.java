@@ -2,9 +2,8 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.DynamicalPoint;
 import com.momega.spacesimulator.model.RotatingObject;
-import com.momega.spacesimulator.model.Time;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,16 +25,17 @@ public class MotionService {
 
     private RotationService rotationService;
 
-    public void move(List<DynamicalPoint> dynamicalPoints, Time time) {
-        BigDecimal timestamp = time.getTimestamp().add(time.getWarpFactor());
-        time.setTimestamp(timestamp);
+    public Timestamp move(List<DynamicalPoint> dynamicalPoints, Timestamp time, BigDecimal warpFactor) {
+        BigDecimal timestamp = time.getValue().add(warpFactor);
+        Timestamp newTimestamp = TimeUtils.newTime(timestamp);
         logger.debug("time={}", timestamp);
         for(DynamicalPoint dp : dynamicalPoints) {
-            trajectoryService.move(dp, timestamp);
+            trajectoryService.move(dp, newTimestamp);
             if (dp instanceof RotatingObject) {
-                rotationService.rotate((RotatingObject) dp, timestamp);
+                rotationService.rotate((RotatingObject) dp, newTimestamp);
             }
         }
+        return newTimestamp;
     }
 
     public void setTrajectoryService(TrajectoryService trajectoryService) {

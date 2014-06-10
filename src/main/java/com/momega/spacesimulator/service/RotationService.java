@@ -1,8 +1,8 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.RotatingObject;
-
-import java.math.BigDecimal;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
  * Rotation service is used to rotate the {@link com.momega.spacesimulator.model.RotatingObject} such as {@link com.momega.spacesimulator.model.Planet}
@@ -13,10 +13,10 @@ public class RotationService {
     /**
      * Rotate the object along its axis
      * @param rotatingObject the rotating object, possibly planet or sun
-     * @param newTimestamp new timestamp
+     * @param newTime new time
      */
-    public void rotate(RotatingObject rotatingObject, BigDecimal newTimestamp) {
-        double dt = newTimestamp.subtract(rotatingObject.getTimestamp()).doubleValue();
+    public void rotate(RotatingObject rotatingObject, Timestamp newTime) {
+        double dt = TimeUtils.subtract(newTime, rotatingObject.getTimestamp()).getValue().doubleValue();
         double phi = dt / rotatingObject.getRotationPeriod();
         phi *= (2*Math.PI);
         rotatingObject.getOrientation().lookLeft(phi);
