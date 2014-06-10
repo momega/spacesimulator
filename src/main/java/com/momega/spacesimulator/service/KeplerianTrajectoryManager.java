@@ -29,6 +29,11 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
     }
 
     @Override
+    public void computePrediction(MovingObject movingObject) {
+        // do nothing
+    }
+
+    @Override
     public boolean supports(Trajectory trajectory) {
         return trajectory instanceof KeplerianTrajectory3d;
     }

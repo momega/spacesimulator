@@ -1,8 +1,8 @@
 package com.momega.spacesimulator.model;
 
 /**
- * The implementation of the moving object. The moving object has the defined velocity and a trajectory which can compute new position and velocity
- * The moving object also has a name to distinguish the objects
+ * The implementation of the moving object. The moving object has the defined velocity and a trajectory which can compute new position and velocity.
+ * The moving object also has a name to distinguish the objects.
  * Created by martin on 10.5.2014.
  */
 public class MovingObject extends Object3d {
@@ -23,6 +23,10 @@ public class MovingObject extends Object3d {
         this.velocity = velocity;
     }
 
+    /**
+     * Gets the name of the moving object
+     * @return the moving object
+     */
     public String getName() {
         return name;
     }

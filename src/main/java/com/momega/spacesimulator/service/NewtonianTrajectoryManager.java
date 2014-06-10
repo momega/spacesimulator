@@ -3,14 +3,18 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.TimeUtils;
 
+import java.util.Vector;
+
 /**
- * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along newtonian trajectory. The
+ * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along {@link com.momega.spacesimulator.model.NewtonianTrajectory}. The
  * implementation can use either Euler's or Runge-Kutta's method to computer the next iteration of the velocity and position
  * Created by martin on 5/21/14.
  */
 public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     public static final double G = 6.67384*1E-11;
+
+    private static double MINOR_ERROR = Math.pow(10, -12);
 
     private UniverseService universeService;
 
@@ -29,6 +33,55 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Vector3d[] result = eulerSolver(position, velocity, dt);
         movingObject.setVelocity(result[0]);
         movingObject.setPosition(result[1]);
+    }
+
+    @Override
+    public void computePrediction(MovingObject movingObject) {
+        Vector3d hVector = movingObject.getPosition().cross(movingObject.getVelocity());
+        double h = hVector.length();
+        double i = Math.acos(hVector.z / h);
+
+        DynamicalPoint earth = universeService.findDynamicalPoint("Earth");
+        double mi = earth.getMass() * G;
+
+        Vector3d eVector = movingObject.getVelocity().cross(hVector).scale(1/mi).subtract(movingObject.getPosition().normalize());
+        double e = eVector.length();
+
+        double a = h*h / ( 1- e*e) / mi;
+
+        double OMEGA = 0;
+        double omega = 0;
+
+        if (i > MINOR_ERROR) {
+            Vector3d nVector = new Vector3d(0, 0, 1).cross(hVector);
+            double n = nVector.length();
+            OMEGA = Math.acos(nVector.x / n);
+            if (nVector.y < 0) {
+                OMEGA = 2 * Math.PI - OMEGA;
+            }
+
+            omega = Math.acos( nVector.dot(eVector) / n / e);
+            if (eVector.z <0) {
+                omega = 2 * Math.PI - omega;
+            }
+        } else {
+            omega = Math.acos(eVector.x / e);
+            if (eVector.y<0) {
+                omega = 2 * Math.PI - omega;
+            }
+        }
+
+        KeplerianTrajectory3d prediction = new KeplerianTrajectory3d();
+        prediction.setCentralObject(earth);
+        prediction.setInclination(i);
+        prediction.setEccentricity(e);
+        prediction.setSemimajorAxis(a);
+        prediction.setAscendingNode(OMEGA);
+        prediction.setArgumentOfPeriapsis(omega);
+        prediction.setTrajectoryColor(new double[] {1d, 1d, 0d});
+
+        NewtonianTrajectory nt = (NewtonianTrajectory) movingObject.getTrajectory();
+        nt.setPrediction(prediction);
     }
 
     /**

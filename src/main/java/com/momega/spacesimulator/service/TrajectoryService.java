@@ -29,9 +29,22 @@ public class TrajectoryService {
                 return;
             }
         }
-        throw new IllegalArgumentException("object " + movingObject.getName() + " has unknown trajectory");
+        throw new IllegalArgumentException("object " + movingObject.getName() + " has unknown trajectory type");
     }
 
+    /**
+     * Computes the prediction of the trajectory. Some types of the trajectory such as {@link com.momega.spacesimulator.model.NewtonianTrajectory} can
+     * be estimated by prediction trajectory.
+     * @param movingObject the moving object
+     */
+    public void prediction(MovingObject movingObject) {
+        for(TrajectoryManager m : trajectoryManagers) {
+            if (m.supports(movingObject.getTrajectory())) {
+                m.computePrediction(movingObject);
+            }
+        }
+        logger.info("prediction computed for dynamical point {}", movingObject.getName());
+    }
 
     public void setTrajectoryManagers(List<TrajectoryManager> trajectoryManagers) {
         this.trajectoryManagers = trajectoryManagers;

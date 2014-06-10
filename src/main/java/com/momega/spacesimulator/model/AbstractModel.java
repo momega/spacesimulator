@@ -39,6 +39,8 @@ public abstract class AbstractModel {
         initDynamicalPoints();
         initCamera();
         logger.info("model initialized");
+
+        motionService.predict();
     }
 
     private void initServices() {
@@ -55,7 +57,7 @@ public abstract class AbstractModel {
         this.motionService = new MotionService();
         this.motionService.setRotationService(rotationService);
         this.motionService.setTrajectoryService(trajectoryService);
-
+        this.motionService.setUniverseService(universeService);
         this.cameraService = new CameraService();
     }
 
@@ -63,13 +65,11 @@ public abstract class AbstractModel {
 
     protected abstract void initCamera();
 
-
-
     /**
      * Next step of the model iteration
      */
     public void next() {
-        Timestamp t = motionService.move(universeService.getDynamicalPoints(), getTime(),getWarpFactor());
+        Timestamp t = motionService.move(getTime(), getWarpFactor());
         setTime(t);
         cameraService.updatePosition(camera);
     }

@@ -17,6 +17,13 @@ public interface TrajectoryManager {
     void computePosition(MovingObject movingObject, Timestamp newTimestamp);
 
     /**
+     * Computes the prediction of the trajectory
+     * @param movingObject
+     * @return
+     */
+    void computePrediction(MovingObject movingObject);
+
+    /**
      * Indicates whether or not the service supports the trajectory
      * @param trajectory the trajectory
      * @return returns boolean value

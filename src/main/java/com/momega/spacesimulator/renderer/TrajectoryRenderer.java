@@ -32,7 +32,7 @@ public abstract class TrajectoryRenderer implements Renderer {
     /**
      * Creates the trajectory renderer
      * @param trajectory the trajectory
-     * @return
+     * @return new instance of the trajectory renderer
      */
     public static TrajectoryRenderer createInstance(Trajectory trajectory) {
         if (trajectory instanceof StaticTrajectory) {
@@ -42,7 +42,7 @@ public abstract class TrajectoryRenderer implements Renderer {
         } else if (trajectory instanceof KeplerianTrajectory2d) {
             return new KeplerianTrajectory2dRenderer((KeplerianTrajectory2d)trajectory);
         } else if (trajectory instanceof NewtonianTrajectory) {
-            return new NewtonianTrajectoryRenderer(trajectory);
+            return new NewtonianTrajectoryRenderer((NewtonianTrajectory) trajectory);
         }
 
         throw new IllegalArgumentException("unable to handle trajectory");

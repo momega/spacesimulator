@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * The motion service is responsible for computing new position of dynamical points such as planets and satellites.
@@ -25,11 +24,13 @@ public class MotionService {
 
     private RotationService rotationService;
 
-    public Timestamp move(List<DynamicalPoint> dynamicalPoints, Timestamp time, BigDecimal warpFactor) {
+    private UniverseService universeService;
+
+    public Timestamp move(Timestamp time, BigDecimal warpFactor) {
         BigDecimal timestamp = time.getValue().add(warpFactor);
         Timestamp newTimestamp = TimeUtils.newTime(timestamp);
         logger.debug("time={}", timestamp);
-        for(DynamicalPoint dp : dynamicalPoints) {
+        for(DynamicalPoint dp : universeService.getDynamicalPoints()) {
             trajectoryService.move(dp, newTimestamp);
             if (dp instanceof RotatingObject) {
                 rotationService.rotate((RotatingObject) dp, newTimestamp);
@@ -44,5 +45,15 @@ public class MotionService {
 
     public void setRotationService(RotationService rotationService) {
         this.rotationService = rotationService;
+    }
+
+    public void setUniverseService(UniverseService universeService) {
+        this.universeService = universeService;
+    }
+
+    public void predict() {
+        for(DynamicalPoint dp : universeService.getDynamicalPoints()) {
+            trajectoryService.prediction(dp);
+        }
     }
 }
