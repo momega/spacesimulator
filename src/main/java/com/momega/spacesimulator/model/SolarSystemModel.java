@@ -80,11 +80,62 @@ public class SolarSystemModel extends AbstractModel {
         universeService.addDynamicalPoint(mercury);
         universeService.addDynamicalPoint(jupiter);
 
+
+        Planet io = new Planet();
+        io.setTrajectory(universeService.createKeplerianTrajectory(jupiter, 421.769 * 1E6, 0.0041, 136.11730, 1.769138, 2456821.035697427578, 0.036, 337.181));
+        io.getTrajectory().setTrajectoryColor(new double[] {1,1,1});
+        universeService.updateDynamicalPoint(io, "Io",  893.3E-4, 1.769138, 1.8213, 0d);
+        io.setTextureFileName("io.jpg");
+        universeService.addDynamicalPoint(io);
+
+        Planet europa = new Planet();
+        europa.setTrajectory(universeService.createKeplerianTrajectory(jupiter, 671.079 * 1E6, 0.0101, 302.75, 3.551810, 2456822.782242114656, 0.464, 343.685));
+        europa.getTrajectory().setTrajectoryColor(new double[]{1, 1, 1});
+        universeService.updateDynamicalPoint(europa, "Europa", 479.7E-4, 3.551810, 1.565, 0.1d);
+        europa.setTextureFileName("europa.jpg");
+        universeService.addDynamicalPoint(europa);
+
+        Planet ganymede = new Planet();
+        ganymede.setTrajectory(universeService.createKeplerianTrajectory(jupiter, 1070.0428 * 1E6, 0.0006, 342.14, 7.154553, 2456819.953914982267, 0.186, 340.928));
+        ganymede.getTrajectory().setTrajectoryColor(new double[] {1,1,1});
+        universeService.updateDynamicalPoint(ganymede, "Ganymede", 1482E-4, 7.154553, 2.634, 0.33d);
+        ganymede.setTextureFileName("ganymede.jpg");
+        universeService.addDynamicalPoint(ganymede);
+
+        Planet callisto = new Planet();
+        callisto.setTrajectory(universeService.createKeplerianTrajectory(jupiter, 1883 * 1E6, 0.007, 263.79, 16.689018, 2456815.215215998702, 0.281, 337.0061));
+        callisto.getTrajectory().setTrajectoryColor(new double[] {1,1,1});
+        universeService.updateDynamicalPoint(callisto, "Callisto", 1076E-4, 16.689018, 2.403, 0.22d);
+        callisto.setTextureFileName("callisto.jpg");
+        universeService.addDynamicalPoint(callisto);
+
+        Planet phobos = new Planet();
+        phobos.setTrajectory(universeService.createKeplerianTrajectory(mars, 9.3772 * 1E6, 0.0151, 121.451, 0.319, 2456821.639245583210, 1.082, 82.446));
+        phobos.getTrajectory().setTrajectoryColor(new double[] {1,1,1});
+        universeService.updateDynamicalPoint(phobos, "Phobos", 1.08E-8, 0.319, 13.1E-3, 0d);
+        phobos.setTextureFileName("phobos.jpg");
+        universeService.addDynamicalPoint(phobos);
+
+        Planet deimos = new Planet();
+        deimos.setTrajectory(universeService.createKeplerianTrajectory(mars, 23.4632 * 1E6, 0.00033, 306.201, 1.263, 2456821.036168867722, 1.791, 78.74157));
+        deimos.getTrajectory().setTrajectoryColor(new double[] {1,1,1});
+        universeService.updateDynamicalPoint(deimos, "Deimos", 1.80E-9, 1.263, 7.8E-3, 0d);
+        deimos.setTextureFileName("deimos.jpg");
+        universeService.addDynamicalPoint(deimos);
+
         for(DynamicalPoint dp : universeService.getDynamicalPoints()) {
             dp.setTimestamp(getTime());
         }
 
         next();
+
+        Vector3d sv = earth.getPosition().normalize().scale(-9500d).add(earth.getVelocity());
+        Satellite satellite = universeService.createSatellite(earth, "Satellite 4", 250, sv);
+        universeService.addDynamicalPoint(satellite);
+
+        for(DynamicalPoint dp : universeService.getSatellites()) {
+            dp.setTimestamp(getTime());
+        }
     }
 
     @Override
@@ -104,10 +155,15 @@ public class SolarSystemModel extends AbstractModel {
         f.setPosition(new Vector3d(15 * 1E9, 0, 0));
         f.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
         f.setVelocity(1 * 1E6);
-        setCamera(f);
+
+        DynamicalPoint jupiter = universeService.findDynamicalPoint("Jupiter");
+        FreeCamera f2 = new FreeCamera();
+        f2.setPosition(jupiter.getPosition().add(new Vector3d(1 * 1E9, 0, 0)));
+        f2.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
+        f2.setVelocity(1 * 1E7);
 
         CompositeCamera c = new CompositeCamera();
-        c.setCameras(Arrays.asList(f, s));
+        c.setCameras(Arrays.asList(f, f2, s));
         c.updateCurrent(0);
         setCamera(c);
     }

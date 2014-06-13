@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.renderer;
 
-import com.jogamp.common.util.IOUtil;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -8,6 +7,7 @@ import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +53,7 @@ public class PlanetRenderer extends DynamicalPointRenderer {
             return result;
         }
         catch (IOException exc) {
-            IOUtil.close(stream, true);
+            IOUtils.closeQuietly(stream);
         }
 
         return null;

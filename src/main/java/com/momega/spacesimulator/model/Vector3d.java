@@ -10,12 +10,13 @@ public class Vector3d {
 
     final private static double SMALL_EPSILON = 0.0001;
 
-    public double x = 0, y = 0, z = 0;
+    public double x = 0d, y = 0d, z = 0d;
 
     /**
      * Constructs a new Vector3d, all coordinates are set to zero
      */
     public Vector3d() {
+        super();
     }
 
     /**

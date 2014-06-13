@@ -42,14 +42,15 @@ public class EarthSystemModel extends AbstractModel {
 
         next();
 
-        Satellite satellite = universeService.createSatellite(earth, "Satellite 1", 200, new Vector3d(0d, 10000d, 0d));
+        Satellite satellite = universeService.createSatellite(earth, "Satellite 1", 200, earth.getOrientation().getU().scale(10000d));
         universeService.addDynamicalPoint(satellite);
 
         satellite = universeService.createSatellite(earth, "Satellite 2", 300, new Vector3d(0d, 0d, 9000d));
         universeService.addDynamicalPoint(satellite);
 
-//        satellite = universeService.createSatellite(moon, "Satellite 3", 50, Vector3d.scaleAdd(1, moon.getVelocity(), new Vector3d(0d, 1800d, 0d)));
-//        universeService.addDynamicalPoint(satellite);
+        Vector3d sv = moon.getPosition().normalize().scale(-1800d).add(moon.getVelocity());
+        satellite = universeService.createSatellite(moon, "Satellite 3", 50, sv);
+        universeService.addDynamicalPoint(satellite);
 
         for(DynamicalPoint dp : universeService.getSatellites()) {
             dp.setTimestamp(getTime());

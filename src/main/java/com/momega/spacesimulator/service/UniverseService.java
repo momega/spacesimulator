@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class UniverseService {
 
+    public static final double AU = 149597870700d;
+
     protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
     private final List<Planet> planets = new ArrayList<>();
     private final List<Satellite> satellites = new ArrayList<>();
@@ -83,7 +85,14 @@ public class UniverseService {
     public Satellite createSatellite(DynamicalPoint centralPoint, String name, double height, Vector3d velocity) {
         Satellite satellite = new Satellite();
         satellite.setName(name);
-        Vector3d p = Vector3d.scaleAdd(1, centralPoint.getPosition(), new Vector3d(centralPoint.getRadius() + height*1E3, 0, 0));
+
+        Vector3d p;
+        if (centralPoint.getVelocity().length()==0) {
+            p = Vector3d.scaleAdd(1, centralPoint.getPosition(), new Vector3d(centralPoint.getRadius() + height*1E3, 0, 0));
+        } else {
+            p = centralPoint.getPosition().add(centralPoint.getVelocity().normalize().scale(centralPoint.getRadius() + height * 1E3));
+        }
+
         satellite.setPosition(p);
         satellite.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
         satellite.setVelocity(velocity);
@@ -95,16 +104,20 @@ public class UniverseService {
         return satellite;
     }
 
-    public void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
+    public void updateDynamicalPoint(DynamicalPoint dp, double radius, double mass, double rotationPeriod, double axialTilt) {
         dp.setRadius(radius * 1E6);
-        dp.setName(name);
         dp.setMass(mass * 1E24);
         dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
-        dp.getOrientation().lookUp(Math.toRadians(axialTilt));
+        dp.getOrientation().twist(Math.toRadians(axialTilt));
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
             ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
         }
+    }
+
+    public void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
+        dp.setName(name);
+        updateDynamicalPoint(dp, radius, mass, rotationPeriod, axialTilt);
     }
 
     public List<DynamicalPoint> getDynamicalPoints() {
