@@ -127,6 +127,22 @@ public class SolarSystemModel extends AbstractModel {
             dp.setTimestamp(getTime());
         }
 
+        sphereOfInfluenceService.addPlanet(sun, null);
+        sphereOfInfluenceService.addPlanet(mercury, sun);
+        sphereOfInfluenceService.addPlanet(venus, sun);
+        sphereOfInfluenceService.addPlanet(earth, sun);
+        sphereOfInfluenceService.addPlanet(moon, earth);
+        sphereOfInfluenceService.addPlanet(mars, sun);
+        sphereOfInfluenceService.addPlanet(phobos, mars);
+        sphereOfInfluenceService.addPlanet(deimos, mars);
+        sphereOfInfluenceService.addPlanet(jupiter, sun);
+        sphereOfInfluenceService.addPlanet(io, jupiter);
+        sphereOfInfluenceService.addPlanet(europa, jupiter);
+        sphereOfInfluenceService.addPlanet(ganymede, jupiter);
+        sphereOfInfluenceService.addPlanet(callisto, jupiter);
+
+        sphereOfInfluenceService.calculateSois();
+
         next();
 
         Vector3d sv = earth.getPosition().normalize().scale(-9500d).add(earth.getVelocity());

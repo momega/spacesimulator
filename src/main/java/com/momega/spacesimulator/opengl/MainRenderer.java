@@ -117,7 +117,7 @@ public class MainRenderer extends AbstractRenderer {
             result.setX((int)my2DPoint[0]);
             result.setY((int)my2DPoint[1]);
 
-            double distance = dynamicalPoint.getPosition().distance(camera.getPosition());
+            double distance = dynamicalPoint.getPosition().subtract(camera.getPosition()).length();
             double radiusAngle = Math.atan2(dynamicalPoint.getRadius(), distance);
 
             result.setRadius(radiusAngle);

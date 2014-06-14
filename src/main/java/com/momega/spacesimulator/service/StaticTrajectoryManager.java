@@ -20,6 +20,11 @@ public class StaticTrajectoryManager implements TrajectoryManager {
     }
 
     @Override
+    public boolean supportPrediction(MovingObject movingObject) {
+        return false;
+    }
+
+    @Override
     public boolean supports(Trajectory trajectory) {
         return trajectory instanceof StaticTrajectory;
     }

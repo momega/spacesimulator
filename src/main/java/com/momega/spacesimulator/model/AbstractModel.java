@@ -15,7 +15,6 @@ import java.util.Arrays;
 public abstract class AbstractModel {
 
     public final static double UNIVERSE_RADIUS = 1E19;
-
     private final static int MIN_TARGET_SIZE = 5;
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModel.class);
@@ -29,6 +28,7 @@ public abstract class AbstractModel {
 
     protected MotionService motionService;
     protected UniverseService universeService;
+    protected SphereOfInfluenceService sphereOfInfluenceService;
 
     /**
      * Initialize model
@@ -59,6 +59,11 @@ public abstract class AbstractModel {
         this.motionService.setTrajectoryService(trajectoryService);
         this.motionService.setUniverseService(universeService);
         this.cameraService = new CameraService();
+
+        this.sphereOfInfluenceService = new SphereOfInfluenceService();
+        this.sphereOfInfluenceService.setUniverseService(universeService);
+
+        ntm.setSphereOfInfluenceService(this.sphereOfInfluenceService);
     }
 
     protected abstract void initTime();
@@ -74,6 +79,7 @@ public abstract class AbstractModel {
         cameraService.updatePosition(camera);
     }
 
+    //TODO: Does not work exactly, new algorithm has to be created
     public double computeZNear(double aratio) {
         Vector3d viewVector = camera.getOrientation().getN();
         double znear = UNIVERSE_RADIUS * 2;
@@ -85,7 +91,7 @@ public abstract class AbstractModel {
                 continue;
             }
 
-            double distance = dp.getPosition().distance(camera.getPosition());
+            double distance = dp.getPosition().subtract(camera.getPosition()).length();
             double distanceFactor = distance / dp.getRadius();
             if (distanceFactor > UNIVERSE_RADIUS * 0.001) {
                 continue; // If it's too far to be visible discard it
@@ -127,8 +133,6 @@ public abstract class AbstractModel {
      * Creates all dynamical points
      */
     protected abstract void initDynamicalPoints();
-
-
 
     public DynamicalPoint selectDynamicalPoint(int x, int y) {
         for(DynamicalPoint dp : universeService.getDynamicalPoints()) {

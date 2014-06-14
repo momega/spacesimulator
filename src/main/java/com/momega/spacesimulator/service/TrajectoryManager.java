@@ -29,4 +29,11 @@ public interface TrajectoryManager {
      * @return returns boolean value
      */
     boolean supports(Trajectory trajectory);
+
+    /**
+     * Indicates whether or not the service supports the computing prediction for the dynamical point
+     * @param movingObject the moving object
+     * @return returns boolean value
+     */
+    boolean supportPrediction(MovingObject movingObject);
 }

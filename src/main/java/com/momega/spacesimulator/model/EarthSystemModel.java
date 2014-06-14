@@ -40,6 +40,10 @@ public class EarthSystemModel extends AbstractModel {
             dp.setTimestamp(getTime());
         }
 
+        sphereOfInfluenceService.addPlanet(earth, null);
+        sphereOfInfluenceService.addPlanet(moon, earth);
+        sphereOfInfluenceService.calculateSois();
+
         next();
 
         Satellite satellite = universeService.createSatellite(earth, "Satellite 1", 200, earth.getOrientation().getU().scale(10000d));

@@ -32,4 +32,5 @@ public class DynamicalPoint extends MovingObject {
     public void setRadius(double radius) {
         this.radius = radius;
     }
+
 }

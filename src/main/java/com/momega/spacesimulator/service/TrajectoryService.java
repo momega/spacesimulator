@@ -39,7 +39,7 @@ public class TrajectoryService {
      */
     public void prediction(MovingObject movingObject) {
         for(TrajectoryManager m : trajectoryManagers) {
-            if (m.supports(movingObject.getTrajectory())) {
+            if (m.supportPrediction(movingObject)) {
                 m.computePrediction(movingObject);
             }
         }

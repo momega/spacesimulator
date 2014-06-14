@@ -15,11 +15,14 @@ import java.util.List;
  */
 public class UniverseService {
 
+    /**
+     * Astronautical unit
+     */
     public static final double AU = 149597870700d;
-
     protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
     private final List<Planet> planets = new ArrayList<>();
     private final List<Satellite> satellites = new ArrayList<>();
+    private Planet centralBody;
 
     /**
      * Register the dynamical point to the universe
@@ -27,8 +30,13 @@ public class UniverseService {
      */
     public void addDynamicalPoint(DynamicalPoint dp) {
         getDynamicalPoints().add(dp);
+
         if (dp instanceof Planet) {
-            planets.add((Planet) dp);
+            Planet planet = (Planet) dp;
+            planets.add(planet);
+            if (planet.getTrajectory() instanceof StaticTrajectory) {
+                this.centralBody = planet;
+            }
         }
         if (dp instanceof  Satellite) {
             satellites.add((Satellite) dp);
@@ -131,4 +139,9 @@ public class UniverseService {
     public List<Satellite> getSatellites() {
         return satellites;
     }
+
+    public Planet getCentralBody() {
+        return centralBody;
+    }
+
 }

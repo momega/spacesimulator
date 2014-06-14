@@ -32,6 +32,11 @@ public class Vector3d {
         this.z = z;
     }
 
+    /**
+     * Adds two vectors. The operation is: result = this + u
+     * @param u the second vector
+     * @return new instance of the vector
+     */
     public Vector3d add(final Vector3d u) {
         return scaleAdd(1, u);
     }
@@ -52,15 +57,6 @@ public class Vector3d {
      */
     public Vector3d cross(final Vector3d rhs) {
         return new Vector3d(y * rhs.z - z * rhs.y, z * rhs.x - x * rhs.z, x * rhs.y - y * rhs.x);
-    }
-
-    public double distance(final Vector3d rhs) {
-        return Math.sqrt(distanceSquared(rhs));
-    }
-
-    public double distanceSquared(final Vector3d rhs) {
-        double dx = x - rhs.x, dy = y - rhs.y, dz = z - rhs.z;
-        return dx * dx + dy * dy + dz * dz;
     }
 
     public double dot(final Vector3d rhs) {

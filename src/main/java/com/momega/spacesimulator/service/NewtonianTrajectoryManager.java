@@ -3,8 +3,6 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.TimeUtils;
 
-import java.util.Vector;
-
 /**
  * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along {@link com.momega.spacesimulator.model.NewtonianTrajectory}. The
  * implementation can use either Euler's or Runge-Kutta's method to computer the next iteration of the velocity and position
@@ -17,6 +15,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     private static double MINOR_ERROR = Math.pow(10, -12);
 
     private UniverseService universeService;
+    private SphereOfInfluenceService sphereOfInfluenceService;
 
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
@@ -33,18 +32,38 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Vector3d[] result = eulerSolver(position, velocity, dt);
         movingObject.setVelocity(result[0]);
         movingObject.setPosition(result[1]);
+
+        if (movingObject instanceof Satellite) {
+            Satellite satellite = (Satellite) movingObject;
+            Planet soiBody = satellite.getSoiBody();
+            satellite.setRelativePosition(movingObject.getPosition().subtract(soiBody.getPosition()));
+            satellite.setRelativeVelocity(movingObject.getVelocity().subtract(soiBody.getVelocity()));
+        }
     }
 
+    /**
+     * Computes the prediction of the trajectory. Currently the supports work only for {@link com.momega.spacesimulator.model.Satellite}s.
+     * @param movingObject the moving object which.
+     */
     @Override
     public void computePrediction(MovingObject movingObject) {
-        Vector3d hVector = movingObject.getPosition().cross(movingObject.getVelocity());
+        SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(movingObject);
+        Vector3d position = movingObject.getPosition().subtract(soi.getBody().getPosition());
+        Vector3d velocity = movingObject.getVelocity().subtract(soi.getBody().getVelocity());
+
+        if (movingObject instanceof Satellite) {
+            Satellite satellite = (Satellite) movingObject;
+            satellite.setSoiBody(soi.getBody());
+        }
+
+        Vector3d hVector = position.cross(velocity);
         double h = hVector.length();
         double i = Math.acos(hVector.z / h);
 
-        DynamicalPoint earth = universeService.findDynamicalPoint("Earth");
-        double mi = earth.getMass() * G;
+        DynamicalPoint soiBody = soi.getBody();
+        double mi = soiBody.getMass() * G;
 
-        Vector3d eVector = movingObject.getVelocity().cross(hVector).scale(1/mi).subtract(movingObject.getPosition().normalize());
+        Vector3d eVector = velocity.cross(hVector).scale(1/mi).subtract(position.normalize());
         double e = eVector.length();
 
         double a = h*h / ( 1- e*e) / mi;
@@ -72,7 +91,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         }
 
         KeplerianTrajectory3d prediction = new KeplerianTrajectory3d();
-        prediction.setCentralObject(earth);
+        prediction.setCentralObject(soiBody);
         prediction.setInclination(i);
         prediction.setEccentricity(e);
         prediction.setSemimajorAxis(a);
@@ -86,9 +105,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     /**
      * Solves the velocity and position by the simple Euler method
-     * @param position
-     * @param velocity
-     * @param dt
+     * @param position the current position
+     * @param velocity the current velocity
+     * @param dt time interval
      * @return the position
      */
     protected Vector3d[] eulerSolver(Vector3d position, Vector3d velocity, double dt) {
@@ -101,9 +120,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     /**
      * Solves the velocity and position by RK4 method (Runge-Kutta method, 4th order)
-     * @param position
-     * @param velocity
-     * @param dt
+     * @param position the current position
+     * @param velocity the current velocity
+     * @param dt time interval
      * @return new position
      */
     protected Vector3d[] rk4Solver(Vector3d position, Vector3d velocity, double dt) {
@@ -143,7 +162,16 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         return trajectory instanceof NewtonianTrajectory;
     }
 
+    @Override
+    public boolean supportPrediction(MovingObject movingObject) {
+        return movingObject instanceof Satellite;
+    }
+
     public void setUniverseService(UniverseService universeService) {
         this.universeService = universeService;
+    }
+
+    public void setSphereOfInfluenceService(SphereOfInfluenceService sphereOfInfluenceService) {
+        this.sphereOfInfluenceService = sphereOfInfluenceService;
     }
 }

@@ -38,6 +38,11 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
         return trajectory instanceof KeplerianTrajectory3d;
     }
 
+    @Override
+    public boolean supportPrediction(MovingObject movingObject) {
+        return false;
+    }
+
     protected Vector3d[] solveKeplerian2(KeplerianTrajectory3d trajectory, Timestamp time) {
 
         double E = solveEccentricAnomaly(trajectory, time);
