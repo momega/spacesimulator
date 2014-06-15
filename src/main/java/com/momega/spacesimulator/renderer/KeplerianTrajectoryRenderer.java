@@ -1,26 +1,32 @@
 package com.momega.spacesimulator.renderer;
 
+import com.momega.spacesimulator.model.KeplerianTrajectory2d;
 import com.momega.spacesimulator.model.KeplerianTrajectory3d;
-import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLDrawable;
 
 /**
  * The renderer of keplerian trajectory 2d
  * Created by martin on 4/21/14.
  */
-public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer {
+public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
 
-    private double inclination;
-    private double ascendingNode;
+    private final double epsilon;
+    protected final double a;
+    protected final double b;
+    protected final double e;
 
-    public KeplerianTrajectory3dRenderer(KeplerianTrajectory3d trajectory) {
+    protected final double rp;
+
+    public KeplerianTrajectoryRenderer(KeplerianTrajectory3d trajectory) {
         super(trajectory);
-        this.inclination = trajectory.getInclination();
-        this.ascendingNode = trajectory.getAscendingNode();
+        this.epsilon = trajectory.getEccentricity();
+        this.a = trajectory.getSemimajorAxis();
+        this.b = a * Math.sqrt(1 - epsilon*epsilon);
+        this.e = Math.sqrt(a*a - b*b);
+        this.rp = a* (1 - trajectory.getEccentricity());
     }
 
     @Override
@@ -30,9 +36,9 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
         gl.glPushMatrix();
 
         GLUtils.translate(gl, getTrajectory().getCentralObject().getPosition());
-        gl.glRotated(Math.toDegrees(this.ascendingNode), 0, 0, 1);
-        gl.glRotated(Math.toDegrees(this.inclination), 1, 0, 0);
-        gl.glRotated(Math.toDegrees(this.argumentOfPeriapsis), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(getTrajectory().getAscendingNode()), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(getTrajectory().getInclination()), 1, 0, 0);
+        gl.glRotated(Math.toDegrees(getTrajectory().getArgumentOfPeriapsis()), 0, 0, 1);
 
         gl.glColor3dv(getColor(), 0);
         gl.glLineWidth(1);
@@ -50,5 +56,10 @@ public class KeplerianTrajectory3dRenderer extends KeplerianTrajectory2dRenderer
 //        gl.glEnd();
 
         gl.glPopMatrix();
+    }
+
+    @Override
+    public KeplerianTrajectory3d getTrajectory() {
+        return (KeplerianTrajectory3d) super.getTrajectory();
     }
 }

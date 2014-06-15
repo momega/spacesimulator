@@ -81,49 +81,21 @@ public class MainRenderer extends AbstractRenderer {
     }
 
     protected void computeViewCoordinates(GLAutoDrawable drawable) {
+        Camera camera = model.getCamera();
         for(DynamicalPoint dp : model.getUniverseService().getDynamicalPoints()) { // TODO: getting service from model it is not well
-            ViewCoordinates viewCoordinates = createViewCoordinates(drawable, dp, model.getCamera());
+
+            ViewCoordinates viewCoordinates = new ViewCoordinates();
+            double[] xy = GLUtils.getProjectionCoordinates(drawable, dp.getPosition(), camera);
+            viewCoordinates.setVisible(xy != null);
+            if (xy != null) {
+                viewCoordinates.setX((int) xy[0]);
+                viewCoordinates.setY((int) xy[1]);
+            }
+            double distance = dp.getPosition().subtract(camera.getPosition()).length();
+            double radiusAngle = Math.atan2(dp.getRadius(), distance);
+            viewCoordinates.setRadius(radiusAngle);
             dp.setViewCoordinates(viewCoordinates);
         }
-    }
-
-    public ViewCoordinates createViewCoordinates(GLAutoDrawable drawable, DynamicalPoint dynamicalPoint, Camera camera) {
-        double modelView[] = new double[16];
-        double projection[] = new double[16];
-        // will contain 2d window coordinates when done
-        int viewport[] = new int[4];
-        GL2 gl = drawable.getGL().getGL2();
-        gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, modelView, 0);
-        gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projection, 0 );
-        gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
-
-        Vector3d viewVector = camera.getOrientation().getN();
-        Vector3d diffVector = dynamicalPoint.getPosition().subtract(camera.getPosition());
-
-        ViewCoordinates result = new ViewCoordinates();
-        result.setVisible(false);
-        if (viewVector.dot(diffVector) > 0) {  // object is in front of the camera
-            double[] my2DPoint = new double[4];
-            GLU glu = new GLU();
-            Vector3d p = dynamicalPoint.getPosition();
-            glu.gluProject(p.x, p.y, p.z,
-                    modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
-
-            if (dynamicalPoint instanceof Satellite) {
-                logger.debug("pos = {} x {}", my2DPoint[0], my2DPoint[1]);
-            }
-
-            result.setVisible(true);
-            result.setX((int)my2DPoint[0]);
-            result.setY((int)my2DPoint[1]);
-
-            double distance = dynamicalPoint.getPosition().subtract(camera.getPosition()).length();
-            double radiusAngle = Math.atan2(dynamicalPoint.getRadius(), distance);
-
-            result.setRadius(radiusAngle);
-        }
-
-        return result;
     }
 
     @Override
@@ -131,9 +103,9 @@ public class MainRenderer extends AbstractRenderer {
         Camera camera = model.getCamera();
         Vector3d p = camera.getPosition();
         glu.gluLookAt(p.x, p.y, p.z,
-                p.x + camera.getOrientation().getN().x * 1000000,
-                p.y + camera.getOrientation().getN().y * 1000000,
-                p.z + camera.getOrientation().getN().z * 1000000,
+                p.x + camera.getOrientation().getN().x * 1E8,
+                p.y + camera.getOrientation().getN().y * 1E8,
+                p.z + camera.getOrientation().getN().z * 1E8,
                 camera.getOrientation().getV().x,
                 camera.getOrientation().getV().y,
                 camera.getOrientation().getV().z);

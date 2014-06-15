@@ -15,7 +15,7 @@ public abstract class AbstractDynamicalPointRenderer extends AbstractTextRendere
         drawText("P:" + dynamicalPoint.getPosition().toString(), x + 5, y + 20);
         drawText("V:" + String.format("%6.2f m/s", dynamicalPoint.getVelocity().length()), x + 5, y + 10);
         double distance = dynamicalPoint.getPosition().subtract(camera.getPosition()).length() / 1E6;
-        drawText("D:" + String.format("%6.2f 1E3 km", distance), x + 5, y);
+        drawText("D:" + String.format("%6.2f Mm", distance), x + 5, y);
         if (dynamicalPoint instanceof Satellite) {
             Satellite satellite = (Satellite) dynamicalPoint;
             drawText("VR:" + String.format("%6.2f m/s", satellite.getRelativeVelocity().length()), x + 5, y - 10);

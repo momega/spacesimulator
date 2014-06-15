@@ -26,13 +26,13 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Vector3d velocity = movingObject.getVelocity();
         Vector3d position = movingObject.getPosition();
 
-//        Vector3d[] result = rk4Solver(position, velocity, dt);
-//        movingObject.setVelocity(result[0]);
-//        movingObject.setPosition(result[1]);
-
-        Vector3d[] result = eulerSolver(position, velocity, dt);
+        Vector3d[] result = rk4Solver(position, velocity, dt);
         movingObject.setVelocity(result[0]);
         movingObject.setPosition(result[1]);
+
+//        Vector3d[] result = eulerSolver(position, velocity, dt);
+//        movingObject.setVelocity(result[0]);
+//        movingObject.setPosition(result[1]);
 
         if (movingObject instanceof Satellite) {
             Satellite satellite = (Satellite) movingObject;
@@ -48,7 +48,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
      */
     @Override
     public void computePrediction(MovingObject movingObject) {
-        Assert.isTrue(movingObject instanceof Satellite, "predication of trajectory is supported only for satellites");
+        Assert.isInstanceOf(Satellite.class, movingObject, "predication of trajectory is supported only for satellites");
 
         Satellite satellite = (Satellite) movingObject;
         SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(satellite);

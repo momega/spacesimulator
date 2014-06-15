@@ -1,9 +1,12 @@
 package com.momega.spacesimulator.opengl;
 
+import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.Renderer;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.glu.GLU;
 
 import static javax.media.opengl.GL.GL_LINE_LOOP;
 
@@ -54,6 +57,38 @@ public class GLUtils {
 
         gl.glEnd();
     }
+
+    /**
+     * Gets the projection coordinates of the position in model-view based on the camera
+     * @param drawable the drawable
+     * @param position any position on 3D
+     * @param camera the camera
+     * @return array of the coordinates, 0th coordinate is x, 1st coordinate is y
+     */
+    public static double[] getProjectionCoordinates(GLAutoDrawable drawable, Vector3d position, Camera camera) {
+        Vector3d viewVector = camera.getOrientation().getN();
+        Vector3d diffVector = position.subtract(camera.getPosition());
+
+        if (viewVector.dot(diffVector) > 0) {  // object is in front of the camera
+            double modelView[] = new double[16];
+            double projection[] = new double[16];
+            int viewport[] = new int[4];
+            GL2 gl = drawable.getGL().getGL2();
+            gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, modelView, 0);
+            gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projection, 0 );
+            gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
+
+            double[] my2DPoint = new double[4];
+            GLU glu = new GLU();
+            glu.gluProject(position.x, position.y, position.z,
+                    modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
+
+            return my2DPoint;
+        }
+
+        return null;
+    }
+
 
     public static void translate(GL2 gl, Vector3d position) {
         gl.glTranslated(position.x, position.y, position.z);

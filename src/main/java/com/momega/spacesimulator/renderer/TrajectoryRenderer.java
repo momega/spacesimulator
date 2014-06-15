@@ -2,14 +2,11 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.*;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-
 /**
  * Interface contains methods to draw the trajectories
  * Created by martin on 4/21/14.
  */
-public abstract class TrajectoryRenderer implements Renderer {
+public abstract class TrajectoryRenderer extends CompositeRenderer {
 
     private final Trajectory trajectory;
     private final double[] color;
@@ -17,16 +14,6 @@ public abstract class TrajectoryRenderer implements Renderer {
     protected TrajectoryRenderer(Trajectory trajectory) {
         this.trajectory = trajectory;
         this.color = trajectory.getTrajectoryColor();
-    }
-
-    @Override
-    public void init(GL2 gl) {
-        // do nothing
-    }
-
-    @Override
-    public void draw(GLAutoDrawable drawable) {
-        // do nothing, ready for override
     }
 
     /**
@@ -38,19 +25,12 @@ public abstract class TrajectoryRenderer implements Renderer {
         if (trajectory instanceof StaticTrajectory) {
             return new StaticTrajectoryRenderer(trajectory);
         } else if (trajectory instanceof KeplerianTrajectory3d) {
-            return new KeplerianTrajectory3dRenderer((KeplerianTrajectory3d)trajectory);
-        } else if (trajectory instanceof KeplerianTrajectory2d) {
-            return new KeplerianTrajectory2dRenderer((KeplerianTrajectory2d)trajectory);
+            return new KeplerianTrajectoryRenderer((KeplerianTrajectory3d)trajectory);
         } else if (trajectory instanceof NewtonianTrajectory) {
             return new NewtonianTrajectoryRenderer((NewtonianTrajectory) trajectory);
         }
 
         throw new IllegalArgumentException("unable to handle trajectory");
-    }
-
-    @Override
-    public void dispose(GL2 gl) {
-        // do nothing
     }
 
     public Trajectory getTrajectory() {
