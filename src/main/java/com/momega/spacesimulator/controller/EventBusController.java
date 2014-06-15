@@ -2,6 +2,7 @@ package com.momega.spacesimulator.controller;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,6 +82,13 @@ public class EventBusController extends AbstractController {
     public void mouseDragged(MouseEvent e) {
         for(Controller controller : controllers) {
             controller.mouseDragged(e);
+        }
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        for(Controller controller : controllers) {
+            controller.mouseWheelMoved(e);
         }
     }
 

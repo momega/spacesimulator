@@ -10,7 +10,6 @@ import com.momega.spacesimulator.model.SolarSystemModel;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.controller.EventBusController;
 import com.momega.spacesimulator.opengl.MainRenderer;
-import com.momega.spacesimulator.renderer.ModelRenderer;
 
 
 /**
@@ -27,13 +26,13 @@ public class MainWindow extends DefaultWindow {
         MainWindow window = new MainWindow("Space Simulator");
         EventBusController controller = new EventBusController();
 
-        AbstractModel model = new EarthSystemModel();
+        AbstractModel model = new SolarSystemModel();
         model.init();
 
         MainRenderer mr = new MainRenderer(model);
         controller.addController(new QuitController(window));
         controller.addController(new TargetController(model));
-        controller.addController(new CompositeCameraController((com.momega.spacesimulator.model.CompositeCamera) model.getCamera()));
+        controller.addController(new CameraController(model.getCamera()));
         controller.addController(new TimeController(model));
         controller.addController(new PerspectiveController(mr));
         window.openWindow(mr, controller);

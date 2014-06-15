@@ -19,19 +19,10 @@ public class CameraPositionRenderer extends AbstractTextRenderer {
     public void renderTexts(GL2 gl, int width, int height) {
         setColor(255, 255, 255);
         Camera c = this.camera;
-        if (c instanceof CompositeCamera) {
-            c = ((CompositeCamera) c).getCurrentCamera();
-        }
-        if (c instanceof FreeCamera) {
-            drawText("Velocity:" + ((FreeCamera)c).getVelocity(), 10, 70);
-        }
-        if (c instanceof AttachedCamera) {
-            AttachedCamera sc = (AttachedCamera) c;
-            drawText("Distance:" + sc.getDistance(), 10, 70);
-        }
-        drawText("Position:" + c.getPosition().toString(), 10, 55);
-        drawText("N:" + c.getOrientation().getN().toString(), 10, 40);
-        drawText("U:" + c.getOrientation().getU().toString(), 10, 25);
+        drawText("Distance:" + c.getDistance(), 10, 50);
+        drawText("Position:" + c.getPosition().toString(), 10, 40);
+        drawText("N:" + c.getOrientation().getN().toString(), 10, 30);
+        drawText("U:" + c.getOrientation().getU().toString(), 10, 20);
         drawText("V:" + c.getOrientation().getV().toString(), 10, 10);
     }
 

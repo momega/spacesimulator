@@ -139,6 +139,7 @@ public abstract class AbstractModel {
             if (viewCoordinates!= null && viewCoordinates.isVisible()) {
                 if ((Math.abs(x - viewCoordinates.getX())< MIN_TARGET_SIZE) && (Math.abs(y - viewCoordinates.getY())< MIN_TARGET_SIZE)) {
                     setSelectedDynamicalPoint(dp);
+                    camera.setDynamicalPoint(dp);
                     logger.info("selected dynamical point changed to {}", this.selectedDynamicalPoint.getName());
                 }
             }

@@ -61,9 +61,10 @@ public class GLUtils {
     /**
      * Gets the projection coordinates of the position in model-view based on the camera
      * @param drawable the drawable
-     * @param position any position on 3D
+     * @param position any position in 3D
      * @param camera the camera
-     * @return array of the coordinates, 0th coordinate is x, 1st coordinate is y
+     * @return array of the coordinates, 0th coordinate is x, 1st coordinate is y, Result can be null if the point is behind
+     * the camera
      */
     public static double[] getProjectionCoordinates(GLAutoDrawable drawable, Vector3d position, Camera camera) {
         Vector3d viewVector = camera.getOrientation().getN();

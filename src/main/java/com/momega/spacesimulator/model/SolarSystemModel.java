@@ -160,25 +160,12 @@ public class SolarSystemModel extends AbstractModel {
 
     @Override
     protected void initCamera() {
-        AttachedCamera s = new AttachedCamera();
+        Camera s = new Camera();
         s.setDynamicalPoint(universeService.findDynamicalPoint("Earth"));
-        s.setDistance(15 * 1E6);
+        s.setDistance(100 * 1E6);
+        s.setPosition(new Vector3d(s.getDistance(), 0, 0));
         s.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
-
-        FreeCamera f = new FreeCamera();
-        f.setPosition(new Vector3d(15 * 1E9, 0, 0));
-        f.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
-        f.setVelocity(1 * 1E6);
-
-        DynamicalPoint jupiter = universeService.findDynamicalPoint("Jupiter");
-        FreeCamera f2 = new FreeCamera();
-        f2.setPosition(jupiter.getPosition().add(new Vector3d(1 * 1E9, 0, 0)));
-        f2.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
-        f2.setVelocity(1 * 1E7);
-
-        CompositeCamera c = new CompositeCamera();
-        c.setCameras(Arrays.asList(f, f2, s));
-        c.updateCurrent(0);
-        setCamera(c);
+        s.setOppositeOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        setCamera(s);
     }
 }

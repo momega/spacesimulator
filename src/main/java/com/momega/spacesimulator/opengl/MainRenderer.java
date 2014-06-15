@@ -102,6 +102,7 @@ public class MainRenderer extends AbstractRenderer {
     public void setCamera() {
         Camera camera = model.getCamera();
         Vector3d p = camera.getPosition();
+        logger.debug("Camera Position = {}", p.asArray());
         glu.gluLookAt(p.x, p.y, p.z,
                 p.x + camera.getOrientation().getN().x * 1E8,
                 p.y + camera.getOrientation().getN().y * 1E8,

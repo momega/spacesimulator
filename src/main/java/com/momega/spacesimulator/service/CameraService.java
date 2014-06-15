@@ -1,23 +1,25 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.MathUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by martin on 5/27/14.
  */
 public class CameraService {
 
+    private static final Logger logger = LoggerFactory.getLogger(CameraService.class);
+
     public void updatePosition(Camera camera) {
-        if (camera instanceof FreeCamera) {
-            // do nothing
-        } else if (camera instanceof AttachedCamera) {
-            AttachedCamera ac = (AttachedCamera) camera;
-            double distance = ac.getDistance();
-            DynamicalPoint dynamicalPoint = ac.getDynamicalPoint();
-            ac.setPosition(Vector3d.scaleAdd(distance, new Vector3d(1d, 0d, 0d), dynamicalPoint.getPosition()));
-        } else if (camera instanceof  CompositeCamera) {
-            CompositeCamera cc = (CompositeCamera) camera;
-            updatePosition(cc.getCurrentCamera());
+        if (camera == null) {
+            return;
         }
+        Vector3d pos = camera.getDynamicalPoint().getPosition().scaleAdd(camera.getDistance(), camera.getOppositeOrientation().getN());
+        Orientation orientation = MathUtils.createOrientation(camera.getOppositeOrientation().getN().negate(), camera.getOppositeOrientation().getV());
+        logger.debug("New Position = {}", pos.asArray());
+        camera.setPosition(pos);
+        camera.setOrientation(orientation);
     }
 }

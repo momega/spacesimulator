@@ -57,4 +57,10 @@ public abstract class AbstractController implements Controller {
     public void mouseDragged(MouseEvent e) {
         // do nothing
     }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        // do nothing
+    }
+
 }

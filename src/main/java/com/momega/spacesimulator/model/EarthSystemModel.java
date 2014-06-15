@@ -4,7 +4,6 @@ import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 /**
  * Simple earth-moon model with the satellite
@@ -74,21 +73,13 @@ public class EarthSystemModel extends AbstractModel {
 
     @Override
     protected void initCamera() {
-        AttachedCamera s = new AttachedCamera();
-        s.setDynamicalPoint(universeService.getSatellites().get(0));
-        s.setDistance(100);
+        Camera s = new Camera();
+        s.setDynamicalPoint(universeService.findDynamicalPoint("Earth"));
+        s.setDistance(100 * 1E6);
+        s.setPosition(new Vector3d(s.getDistance(), 0, 0));
         s.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
-
-        FreeCamera f = new FreeCamera();
-        f.setPosition(new Vector3d(15 * 1E6, 0, 0));
-        f.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
-        f.setVelocity(1 * 1E6);
-        setCamera(f);
-
-        CompositeCamera c = new CompositeCamera();
-        c.setCameras(Arrays.asList(s, f));
-        c.updateCurrent(0);
-        setCamera(c);
+        s.setOppositeOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        setCamera(s);
     }
 
 
