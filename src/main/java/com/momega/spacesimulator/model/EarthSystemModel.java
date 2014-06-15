@@ -42,7 +42,6 @@ public class EarthSystemModel extends AbstractModel {
 
         sphereOfInfluenceService.addPlanet(earth, null);
         sphereOfInfluenceService.addPlanet(moon, earth);
-        sphereOfInfluenceService.calculateSois();
 
         next();
 
@@ -54,6 +53,10 @@ public class EarthSystemModel extends AbstractModel {
 
         Vector3d sv = moon.getPosition().normalize().scale(-1800d).add(moon.getVelocity());
         satellite = universeService.createSatellite(moon, "Satellite 3", 50, sv);
+        universeService.addDynamicalPoint(satellite);
+
+        sv = moon.getPosition().normalize().scale(1700d).add(moon.getVelocity());
+        satellite = universeService.createSatellite(moon, "Satellite 5", 80, sv);
         universeService.addDynamicalPoint(satellite);
 
         for(DynamicalPoint dp : universeService.getSatellites()) {

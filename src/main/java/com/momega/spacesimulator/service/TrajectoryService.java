@@ -23,7 +23,7 @@ public class TrajectoryService {
      */
     public void move(MovingObject movingObject, Timestamp newTime) {
         for(TrajectoryManager m : trajectoryManagers) {
-            if (m.supports(movingObject.getTrajectory())) {
+            if (m.supports(movingObject)) {
                 m.computePosition(movingObject, newTime);
                 movingObject.setTimestamp(newTime);
                 return;
@@ -39,7 +39,7 @@ public class TrajectoryService {
      */
     public void prediction(MovingObject movingObject) {
         for(TrajectoryManager m : trajectoryManagers) {
-            if (m.supportPrediction(movingObject)) {
+            if (m.supports(movingObject)) {
                 m.computePrediction(movingObject);
             }
         }

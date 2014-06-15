@@ -61,7 +61,6 @@ public abstract class AbstractModel {
         this.cameraService = new CameraService();
 
         this.sphereOfInfluenceService = new SphereOfInfluenceService();
-        this.sphereOfInfluenceService.setUniverseService(universeService);
 
         ntm.setSphereOfInfluenceService(this.sphereOfInfluenceService);
     }

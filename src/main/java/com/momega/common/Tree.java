@@ -1,10 +1,13 @@
 package com.momega.common;
 
+import org.apache.commons.collections.Predicate;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
+ * The simple implementation of the tree.
  * Created by martin on 6/14/14.
  */
 public class Tree<V> {
@@ -15,11 +18,19 @@ public class Tree<V> {
 
     public void add(V item, V parent) {
         children.add(parent, item);
-        if (parent != null) {
-            parents.put(item, parent);
-        } else {
-            root = parent;
+        parents.put(item, parent);
+        if (parent == null) {
+            root = item;
         }
+    }
+
+    public V findByPredicate(Predicate predicate) {
+        for(V item : parents.keySet()) {
+            if (predicate.evaluate(item)) {
+                return item;
+            }
+        }
+        return null;
     }
 
     public List<V> getChildren(V node) {
@@ -27,9 +38,6 @@ public class Tree<V> {
     }
 
     public V getParent(V node) {
-        if (node == root) {
-            return null;
-        }
         return parents.get(node);
     }
 

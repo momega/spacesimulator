@@ -5,7 +5,7 @@ package com.momega.spacesimulator.model;
  */
 public class Satellite extends DynamicalPoint {
 
-    private Planet soiBody;
+    private SphereOfInfluence sphereOfInfluence;
     private Vector3d relativePosition;
     private Vector3d relativeVelocity;
 
@@ -25,11 +25,11 @@ public class Satellite extends DynamicalPoint {
         this.relativeVelocity = relativeVelocity;
     }
 
-    public Planet getSoiBody() {
-        return soiBody;
+    public SphereOfInfluence getSphereOfInfluence() {
+        return sphereOfInfluence;
     }
 
-    public void setSoiBody(Planet soiBody) {
-        this.soiBody = soiBody;
+    public void setSphereOfInfluence(SphereOfInfluence sphereOfInfluence) {
+        this.sphereOfInfluence = sphereOfInfluence;
     }
 }

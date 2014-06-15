@@ -2,6 +2,7 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.TimeUtils;
+import org.springframework.util.Assert;
 
 /**
  * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along {@link com.momega.spacesimulator.model.NewtonianTrajectory}. The
@@ -35,9 +36,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         if (movingObject instanceof Satellite) {
             Satellite satellite = (Satellite) movingObject;
-            Planet soiBody = satellite.getSoiBody();
-            satellite.setRelativePosition(movingObject.getPosition().subtract(soiBody.getPosition()));
-            satellite.setRelativeVelocity(movingObject.getVelocity().subtract(soiBody.getVelocity()));
+            Planet soiPlanet = satellite.getSphereOfInfluence().getBody();
+            satellite.setRelativePosition(movingObject.getPosition().subtract(soiPlanet.getPosition()));
+            satellite.setRelativeVelocity(movingObject.getVelocity().subtract(soiPlanet.getVelocity()));
         }
     }
 
@@ -47,14 +48,13 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
      */
     @Override
     public void computePrediction(MovingObject movingObject) {
-        SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(movingObject);
-        Vector3d position = movingObject.getPosition().subtract(soi.getBody().getPosition());
-        Vector3d velocity = movingObject.getVelocity().subtract(soi.getBody().getVelocity());
+        Assert.isTrue(movingObject instanceof Satellite, "predication of trajectory is supported only for satellites");
 
-        if (movingObject instanceof Satellite) {
-            Satellite satellite = (Satellite) movingObject;
-            satellite.setSoiBody(soi.getBody());
-        }
+        Satellite satellite = (Satellite) movingObject;
+        SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(satellite);
+        sphereOfInfluenceService.updateRelativePositionAndVelocity(satellite);
+        Vector3d position = satellite.getRelativePosition();
+        Vector3d velocity = satellite.getRelativeVelocity();
 
         Vector3d hVector = position.cross(velocity);
         double h = hVector.length();
@@ -158,13 +158,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     }
 
     @Override
-    public boolean supports(Trajectory trajectory) {
-        return trajectory instanceof NewtonianTrajectory;
-    }
-
-    @Override
-    public boolean supportPrediction(MovingObject movingObject) {
-        return movingObject instanceof Satellite;
+    public boolean supports(MovingObject movingObject) {
+        Assert.notNull(movingObject);
+        return (movingObject instanceof  Satellite) && (movingObject.getTrajectory() instanceof NewtonianTrajectory);
     }
 
     public void setUniverseService(UniverseService universeService) {

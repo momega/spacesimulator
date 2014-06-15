@@ -5,6 +5,7 @@ import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 /**
  * Computes the position of the {@link com.momega.spacesimulator.model.MovingObject} along the keplerian trajectory.
@@ -34,17 +35,12 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
     }
 
     @Override
-    public boolean supports(Trajectory trajectory) {
-        return trajectory instanceof KeplerianTrajectory3d;
-    }
-
-    @Override
-    public boolean supportPrediction(MovingObject movingObject) {
-        return false;
+    public boolean supports(MovingObject movingObject) {
+        Assert.notNull(movingObject);
+        return movingObject.getTrajectory() instanceof KeplerianTrajectory3d;
     }
 
     protected Vector3d[] solveKeplerian2(KeplerianTrajectory3d trajectory, Timestamp time) {
-
         double E = solveEccentricAnomaly(trajectory, time);
 
         double omega = trajectory.getArgumentOfPeriapsis();

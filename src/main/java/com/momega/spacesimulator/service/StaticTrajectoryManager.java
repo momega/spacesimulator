@@ -3,6 +3,8 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.model.*;
 
 /**
+ * The static trajectory manager is the simple implementation {@link com.momega.spacesimulator.service.TrajectoryManager}
+ * which computers the position for the not moving the object. The position is predefined and typically is the center of the coordinate system.
  * Created by martin on 5/21/14.
  */
 public class StaticTrajectoryManager implements TrajectoryManager {
@@ -20,12 +22,7 @@ public class StaticTrajectoryManager implements TrajectoryManager {
     }
 
     @Override
-    public boolean supportPrediction(MovingObject movingObject) {
-        return false;
-    }
-
-    @Override
-    public boolean supports(Trajectory trajectory) {
-        return trajectory instanceof StaticTrajectory;
+    public boolean supports(MovingObject movingObject) {
+        return movingObject.getTrajectory() instanceof StaticTrajectory;
     }
 }

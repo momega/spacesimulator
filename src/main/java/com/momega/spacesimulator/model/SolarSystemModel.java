@@ -130,7 +130,7 @@ public class SolarSystemModel extends AbstractModel {
         sphereOfInfluenceService.addPlanet(sun, null);
         sphereOfInfluenceService.addPlanet(mercury, sun);
         sphereOfInfluenceService.addPlanet(venus, sun);
-        sphereOfInfluenceService.addPlanet(earth, sun);
+        sphereOfInfluenceService.addPlanet(earth, sun, (KeplerianTrajectory2d) earthMoonBarycenter.getTrajectory());
         sphereOfInfluenceService.addPlanet(moon, earth);
         sphereOfInfluenceService.addPlanet(mars, sun);
         sphereOfInfluenceService.addPlanet(phobos, mars);
@@ -140,8 +140,6 @@ public class SolarSystemModel extends AbstractModel {
         sphereOfInfluenceService.addPlanet(europa, jupiter);
         sphereOfInfluenceService.addPlanet(ganymede, jupiter);
         sphereOfInfluenceService.addPlanet(callisto, jupiter);
-
-        sphereOfInfluenceService.calculateSois();
 
         next();
 
