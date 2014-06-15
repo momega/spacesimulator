@@ -18,15 +18,12 @@ public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
     protected final double b;
     protected final double e;
 
-    protected final double rp;
-
     public KeplerianTrajectoryRenderer(KeplerianTrajectory3d trajectory) {
         super(trajectory);
         this.epsilon = trajectory.getEccentricity();
         this.a = trajectory.getSemimajorAxis();
         this.b = a * Math.sqrt(1 - epsilon*epsilon);
         this.e = Math.sqrt(a*a - b*b);
-        this.rp = a* (1 - trajectory.getEccentricity());
     }
 
     @Override

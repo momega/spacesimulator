@@ -26,7 +26,7 @@ public class DynamicalPointRenderer extends CompositeRenderer {
 
     public DynamicalPointRenderer(DynamicalPoint dynamicalPoint, Camera camera) {
         this.dynamicalPoint = dynamicalPoint;
-        this.trajectoryRenderer = TrajectoryRenderer.createInstance(dynamicalPoint.getTrajectory());
+        this.trajectoryRenderer = TrajectoryRenderer.createInstance(dynamicalPoint.getTrajectory(), camera);
         this.labelRenderer = new DynamicalPointLabelRenderer(dynamicalPoint, camera);
 
         addRenderer(trajectoryRenderer);

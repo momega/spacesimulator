@@ -1,9 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
+import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.NewtonianTrajectory;
-
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
 
 /**
  * Renderer for {@link com.momega.spacesimulator.model.NewtonianTrajectory}. It also renders the keplerian prediction of the trajectory
@@ -11,9 +9,10 @@ import javax.media.opengl.GLAutoDrawable;
  */
 public class NewtonianTrajectoryRenderer extends TrajectoryRenderer {
 
-    protected NewtonianTrajectoryRenderer(NewtonianTrajectory trajectory) {
+    protected NewtonianTrajectoryRenderer(NewtonianTrajectory trajectory, Camera camera) {
         super(trajectory);
         addRenderer(new KeplerianTrajectoryRenderer(getTrajectory().getPrediction()));
+        addRenderer(new ApsidesRenderer(getTrajectory().getPrediction(), camera));
     }
 
     public NewtonianTrajectory getTrajectory() {

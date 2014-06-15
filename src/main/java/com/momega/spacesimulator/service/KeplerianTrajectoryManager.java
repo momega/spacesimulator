@@ -100,12 +100,8 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
         double r = p / (1 + eccentricity * Math.cos(theta));
         logger.debug("r = {}, theta = {}", r, theta);
 
-        double u =  theta + trajectory.getArgumentOfPeriapsis();
-
-        double x = trajectory.getCentralObject().getPosition().x + r * (Math.cos(u) * Math.cos(trajectory.getAscendingNode()) - Math.sin(u) * Math.cos(trajectory.getInclination()) * Math.sin(trajectory.getAscendingNode()));
-        double y = trajectory.getCentralObject().getPosition().y + r * (Math.cos(u) * Math.sin(trajectory.getAscendingNode()) + Math.sin(u) * Math.cos(trajectory.getInclination()) * Math.cos(trajectory.getAscendingNode()));
-        double z = trajectory.getCentralObject().getPosition().z + r * (Math.sin(u) * Math.sin(trajectory.getInclination()));
-        return new Vector3d[] {new Vector3d(x,y,z), new Vector3d(0d,0d,0d)};
+        Vector3d position = MathUtils.getKeplerianPosition(trajectory, r, theta);
+        return new Vector3d[] {position, new Vector3d(0d,0d,0d)};
     }
 
     protected double solveEccentricAnomaly(KeplerianTrajectory2d trajectory, Timestamp time) {
