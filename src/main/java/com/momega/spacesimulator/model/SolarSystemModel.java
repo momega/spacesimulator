@@ -147,6 +147,10 @@ public class SolarSystemModel extends AbstractModel {
         Satellite satellite = universeService.createSatellite(earth, "Satellite 4", 250, sv);
         universeService.addDynamicalPoint(satellite);
 
+        sv = moon.getPosition().normalize().scale(1900d).add(moon.getVelocity());
+        satellite = universeService.createSatellite(moon, "Satellite 6", 250, sv);
+        universeService.addDynamicalPoint(satellite);
+
         for(DynamicalPoint dp : universeService.getSatellites()) {
             dp.setTimestamp(getTime());
         }
