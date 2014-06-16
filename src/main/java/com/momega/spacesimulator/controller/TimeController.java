@@ -21,12 +21,12 @@ public class TimeController extends AbstractController {
     public void keyPressed(KeyEvent e) {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
-            case KeyEvent.VK_COMMA :
-                changeWarpFactor(0.1);
+            case KeyEvent.VK_COMMA:
+                changeWarpFactor(0.2);
                 break;
 
             case KeyEvent.VK_PERIOD:
-                changeWarpFactor(10);
+                changeWarpFactor(5);
                 break;
         }
     }

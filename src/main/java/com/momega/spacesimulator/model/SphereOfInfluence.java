@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
- * Represents the
+ * Represents the Sphere of influence of the given body
  * Created by martin on 6/14/14.
  */
 public class SphereOfInfluence {
