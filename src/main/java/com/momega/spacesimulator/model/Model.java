@@ -9,11 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The model is the POJO object containing all the data. It contains current timestamp, all dynamical points,
+ * selected and and central body and also the tree of the spheres of influences.
  * Created by martin on 5/6/14.
  */
 public class Model {
-
-    private static final Logger logger = LoggerFactory.getLogger(Model.class);
 
     protected Timestamp time;
     protected BigDecimal warpFactor;
@@ -31,6 +31,10 @@ public class Model {
         this.camera = camera;
     }
 
+    /**
+     * Gets the current timestamp
+     * @return the time stamp of the model
+     */
     public Timestamp getTime() {
         return time;
     }
@@ -55,6 +59,10 @@ public class Model {
         this.selectedDynamicalPoint = selectedDynamicalPoint;
     }
 
+    /**
+     * Gets the list of the dynamical points. It includes all celestial bodies and satellites.
+     * @return the list of the dynamical points
+     */
     public List<DynamicalPoint> getDynamicalPoints() {
         return dynamicalPoints;
     }

@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.opengl;
 
 import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
@@ -21,7 +22,6 @@ public class MainRenderer extends AbstractRenderer {
     public final static double UNIVERSE_RADIUS = 1E19;
     private static final Logger logger = LoggerFactory.getLogger(MainRenderer.class);
 
-    private final Model model;
     private final ModelRenderer renderer;
     private final Application application;
 
@@ -29,10 +29,9 @@ public class MainRenderer extends AbstractRenderer {
     public double znear = 100;
     protected boolean reshape = false;
 
-    public MainRenderer(Model model, Application application) {
-        this.model = model;
+    public MainRenderer(Application application) {
         this.application = application;
-        this.renderer = new ModelRenderer(model);
+        this.renderer = new ModelRenderer(ModelHolder.getModel());
         this.renderer.addRenderer(new PerspectiveRenderer(this));
     }
 
@@ -75,35 +74,35 @@ public class MainRenderer extends AbstractRenderer {
         if (z < znear/2) {
             znear = z;
             reshape = true;
-            logger.info("new znear = {}", znear);
+            logger.info("new z-near = {}", znear);
         }
         if (z > znear*2) {
             znear = z;
             reshape =true;
-            logger.info("new znear = {}", znear);
+            logger.info("new z-near = {}", znear);
         }
     }
 
     //TODO: Does not work exactly, new algorithm has to be created
     public double computeZNear(double aratio) {
-        Vector3d viewVector = model.getCamera().getOrientation().getN();
+        Vector3d viewVector = ModelHolder.getModel().getCamera().getOrientation().getN();
         double znear = UNIVERSE_RADIUS * 2;
 
-        for(DynamicalPoint dp : model.getDynamicalPoints()) {
+        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
 
             // only valid for object with radius
             if (dp.getRadius() <= 0) {
                 continue;
             }
 
-            double distance = dp.getPosition().subtract(model.getCamera().getPosition()).length();
+            double distance = dp.getPosition().subtract(ModelHolder.getModel().getCamera().getPosition()).length();
             double distanceFactor = distance / dp.getRadius();
             if (distanceFactor > UNIVERSE_RADIUS * 0.001) {
                 continue; // If it's too far to be visible discard it
             }
 
             // check whether the dynamic point is visible
-            Vector3d diffVector = dp.getPosition().subtract(model.getCamera().getPosition()).normalize();
+            Vector3d diffVector = dp.getPosition().subtract(ModelHolder.getModel().getCamera().getPosition()).normalize();
             double dot = viewVector.dot(diffVector);
             if (Math.abs(dot) < 0.01) {
                 continue;
@@ -135,8 +134,8 @@ public class MainRenderer extends AbstractRenderer {
     }
 
     protected void computeViewCoordinates(GLAutoDrawable drawable) {
-        Camera camera = model.getCamera();
-        for(DynamicalPoint dp : model.getDynamicalPoints()) {
+        Camera camera = ModelHolder.getModel().getCamera();
+        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
             ViewCoordinates viewCoordinates = new ViewCoordinates();
             double[] xy = GLUtils.getProjectionCoordinates(drawable, dp.getPosition(), camera);
             viewCoordinates.setVisible(xy != null);
@@ -156,7 +155,7 @@ public class MainRenderer extends AbstractRenderer {
 
     @Override
     public void setCamera() {
-        Camera camera = model.getCamera();
+        Camera camera = ModelHolder.getModel().getCamera();
         Vector3d p = camera.getPosition();
         logger.debug("Camera Position = {}", p.asArray());
         glu.gluLookAt(p.x, p.y, p.z,
