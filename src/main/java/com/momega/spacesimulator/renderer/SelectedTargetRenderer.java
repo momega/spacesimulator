@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.AbstractModel;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.DynamicalPoint;
 
 import javax.media.opengl.GL2;
@@ -10,9 +10,9 @@ import javax.media.opengl.GL2;
  */
 public class SelectedTargetRenderer extends AbstractDynamicalPointRenderer {
 
-    private final AbstractModel model;
+    private final Model model;
 
-    public SelectedTargetRenderer(AbstractModel model) {
+    public SelectedTargetRenderer(Model model) {
         this.model = model;
     }
 

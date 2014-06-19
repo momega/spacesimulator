@@ -1,7 +1,11 @@
 package com.momega.spacesimulator.controller;
 
 import javax.media.opengl.awt.GLCanvas;
-import com.momega.spacesimulator.model.AbstractModel;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.DynamicalPoint;
+import com.momega.spacesimulator.model.ViewCoordinates;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GLDrawable;
 import java.awt.event.MouseEvent;
@@ -11,9 +15,13 @@ import java.awt.event.MouseEvent;
  */
 public class TargetController extends AbstractController {
 
-    private final AbstractModel model;
+    private static final Logger logger = LoggerFactory.getLogger(CameraController.class);
 
-    public TargetController(AbstractModel model) {
+    private final static int MIN_TARGET_SIZE = 5;
+
+    private final Model model;
+
+    public TargetController(Model model) {
         this.model = model;
     }
 
@@ -26,7 +34,21 @@ public class TargetController extends AbstractController {
         if (drawable.isGLOriented()) {
             y = drawable.getHeight() - y;
         }
-        model.selectDynamicalPoint(x, y);
+        selectDynamicalPoint(x, y);
         super.mouseClicked(e);
+    }
+
+    public DynamicalPoint selectDynamicalPoint(int x, int y) {
+        for(DynamicalPoint dp : model.getDynamicalPoints()) {
+            ViewCoordinates viewCoordinates = dp.getViewCoordinates();
+            if (viewCoordinates!= null && viewCoordinates.isVisible()) {
+                if ((Math.abs(x - viewCoordinates.getX())< MIN_TARGET_SIZE) && (Math.abs(y - viewCoordinates.getY())< MIN_TARGET_SIZE)) {
+                    model.setSelectedDynamicalPoint(dp);
+                    model.getCamera().setDynamicalPoint(dp);
+                    logger.info("selected dynamical point changed to {}", dp.getName());
+                }
+            }
+        }
+        return model.getSelectedDynamicalPoint();
     }
 }

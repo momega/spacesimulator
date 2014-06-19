@@ -1,60 +1,86 @@
-package com.momega.spacesimulator.service;
+package com.momega.spacesimulator.builder;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
+import org.apache.commons.collections.Predicate;
 import org.joda.time.DateTimeConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
- * The universe service holds the data about all {@link com.momega.spacesimulator.model.DynamicalPoint}
- * Created by martin on 6/9/14.
+ * Super class for all model builders
+ * Created by martin on 6/18/14.
  */
-public class UniverseService {
+public abstract class AbstractModelBuilder {
+
+    private static final Logger logger = LoggerFactory.getLogger(AbstractModelBuilder.class);
+
+    protected Model model = ModelHolder.getModel();
+
+    /**
+     * Returns newly created instance
+     * @return the instance of the model
+     */
+    public Model getModel() {
+        return model;
+    }
+
+    /**
+     * Initialize model
+     */
+    public final Model init() {
+        initTime();
+        initPlanets();
+        initCamera();
+        logger.info("model initialized");
+        return model;
+    }
+
+    protected void initTime() {
+        model.setTime(TimeUtils.createTime(2456820d));
+        model.setWarpFactor(BigDecimal.ONE);
+    }
+
+    protected void initCamera() {
+        Camera s = new Camera();
+        s.setDynamicalPoint(findDynamicalPoint("Earth"));
+        s.setDistance(100 * 1E6);
+        s.setPosition(new Vector3d(s.getDistance(), 0, 0));
+        s.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
+        s.setOppositeOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        model.setCamera(s);
+    }
+
+    /**
+     * Creates all dynamical points
+     */
+    protected abstract void initPlanets();
+
+    public abstract void initSatellites();
 
     /**
      * Astronautical unit
      */
     public static final double AU = 149597870700d;
-    protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
-    private final List<Planet> planets = new ArrayList<>();
-    private final List<Satellite> satellites = new ArrayList<>();
-    private Planet centralBody;
 
     /**
      * Register the dynamical point to the universe
      * @param dp the instance of the dynamical point
      */
     public void addDynamicalPoint(DynamicalPoint dp) {
-        getDynamicalPoints().add(dp);
-
+        dp.setTimestamp(model.getTime());
+        model.getDynamicalPoints().add(dp);
         if (dp instanceof Planet) {
             Planet planet = (Planet) dp;
-            planets.add(planet);
             if (planet.getTrajectory() instanceof StaticTrajectory) {
-                this.centralBody = planet;
+                model.setCentralBody(planet);
             }
         }
-        if (dp instanceof  Satellite) {
-            satellites.add((Satellite) dp);
-        }
-    }
-
-    /**
-     * Finds the dynamical point based on its name
-     * @param name the name of the dynamical point
-     * @return the instance of dynamical point or null
-     */
-    public DynamicalPoint findDynamicalPoint(String name) {
-        for(DynamicalPoint dp : getDynamicalPoints()) {
-            if (name.equals(dp.getName())) {
-                return dp;
-            }
-        }
-        return null;
     }
 
     /**
@@ -128,20 +154,58 @@ public class UniverseService {
         updateDynamicalPoint(dp, radius, mass, rotationPeriod, axialTilt);
     }
 
-    public List<DynamicalPoint> getDynamicalPoints() {
-        return dynamicalPoints;
+    /**
+     * The method adds the planet to the SOI tree and calculate the radius of the planet soi. The trajectory comes directly
+     * from the planet trajectory
+     * @param planet the planet
+     * @param centralPlanet the central planet
+     */
+    public void addPlanetToSoiTree(final Planet planet, final Planet centralPlanet) {
+        if (centralPlanet == null) {
+            SphereOfInfluence soi = new SphereOfInfluence();
+            soi.setBody(planet);
+            soi.setRadius(MathUtils.AU * 100);
+            model.getSoiTree().add(soi, null);
+        } else {
+            Assert.isInstanceOf(KeplerianTrajectory2d.class, planet.getTrajectory());
+            addPlanetToSoiTree(planet, centralPlanet, (KeplerianTrajectory2d) planet.getTrajectory());
+        }
     }
 
-    public List<Planet> getPlanets() {
-        return planets;
+    /**
+     * The method adds the planet to the SOI tree and calculate the radius of the planet soi.
+     * @param planet the planet
+     * @param centralPlanet the central planet
+     * @param trajectory the trajectory of the planet. It has to be specified when the the planet
+     *                   orbiting the bary-centre. In these cases it is not possible to calculate correctly sphere of influence. The example is
+     *                   Earth -> (Earth/Moon Barycentre) -> Sun
+     */
+    public void addPlanetToSoiTree(final Planet planet, final Planet centralPlanet, KeplerianTrajectory2d trajectory) {
+        SphereOfInfluence soi = new SphereOfInfluence();
+        double radius = Math.pow(planet.getMass() / centralPlanet.getMass(), 0.4d) * trajectory.getSemimajorAxis();
+        soi.setRadius(radius);
+        soi.setBody(planet);
+        SphereOfInfluence parentSoi = model.getSoiTree().findByPredicate(new Predicate() {
+            @Override
+            public boolean evaluate(Object object) {
+                SphereOfInfluence obj = (SphereOfInfluence) object;
+                return (obj.getBody() == centralPlanet);
+            }
+        });
+        model.getSoiTree().add(soi, parentSoi);
     }
 
-    public List<Satellite> getSatellites() {
-        return satellites;
+    /**
+     * Finds the dynamical point based on its name
+     * @param name the name of the dynamical point
+     * @return the instance of dynamical point or null
+     */
+    public DynamicalPoint findDynamicalPoint(String name) {
+        for(DynamicalPoint dp : model.getDynamicalPoints()) {
+            if (name.equals(dp.getName())) {
+                return dp;
+            }
+        }
+        return null;
     }
-
-    public Planet getCentralBody() {
-        return centralBody;
-    }
-
 }

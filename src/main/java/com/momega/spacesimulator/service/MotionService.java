@@ -1,11 +1,14 @@
 package com.momega.spacesimulator.service;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.DynamicalPoint;
 import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 
@@ -16,27 +19,34 @@ import java.math.BigDecimal;
  * dynamical points
  * Created by martin on 5/25/14.
  */
+@Component
 public class MotionService {
 
     private static final Logger logger = LoggerFactory.getLogger(MotionService.class);
 
+    @Autowired
     private TrajectoryService trajectoryService;
 
+    @Autowired
     private RotationService rotationService;
-
-    private UniverseService universeService;
 
     public Timestamp move(Timestamp time, BigDecimal warpFactor) {
         BigDecimal timestamp = time.getValue().add(warpFactor);
         Timestamp newTimestamp = TimeUtils.newTime(timestamp);
         logger.debug("time={}", timestamp);
-        for(DynamicalPoint dp : universeService.getDynamicalPoints()) {
+        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
             trajectoryService.move(dp, newTimestamp);
             if (dp instanceof RotatingObject) {
                 rotationService.rotate((RotatingObject) dp, newTimestamp);
             }
         }
         return newTimestamp;
+    }
+
+    public void predict() {
+        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
+            trajectoryService.prediction(dp);
+        }
     }
 
     public void setTrajectoryService(TrajectoryService trajectoryService) {
@@ -47,13 +57,4 @@ public class MotionService {
         this.rotationService = rotationService;
     }
 
-    public void setUniverseService(UniverseService universeService) {
-        this.universeService = universeService;
-    }
-
-    public void predict() {
-        for(DynamicalPoint dp : universeService.getDynamicalPoints()) {
-            trajectoryService.prediction(dp);
-        }
-    }
 }

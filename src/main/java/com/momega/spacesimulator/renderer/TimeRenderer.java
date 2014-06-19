@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.AbstractModel;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -13,10 +13,10 @@ import javax.media.opengl.GL2;
  */
 public class TimeRenderer extends AbstractTextRenderer {
 
-    private final AbstractModel model;
+    private final Model model;
     private DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
 
-    public TimeRenderer(AbstractModel model) {
+    public TimeRenderer(Model model) {
         this.model = model;
     }
 

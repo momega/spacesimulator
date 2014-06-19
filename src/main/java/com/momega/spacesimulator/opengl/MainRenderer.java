@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.opengl;
 
+import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
@@ -17,17 +18,20 @@ import javax.media.opengl.glu.GLU;
  */
 public class MainRenderer extends AbstractRenderer {
 
+    public final static double UNIVERSE_RADIUS = 1E19;
     private static final Logger logger = LoggerFactory.getLogger(MainRenderer.class);
 
-    private final AbstractModel model;
+    private final Model model;
     private final ModelRenderer renderer;
+    private final Application application;
 
     private GLU glu;
     public double znear = 100;
     protected boolean reshape = false;
 
-    public MainRenderer(AbstractModel model) {
+    public MainRenderer(Model model, Application application) {
         this.model = model;
+        this.application = application;
         this.renderer = new ModelRenderer(model);
         this.renderer.addRenderer(new PerspectiveRenderer(this));
     }
@@ -60,13 +64,13 @@ public class MainRenderer extends AbstractRenderer {
 
     @Override
     protected void computeScene(GLAutoDrawable drawable) {
-        model.next();
+        application.next();
 
         // TODO: place this into the method
         double x = drawable.getWidth();
         double y = drawable.getHeight();
         double aratio = Math.sqrt(x * x + y * y) / y;
-        double z = model.computeZNear(aratio);
+        double z = computeZNear(aratio);
         z = z / 10.0d;
         if (z < znear/2) {
             znear = z;
@@ -80,10 +84,59 @@ public class MainRenderer extends AbstractRenderer {
         }
     }
 
+    //TODO: Does not work exactly, new algorithm has to be created
+    public double computeZNear(double aratio) {
+        Vector3d viewVector = model.getCamera().getOrientation().getN();
+        double znear = UNIVERSE_RADIUS * 2;
+
+        for(DynamicalPoint dp : model.getDynamicalPoints()) {
+
+            // only valid for object with radius
+            if (dp.getRadius() <= 0) {
+                continue;
+            }
+
+            double distance = dp.getPosition().subtract(model.getCamera().getPosition()).length();
+            double distanceFactor = distance / dp.getRadius();
+            if (distanceFactor > UNIVERSE_RADIUS * 0.001) {
+                continue; // If it's too far to be visible discard it
+            }
+
+            // check whether the dynamic point is visible
+            Vector3d diffVector = dp.getPosition().subtract(model.getCamera().getPosition()).normalize();
+            double dot = viewVector.dot(diffVector);
+            if (Math.abs(dot) < 0.01) {
+                continue;
+            }
+            double eyeAngle = Math.acos(dot);
+
+            double radiusAngle = Math.atan2(dp.getRadius(), distance);
+
+            double diffAngle = Math.abs(eyeAngle) -  Math.abs(radiusAngle);
+            if (diffAngle > Math.toRadians(aratio * 45)) {
+                continue;
+            }
+
+            double clip = Math.abs(Math.cos(diffAngle) * distance - dp.getRadius()) - 1;
+            if (clip < 1) {
+                clip = 1;
+            }
+
+            if (clip < znear) {
+                znear = clip;
+            }
+        }
+
+        if (znear > UNIVERSE_RADIUS * 0.001) {
+            znear = UNIVERSE_RADIUS * 0.001;
+        }
+
+        return znear;
+    }
+
     protected void computeViewCoordinates(GLAutoDrawable drawable) {
         Camera camera = model.getCamera();
-        for(DynamicalPoint dp : model.getUniverseService().getDynamicalPoints()) { // TODO: getting service from model it is not well
-
+        for(DynamicalPoint dp : model.getDynamicalPoints()) {
             ViewCoordinates viewCoordinates = new ViewCoordinates();
             double[] xy = GLUtils.getProjectionCoordinates(drawable, dp.getPosition(), camera);
             viewCoordinates.setVisible(xy != null);
@@ -95,6 +148,9 @@ public class MainRenderer extends AbstractRenderer {
             double radiusAngle = Math.atan2(dp.getRadius(), distance);
             viewCoordinates.setRadius(radiusAngle);
             dp.setViewCoordinates(viewCoordinates);
+            if (dp instanceof Satellite) {
+                NewtonianTrajectory trajectory = (NewtonianTrajectory) dp.getTrajectory();
+            }
         }
     }
 
@@ -113,7 +169,7 @@ public class MainRenderer extends AbstractRenderer {
     }
 
     protected void setPerspective(GL2 gl, double aspect) {
-        glu.gluPerspective(45, aspect, znear, AbstractModel.UNIVERSE_RADIUS * 10);
+        glu.gluPerspective(45, aspect, znear, UNIVERSE_RADIUS * 10);
     }
 
     public double getZnear() {

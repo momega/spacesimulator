@@ -5,6 +5,7 @@ import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.util.Assert;
  * The manager does not compute the velocity
  * Created by martin on 5/21/14.
  */
+@Component
 public class KeplerianTrajectoryManager implements TrajectoryManager {
 
     private static double MINOR_ERROR = Math.pow(10, -12);

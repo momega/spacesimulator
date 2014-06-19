@@ -3,6 +3,8 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,10 +12,12 @@ import java.util.List;
 /**
  * Created by martin on 5/21/14.
  */
+@Component
 public class TrajectoryService {
 
     private static final Logger logger = LoggerFactory.getLogger(TrajectoryService.class);
 
+    @Autowired
     private List<TrajectoryManager> trajectoryManagers = new ArrayList<>();
 
     /**

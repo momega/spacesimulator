@@ -11,6 +11,8 @@ import com.momega.spacesimulator.model.Vector3d;
  */
 public class MathUtils {
 
+    public static final double AU = 149597870700d;
+
     public static double fmod(double numer, double denom) {
         double z = Math.floor(numer / denom);
         numer = numer - z * denom;

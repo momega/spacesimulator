@@ -1,7 +1,10 @@
 package com.momega.spacesimulator.service;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.TimeUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 /**
@@ -9,13 +12,14 @@ import org.springframework.util.Assert;
  * implementation can use either Euler's or Runge-Kutta's method to computer the next iteration of the velocity and position
  * Created by martin on 5/21/14.
  */
+@Component
 public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     public static final double G = 6.67384*1E-11;
 
     private static double MINOR_ERROR = Math.pow(10, -12);
 
-    private UniverseService universeService;
+    @Autowired
     private SphereOfInfluenceService sphereOfInfluenceService;
 
     @Override
@@ -149,10 +153,13 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     protected Vector3d getAcceleration(Vector3d position) {
         Vector3d a = new Vector3d();
-        for(Planet planet : universeService.getPlanets()) {
-            Vector3d r = planet.getPosition().subtract(position);
-            double dist3 = r.lengthSquared() * r.length();
-            a = a.scaleAdd(G * planet.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
+        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
+            if (dp instanceof Planet) {
+                Planet planet = (Planet) dp;
+                Vector3d r = planet.getPosition().subtract(position);
+                double dist3 = r.lengthSquared() * r.length();
+                a = a.scaleAdd(G * planet.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
+            }
         }
         return a;
     }
@@ -161,10 +168,6 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     public boolean supports(MovingObject movingObject) {
         Assert.notNull(movingObject);
         return (movingObject instanceof  Satellite) && (movingObject.getTrajectory() instanceof NewtonianTrajectory);
-    }
-
-    public void setUniverseService(UniverseService universeService) {
-        this.universeService = universeService;
     }
 
     public void setSphereOfInfluenceService(SphereOfInfluenceService sphereOfInfluenceService) {

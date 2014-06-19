@@ -1,9 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.AbstractModel;
-import com.momega.spacesimulator.model.DynamicalPoint;
-import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.model.Satellite;
+import com.momega.spacesimulator.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,28 +12,30 @@ public class ModelRenderer extends CompositeRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(ModelRenderer.class);
 
-    private final AbstractModel model;
+    private Model model;
 
-    public ModelRenderer(AbstractModel model) {
+    public ModelRenderer(Model model) {
         this.model = model;
-
         logger.info("initializing renderers");
-        for(DynamicalPoint dp : model.getUniverseService().getDynamicalPoints()) { // TODO: getting service from model it is not well
+        for(DynamicalPoint dp : model.getDynamicalPoints()) {
             DynamicalPointRenderer dpr;
             if (dp instanceof  Planet) {
-                dpr = new PlanetRenderer((Planet) dp, model.getCamera());
+                dpr = new PlanetRenderer((Planet) dp, getCamera());
             } else if (dp instanceof Satellite) {
-                dpr = new SatelliteRenderer((Satellite) dp, model.getCamera());
+                dpr = new SatelliteRenderer((Satellite) dp, getCamera());
             } else {
-                dpr = new DynamicalPointRenderer(dp, model.getCamera());
+                dpr = new DynamicalPointRenderer(dp, getCamera());
             }
 
             addRenderer(dpr);
         }
 
-        addRenderer(new CameraPositionRenderer(model.getCamera()));
+        addRenderer(new CameraPositionRenderer(getCamera()));
         addRenderer(new TimeRenderer(model));
         addRenderer(new SelectedTargetRenderer(model));
+    }
+    public Camera getCamera() {
+        return model.getCamera();
     }
 
 }

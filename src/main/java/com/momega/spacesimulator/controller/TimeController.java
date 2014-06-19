@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.model.AbstractModel;
+import com.momega.spacesimulator.model.Model;
 
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
@@ -11,9 +11,9 @@ import java.math.BigDecimal;
  */
 public class TimeController extends AbstractController {
 
-    private AbstractModel model;
+    private Model model;
 
-    public TimeController(AbstractModel model) {
+    public TimeController(Model model) {
         this.model = model;
     }
 
@@ -22,11 +22,11 @@ public class TimeController extends AbstractController {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_COMMA:
-                changeWarpFactor(0.2);
+                changeWarpFactor(0.5);
                 break;
 
             case KeyEvent.VK_PERIOD:
-                changeWarpFactor(5);
+                changeWarpFactor(2);
                 break;
         }
     }

@@ -3,6 +3,8 @@ package com.momega.spacesimulator.renderer;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.KeplerianTrajectory3d;
 import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.model.ViewCoordinates;
+import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.utils.MathUtils;
 
 import javax.media.opengl.GL2;
@@ -17,6 +19,8 @@ public class ApsidesRenderer extends AbstractTextRenderer {
     private final Camera camera;
     private final double rp;
     private final double ra;
+    private double[] periapsisCoordinates = null;
+    private double[] apoapsisCoordinates = null;
 
     public ApsidesRenderer(KeplerianTrajectory3d trajectory, Camera camera) {
         this.trajectory = trajectory;
@@ -44,6 +48,11 @@ public class ApsidesRenderer extends AbstractTextRenderer {
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-
+        if (periapsisCoordinates != null) {
+            drawText("P", (int)periapsisCoordinates[0], (int)periapsisCoordinates[1]);
+        }
+        if (apoapsisCoordinates != null) {
+            drawText("A", (int)apoapsisCoordinates[0], (int)apoapsisCoordinates[1]);
+        }
     }
 }
