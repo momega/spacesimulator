@@ -12,9 +12,6 @@ public class MovingObject extends Object3d {
     private Trajectory trajectory;
     private Timestamp timestamp;
 
-    // TODO: has to be moved outside the model
-    private ViewCoordinates viewCoordinates;
-
     public Vector3d getVelocity() {
         return velocity;
     }
@@ -55,12 +52,5 @@ public class MovingObject extends Object3d {
         this.timestamp = timestamp;
     }
 
-    public ViewCoordinates getViewCoordinates() {
-        return viewCoordinates;
-    }
-
-    public void setViewCoordinates(ViewCoordinates viewCoordinates) {
-        this.viewCoordinates = viewCoordinates;
-    }
 }
 

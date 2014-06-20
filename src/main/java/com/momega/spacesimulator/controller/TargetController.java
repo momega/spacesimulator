@@ -4,6 +4,7 @@ import javax.media.opengl.awt.GLCanvas;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.DynamicalPoint;
 import com.momega.spacesimulator.model.ViewCoordinates;
+import com.momega.spacesimulator.renderer.RendererModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +41,7 @@ public class TargetController extends AbstractController {
 
     public DynamicalPoint selectDynamicalPoint(int x, int y) {
         for(DynamicalPoint dp : model.getDynamicalPoints()) {
-            ViewCoordinates viewCoordinates = dp.getViewCoordinates();
+            ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(dp);
             if (viewCoordinates!= null && viewCoordinates.isVisible()) {
                 if ((Math.abs(x - viewCoordinates.getX())< MIN_TARGET_SIZE) && (Math.abs(y - viewCoordinates.getY())< MIN_TARGET_SIZE)) {
                     model.setSelectedDynamicalPoint(dp);

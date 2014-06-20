@@ -1,17 +1,9 @@
 package com.momega.spacesimulator.renderer;
 
-import com.jogamp.opengl.util.awt.TextRenderer;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.DynamicalPoint;
-import com.momega.spacesimulator.model.Satellite;
-import com.momega.spacesimulator.model.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.glu.GLU;
-import java.awt.*;
 
 /**
  * Created by martin on 4/28/14.
@@ -27,7 +19,7 @@ public class DynamicalPointRenderer extends CompositeRenderer {
     public DynamicalPointRenderer(DynamicalPoint dynamicalPoint, Camera camera) {
         this.dynamicalPoint = dynamicalPoint;
         this.trajectoryRenderer = TrajectoryRenderer.createInstance(dynamicalPoint.getTrajectory(), camera);
-        this.labelRenderer = new DynamicalPointLabelRenderer(dynamicalPoint, camera);
+        this.labelRenderer = new DynamicalPointLabelRenderer(dynamicalPoint);
 
         addRenderer(trajectoryRenderer);
         addRenderer(labelRenderer);

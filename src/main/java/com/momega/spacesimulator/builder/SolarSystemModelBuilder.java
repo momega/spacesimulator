@@ -119,10 +119,6 @@ public class SolarSystemModelBuilder extends AbstractModelBuilder {
         deimos.setTextureFileName("deimos.jpg");
         addDynamicalPoint(deimos);
 
-        for(DynamicalPoint dp : model.getDynamicalPoints()) {
-            dp.setTimestamp(model.getTime());
-        }
-
         addPlanetToSoiTree(sun, null);
         addPlanetToSoiTree(mercury, sun);
         addPlanetToSoiTree(venus, sun);

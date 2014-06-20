@@ -5,6 +5,7 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
+import com.momega.spacesimulator.renderer.RendererModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,7 +147,7 @@ public class MainRenderer extends AbstractRenderer {
             double distance = dp.getPosition().subtract(camera.getPosition()).length();
             double radiusAngle = Math.atan2(dp.getRadius(), distance);
             viewCoordinates.setRadius(radiusAngle);
-            dp.setViewCoordinates(viewCoordinates);
+            RendererModel.getInstance().addViewCoordinates(dp, viewCoordinates);
             if (dp instanceof Satellite) {
                 NewtonianTrajectory trajectory = (NewtonianTrajectory) dp.getTrajectory();
             }

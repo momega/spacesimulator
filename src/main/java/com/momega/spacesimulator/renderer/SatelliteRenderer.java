@@ -31,7 +31,7 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
     }
 
     public void draw(GLAutoDrawable drawable) {
-        ViewCoordinates viewCoordinates = satellite.getViewCoordinates();
+        ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(satellite);
 
         GL2 gl = drawable.getGL().getGL2();
         if (history.size()> maxHistory) {

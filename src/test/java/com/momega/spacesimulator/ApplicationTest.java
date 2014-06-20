@@ -11,8 +11,6 @@ import org.junit.Test;
  */
 public class ApplicationTest {
 
-    private DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
-
     @Test
     public void runTest() {
         Application application = new Application();

@@ -31,10 +31,6 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         addDynamicalPoint(earth);
         addDynamicalPoint(moon);
 
-        for(DynamicalPoint dp : model.getDynamicalPoints()) {
-            dp.setTimestamp(model.getTime());
-        }
-
         addPlanetToSoiTree(earth, null);
         addPlanetToSoiTree(moon, earth);
 

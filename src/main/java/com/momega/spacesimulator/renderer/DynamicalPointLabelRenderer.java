@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.DynamicalPoint;
 import com.momega.spacesimulator.model.Vector3d;
@@ -16,16 +17,14 @@ import javax.media.opengl.GLAutoDrawable;
 public class DynamicalPointLabelRenderer extends AbstractDynamicalPointRenderer {
 
     private final DynamicalPoint dynamicalPoint;
-    private final Camera camera;
 
-    public DynamicalPointLabelRenderer(DynamicalPoint dynamicalPoint, Camera camera) {
+    public DynamicalPointLabelRenderer(DynamicalPoint dynamicalPoint) {
         this.dynamicalPoint = dynamicalPoint;
-        this.camera = camera;
     }
 
     @Override
     public void draw(GLAutoDrawable drawable) {
-        ViewCoordinates viewCoordinates = dynamicalPoint.getViewCoordinates();
+        ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(dynamicalPoint);
         if (viewCoordinates.isVisible()) {
             super.draw(drawable);
         }
@@ -33,10 +32,12 @@ public class DynamicalPointLabelRenderer extends AbstractDynamicalPointRenderer 
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-        if (dynamicalPoint.getViewCoordinates() != null) {
+        ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(dynamicalPoint);
+        Camera camera = ModelHolder.getModel().getCamera();
+        if (viewCoordinates != null) {
             setColor(255, 255, 255);
-            int x = dynamicalPoint.getViewCoordinates().getX();
-            int y = dynamicalPoint.getViewCoordinates().getY();
+            int x = viewCoordinates.getX();
+            int y = viewCoordinates.getY();
             drawData(dynamicalPoint, camera, x, y);
         }
     }

@@ -30,9 +30,9 @@ public class ModelRenderer extends CompositeRenderer {
             addRenderer(dpr);
         }
 
-        addRenderer(new CameraPositionRenderer(getCamera()));
-        addRenderer(new TimeRenderer(model));
-        addRenderer(new SelectedTargetRenderer(model));
+        addRenderer(new CameraPositionRenderer());
+        addRenderer(new TimeRenderer());
+        addRenderer(new SelectedTargetRenderer());
     }
     public Camera getCamera() {
         return model.getCamera();
