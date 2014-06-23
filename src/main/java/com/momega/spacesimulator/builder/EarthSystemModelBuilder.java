@@ -42,7 +42,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         Planet earth = (Planet) findDynamicalPoint("Earth");
         Planet moon = (Planet) findDynamicalPoint("Moon");
 
-        Satellite satellite = createSatellite(earth, "Satellite 1", 200, earth.getOrientation().getU().scale(10000d));
+        Satellite satellite = createSatellite(earth, "Satellite 1", 200, earth.getOrientation().getU().scale(11000d));
         addDynamicalPoint(satellite);
 
         satellite = createSatellite(earth, "Satellite 2", 300, new Vector3d(0d, 0d, 9000d));

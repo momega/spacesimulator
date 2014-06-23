@@ -3,7 +3,6 @@ package com.momega.spacesimulator.renderer;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
-import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
@@ -25,7 +24,7 @@ import static javax.media.opengl.GL.*;
  * The class renders the planet. It holds the {#link Planet} instance and contains logic for rendering.
  * Created by martin on 4/19/14.
  */
-public class PlanetRenderer extends DynamicalPointRenderer {
+public class PlanetRenderer extends CompositeRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(PlanetRenderer.class);
 
@@ -33,8 +32,7 @@ public class PlanetRenderer extends DynamicalPointRenderer {
     private Texture texture;
     private int listIndex;
 
-    public PlanetRenderer(Planet planet, Camera camera) {
-        super(planet, camera);
+    public PlanetRenderer(Planet planet) {
         this.planet = planet;
     }
 
@@ -110,9 +108,7 @@ public class PlanetRenderer extends DynamicalPointRenderer {
         double phi = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,1,0), planet.getOrientation().getU()));
         gl.glRotated(phi, 0, 0, 1);
 
-        if ("Earth".equals(planet.getName())) {
-            logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);
-        }
+        logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);
 
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();

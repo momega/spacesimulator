@@ -10,15 +10,11 @@ import org.slf4j.LoggerFactory;
  */
 public class DynamicalPointRenderer extends CompositeRenderer {
 
-    private static final Logger logger = LoggerFactory.getLogger(DynamicalPointRenderer.class);
-
     private final TrajectoryRenderer trajectoryRenderer;
     private final DynamicalPointLabelRenderer labelRenderer;
-    private final DynamicalPoint dynamicalPoint;
 
-    public DynamicalPointRenderer(DynamicalPoint dynamicalPoint, Camera camera) {
-        this.dynamicalPoint = dynamicalPoint;
-        this.trajectoryRenderer = TrajectoryRenderer.createInstance(dynamicalPoint.getTrajectory(), camera);
+    public DynamicalPointRenderer(DynamicalPoint dynamicalPoint) {
+        this.trajectoryRenderer = TrajectoryRenderer.createInstance(dynamicalPoint.getTrajectory());
         this.labelRenderer = new DynamicalPointLabelRenderer(dynamicalPoint);
 
         addRenderer(trajectoryRenderer);

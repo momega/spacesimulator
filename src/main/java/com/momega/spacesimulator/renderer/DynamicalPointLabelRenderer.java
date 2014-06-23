@@ -3,8 +3,6 @@ package com.momega.spacesimulator.renderer;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.DynamicalPoint;
-import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.model.ViewCoordinates;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;

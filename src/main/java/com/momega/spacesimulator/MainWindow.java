@@ -4,6 +4,7 @@
 package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.builder.AbstractModelBuilder;
+import com.momega.spacesimulator.builder.EarthSystemModelBuilder;
 import com.momega.spacesimulator.builder.SolarSystemModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.controller.*;
@@ -26,7 +27,7 @@ public class MainWindow extends DefaultWindow {
         MainWindow window = new MainWindow("Space Simulator");
         EventBusController controller = new EventBusController();
 
-        AbstractModelBuilder builder = new SolarSystemModelBuilder();
+        AbstractModelBuilder builder = new EarthSystemModelBuilder();
 
         Application application = new Application();
         Model model = application.init(builder);

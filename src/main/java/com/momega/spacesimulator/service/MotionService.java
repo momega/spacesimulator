@@ -35,10 +35,10 @@ public class MotionService {
         Timestamp newTimestamp = TimeUtils.newTime(timestamp);
         logger.debug("time={}", timestamp);
         for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
-            trajectoryService.move(dp, newTimestamp);
             if (dp instanceof RotatingObject) {
                 rotationService.rotate((RotatingObject) dp, newTimestamp);
             }
+            trajectoryService.move(dp, newTimestamp);
         }
         return newTimestamp;
     }

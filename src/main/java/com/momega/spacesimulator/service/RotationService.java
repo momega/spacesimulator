@@ -3,6 +3,7 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.utils.TimeUtils;
+import com.momega.spacesimulator.utils.VectorUtils;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +22,6 @@ public class RotationService {
         double dt = TimeUtils.subtract(newTime, rotatingObject.getTimestamp()).getValue().doubleValue();
         double phi = dt / rotatingObject.getRotationPeriod();
         phi *= (2*Math.PI);
-        rotatingObject.getOrientation().lookLeft(phi);
+        VectorUtils.lookLeft(rotatingObject.getOrientation(), phi);
     }
 }

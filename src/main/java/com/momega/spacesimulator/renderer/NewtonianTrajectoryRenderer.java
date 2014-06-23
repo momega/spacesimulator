@@ -9,10 +9,10 @@ import com.momega.spacesimulator.model.NewtonianTrajectory;
  */
 public class NewtonianTrajectoryRenderer extends TrajectoryRenderer {
 
-    protected NewtonianTrajectoryRenderer(NewtonianTrajectory trajectory, Camera camera) {
+    protected NewtonianTrajectoryRenderer(NewtonianTrajectory trajectory) {
         super(trajectory);
         addRenderer(new KeplerianTrajectoryRenderer(getTrajectory().getPrediction()));
-        addRenderer(new ApsidesRenderer(getTrajectory().getPrediction(), camera));
+        addRenderer(new ApsidesRenderer(getTrajectory().getPrediction()));
     }
 
     public NewtonianTrajectory getTrajectory() {

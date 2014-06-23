@@ -1,4 +1,4 @@
-package com.momega.spacesimulator.model;
+package com.momega.spacesimulator.renderer;
 
 /**
  * Created by martin on 6/7/14.

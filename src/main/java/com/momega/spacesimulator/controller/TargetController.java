@@ -3,7 +3,7 @@ package com.momega.spacesimulator.controller;
 import javax.media.opengl.awt.GLCanvas;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.DynamicalPoint;
-import com.momega.spacesimulator.model.ViewCoordinates;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 import com.momega.spacesimulator.renderer.RendererModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

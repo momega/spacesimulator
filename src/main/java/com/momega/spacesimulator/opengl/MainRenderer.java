@@ -6,6 +6,7 @@ import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

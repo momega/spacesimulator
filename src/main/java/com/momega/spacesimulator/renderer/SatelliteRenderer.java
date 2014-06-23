@@ -1,8 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Satellite;
-import com.momega.spacesimulator.model.ViewCoordinates;
 import com.momega.spacesimulator.opengl.GLUtils;
 
 import javax.media.opengl.GL;
@@ -16,7 +14,7 @@ import java.util.List;
 /**
  * Created by martin on 5/6/14.
  */
-public class SatelliteRenderer extends DynamicalPointRenderer {
+public class SatelliteRenderer extends CompositeRenderer {
 
     private final double size = 1d;
 
@@ -25,8 +23,7 @@ public class SatelliteRenderer extends DynamicalPointRenderer {
 
     private List<double[]> history = new ArrayList<>();
 
-    public SatelliteRenderer(Satellite satellite, Camera camera) {
-        super(satellite, camera);
+    public SatelliteRenderer(Satellite satellite) {
         this.satellite = satellite;
     }
 

@@ -4,6 +4,7 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
+import com.momega.spacesimulator.utils.VectorUtils;
 import org.apache.commons.collections.Predicate;
 import org.joda.time.DateTimeConstants;
 import org.slf4j.Logger;
@@ -142,7 +143,7 @@ public abstract class AbstractModelBuilder {
         dp.setRadius(radius * 1E6);
         dp.setMass(mass * 1E24);
         dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
-        dp.getOrientation().twist(Math.toRadians(axialTilt));
+        VectorUtils.twist(dp.getOrientation(), Math.toRadians(axialTilt));
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
             ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);

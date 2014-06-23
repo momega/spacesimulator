@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.utils.VectorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,12 +62,12 @@ public class CameraController extends AbstractController {
         double horizAngle = delta.x*MOUSE_SPEED_MODIFIER, vertAngle = delta.y*MOUSE_SPEED_MODIFIER;
 
         // Turn horizontally by rotating about the standard up vector (0,0,1).
-        getCamera().getOppositeOrientation().lookLeft(-horizAngle);
+        VectorUtils.lookLeft(getCamera().getOppositeOrientation(), -horizAngle);
 
         // Then look up or down by rotating about u. Note that which way we rotate
         // depends entirely on whether the user wanted the y axis of the mouse
         // inverted or not.
-        getCamera().getOppositeOrientation().lookUp(-vertAngle);
+        VectorUtils.lookUp(getCamera().getOppositeOrientation(), -vertAngle);
         //canvas.display();
 
         mouseLast = new Point(e.getX(), e.getY());

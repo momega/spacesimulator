@@ -18,16 +18,12 @@ public class ModelRenderer extends CompositeRenderer {
         this.model = model;
         logger.info("initializing renderers");
         for(DynamicalPoint dp : model.getDynamicalPoints()) {
-            DynamicalPointRenderer dpr;
+            addRenderer(new DynamicalPointRenderer(dp));
             if (dp instanceof  Planet) {
-                dpr = new PlanetRenderer((Planet) dp, getCamera());
+                addRenderer(new PlanetRenderer((Planet) dp));
             } else if (dp instanceof Satellite) {
-                dpr = new SatelliteRenderer((Satellite) dp, getCamera());
-            } else {
-                dpr = new DynamicalPointRenderer(dp, getCamera());
+                addRenderer(new SatelliteRenderer((Satellite) dp));
             }
-
-            addRenderer(dpr);
         }
 
         addRenderer(new CameraPositionRenderer());

@@ -19,16 +19,15 @@ public abstract class TrajectoryRenderer extends CompositeRenderer {
     /**
      * Creates the trajectory renderer
      * @param trajectory the trajectory
-     * @param camera the camera
      * @return new instance of the trajectory renderer
      */
-    public static TrajectoryRenderer createInstance(Trajectory trajectory, Camera camera) {
+    public static TrajectoryRenderer createInstance(Trajectory trajectory) {
         if (trajectory instanceof StaticTrajectory) {
             return new StaticTrajectoryRenderer(trajectory);
         } else if (trajectory instanceof KeplerianTrajectory3d) {
             return new KeplerianTrajectoryRenderer((KeplerianTrajectory3d)trajectory);
         } else if (trajectory instanceof NewtonianTrajectory) {
-            return new NewtonianTrajectoryRenderer((NewtonianTrajectory) trajectory, camera);
+            return new NewtonianTrajectoryRenderer((NewtonianTrajectory) trajectory);
         }
 
         throw new IllegalArgumentException("unable to handle trajectory");

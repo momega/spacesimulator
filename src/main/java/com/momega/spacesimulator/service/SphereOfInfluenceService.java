@@ -3,12 +3,7 @@ package com.momega.spacesimulator.service;
 import com.momega.common.Tree;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.utils.MathUtils;
-import org.apache.commons.collections.Predicate;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-
-import java.util.List;
 
 /**
  * The service containing all operation regarding sphere of influence (SOI)

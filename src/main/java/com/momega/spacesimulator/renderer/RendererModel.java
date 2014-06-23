@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.DynamicalPoint;
-import com.momega.spacesimulator.model.ViewCoordinates;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +24,7 @@ public class RendererModel {
     /**
      * Adds the view coordinates the renderer model for the given dynamical point
      * @param dp the dynamical point
-     * @param viewCoordinates
+     * @param viewCoordinates the view coordinates
      */
     public void addViewCoordinates(DynamicalPoint dp, ViewCoordinates viewCoordinates) {
         viewData.put(dp, viewCoordinates);
