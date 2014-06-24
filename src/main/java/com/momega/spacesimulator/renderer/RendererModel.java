@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.DynamicalPoint;
+import com.momega.spacesimulator.model.Satellite;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ public class RendererModel {
 
     private static RendererModel instance = new RendererModel();
     private final Map<DynamicalPoint, ViewCoordinates> viewData = new HashMap<>();
+    private final Map<Satellite, SatelliteData> satelliteDataMap = new HashMap<>();
 
     private RendererModel() {
         super();
@@ -32,5 +34,14 @@ public class RendererModel {
 
     public ViewCoordinates findViewCoordinates(DynamicalPoint dp) {
         return viewData.get(dp);
+    }
+
+    /**
+     * Finds the satellite data
+     * @param satellite
+     * @return
+     */
+    public SatelliteData findSatelliteData(Satellite satellite) {
+        return satelliteDataMap.get(satellite);
     }
 }

@@ -76,12 +76,6 @@ public abstract class AbstractModelBuilder {
     public void addDynamicalPoint(DynamicalPoint dp) {
         dp.setTimestamp(model.getTime());
         model.getDynamicalPoints().add(dp);
-        if (dp instanceof Planet) {
-            Planet planet = (Planet) dp;
-            if (planet.getTrajectory() instanceof StaticTrajectory) {
-                model.setCentralBody(planet);
-            }
-        }
     }
 
     /**
@@ -159,41 +153,38 @@ public abstract class AbstractModelBuilder {
      * The method adds the planet to the SOI tree and calculate the radius of the planet soi. The trajectory comes directly
      * from the planet trajectory
      * @param planet the planet
-     * @param centralPlanet the central planet
+     * @param parentSoi the parent soi
      */
-    public void addPlanetToSoiTree(final Planet planet, final Planet centralPlanet) {
-        if (centralPlanet == null) {
+    public SphereOfInfluence addPlanetToSoiTree(final Planet planet, final SphereOfInfluence parentSoi) {
+        if (parentSoi == null) {
             SphereOfInfluence soi = new SphereOfInfluence();
             soi.setBody(planet);
             soi.setRadius(MathUtils.AU * 100);
-            model.getSoiTree().add(soi, null);
+            model.setRootSoi(soi);
+            return soi;
         } else {
             Assert.isInstanceOf(KeplerianTrajectory2d.class, planet.getTrajectory());
-            addPlanetToSoiTree(planet, centralPlanet, (KeplerianTrajectory2d) planet.getTrajectory());
+            return addPlanetToSoiTree(planet, parentSoi, (KeplerianTrajectory2d) planet.getTrajectory());
         }
     }
 
     /**
      * The method adds the planet to the SOI tree and calculate the radius of the planet soi.
      * @param planet the planet
-     * @param centralPlanet the central planet
+     * @param parentSoi the parent soi
      * @param trajectory the trajectory of the planet. It has to be specified when the the planet
      *                   orbiting the bary-centre. In these cases it is not possible to calculate correctly sphere of influence. The example is
      *                   Earth -> (Earth/Moon Barycentre) -> Sun
+     * @return new instance of the sphere of influence
      */
-    public void addPlanetToSoiTree(final Planet planet, final Planet centralPlanet, KeplerianTrajectory2d trajectory) {
+    public SphereOfInfluence addPlanetToSoiTree(final Planet planet, final SphereOfInfluence parentSoi, KeplerianTrajectory2d trajectory) {
         SphereOfInfluence soi = new SphereOfInfluence();
-        double radius = Math.pow(planet.getMass() / centralPlanet.getMass(), 0.4d) * trajectory.getSemimajorAxis();
+        double radius = Math.pow(planet.getMass() / parentSoi.getBody().getMass(), 0.4d) * trajectory.getSemimajorAxis();
         soi.setRadius(radius);
         soi.setBody(planet);
-        SphereOfInfluence parentSoi = model.getSoiTree().findByPredicate(new Predicate() {
-            @Override
-            public boolean evaluate(Object object) {
-                SphereOfInfluence obj = (SphereOfInfluence) object;
-                return (obj.getBody() == centralPlanet);
-            }
-        });
-        model.getSoiTree().add(soi, parentSoi);
+        soi.setParent(parentSoi);
+        parentSoi.getChildren().add(soi);
+        return soi;
     }
 
     /**

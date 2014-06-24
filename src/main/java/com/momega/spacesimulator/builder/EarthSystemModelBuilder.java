@@ -3,7 +3,7 @@ package com.momega.spacesimulator.builder;
 import com.momega.spacesimulator.model.*;
 
 /**
- * Simple earth-moon model with the satellites
+ * The builder or simple earth-moon model with the satellites
  * Created by martin on 5/6/14.
  *
  */
@@ -31,8 +31,8 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         addDynamicalPoint(earth);
         addDynamicalPoint(moon);
 
-        addPlanetToSoiTree(earth, null);
-        addPlanetToSoiTree(moon, earth);
+        SphereOfInfluence rootSoi = addPlanetToSoiTree(earth, null);
+        addPlanetToSoiTree(moon, rootSoi);
 
         model.setSelectedDynamicalPoint(earth);
     }

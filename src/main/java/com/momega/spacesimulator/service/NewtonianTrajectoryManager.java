@@ -30,20 +30,13 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Vector3d velocity = movingObject.getVelocity();
         Vector3d position = movingObject.getPosition();
 
-        Vector3d[] result = rk4Solver(position, velocity, dt);
-        movingObject.setVelocity(result[0]);
-        movingObject.setPosition(result[1]);
-
-//        Vector3d[] result = eulerSolver(position, velocity, dt);
+//        Vector3d[] result = rk4Solver(position, velocity, dt);
 //        movingObject.setVelocity(result[0]);
 //        movingObject.setPosition(result[1]);
 
-        if (movingObject instanceof Satellite) {
-            Satellite satellite = (Satellite) movingObject;
-            Planet soiPlanet = satellite.getSphereOfInfluence().getBody();
-            satellite.setRelativePosition(movingObject.getPosition().subtract(soiPlanet.getPosition()));
-            satellite.setRelativeVelocity(movingObject.getVelocity().subtract(soiPlanet.getVelocity()));
-        }
+        Vector3d[] result = eulerSolver(position, velocity, dt);
+        movingObject.setVelocity(result[0]);
+        movingObject.setPosition(result[1]);
     }
 
     /**
@@ -56,9 +49,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         Satellite satellite = (Satellite) movingObject;
         SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(satellite);
-        sphereOfInfluenceService.updateRelativePositionAndVelocity(satellite);
-        Vector3d position = satellite.getRelativePosition();
-        Vector3d velocity = satellite.getRelativeVelocity();
+        Planet soiPlanet = soi.getBody();
+        Vector3d position = satellite.getPosition().subtract(soiPlanet.getPosition());
+        Vector3d velocity = satellite.getVelocity().subtract(soiPlanet.getVelocity());
 
         Vector3d hVector = position.cross(velocity);
         double h = hVector.length();
@@ -73,7 +66,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         double a = h*h / ( 1- e*e) / mi;
 
         double OMEGA = 0;
-        double omega = 0;
+        double omega;
 
         if (i > MINOR_ERROR) {
             Vector3d nVector = new Vector3d(0, 0, 1).cross(hVector);

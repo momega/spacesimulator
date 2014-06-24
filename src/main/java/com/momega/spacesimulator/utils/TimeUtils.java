@@ -34,7 +34,7 @@ public class TimeUtils {
         return newTime(u.getValue().subtract(v.getValue()));
     }
 
-    public static BigDecimal julianDayAsTimestamp(double julianDay) {
+    private static BigDecimal julianDayAsTimestamp(double julianDay) {
         return BigDecimal.valueOf(DateTimeUtils.fromJulianDay(julianDay) / DateTimeConstants.MILLIS_PER_SECOND);
     }
 
@@ -43,8 +43,8 @@ public class TimeUtils {
      * @param timestamp
      * @return
      */
-    public static DateTime getDateTime(BigDecimal timestamp) {
-        return new DateTime(timestamp.multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue());
+    public static DateTime getDateTime(Timestamp timestamp) {
+        return new DateTime(timestamp.getValue().multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue());
     }
 
 }

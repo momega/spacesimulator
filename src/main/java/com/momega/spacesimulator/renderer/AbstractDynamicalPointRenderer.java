@@ -3,7 +3,6 @@ package com.momega.spacesimulator.renderer;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.DynamicalPoint;
 import com.momega.spacesimulator.model.Satellite;
-import com.momega.spacesimulator.model.Vector3d;
 
 /**
  * Created by martin on 6/8/14.
@@ -18,8 +17,9 @@ public abstract class AbstractDynamicalPointRenderer extends AbstractTextRendere
         drawText("D:" + String.format("%6.2f Mm", distance), x + 5, y);
         if (dynamicalPoint instanceof Satellite) {
             Satellite satellite = (Satellite) dynamicalPoint;
-            drawText("VR:" + String.format("%6.2f m/s", satellite.getRelativeVelocity().length()), x + 5, y - 10);
-            drawText("DR:" + String.format("%6.2f Mm", satellite.getRelativePosition().length() / 1E6), x + 5, y - 20);
+            SatelliteData sd = RendererModel.getInstance().findSatelliteData(satellite);
+            //drawText("VR:" + String.format("%6.2f m/s", sd.getRelativeVelocity().length()), x + 5, y - 10);
+            //drawText("DR:" + String.format("%6.2f Mm", sd.getRelativePosition().length() / 1E6), x + 5, y - 20);
         }
     }
 }

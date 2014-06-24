@@ -49,5 +49,4 @@ public class Orientation {
         this.v = vVector;
     }
 
-
 }

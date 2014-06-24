@@ -3,6 +3,7 @@ package com.momega.spacesimulator.builder;
 import com.momega.spacesimulator.model.*;
 
 /**
+ * The builder of the solar system
  * Created by martin on 5/6/14.
  */
 public class SolarSystemModelBuilder extends AbstractModelBuilder {
@@ -119,19 +120,19 @@ public class SolarSystemModelBuilder extends AbstractModelBuilder {
         deimos.setTextureFileName("deimos.jpg");
         addDynamicalPoint(deimos);
 
-        addPlanetToSoiTree(sun, null);
-        addPlanetToSoiTree(mercury, sun);
-        addPlanetToSoiTree(venus, sun);
-        addPlanetToSoiTree(earth, sun, (KeplerianTrajectory2d) earthMoonBarycenter.getTrajectory());
-        addPlanetToSoiTree(moon, earth);
-        addPlanetToSoiTree(mars, sun);
-        addPlanetToSoiTree(phobos, mars);
-        addPlanetToSoiTree(deimos, mars);
-        addPlanetToSoiTree(jupiter, sun);
-        addPlanetToSoiTree(io, jupiter);
-        addPlanetToSoiTree(europa, jupiter);
-        addPlanetToSoiTree(ganymede, jupiter);
-        addPlanetToSoiTree(callisto, jupiter);
+        SphereOfInfluence sunSoi = addPlanetToSoiTree(sun, null);
+        addPlanetToSoiTree(mercury, sunSoi);
+        addPlanetToSoiTree(venus, sunSoi);
+        SphereOfInfluence earthSoi = addPlanetToSoiTree(earth, sunSoi, (KeplerianTrajectory2d) earthMoonBarycenter.getTrajectory());
+        addPlanetToSoiTree(moon, earthSoi);
+        SphereOfInfluence marsSoi = addPlanetToSoiTree(mars, sunSoi);
+        addPlanetToSoiTree(phobos, marsSoi);
+        addPlanetToSoiTree(deimos, marsSoi);
+        SphereOfInfluence jupiterSoi = addPlanetToSoiTree(jupiter, sunSoi);
+        addPlanetToSoiTree(io, jupiterSoi);
+        addPlanetToSoiTree(europa, jupiterSoi);
+        addPlanetToSoiTree(ganymede, jupiterSoi);
+        addPlanetToSoiTree(callisto, jupiterSoi);
 
         model.setSelectedDynamicalPoint(earth);
     }

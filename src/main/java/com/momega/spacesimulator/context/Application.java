@@ -34,7 +34,7 @@ public class Application {
 
     public Model init(AbstractModelBuilder modelBuilder) {
         modelBuilder.init();
-        logger.info("time = {}", formatter.print(TimeUtils.getDateTime(ModelHolder.getModel().getTime().getValue())));
+        logger.info("time = {}", formatter.print(TimeUtils.getDateTime(ModelHolder.getModel().getTime())));
         next();
         modelBuilder.initSatellites();
         predict();
@@ -49,7 +49,7 @@ public class Application {
         Timestamp t = motionService.move(model.getTime(), model.getWarpFactor());
         model.setTime(t);
         cameraService.updatePosition(model.getCamera());
-        logger.debug("time = {}",  formatter.print(TimeUtils.getDateTime(model.getTime().getValue())));
+        logger.debug("time = {}",  formatter.print(TimeUtils.getDateTime(model.getTime())));
     }
 
     public void predict() {
@@ -58,7 +58,7 @@ public class Application {
 
     public void dispose() {
         Model model = ModelHolder.getModel();
-        logger.info("time = {}",  formatter.print(TimeUtils.getDateTime(model.getTime().getValue())));
+        logger.info("time = {}",  formatter.print(TimeUtils.getDateTime(model.getTime())));
     }
 
 }

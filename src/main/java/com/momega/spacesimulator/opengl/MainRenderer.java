@@ -33,7 +33,7 @@ public class MainRenderer extends AbstractRenderer {
 
     public MainRenderer(Application application) {
         this.application = application;
-        this.renderer = new ModelRenderer(ModelHolder.getModel());
+        this.renderer = new ModelRenderer();
         this.renderer.addRenderer(new PerspectiveRenderer(this));
     }
 

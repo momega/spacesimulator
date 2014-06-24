@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +13,9 @@ public class ModelRenderer extends CompositeRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(ModelRenderer.class);
 
-    private Model model;
-
-    public ModelRenderer(Model model) {
-        this.model = model;
+    public ModelRenderer() {
         logger.info("initializing renderers");
-        for(DynamicalPoint dp : model.getDynamicalPoints()) {
+        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
             addRenderer(new DynamicalPointRenderer(dp));
             if (dp instanceof  Planet) {
                 addRenderer(new PlanetRenderer((Planet) dp));
@@ -29,9 +27,6 @@ public class ModelRenderer extends CompositeRenderer {
         addRenderer(new CameraPositionRenderer());
         addRenderer(new TimeRenderer());
         addRenderer(new SelectedTargetRenderer());
-    }
-    public Camera getCamera() {
-        return model.getCamera();
     }
 
 }

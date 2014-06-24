@@ -1,8 +1,8 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.common.Tree;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
+import org.apache.commons.collections.Predicate;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,30 +12,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class SphereOfInfluenceService {
 
-    public Tree<SphereOfInfluence> getSoiTree() {
-        return ModelHolder.getModel().getSoiTree();
-    }
-
-    /**
-     * Updates the relative position and velocity to the body of the sphere of influence
-     * @param satellite the satellite
-     */
-    public void updateRelativePositionAndVelocity(Satellite satellite) {
-        Planet soiPlanet = satellite.getSphereOfInfluence().getBody();
-        Vector3d position = satellite.getPosition().subtract(soiPlanet.getPosition());
-        Vector3d velocity = satellite.getVelocity().subtract(soiPlanet.getVelocity());
-        satellite.setRelativePosition(position);
-        satellite.setRelativeVelocity(velocity);
-    }
-
     public SphereOfInfluence findCurrentSoi(Satellite satellite) {
-        SphereOfInfluence soi = checkSoiOfPlanet(satellite, getSoiTree().getRoot());
-        satellite.setSphereOfInfluence(soi);
+        SphereOfInfluence soi = checkSoiOfPlanet(satellite, ModelHolder.getModel().getRootSoi());
         return soi;
     }
 
     protected SphereOfInfluence checkSoiOfPlanet(MovingObject satellite, SphereOfInfluence parentSoi) {
-        for(SphereOfInfluence soi : getSoiTree().getChildren(parentSoi)) {
+        for(SphereOfInfluence soi : parentSoi.getChildren()) {
             SphereOfInfluence childSoi = checkSoiOfPlanet(satellite, soi);
             if (childSoi != null) {
                 return childSoi;
@@ -49,4 +32,20 @@ public class SphereOfInfluenceService {
         return parentSoi;
     }
 
+    public SphereOfInfluence findByPredicate(Predicate predicate) {
+        return findByPredicate(ModelHolder.getModel().getRootSoi(), predicate);
+    }
+
+    public SphereOfInfluence findByPredicate(SphereOfInfluence item, Predicate predicate) {
+        if (predicate.evaluate(item)) {
+            return item;
+        }
+        for(SphereOfInfluence child : item.getChildren()) {
+            SphereOfInfluence result =  findByPredicate(child, predicate);
+            if (result != null) {
+                return child;
+            }
+        }
+        return null;
+    }
 }
