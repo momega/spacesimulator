@@ -18,9 +18,14 @@ public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
 
     public KeplerianTrajectoryRenderer(KeplerianTrajectory3d trajectory) {
         super(trajectory);
+
         this.a = trajectory.getSemimajorAxis();
-        this.b = a * Math.sqrt(1 - trajectory.getEccentricity()*trajectory.getEccentricity());
-        this.e = Math.sqrt(a*a - b*b);
+        this.e = a * trajectory.getEccentricity();
+        if (trajectory.getEccentricity()<1) {
+            this.b = a * Math.sqrt(1 - trajectory.getEccentricity() * trajectory.getEccentricity());
+        } else {
+            this.b = a * Math.sqrt(trajectory.getEccentricity() * trajectory.getEccentricity() - 1);
+        }
     }
 
     @Override
@@ -36,7 +41,12 @@ public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
 
         gl.glColor3dv(getColor(), 0);
         gl.glLineWidth(1);
-        GLUtils.drawEllipse(gl, -e, 0, a, b, 7200);
+        gl.glTranslated(-e, 0, 0);
+        if (getTrajectory().getEccentricity()<1) {
+            GLUtils.drawEllipse(gl, a, b, 7200);
+        } else {
+            GLUtils.drawHyperbola(gl, a, b, 7200);
+        }
 
         gl.glPopMatrix();
     }

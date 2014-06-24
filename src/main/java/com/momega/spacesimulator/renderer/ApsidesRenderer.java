@@ -34,8 +34,10 @@ public class ApsidesRenderer extends AbstractTextRenderer {
         Vector3d periapsis = MathUtils.getKeplerianPosition(trajectory, rp, 0d);
         gl.glVertex3dv(periapsis.asArray(), 0);
 
-        Vector3d apoapsis = MathUtils.getKeplerianPosition(trajectory, ra, Math.PI);
-        gl.glVertex3dv(apoapsis.asArray(), 0);
+        if (trajectory.getEccentricity()<1) {
+            Vector3d apoapsis = MathUtils.getKeplerianPosition(trajectory, ra, Math.PI);
+            gl.glVertex3dv(apoapsis.asArray(), 0);
+        }
 
         gl.glEnd();
 

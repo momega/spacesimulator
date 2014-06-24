@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.NewtonianTrajectory;
 
 /**

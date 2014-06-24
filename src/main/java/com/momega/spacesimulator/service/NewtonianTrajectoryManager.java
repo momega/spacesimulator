@@ -65,8 +65,8 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         double a = h*h / ( 1- e*e) / mi;
 
-        double OMEGA = 0;
-        double omega;
+        double OMEGA = 0d;
+        double omega = 0d; // this is for circular, equatorial Orbit
 
         if (i > MINOR_ERROR) {
             Vector3d nVector = new Vector3d(0, 0, 1).cross(hVector);
@@ -76,14 +76,18 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
                 OMEGA = 2 * Math.PI - OMEGA;
             }
 
-            omega = Math.acos( nVector.dot(eVector) / n / e);
-            if (eVector.z <0) {
-                omega = 2 * Math.PI - omega;
+            if (e>MINOR_ERROR) {
+                omega = Math.acos(nVector.dot(eVector) / n / e);
+                if (eVector.z < 0) {
+                    omega = 2 * Math.PI - omega;
+                }
             }
         } else {
-            omega = Math.acos(eVector.x / e);
-            if (eVector.y<0) {
-                omega = 2 * Math.PI - omega;
+            if (e>MINOR_ERROR) {
+                omega = Math.acos(eVector.x / e);
+                if (eVector.y < 0) {
+                    omega = 2 * Math.PI - omega;
+                }
             }
         }
 

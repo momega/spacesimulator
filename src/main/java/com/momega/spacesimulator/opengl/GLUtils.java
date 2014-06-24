@@ -7,7 +7,9 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 
+import static javax.media.opengl.GL.GL_LINEAR;
 import static javax.media.opengl.GL.GL_LINE_LOOP;
+import static javax.media.opengl.GL.GL_LINE_STRIP;
 
 /**
  * The class contains static handful methods to draw objects such as {#link drawCircle} or {#link drawEllipse}
@@ -45,16 +47,38 @@ public class GLUtils {
         gl.glEnd();
     }
 
-    public static void drawEllipse(GL2 gl, double cx, double cy, double a, double b, int num_segments) {
+    /**
+     * Draw the ellipse
+     * @param gl the OpenGL context
+     * @param a the semi-major axis
+     * @param b the semi-minor axis
+     * @param num_segments the number of the segments
+     */
+    public static void drawEllipse(GL2 gl, double a, double b, int num_segments) {
         gl.glBegin(GL_LINE_LOOP);
         double DEG2RAD = 2.0 * Math.PI / num_segments;
 
         for (int i=0; i<=num_segments ; i++) {
             double degInRad = DEG2RAD * i;
-            gl.glVertex2d(cx + Math.cos(degInRad) * a, cy + Math.sin(degInRad) * b);
+            gl.glVertex2d(Math.cos(degInRad) * a, Math.sin(degInRad) * b);
         }
 
         gl.glEnd();
+    }
+
+    public static void drawHyperbola(GL2 gl, double a, double b, int num_segments) {
+        gl.glBegin(GL_LINE_STRIP);
+        for (int i=-num_segments; i<=num_segments ; i++) {
+            double k = ((double)i)/2000.0d;
+            gl.glVertex2d(Math.cosh(k) * a, Math.sinh(k) * b);
+        }
+
+        gl.glEnd();
+    }
+
+    public static void drawEllipse(GL2 gl, double cx, double cy, double a, double b, int num_segments) {
+        gl.glTranslated(cx, cy, 0);
+        drawEllipse(gl, a, b, num_segments);
     }
 
     /**

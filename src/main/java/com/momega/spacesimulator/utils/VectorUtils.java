@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.utils;
 
-import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Vector3d;
 
 /**
@@ -11,20 +10,20 @@ public class VectorUtils {
     private final static double EPSILON = 0.0001;
 
     /**
-     Rotates vector v anticlockwise about the specified axis by the specified angle (in degrees).
-
-     <p><b>Preconditions:</b>
-     <dl>
-     <dd>v != null
-     <dd>axis != null
-     <dd>axis must be normalized
-     </dl>
-
-     @param v			The vector to rotate about the axis
-     @param angle	The angle by which to rotate it (in radians)
-     @param axis			The axis about which to rotate it
-     @return				A (new) vector containing the result of the rotation
-     @throws Error	If any of the preconditions are not met
+     * Rotates vector v anticlockwise about the specified axis by the specified angle (in degrees).
+     *
+     * <p><b>Preconditions:</b>
+     * <dl>
+     * <dd>v != null
+     * <dd>axis != null
+     * <dd>axis must be normalized
+     * </dl>
+     *
+     * @param v			The vector to rotate about the axis
+     * @param angle	The angle by which to rotate it (in radians)
+     * @param axis			The axis about which to rotate it
+     * @return				A (new) vector containing the result of the rotation
+     * @throws Error	If any of the preconditions are not met
      */
     public static Vector3d rotateAboutAxis(final Vector3d v, final double angle, final Vector3d axis)
     {

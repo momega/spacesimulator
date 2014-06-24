@@ -3,7 +3,7 @@ package com.momega.spacesimulator.model;
 import java.math.BigDecimal;
 
 /**
- * The class computer keplerian trajectory and object along the eclipse. It computes only in 2D
+ * The class computer keplerian trajectory and object along the eclipse. It computes only in 2D space.
  * Created by martin on 4/21/14.
  */
 public class KeplerianTrajectory2d extends Trajectory {
