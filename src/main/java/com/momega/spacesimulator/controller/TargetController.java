@@ -1,6 +1,8 @@
 package com.momega.spacesimulator.controller;
 
 import javax.media.opengl.awt.GLCanvas;
+
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.DynamicalPoint;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
@@ -12,6 +14,7 @@ import javax.media.opengl.GLDrawable;
 import java.awt.event.MouseEvent;
 
 /**
+ * Controller which enables selecting the target
  * Created by martin on 6/7/14.
  */
 public class TargetController extends AbstractController {
@@ -19,12 +22,6 @@ public class TargetController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(CameraController.class);
 
     private final static int MIN_TARGET_SIZE = 5;
-
-    private final Model model;
-
-    public TargetController(Model model) {
-        this.model = model;
-    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -40,6 +37,7 @@ public class TargetController extends AbstractController {
     }
 
     public DynamicalPoint selectDynamicalPoint(int x, int y) {
+        Model model = ModelHolder.getModel();
         for(DynamicalPoint dp : model.getDynamicalPoints()) {
             ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(dp);
             if (viewCoordinates!= null && viewCoordinates.isVisible()) {

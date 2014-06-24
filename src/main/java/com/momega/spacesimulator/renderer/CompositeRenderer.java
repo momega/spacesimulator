@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The composite renderer composites several other renderer
  * Created by martin on 5/17/14.
  */
 public class CompositeRenderer implements Renderer {

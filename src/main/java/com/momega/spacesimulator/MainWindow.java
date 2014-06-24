@@ -5,7 +5,6 @@ package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.builder.AbstractModelBuilder;
 import com.momega.spacesimulator.builder.EarthSystemModelBuilder;
-import com.momega.spacesimulator.builder.SolarSystemModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.controller.*;
 import com.momega.spacesimulator.model.Model;
@@ -34,9 +33,9 @@ public class MainWindow extends DefaultWindow {
 
         MainRenderer mr = new MainRenderer(application);
         controller.addController(new QuitController(window));
-        controller.addController(new TargetController(model));
+        controller.addController(new TargetController());
         controller.addController(new CameraController(model.getCamera()));
-        controller.addController(new TimeController(model));
+        controller.addController(new TimeController());
         controller.addController(new PerspectiveController(mr));
         window.openWindow(mr, controller);
     }

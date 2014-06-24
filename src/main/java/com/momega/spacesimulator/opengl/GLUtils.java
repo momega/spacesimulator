@@ -2,7 +2,6 @@ package com.momega.spacesimulator.opengl;
 
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.renderer.Renderer;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;

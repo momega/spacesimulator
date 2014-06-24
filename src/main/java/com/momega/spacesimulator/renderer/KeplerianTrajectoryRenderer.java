@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.KeplerianTrajectory2d;
 import com.momega.spacesimulator.model.KeplerianTrajectory3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 
@@ -13,16 +12,14 @@ import javax.media.opengl.GLAutoDrawable;
  */
 public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
 
-    private final double epsilon;
     protected final double a;
     protected final double b;
     protected final double e;
 
     public KeplerianTrajectoryRenderer(KeplerianTrajectory3d trajectory) {
         super(trajectory);
-        this.epsilon = trajectory.getEccentricity();
         this.a = trajectory.getSemimajorAxis();
-        this.b = a * Math.sqrt(1 - epsilon*epsilon);
+        this.b = a * Math.sqrt(1 - trajectory.getEccentricity()*trajectory.getEccentricity());
         this.e = Math.sqrt(a*a - b*b);
     }
 
@@ -40,17 +37,6 @@ public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
         gl.glColor3dv(getColor(), 0);
         gl.glLineWidth(1);
         GLUtils.drawEllipse(gl, -e, 0, a, b, 7200);
-
-//        gl.glLineWidth(2f);
-//        gl.glBegin(GL2.GL_LINES);
-//        gl.glVertex3d(-a-e, 0 , 0);
-//        gl.glVertex3d(a-e, 0, 0);
-//        gl.glEnd();
-//
-//        gl.glBegin(GL2.GL_LINES);
-//        gl.glVertex3d(-e, -b, 0);
-//        gl.glVertex3d(-e, b, 0);
-//        gl.glEnd();
 
         gl.glPopMatrix();
     }

@@ -10,9 +10,6 @@ import javax.media.opengl.GL2;
  */
 public class CameraPositionRenderer extends AbstractTextRenderer {
 
-    public CameraPositionRenderer() {
-    }
-
     @Override
     public void renderTexts(GL2 gl, int width, int height) {
         setColor(255, 255, 255);

@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.controller;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
 
 import java.awt.event.KeyEvent;
@@ -10,12 +11,6 @@ import java.math.BigDecimal;
  * Created by martin on 5/5/14.
  */
 public class TimeController extends AbstractController {
-
-    private Model model;
-
-    public TimeController(Model model) {
-        this.model = model;
-    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -32,6 +27,7 @@ public class TimeController extends AbstractController {
     }
 
     public void changeWarpFactor(double ratio) {
+        Model model = ModelHolder.getModel();
         BigDecimal warpFactor = model.getWarpFactor();
         warpFactor = warpFactor.multiply(BigDecimal.valueOf(ratio));
         model.setWarpFactor(warpFactor);
