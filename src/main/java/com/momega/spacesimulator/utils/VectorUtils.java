@@ -48,42 +48,4 @@ public class VectorUtils {
         return ret;
     }
 
-    /**
-     * Rotates the object3d anticlockwise by the specified angle about the specified axis.
-     * @param  orientation the vector to be rotate
-     * @param axis	The axis about which to rotate
-     * @param angle	The angle by which to rotate (in radians)
-     */
-    public static void rotate(Orientation orientation, Vector3d axis, double angle)
-    {
-        // Note: We try and optimise things a little by observing that there's no point rotating
-        // an axis about itself and that generally when we rotate about an axis, we'll be passing
-        // it in as the parameter axis, e.g. object3d.rotate(object3d.get_n(), Math.PI/2).
-        if(axis != orientation.getN()) {
-            orientation.setN(rotateAboutAxis(orientation.getN(), angle, axis));
-        }
-        if(axis != orientation.getU()) {
-            orientation.setU(rotateAboutAxis(orientation.getU(), angle, axis));
-        }
-        if(axis != orientation.getV()) {
-            orientation.setV(rotateAboutAxis(orientation.getV(), angle, axis));
-        }
-    }
-
-    /**
-     * Rotates the orientation up
-     * @param o the orientation
-     * @param step the angle in radians
-     */
-    public static void lookUp(Orientation o, double step) {
-        rotate(o, o.getU(), step);
-    }
-
-    public static void lookLeft(Orientation o, double step) {
-        rotate(o, new Vector3d(0, 0, 1), step);
-    }
-
-    public static void twist(Orientation o, double step) {
-        rotate(o, o.getN(), step);
-    }
 }

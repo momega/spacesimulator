@@ -62,12 +62,12 @@ public class CameraController extends AbstractController {
         double horizAngle = delta.x*MOUSE_SPEED_MODIFIER, vertAngle = delta.y*MOUSE_SPEED_MODIFIER;
 
         // Turn horizontally by rotating about the standard up vector (0,0,1).
-        VectorUtils.lookLeft(getCamera().getOppositeOrientation(), -horizAngle);
+        getCamera().getOppositeOrientation().lookLeft(-horizAngle);
 
         // Then look up or down by rotating about u. Note that which way we rotate
         // depends entirely on whether the user wanted the y axis of the mouse
         // inverted or not.
-        VectorUtils.lookUp(getCamera().getOppositeOrientation(), -vertAngle);
+        getCamera().getOppositeOrientation().lookUp(-vertAngle);
         //canvas.display();
 
         mouseLast = new Point(e.getX(), e.getY());
