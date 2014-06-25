@@ -1,8 +1,6 @@
 package com.momega.spacesimulator.utils;
 
-import com.momega.spacesimulator.model.KeplerianTrajectory3d;
-import com.momega.spacesimulator.model.Orientation;
-import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.model.*;
 
 /**
  * Set of mathematical helper functions

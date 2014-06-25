@@ -9,16 +9,16 @@ import java.util.List;
  */
 public class SphereOfInfluence {
 
-    private Planet body;
+    private CelestialBody body;
     private double radius;
     private List<SphereOfInfluence> children = new ArrayList<>();
     private SphereOfInfluence parent;
 
-    public Planet getBody() {
+    public CelestialBody getBody() {
         return body;
     }
 
-    public void setBody(Planet body) {
+    public void setBody(CelestialBody body) {
         this.body = body;
     }
 

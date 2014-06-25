@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
- * The rotation object is the {@link com.momega.spacesimulator.model.DynamicalPoint} with defined rotation period. The {@link com.momega.spacesimulator.model.Planet}
+ * The rotation object is the {@link com.momega.spacesimulator.model.DynamicalPoint} with defined rotation period. The {@link CelestialBody}
  * is the typical subclass of the rotation object
  * Created by martin on 5/25/14.
  */

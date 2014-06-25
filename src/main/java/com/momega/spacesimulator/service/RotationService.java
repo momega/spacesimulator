@@ -6,7 +6,7 @@ import com.momega.spacesimulator.utils.TimeUtils;
 import org.springframework.stereotype.Component;
 
 /**
- * Rotation service is used to rotate the {@link com.momega.spacesimulator.model.RotatingObject} such as {@link com.momega.spacesimulator.model.Planet}
+ * Rotation service is used to rotate the {@link com.momega.spacesimulator.model.RotatingObject} such as {@link com.momega.spacesimulator.model.CelestialBody}
  * Created by martin on 5/25/14.
  */
 @Component

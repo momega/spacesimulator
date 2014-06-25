@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
  * The builder or simple earth-moon model with the satellites
@@ -11,7 +12,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
 
     @Override
     public void initPlanets() {
-        Planet earth = new Planet();
+        CelestialBody earth = new CelestialBody();
         earth.setName("Earth");
 
         StaticTrajectory earthTrajectory = new StaticTrajectory();
@@ -23,7 +24,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
 
         KeplerianTrajectory3d moonTrajectory = createKeplerianTrajectory(earth, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.241500, 208.1199);
         moonTrajectory.setTrajectoryColor(new double[] {0.5,0.5,0.5});
-        Planet moon = new Planet();
+        CelestialBody moon = new CelestialBody();
         updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687);
         moon.setTrajectory(moonTrajectory);
         moon.setTextureFileName("moon.jpg");
@@ -34,26 +35,29 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         SphereOfInfluence rootSoi = addPlanetToSoiTree(earth, null);
         addPlanetToSoiTree(moon, rootSoi);
 
-        model.setSelectedDynamicalPoint(earth);
+        model.setSelectedDynamicalPoint(moon);
     }
 
     @Override
     public void initSatellites() {
-        Planet earth = (Planet) findDynamicalPoint("Earth");
-        Planet moon = (Planet) findDynamicalPoint("Moon");
+        CelestialBody earth = (CelestialBody) findDynamicalPoint("Earth");
+        CelestialBody moon = (CelestialBody) findDynamicalPoint("Moon");
 
-        Satellite satellite = createSatellite(earth, "Satellite 1", 200, earth.getOrientation().getU().scale(11000d));
+        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);
+        Vector3d velocity = new Vector3d(0, 10000d, 0);
+        Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
         addDynamicalPoint(satellite);
 
-        satellite = createSatellite(earth, "Satellite 2", 300, new Vector3d(0d, 0d, 9000d));
-        addDynamicalPoint(satellite);
+//        satellite = createSatellite(earth, "Satellite 2", 300, new Vector3d(0d, 0d, 9000d));
+//        addDynamicalPoint(satellite);
 
-        Vector3d sv = moon.getPosition().normalize().scale(-1800d).add(moon.getVelocity());
-        satellite = createSatellite(moon, "Satellite 3", 50, sv);
+        position = VectorUtils.fromSphericalCoordinates(50 * 1E3 + moon.getRadius(), Math.PI/2, 0);
+        velocity = new Vector3d(0, 1800d, 0);
+        satellite = createSatellite(moon, "Satellite 3", position, velocity);
         addDynamicalPoint(satellite);
-
-        sv = moon.getPosition().normalize().scale(1700d).add(moon.getVelocity());
-        satellite = createSatellite(moon, "Satellite 5", 80, sv);
-        addDynamicalPoint(satellite);
+//
+//        sv = moon.getPosition().normalize().scale(1700d).add(moon.getVelocity());
+//        satellite = createSatellite(moon, "Satellite 5", 80, sv);
+//        addDynamicalPoint(satellite);
     }
 }

@@ -24,8 +24,8 @@ public class SphereOfInfluenceService {
                 return childSoi;
             }
         }
-        Planet planet = parentSoi.getBody();
-        double distance = satellite.getPosition().subtract(planet.getPosition()).length();
+        CelestialBody celestialBody = parentSoi.getBody();
+        double distance = satellite.getPosition().subtract(celestialBody.getPosition()).length();
         if (distance > parentSoi.getRadius()) {
             return null;
         }

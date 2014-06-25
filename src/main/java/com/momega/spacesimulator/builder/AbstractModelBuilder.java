@@ -5,7 +5,6 @@ import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
-import org.apache.commons.collections.Predicate;
 import org.joda.time.DateTimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,24 +104,24 @@ public abstract class AbstractModelBuilder {
 
     /**
      * Creates the satellite
-     * @param centralPoint the initial dynamical point, the satellite is orbiting
+     * @param centralPoint the initial dynamical point, the satellite is orbiting. It is also used for transforming coordinates (position and velocity)
+     *                     to the central body of the system
      * @param name the name of the satellite
-     * @param height the height above the ground of the dynamical point (or planet) in kilometers
+     * @param position the position of the satellite
      * @param velocity the initial velocity
      * @return new instance of the satellite
      */
-    public Satellite createSatellite(DynamicalPoint centralPoint, String name, double height, Vector3d velocity) {
+    public Satellite createSatellite(DynamicalPoint centralPoint, String name, Vector3d position, Vector3d velocity) {
         Satellite satellite = new Satellite();
         satellite.setName(name);
 
-        Vector3d p;
-        if (centralPoint.getVelocity().length()==0) {
-            p = Vector3d.scaleAdd(1, centralPoint.getPosition(), new Vector3d(centralPoint.getRadius() + height*1E3, 0, 0));
-        } else {
-            p = centralPoint.getPosition().add(centralPoint.getVelocity().normalize().scale(centralPoint.getRadius() + height * 1E3));
+        if (centralPoint != model.getRootSoi().getBody()) {
+            Vector3d[] vectors = VectorUtils.transformCoordinateSystem(centralPoint, model.getRootSoi().getBody(), new Vector3d[] {position, velocity});
+            position = vectors[0];
+            velocity = vectors[1];
         }
 
-        satellite.setPosition(p);
+        satellite.setPosition(position);
         satellite.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
         satellite.setVelocity(velocity);
         NewtonianTrajectory satelliteTrajectory = new NewtonianTrajectory();
@@ -152,36 +151,36 @@ public abstract class AbstractModelBuilder {
     /**
      * The method adds the planet to the SOI tree and calculate the radius of the planet soi. The trajectory comes directly
      * from the planet trajectory
-     * @param planet the planet
+     * @param celestialBody the planet
      * @param parentSoi the parent soi
      */
-    public SphereOfInfluence addPlanetToSoiTree(final Planet planet, final SphereOfInfluence parentSoi) {
+    public SphereOfInfluence addPlanetToSoiTree(final CelestialBody celestialBody, final SphereOfInfluence parentSoi) {
         if (parentSoi == null) {
             SphereOfInfluence soi = new SphereOfInfluence();
-            soi.setBody(planet);
+            soi.setBody(celestialBody);
             soi.setRadius(MathUtils.AU * 100);
             model.setRootSoi(soi);
             return soi;
         } else {
-            Assert.isInstanceOf(KeplerianTrajectory2d.class, planet.getTrajectory());
-            return addPlanetToSoiTree(planet, parentSoi, (KeplerianTrajectory2d) planet.getTrajectory());
+            Assert.isInstanceOf(KeplerianTrajectory2d.class, celestialBody.getTrajectory());
+            return addPlanetToSoiTree(celestialBody, parentSoi, (KeplerianTrajectory2d) celestialBody.getTrajectory());
         }
     }
 
     /**
      * The method adds the planet to the SOI tree and calculate the radius of the planet soi.
-     * @param planet the planet
+     * @param celestialBody the planet
      * @param parentSoi the parent soi
      * @param trajectory the trajectory of the planet. It has to be specified when the the planet
      *                   orbiting the bary-centre. In these cases it is not possible to calculate correctly sphere of influence. The example is
      *                   Earth -> (Earth/Moon Barycentre) -> Sun
      * @return new instance of the sphere of influence
      */
-    public SphereOfInfluence addPlanetToSoiTree(final Planet planet, final SphereOfInfluence parentSoi, KeplerianTrajectory2d trajectory) {
+    public SphereOfInfluence addPlanetToSoiTree(final CelestialBody celestialBody, final SphereOfInfluence parentSoi, KeplerianTrajectory2d trajectory) {
         SphereOfInfluence soi = new SphereOfInfluence();
-        double radius = Math.pow(planet.getMass() / parentSoi.getBody().getMass(), 0.4d) * trajectory.getSemimajorAxis();
+        double radius = Math.pow(celestialBody.getMass() / parentSoi.getBody().getMass(), 0.4d) * trajectory.getSemimajorAxis();
         soi.setRadius(radius);
-        soi.setBody(planet);
+        soi.setBody(celestialBody);
         soi.setParent(parentSoi);
         parentSoi.getChildren().add(soi);
         return soi;

@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.utils;
 
+import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Vector3d;
 
 /**
@@ -8,6 +9,17 @@ import com.momega.spacesimulator.model.Vector3d;
 public class VectorUtils {
 
     private final static double EPSILON = 0.0001;
+
+    public static Vector3d fromSphericalCoordinates(double r, double theta, double phi) {
+        return new Vector3d(r * Math.sin(theta)* Math.cos(phi), r*Math.sin(theta) * Math.sin(phi), r * Math.cos(theta));
+    }
+
+    public static Vector3d[] transformCoordinateSystem(MovingObject source, MovingObject target, Vector3d[] vectors) {
+        Vector3d position = vectors[0].add(source.getPosition()).subtract(target.getPosition());
+        Vector3d velocity = vectors[1].add(source.getVelocity()).subtract(target.getVelocity());
+        return new Vector3d[] {position, velocity};
+    }
+
 
     /**
      * Rotates vector v anticlockwise about the specified axis by the specified angle (in degrees).

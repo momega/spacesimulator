@@ -3,7 +3,7 @@ package com.momega.spacesimulator.renderer;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
-import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import org.apache.commons.io.IOUtils;
@@ -21,23 +21,23 @@ import java.io.InputStream;
 import static javax.media.opengl.GL.*;
 
 /**
- * The class renders the planet. It holds the {#link Planet} instance and contains logic for rendering.
+ * The class renders the planet. It holds the {@link CelestialBody} instance and contains logic for rendering.
  * Created by martin on 4/19/14.
  */
-public class PlanetRenderer extends CompositeRenderer {
+public class CelestialBodyRenderer extends CompositeRenderer {
 
-    private static final Logger logger = LoggerFactory.getLogger(PlanetRenderer.class);
+    private static final Logger logger = LoggerFactory.getLogger(CelestialBodyRenderer.class);
 
-    private final Planet planet;
+    private final CelestialBody celestialBody;
     private Texture texture;
     private int listIndex;
 
-    public PlanetRenderer(Planet planet) {
-        this.planet = planet;
+    public CelestialBodyRenderer(CelestialBody celestialBody) {
+        this.celestialBody = celestialBody;
     }
 
     public void loadTexture(GL2 gl) {
-        this.texture = loadTexture(gl, planet.getTextureFileName());
+        this.texture = loadTexture(gl, celestialBody.getTextureFileName());
     }
 
     private Texture loadTexture(GL2 gl, String fileName) {
@@ -87,14 +87,14 @@ public class PlanetRenderer extends CompositeRenderer {
         glu.gluQuadricTexture(quadric, true);
         glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
-        glu.gluSphere(quadric, planet.getRadius(), 64, 64);
+        glu.gluSphere(quadric, celestialBody.getRadius(), 64, 64);
         glu.gluDeleteQuadric(quadric);
         texture.disable(gl);
 
         gl.glLineWidth(2.5f);
         gl.glBegin(GL_LINES);
-        gl.glVertex3d(0, 0, planet.getRadius() * 2);
-        gl.glVertex3d(0, 0, -planet.getRadius() * 2);
+        gl.glVertex3d(0, 0, celestialBody.getRadius() * 2);
+        gl.glVertex3d(0, 0, -celestialBody.getRadius() * 2);
         gl.glEnd();
     }
 
@@ -102,10 +102,10 @@ public class PlanetRenderer extends CompositeRenderer {
         GL2 gl = drawable.getGL().getGL2();
         gl.glPushMatrix();
 
-        GLUtils.translate(gl, planet.getPosition());
-        double axialTilt = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,0,1), planet.getOrientation().getV()));
+        GLUtils.translate(gl, celestialBody.getPosition());
+        double axialTilt = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,0,1), celestialBody.getOrientation().getV()));
         gl.glRotated(axialTilt, 1, 0, 0);
-        double phi = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,1,0), planet.getOrientation().getU()));
+        double phi = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,1,0), celestialBody.getOrientation().getU()));
         gl.glRotated(phi, 0, 0, 1);
 
         logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);

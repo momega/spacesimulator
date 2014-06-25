@@ -49,9 +49,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         Satellite satellite = (Satellite) movingObject;
         SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(satellite);
-        Planet soiPlanet = soi.getBody();
-        Vector3d position = satellite.getPosition().subtract(soiPlanet.getPosition());
-        Vector3d velocity = satellite.getVelocity().subtract(soiPlanet.getVelocity());
+        CelestialBody soiCelestialBody = soi.getBody();
+        Vector3d position = satellite.getPosition().subtract(soiCelestialBody.getPosition());
+        Vector3d velocity = satellite.getVelocity().subtract(soiCelestialBody.getVelocity());
 
         Vector3d hVector = position.cross(velocity);
         double h = hVector.length();
@@ -151,11 +151,11 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     protected Vector3d getAcceleration(Vector3d position) {
         Vector3d a = new Vector3d();
         for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
-            if (dp instanceof Planet) {
-                Planet planet = (Planet) dp;
-                Vector3d r = planet.getPosition().subtract(position);
+            if (dp instanceof CelestialBody) {
+                CelestialBody celestialBody = (CelestialBody) dp;
+                Vector3d r = celestialBody.getPosition().subtract(position);
                 double dist3 = r.lengthSquared() * r.length();
-                a = a.scaleAdd(G * planet.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
+                a = a.scaleAdd(G * celestialBody.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
             }
         }
         return a;

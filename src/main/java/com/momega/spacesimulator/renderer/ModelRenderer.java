@@ -17,8 +17,8 @@ public class ModelRenderer extends CompositeRenderer {
         logger.info("initializing renderers");
         for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
             addRenderer(new DynamicalPointRenderer(dp));
-            if (dp instanceof  Planet) {
-                addRenderer(new PlanetRenderer((Planet) dp));
+            if (dp instanceof CelestialBody) {
+                addRenderer(new CelestialBodyRenderer((CelestialBody) dp));
             } else if (dp instanceof Satellite) {
                 addRenderer(new SatelliteRenderer((Satellite) dp));
             }

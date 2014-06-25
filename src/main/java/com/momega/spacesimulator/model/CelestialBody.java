@@ -7,9 +7,8 @@ import org.joda.time.DateTime;
  * with defined texture
  *
  * Created by martin on 4/15/14.
- * TODO: Rename to celestial body
  */
-public class Planet extends RotatingObject {
+public class CelestialBody extends RotatingObject {
 
     private String textureFileName;
 
