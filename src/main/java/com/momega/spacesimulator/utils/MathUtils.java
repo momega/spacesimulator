@@ -34,6 +34,11 @@ public class MathUtils {
         return fmod(angle, 2* Math.PI);
     }
 
+    public static double asinh(double x)
+    {
+        return Math.log(x + Math.sqrt(x*x + 1.0));
+    }
+
     public static Orientation createOrientation(Vector3d nVector, Vector3d vVector) {
         Orientation o = new Orientation();
         o.setN(nVector.normalize());

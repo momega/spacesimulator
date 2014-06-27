@@ -45,6 +45,9 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
     protected Vector3d[] solveKeplerian2(KeplerianTrajectory3d trajectory, Timestamp time) {
         double E = solveEccentricAnomaly(trajectory, time);
 
+        double theta = solveTheta1(E, trajectory.getEccentricity());
+        trajectory.setTrueAnomaly(theta);
+
         double omega = trajectory.getArgumentOfPeriapsis();
         double OMEGA = trajectory.getAscendingNode();
         double i = trajectory.getInclination();
@@ -63,14 +66,11 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
                 Math.cos(omega) * Math.sin(i)
         );
 
-        Vector3d r = P.scale(a * (Math.cos(E) - e));
-        r = Vector3d.scaleAdd(a * Math.sqrt(1 - e*e) * Math.sin(E), Q,  r);
+        Vector3d r = P.scale(a * (Math.cos(E) - e)).scaleAdd(a * Math.sqrt(1 - e*e) * Math.sin(E), Q);
 
         double n = 2 * Math.PI / trajectory.getPeriod().doubleValue();
         double derE = n / (1 - e* Math.cos(E));
-
-        Vector3d v = P.scale(-a * Math.sin(E) * derE);
-        v = Vector3d.scaleAdd(a * Math.sqrt(1 - e*e) * Math.cos(E) * derE, Q, v);
+        Vector3d v = P.scale(-a * Math.sin(E) * derE).scaleAdd(a * Math.sqrt(1 - e*e) * Math.cos(E) * derE, Q);
 
         return new Vector3d[] { r, v };
     }
@@ -86,24 +86,39 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
         double p = trajectory.getSemimajorAxis() * (1 - eccentricity* eccentricity);
 
         double E = solveEccentricAnomaly(trajectory, time);
-
-        double cosTheta = (Math.cos(E) - eccentricity) / ( 1.0 - eccentricity * Math.cos(E));
-        logger.debug("E = {}, cosTheta = {}", E, cosTheta);
-
-        double theta;
-        if (E < Math.PI) {
-            theta = Math.acos(cosTheta);
-        } else {
-            theta = 2*Math.PI - Math.acos(cosTheta);
-        }
-
-//        double theta = 2*Math.atan(thetaParam * Math.tan(E/2));
+        double theta = solveTheta1(E, eccentricity);
 
         double r = p / (1 + eccentricity * Math.cos(theta));
         logger.debug("r = {}, theta = {}", r, theta);
 
         Vector3d position = MathUtils.getKeplerianPosition(trajectory, r, theta);
         return new Vector3d[] {position, new Vector3d(0d,0d,0d)};
+    }
+
+    protected double solveTheta1(double E, double eccentricity) {
+        double cosTheta = (Math.cos(E) - eccentricity) / ( 1.0 - eccentricity * Math.cos(E));
+        double theta;
+        if (E < Math.PI) {
+            theta = Math.acos(cosTheta);
+        } else {
+            theta = 2*Math.PI - Math.acos(cosTheta);
+        }
+        return theta;
+    }
+
+    protected double solveTheta2(double E, double eccentricity) {
+        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
+        double theta = 2*Math.atan(param * Math.tan(E/2));
+        if (theta < 0) {
+            theta = Math.PI * 2 + theta;
+        }
+        return theta;
+    }
+
+    protected double solveTheta3(double E, double eccentricity) {
+        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
+        double theta = Math.atan(param * Math.sin(E) / (Math.cos(E) - eccentricity) );
+        return theta;
     }
 
     protected double solveEccentricAnomaly(KeplerianTrajectory2d trajectory, Timestamp time) {

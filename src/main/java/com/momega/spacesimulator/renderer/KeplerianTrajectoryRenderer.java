@@ -2,6 +2,9 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.KeplerianTrajectory3d;
 import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.utils.MathUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -12,20 +15,10 @@ import javax.media.opengl.GLAutoDrawable;
  */
 public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
 
-    protected final double a;
-    protected final double b;
-    protected final double e;
+    private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectoryRenderer.class);
 
     public KeplerianTrajectoryRenderer(KeplerianTrajectory3d trajectory) {
         super(trajectory);
-
-        this.a = trajectory.getSemimajorAxis();
-        this.e = a * trajectory.getEccentricity();
-        if (trajectory.getEccentricity()<1) {
-            this.b = a * Math.sqrt(1 - trajectory.getEccentricity() * trajectory.getEccentricity());
-        } else {
-            this.b = a * Math.sqrt(trajectory.getEccentricity() * trajectory.getEccentricity() - 1);
-        }
     }
 
     @Override
@@ -39,16 +32,37 @@ public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
         gl.glRotated(Math.toDegrees(getTrajectory().getInclination()), 1, 0, 0);
         gl.glRotated(Math.toDegrees(getTrajectory().getArgumentOfPeriapsis()), 0, 0, 1);
 
+        double a = getTrajectory().getSemimajorAxis();
+        double e = a * getTrajectory().getEccentricity();
+        double b;
+        if (getTrajectory().getEccentricity()<1) {
+            b = a * Math.sqrt(1 - getTrajectory().getEccentricity() * getTrajectory().getEccentricity());
+        } else {
+            b = a * Math.sqrt(getTrajectory().getEccentricity() * getTrajectory().getEccentricity() - 1);
+        }
+
+        logger.debug("semi-major = {}", a);
+
         gl.glColor3dv(getColor(), 0);
         gl.glLineWidth(1);
         gl.glTranslated(-e, 0, 0);
         if (getTrajectory().getEccentricity()<1) {
             GLUtils.drawEllipse(gl, a, b, 7200);
         } else {
-            GLUtils.drawHyperbola(gl, a, b, 7200);
+            double HA = getHA();
+            logger.debug("HA = {}", HA);
+            GLUtils.drawHyperbolaPartial(gl, a, b, -Math.PI, -HA, 7200); // -HA because of a<0
         }
 
         gl.glPopMatrix();
+    }
+
+    protected double getHA() {
+        double theta = getTrajectory().getTrueAnomaly();
+        double eccentricity = getTrajectory().getEccentricity();
+        double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
+        double HA = MathUtils.asinh(sinH);
+        return HA;
     }
 
     @Override

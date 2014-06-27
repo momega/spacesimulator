@@ -14,15 +14,11 @@ import javax.media.opengl.GLAutoDrawable;
 public class ApsidesRenderer extends AbstractTextRenderer {
 
     private final KeplerianTrajectory3d trajectory;
-    private final double rp;
-    private final double ra;
     private double[] periapsisCoordinates = null;
     private double[] apoapsisCoordinates = null;
 
     public ApsidesRenderer(KeplerianTrajectory3d trajectory) {
         this.trajectory = trajectory;
-        this.rp = trajectory.getSemimajorAxis()* (1 - trajectory.getEccentricity());
-        this.ra = trajectory.getSemimajorAxis()* (1 + trajectory.getEccentricity());
     }
 
     @Override
@@ -30,6 +26,9 @@ public class ApsidesRenderer extends AbstractTextRenderer {
         GL2 gl = drawable.getGL().getGL2();
         gl.glPointSize(8);
         gl.glBegin(GL2.GL_POINTS);
+
+        double rp = trajectory.getSemimajorAxis()* (1 - trajectory.getEccentricity());
+        double ra = trajectory.getSemimajorAxis()* (1 + trajectory.getEccentricity());
 
         Vector3d periapsis = MathUtils.getKeplerianPosition(trajectory, rp, 0d);
         gl.glVertex3dv(periapsis.asArray(), 0);

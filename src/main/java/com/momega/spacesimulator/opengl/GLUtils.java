@@ -66,13 +66,34 @@ public class GLUtils {
         gl.glEnd();
     }
 
+    public static void drawHyperbolaPartial(GL2 gl, double a, double b, double startAngle, double stopAngle, int num_segments) {
+        if (startAngle > Math.PI) {
+            startAngle = startAngle - 2*Math.PI;
+        }
+        if (stopAngle > Math.PI) {
+            stopAngle = stopAngle - 2*Math.PI;
+        }
+        gl.glBegin(GL_LINE_STRIP);
+        double DEG2RAD = 2 * Math.PI / num_segments;
+        int startIndex = (int) (startAngle / DEG2RAD);
+        int stopIndex = (int) (stopAngle / DEG2RAD);
+        if (startIndex <= -num_segments/2) {
+            startIndex = -num_segments/2+1;
+        }
+        for (int i= startIndex; i<=stopIndex; i++) {
+            double degInRad = DEG2RAD * i;
+            gl.glVertex2d(Math.cosh(degInRad) * a, Math.sinh(degInRad) * b);
+        }
+        gl.glEnd();
+    }
+
     public static void drawHyperbola(GL2 gl, double a, double b, int num_segments) {
         gl.glBegin(GL_LINE_STRIP);
-        for (int i=-num_segments; i<=num_segments ; i++) {
-            double k = ((double)i)/2000.0d;
-            gl.glVertex2d(Math.cosh(k) * a, Math.sinh(k) * b);
+        double DEG2RAD = 2.0 * Math.PI / num_segments;
+        for (int i= -num_segments/2 + 1; i<=num_segments/2-1 ; i++) {
+            double degInRad = DEG2RAD * i;
+            gl.glVertex2d(Math.cosh(degInRad) * a, Math.sinh(degInRad) * b);
         }
-
         gl.glEnd();
     }
 

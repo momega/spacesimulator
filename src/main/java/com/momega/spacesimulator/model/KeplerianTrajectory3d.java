@@ -9,6 +9,8 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
     private double inclination; // i
     private double ascendingNode; // uppercase omega
 
+    private double trueAnomaly = 0;
+
     /**
      * The inclination in radian
      * @return returns the inclination of the keplerian 3d trajectory
@@ -31,5 +33,17 @@ public class KeplerianTrajectory3d extends KeplerianTrajectory2d {
 
     public void setInclination(double inclination) {
         this.inclination = inclination;
+    }
+
+    /**
+     * Gets the true anomaly
+     * @return the tru anomaly in radians
+     */
+    public double getTrueAnomaly() {
+        return trueAnomaly;
+    }
+
+    public void setTrueAnomaly(double trueAnomaly) {
+        this.trueAnomaly = trueAnomaly;
     }
 }

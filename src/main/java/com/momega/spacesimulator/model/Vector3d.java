@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.utils.VectorUtils;
+
 /**
  * This class represents 3D vectors, storing their components as doubles.
  * Note that the class can be used to represent both point vectors and
@@ -7,8 +9,6 @@ package com.momega.spacesimulator.model;
  * vectors easier.
  */
 public class Vector3d {
-
-    final private static double SMALL_EPSILON = 0.0001;
 
     public double x = 0d, y = 0d, z = 0d;
 
@@ -81,7 +81,7 @@ public class Vector3d {
 
     public Vector3d normalize() {
         double len = length();
-        if (Math.abs(len) < SMALL_EPSILON) {
+        if (Math.abs(len) < VectorUtils.SMALL_EPSILON) {
             throw new IllegalStateException("length to small");
         }
 
@@ -90,24 +90,6 @@ public class Vector3d {
 
     public Vector3d scale(double factor) {
         return new Vector3d( x * factor, y * factor, z * factor);
-    }
-
-    /**
-     * Returns the result of the operation factor*u + v.
-     *
-     * @param factor The scaling factor for u
-     * @param u      The vector to scale
-     * @param v      The vector to add
-     * @return ...think about it...
-     */
-    public static Vector3d scaleAdd(double factor, final Vector3d u, final Vector3d v) {
-        return new Vector3d(factor * u.x + v.x, factor * u.y + v.y, factor * u.z + v.z);
-    }
-
-    public static double angleBetween(Vector3d a, Vector3d b) {
-        double cosAlpha = a.dot(b) / a.length() / b.length();
-        if(cosAlpha > 1) cosAlpha = 1;
-        return Math.acos(cosAlpha);
     }
 
     public Vector3d subtract(final Vector3d u) {

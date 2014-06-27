@@ -3,6 +3,9 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.TimeUtils;
+import org.apache.commons.collections.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
@@ -14,6 +17,8 @@ import org.springframework.util.Assert;
  */
 @Component
 public class NewtonianTrajectoryManager implements TrajectoryManager {
+
+    private static final Logger logger = LoggerFactory.getLogger(NewtonianTrajectoryManager.class);
 
     public static final double G = 6.67384*1E-11;
 
@@ -30,13 +35,15 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Vector3d velocity = movingObject.getVelocity();
         Vector3d position = movingObject.getPosition();
 
-//        Vector3d[] result = rk4Solver(position, velocity, dt);
+        Vector3d[] result = rk4Solver(position, velocity, dt);
+        movingObject.setVelocity(result[0]);
+        movingObject.setPosition(result[1]);
+
+//        Vector3d[] result = eulerSolver(position, velocity, dt);
 //        movingObject.setVelocity(result[0]);
 //        movingObject.setPosition(result[1]);
 
-        Vector3d[] result = eulerSolver(position, velocity, dt);
-        movingObject.setVelocity(result[0]);
-        movingObject.setPosition(result[1]);
+        computePrediction(movingObject);
     }
 
     /**
@@ -63,10 +70,13 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Vector3d eVector = velocity.cross(hVector).scale(1/mi).subtract(position.normalize());
         double e = eVector.length();
 
+        logger.debug("e = {}", e);
+
         double a = h*h / ( 1- e*e) / mi;
 
         double OMEGA = 0d;
         double omega = 0d; // this is for circular, equatorial Orbit
+        double theta;
 
         if (i > MINOR_ERROR) {
             Vector3d nVector = new Vector3d(0, 0, 1).cross(hVector);
@@ -81,26 +91,60 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
                 if (eVector.z < 0) {
                     omega = 2 * Math.PI - omega;
                 }
+
+                theta = Math.acos(eVector.dot(position) / e / position.length());
+                if (position.dot(velocity) <0) {
+                    theta = 2* Math.PI - theta;
+                }
+
+            } else {
+
+                theta = Math.acos(nVector.dot(position) / n / position.length());
+                if (position.z<0) {
+                    theta = 2* Math.PI - theta;
+                }
             }
+
         } else {
             if (e>MINOR_ERROR) {
                 omega = Math.acos(eVector.x / e);
                 if (eVector.y < 0) {
                     omega = 2 * Math.PI - omega;
                 }
+
+                theta = Math.acos(eVector.dot(position) / e / position.length());
+                if (position.dot(velocity) <0) {
+                    theta = 2* Math.PI - theta;
+                }
+
+            } else {
+                theta = Math.acos(position.x / position.length());
+                if (position.y <0) {
+                    theta = 2* Math.PI - theta;
+                }
             }
         }
 
-        KeplerianTrajectory3d prediction = new KeplerianTrajectory3d();
+        logger.debug("theta = {}, inclination = {}", theta, i);
+
+        NewtonianTrajectory nt = (NewtonianTrajectory) movingObject.getTrajectory();
+        KeplerianTrajectory3d prediction = nt.getPrediction();
+        if (prediction == null) {
+            prediction = new KeplerianTrajectory3d();
+        }
+
+        if (prediction.getCentralObject() != soiBody) {
+            logger.info("changing soi to {} for satellite {}", soiBody.getName(), satellite.getName());
+        }
         prediction.setCentralObject(soiBody);
         prediction.setInclination(i);
         prediction.setEccentricity(e);
         prediction.setSemimajorAxis(a);
         prediction.setAscendingNode(OMEGA);
         prediction.setArgumentOfPeriapsis(omega);
+        prediction.setTrueAnomaly(theta);
         prediction.setTrajectoryColor(new double[] {1d, 1d, 0d});
 
-        NewtonianTrajectory nt = (NewtonianTrajectory) movingObject.getTrajectory();
         nt.setPrediction(prediction);
     }
 
@@ -132,12 +176,12 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         Vector3d k1v = getAcceleration(position).scale(dt);
         Vector3d k1x = velocity.scale(dt);
-        Vector3d k2v = getAcceleration(Vector3d.scaleAdd(dt/2, k1x, position)).scale(dt);
-        Vector3d k2x = Vector3d.scaleAdd(1.0/2, k1v, velocity).scale(dt);
-        Vector3d k3v = getAcceleration(Vector3d.scaleAdd(dt/2, k2x, position)).scale(dt);
-        Vector3d k3x = Vector3d.scaleAdd(1.0/2, k2v, velocity).scale(dt);
-        Vector3d k4v = getAcceleration(Vector3d.scaleAdd(dt, k3x, position)).scale(dt);
-        Vector3d k4x = Vector3d.scaleAdd(1.0, k3v, velocity).scale(dt);
+        Vector3d k2v = getAcceleration(position.scaleAdd(dt/2, k1x)).scale(dt);
+        Vector3d k2x = velocity.scaleAdd(1.0/2, k1v).scale(dt);
+        Vector3d k3v = getAcceleration(position.scaleAdd(dt/2, k2x)).scale(dt);
+        Vector3d k3x = velocity.scaleAdd(1.0/2, k2v).scale(dt);
+        Vector3d k4v = getAcceleration(position.scaleAdd(dt, k3x)).scale(dt);
+        Vector3d k4x = velocity.scaleAdd(1.0, k3v).scale(dt);
 
         velocity = velocity.add(rk4(k1v, k2v, k3v, k4v));
         position = position.add(rk4(k1x, k2x, k3x, k4x));

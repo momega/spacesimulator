@@ -9,6 +9,7 @@ import com.momega.spacesimulator.model.Vector3d;
 public class VectorUtils {
 
     private final static double EPSILON = 0.0001;
+    public final static double SMALL_EPSILON = 0.0001;
 
     public static Vector3d fromSphericalCoordinates(double r, double theta, double phi) {
         return new Vector3d(r * Math.sin(theta)* Math.cos(phi), r*Math.sin(theta) * Math.sin(phi), r * Math.cos(theta));
@@ -59,4 +60,9 @@ public class VectorUtils {
         return ret;
     }
 
+    public static double angleBetween(Vector3d a, Vector3d b) {
+        double cosAlpha = a.dot(b) / a.length() / b.length();
+        if(cosAlpha > 1) cosAlpha = 1;
+        return Math.acos(cosAlpha);
+    }
 }

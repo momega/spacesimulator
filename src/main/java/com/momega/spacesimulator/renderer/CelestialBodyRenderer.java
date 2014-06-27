@@ -6,6 +6,7 @@ import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.utils.VectorUtils;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,9 +104,9 @@ public class CelestialBodyRenderer extends CompositeRenderer {
         gl.glPushMatrix();
 
         GLUtils.translate(gl, celestialBody.getPosition());
-        double axialTilt = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,0,1), celestialBody.getOrientation().getV()));
+        double axialTilt = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), celestialBody.getOrientation().getV()));
         gl.glRotated(axialTilt, 1, 0, 0);
-        double phi = Math.toDegrees(Vector3d.angleBetween(new Vector3d(0,1,0), celestialBody.getOrientation().getU()));
+        double phi = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 1, 0), celestialBody.getOrientation().getU()));
         gl.glRotated(phi, 0, 0, 1);
 
         logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);
