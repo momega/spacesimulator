@@ -3,15 +3,16 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.TimeUtils;
-import org.apache.commons.collections.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 /**
- * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along {@link com.momega.spacesimulator.model.NewtonianTrajectory}. The
+ * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along Newtonian Trajectory. The
  * implementation can use either Euler's or Runge-Kutta's method to computer the next iteration of the velocity and position
  * Created by martin on 5/21/14.
  */
@@ -23,6 +24,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     public static final double G = 6.67384*1E-11;
 
     private static double MINOR_ERROR = Math.pow(10, -12);
+    private int maxHistory = 100000;
 
     @Autowired
     private SphereOfInfluenceService sphereOfInfluenceService;
@@ -35,22 +37,31 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Vector3d velocity = movingObject.getVelocity();
         Vector3d position = movingObject.getPosition();
 
-        Vector3d[] result = rk4Solver(position, velocity, dt);
-        movingObject.setVelocity(result[0]);
-        movingObject.setPosition(result[1]);
-
-//        Vector3d[] result = eulerSolver(position, velocity, dt);
+//        Vector3d[] result = rk4Solver(position, velocity, dt);
 //        movingObject.setVelocity(result[0]);
 //        movingObject.setPosition(result[1]);
 
+        Vector3d[] result = eulerSolver(position, velocity, dt);
+        movingObject.setVelocity(result[0]);
+        movingObject.setPosition(result[1]);
+
         computePrediction(movingObject);
+        updateHistory(movingObject);
+    }
+
+    private void updateHistory(MovingObject movingObject) {
+        List<Vector3d> history = movingObject.getTrajectory().getHistory();
+        if (history.size()> maxHistory) {
+            history.remove(0);
+        }
+        history.add(movingObject.getPosition());
+
     }
 
     /**
      * Computes the prediction of the trajectory. Currently the supports work only for {@link com.momega.spacesimulator.model.Satellite}s.
      * @param movingObject the moving object which.
      */
-    @Override
     public void computePrediction(MovingObject movingObject) {
         Assert.isInstanceOf(Satellite.class, movingObject, "predication of trajectory is supported only for satellites");
 
@@ -127,25 +138,22 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         logger.debug("theta = {}, inclination = {}", theta, i);
 
-        NewtonianTrajectory nt = (NewtonianTrajectory) movingObject.getTrajectory();
-        KeplerianTrajectory3d prediction = nt.getPrediction();
-        if (prediction == null) {
-            prediction = new KeplerianTrajectory3d();
+        KeplerianElements keplerianElements = movingObject.getKeplerianElements();
+        if (keplerianElements == null) {
+            keplerianElements = new KeplerianElements();
         }
-
-        if (prediction.getCentralObject() != soiBody) {
+        if (keplerianElements.getCentralObject() != soiBody) {
             logger.info("changing soi to {} for satellite {}", soiBody.getName(), satellite.getName());
         }
-        prediction.setCentralObject(soiBody);
-        prediction.setInclination(i);
-        prediction.setEccentricity(e);
-        prediction.setSemimajorAxis(a);
-        prediction.setAscendingNode(OMEGA);
-        prediction.setArgumentOfPeriapsis(omega);
-        prediction.setTrueAnomaly(theta);
-        prediction.setTrajectoryColor(new double[] {1d, 1d, 0d});
+        keplerianElements.setCentralObject(soiBody);
+        keplerianElements.setInclination(i);
+        keplerianElements.setEccentricity(e);
+        keplerianElements.setSemimajorAxis(a);
+        keplerianElements.setAscendingNode(OMEGA);
+        keplerianElements.setArgumentOfPeriapsis(omega);
+        keplerianElements.setTrueAnomaly(theta);
 
-        nt.setPrediction(prediction);
+        movingObject.setKeplerianElements(keplerianElements);
     }
 
     /**
@@ -207,11 +215,14 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     @Override
     public boolean supports(MovingObject movingObject) {
-        Assert.notNull(movingObject);
-        return (movingObject instanceof  Satellite) && (movingObject.getTrajectory() instanceof NewtonianTrajectory);
+        return TrajectorySolverType.NEWTONIAN.equals(movingObject.getTrajectory().getSolverType());
     }
 
     public void setSphereOfInfluenceService(SphereOfInfluenceService sphereOfInfluenceService) {
         this.sphereOfInfluenceService = sphereOfInfluenceService;
+    }
+
+    public void setMaxHistory(int maxHistory) {
+        this.maxHistory = maxHistory;
     }
 }

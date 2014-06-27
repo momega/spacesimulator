@@ -3,25 +3,19 @@ package com.momega.spacesimulator.renderer;
 import com.momega.spacesimulator.model.Satellite;
 import com.momega.spacesimulator.opengl.GLUtils;
 
-import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by martin on 5/6/14.
  */
-public class SatelliteRenderer extends CompositeRenderer {
+public class SatelliteRenderer extends AbstractRenderer {
 
     private final double size = 1d;
 
-    public static final int maxHistory = 100000;
     private final Satellite satellite;
-
-    private List<double[]> history = new ArrayList<>();
 
     public SatelliteRenderer(Satellite satellite) {
         this.satellite = satellite;
@@ -29,23 +23,8 @@ public class SatelliteRenderer extends CompositeRenderer {
 
     public void draw(GLAutoDrawable drawable) {
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(satellite);
-
-        GL2 gl = drawable.getGL().getGL2();
-        if (history.size()> maxHistory) {
-            history.remove(0);
-        }
-        history.add(satellite.getPosition().asArray());
-
-        gl.glPushMatrix();
-        gl.glColor3dv(satellite.getTrajectory().getTrajectoryColor(), 0);
-        gl.glBegin(GL.GL_LINE_STRIP);
-        for (double[] v : history) {
-            gl.glVertex3dv(v, 0);
-        }
-        gl.glEnd();
-        gl.glPopMatrix();
-
         if ((viewCoordinates!=null) && (viewCoordinates.getRadius()>0.001)) {
+            GL2 gl = drawable.getGL().getGL2();
             GLU glu = new GLU();
 
             gl.glPushMatrix();
@@ -106,7 +85,5 @@ public class SatelliteRenderer extends CompositeRenderer {
 
             gl.glPopMatrix();
         }
-
-        super.draw(drawable);
     }
 }

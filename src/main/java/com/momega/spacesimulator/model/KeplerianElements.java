@@ -3,10 +3,10 @@ package com.momega.spacesimulator.model;
 import java.math.BigDecimal;
 
 /**
- * The class computer keplerian trajectory and object along the eclipse. It computes only in 2D space.
+ * The class holding keplerian elements of the trajectory
  * Created by martin on 4/21/14.
  */
-public class KeplerianTrajectory2d extends Trajectory {
+public class KeplerianElements {
 
     private DynamicalPoint centralObject;
     private double semimajorAxis; // (a)
@@ -14,11 +14,18 @@ public class KeplerianTrajectory2d extends Trajectory {
     private Timestamp timeOfPeriapsis; // seconds
     private BigDecimal period; // T in seconds
     private double argumentOfPeriapsis; // lowercase omega
+    private double inclination; // i
+    private double ascendingNode; // uppercase omega
+    private double trueAnomaly; // theta;
 
     public double getSemimajorAxis() {
         return this.semimajorAxis;
     }
 
+    /**
+     * Get eccentricity of the trajectory
+     * @return the eccentricity value
+     */
     public double getEccentricity() {
         return this.eccentricity;
     }
@@ -61,5 +68,41 @@ public class KeplerianTrajectory2d extends Trajectory {
 
     public void setArgumentOfPeriapsis(double argumentOfPeriapsis) {
         this.argumentOfPeriapsis = argumentOfPeriapsis;
+    }
+
+    /**
+     * The inclination in radian
+     * @return returns the inclination of the keplerian 3d trajectory
+     */
+    public double getInclination() {
+        return inclination;
+    }
+
+    /**
+     * Gets the Ascending node (upper omega)
+     * @return ascending node in radians
+     */
+    public double getAscendingNode() {
+        return ascendingNode;
+    }
+
+    public void setAscendingNode(double ascendingNode) {
+        this.ascendingNode = ascendingNode;
+    }
+
+    public void setInclination(double inclination) {
+        this.inclination = inclination;
+    }
+
+    /**
+     * Gets the true anomaly
+     * @return the tru anomaly in radians
+     */
+    public double getTrueAnomaly() {
+        return trueAnomaly;
+    }
+
+    public void setTrueAnomaly(double trueAnomaly) {
+        this.trueAnomaly = trueAnomaly;
     }
 }

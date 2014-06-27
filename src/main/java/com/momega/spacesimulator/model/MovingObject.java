@@ -10,6 +10,7 @@ public class MovingObject extends Object3d {
     private String name;
     private Vector3d velocity;
     private Trajectory trajectory;
+    private KeplerianElements keplerianElements;
     private Timestamp timestamp;
 
     public Vector3d getVelocity() {
@@ -52,5 +53,12 @@ public class MovingObject extends Object3d {
         this.timestamp = timestamp;
     }
 
+    public void setKeplerianElements(KeplerianElements keplerianElements) {
+        this.keplerianElements = keplerianElements;
+    }
+
+    public KeplerianElements getKeplerianElements() {
+        return keplerianElements;
+    }
 }
 

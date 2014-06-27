@@ -1,15 +1,18 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Timestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Trajectory Service calculates the position of all objects
  * Created by martin on 5/21/14.
  */
 @Component
@@ -26,7 +29,10 @@ public class TrajectoryService {
      * @param newTime new timestamp
      */
     public void move(MovingObject movingObject, Timestamp newTime) {
+        logger.debug("new time = {}", newTime);
         for(TrajectoryManager m : trajectoryManagers) {
+            Assert.notNull(movingObject);
+            Assert.notNull(movingObject.getTrajectory());
             if (m.supports(movingObject)) {
                 m.computePosition(movingObject, newTime);
                 movingObject.setTimestamp(newTime);
@@ -34,20 +40,6 @@ public class TrajectoryService {
             }
         }
         throw new IllegalArgumentException("object " + movingObject.getName() + " has unknown trajectory type");
-    }
-
-    /**
-     * Computes the prediction of the trajectory. Some types of the trajectory such as {@link com.momega.spacesimulator.model.NewtonianTrajectory} can
-     * be estimated by prediction trajectory.
-     * @param movingObject the moving object
-     */
-    public void prediction(MovingObject movingObject) {
-        for(TrajectoryManager m : trajectoryManagers) {
-            if (m.supports(movingObject)) {
-                m.computePrediction(movingObject);
-            }
-        }
-        logger.info("prediction computed for dynamical point {}", movingObject.getName());
     }
 
     public void setTrajectoryManagers(List<TrajectoryManager> trajectoryManagers) {

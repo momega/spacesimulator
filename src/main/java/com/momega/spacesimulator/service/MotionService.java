@@ -43,12 +43,6 @@ public class MotionService {
         return newTimestamp;
     }
 
-    public void predict() {
-        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
-            trajectoryService.prediction(dp);
-        }
-    }
-
     public void setTrajectoryService(TrajectoryService trajectoryService) {
         this.trajectoryService = trajectoryService;
     }

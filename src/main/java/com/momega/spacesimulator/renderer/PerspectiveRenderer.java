@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.opengl.MainRenderer;
+import com.momega.spacesimulator.opengl.MainGLRenderer;
 
 import javax.media.opengl.GL2;
 
@@ -9,9 +9,9 @@ import javax.media.opengl.GL2;
  */
 public class PerspectiveRenderer extends AbstractTextRenderer {
 
-    private final MainRenderer mainRenderer;
+    private final MainGLRenderer mainRenderer;
 
-    public PerspectiveRenderer(MainRenderer mainRenderer) {
+    public PerspectiveRenderer(MainGLRenderer mainRenderer) {
         this.mainRenderer = mainRenderer;
     }
 

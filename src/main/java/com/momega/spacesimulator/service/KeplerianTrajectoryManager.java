@@ -6,7 +6,6 @@ import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 
 /**
  * Computes the position of the {@link com.momega.spacesimulator.model.MovingObject} along the keplerian trajectory.
@@ -21,7 +20,7 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
 
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
-        KeplerianTrajectory3d trajectory = (KeplerianTrajectory3d) movingObject.getTrajectory();
+        KeplerianElements trajectory = movingObject.getKeplerianElements();
 
         Vector3d[] result = solveKeplerian2(trajectory, newTimestamp);
         Vector3d r = result[0].add(trajectory.getCentralObject().getPosition());
@@ -32,27 +31,21 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
     }
 
     @Override
-    public void computePrediction(MovingObject movingObject) {
-        // do nothing
-    }
-
-    @Override
     public boolean supports(MovingObject movingObject) {
-        Assert.notNull(movingObject);
-        return movingObject.getTrajectory() instanceof KeplerianTrajectory3d;
+        return TrajectorySolverType.KEPLERIAN.equals(movingObject.getTrajectory().getSolverType());
     }
 
-    protected Vector3d[] solveKeplerian2(KeplerianTrajectory3d trajectory, Timestamp time) {
-        double E = solveEccentricAnomaly(trajectory, time);
+    protected Vector3d[] solveKeplerian2(KeplerianElements keplerianElements, Timestamp time) {
+        double E = solveEccentricAnomaly(keplerianElements, time);
 
-        double theta = solveTheta1(E, trajectory.getEccentricity());
-        trajectory.setTrueAnomaly(theta);
+        double theta = solveTheta1(E, keplerianElements.getEccentricity());
+        keplerianElements.setTrueAnomaly(theta);
 
-        double omega = trajectory.getArgumentOfPeriapsis();
-        double OMEGA = trajectory.getAscendingNode();
-        double i = trajectory.getInclination();
-        double e = trajectory.getEccentricity();
-        double a = trajectory.getSemimajorAxis();
+        double omega = keplerianElements.getArgumentOfPeriapsis();
+        double OMEGA = keplerianElements.getAscendingNode();
+        double i = keplerianElements.getInclination();
+        double e = keplerianElements.getEccentricity();
+        double a = keplerianElements.getSemimajorAxis();
 
         Vector3d P = new Vector3d(
                 Math.cos(omega) * Math.cos(OMEGA) - Math.sin(omega) * Math.cos(i) * Math.sin(OMEGA),
@@ -68,7 +61,7 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
 
         Vector3d r = P.scale(a * (Math.cos(E) - e)).scaleAdd(a * Math.sqrt(1 - e*e) * Math.sin(E), Q);
 
-        double n = 2 * Math.PI / trajectory.getPeriod().doubleValue();
+        double n = 2 * Math.PI / keplerianElements.getPeriod().doubleValue();
         double derE = n / (1 - e* Math.cos(E));
         Vector3d v = P.scale(-a * Math.sin(E) * derE).scaleAdd(a * Math.sqrt(1 - e*e) * Math.cos(E) * derE, Q);
 
@@ -80,18 +73,18 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
      * @param time the time
      * @return the array with the radius (r) and theta (real anomaly)
      */
-    protected Vector3d[] solveKeplerian(KeplerianTrajectory3d trajectory, Timestamp time) {
+    protected Vector3d[] solveKeplerian(KeplerianElements keplerianElements, Timestamp time) {
 
-        double eccentricity = trajectory.getEccentricity();
-        double p = trajectory.getSemimajorAxis() * (1 - eccentricity* eccentricity);
+        double eccentricity = keplerianElements.getEccentricity();
+        double p = keplerianElements.getSemimajorAxis() * (1 - eccentricity* eccentricity);
 
-        double E = solveEccentricAnomaly(trajectory, time);
+        double E = solveEccentricAnomaly(keplerianElements, time);
         double theta = solveTheta1(E, eccentricity);
 
         double r = p / (1 + eccentricity * Math.cos(theta));
         logger.debug("r = {}, theta = {}", r, theta);
 
-        Vector3d position = MathUtils.getKeplerianPosition(trajectory, r, theta);
+        Vector3d position = MathUtils.getKeplerianPosition(keplerianElements, r, theta);
         return new Vector3d[] {position, new Vector3d(0d,0d,0d)};
     }
 
@@ -121,17 +114,17 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
         return theta;
     }
 
-    protected double solveEccentricAnomaly(KeplerianTrajectory2d trajectory, Timestamp time) {
+    protected double solveEccentricAnomaly(KeplerianElements keplerianElements, Timestamp time) {
         logger.debug("time = {}", time);
 
         double E = Math.PI; //  eccentric anomaly
-        double dt = TimeUtils.subtract(time, trajectory.getTimeOfPeriapsis()).getValue().doubleValue();
-        double n = 2 * Math.PI / trajectory.getPeriod().doubleValue();
+        double dt = TimeUtils.subtract(time, keplerianElements.getTimeOfPeriapsis()).getValue().doubleValue();
+        double n = 2 * Math.PI / keplerianElements.getPeriod().doubleValue();
         double M = n * dt;   // mean anomaly
         M = MathUtils.normalizeAngle(M);
 
         logger.debug("M = {}", M);
-        double eccentricity = trajectory.getEccentricity();
+        double eccentricity = keplerianElements.getEccentricity();
         double F = E - eccentricity * Math.sin(M) - M;
         for(int i=0; i<50; i++) {
             E = E - F / (1.0 - eccentricity * Math.cos(E));

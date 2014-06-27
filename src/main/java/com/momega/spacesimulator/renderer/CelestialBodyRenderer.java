@@ -25,7 +25,7 @@ import static javax.media.opengl.GL.*;
  * The class renders the planet. It holds the {@link CelestialBody} instance and contains logic for rendering.
  * Created by martin on 4/19/14.
  */
-public class CelestialBodyRenderer extends CompositeRenderer {
+public class CelestialBodyRenderer extends AbstractRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(CelestialBodyRenderer.class);
 
@@ -113,7 +113,5 @@ public class CelestialBodyRenderer extends CompositeRenderer {
 
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();
-
-        super.draw(drawable);
     }
 }

@@ -14,9 +14,9 @@ import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
  *
  * Created by martin on 4/19/14.
  */
-public abstract class AbstractRenderer implements GLEventListener {
+public abstract class AbstractGLRenderer implements GLEventListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractRenderer.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractGLRenderer.class);
 
     /**
      * The default implementation of initializing of the renderer. It creates GLU and GLUT objects

@@ -14,7 +14,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * This abstract class provides basic OPENGL window, with the animator. It also registered the {@link com.momega.spacesimulator.opengl.AbstractRenderer}
+ * This abstract class provides basic OPENGL window, with the animator. It also registered the {@link AbstractGLRenderer}
  * and {@link com.momega.spacesimulator.controller.Controller}
  * Created by martin on 4/19/14.
  */
@@ -25,7 +25,7 @@ public class DefaultWindow {
     private static final int FPS = 20; // animator's target frames per second
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultWindow.class);
-    private AbstractRenderer renderer;
+    private AbstractGLRenderer renderer;
     private Controller controller;
     private GLCanvas canvas;
     private AnimatorBase animator;
@@ -35,7 +35,7 @@ public class DefaultWindow {
         this.title = title;
     }
 
-    public void openWindow(final AbstractRenderer renderer, final Controller controller) {
+    public void openWindow(final AbstractGLRenderer renderer, final Controller controller) {
         this.renderer = renderer;
         this.controller = controller;
         // Run the GUI codes in the event-dispatching thread for thread safety

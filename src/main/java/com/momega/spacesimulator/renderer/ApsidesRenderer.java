@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.KeplerianTrajectory3d;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.MathUtils;
 
@@ -13,12 +13,10 @@ import javax.media.opengl.GLAutoDrawable;
  */
 public class ApsidesRenderer extends AbstractTextRenderer {
 
-    private final KeplerianTrajectory3d trajectory;
-    private double[] periapsisCoordinates = null;
-    private double[] apoapsisCoordinates = null;
+    private final MovingObject movingObject;
 
-    public ApsidesRenderer(KeplerianTrajectory3d trajectory) {
-        this.trajectory = trajectory;
+    public ApsidesRenderer(MovingObject movingObject) {
+        this.movingObject = movingObject;
     }
 
     @Override
@@ -27,14 +25,16 @@ public class ApsidesRenderer extends AbstractTextRenderer {
         gl.glPointSize(8);
         gl.glBegin(GL2.GL_POINTS);
 
-        double rp = trajectory.getSemimajorAxis()* (1 - trajectory.getEccentricity());
-        double ra = trajectory.getSemimajorAxis()* (1 + trajectory.getEccentricity());
+        KeplerianElements keplerianElements = movingObject.getKeplerianElements();
 
-        Vector3d periapsis = MathUtils.getKeplerianPosition(trajectory, rp, 0d);
+        double rp = keplerianElements.getSemimajorAxis()* (1 - keplerianElements.getEccentricity());
+        double ra = keplerianElements.getSemimajorAxis()* (1 + keplerianElements.getEccentricity());
+
+        Vector3d periapsis = MathUtils.getKeplerianPosition(keplerianElements, rp, 0d);
         gl.glVertex3dv(periapsis.asArray(), 0);
 
-        if (trajectory.getEccentricity()<1) {
-            Vector3d apoapsis = MathUtils.getKeplerianPosition(trajectory, ra, Math.PI);
+        if (keplerianElements.getEccentricity()<1) {
+            Vector3d apoapsis = MathUtils.getKeplerianPosition(keplerianElements, ra, Math.PI);
             gl.glVertex3dv(apoapsis.asArray(), 0);
         }
 
@@ -45,11 +45,11 @@ public class ApsidesRenderer extends AbstractTextRenderer {
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-        if (periapsisCoordinates != null) {
-            drawText("P", (int)periapsisCoordinates[0], (int)periapsisCoordinates[1]);
-        }
-        if (apoapsisCoordinates != null) {
-            drawText("A", (int)apoapsisCoordinates[0], (int)apoapsisCoordinates[1]);
-        }
+//        if (periapsisCoordinates != null) {
+//            drawText("P", (int)periapsisCoordinates[0], (int)periapsisCoordinates[1]);
+//        }
+//        if (apoapsisCoordinates != null) {
+//            drawText("A", (int)apoapsisCoordinates[0], (int)apoapsisCoordinates[1]);
+//        }
     }
 }

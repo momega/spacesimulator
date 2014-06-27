@@ -19,10 +19,10 @@ import javax.media.opengl.glu.GLU;
  * for all my OPENGL implementation
  * Created by martin on 4/19/14.
  */
-public class MainRenderer extends AbstractRenderer {
+public class MainGLRenderer extends AbstractGLRenderer {
 
     public final static double UNIVERSE_RADIUS = 1E19;
-    private static final Logger logger = LoggerFactory.getLogger(MainRenderer.class);
+    private static final Logger logger = LoggerFactory.getLogger(MainGLRenderer.class);
 
     private final ModelRenderer renderer;
     private final Application application;
@@ -31,7 +31,7 @@ public class MainRenderer extends AbstractRenderer {
     public double znear = 100;
     protected boolean reshape = false;
 
-    public MainRenderer(Application application) {
+    public MainGLRenderer(Application application) {
         this.application = application;
         this.renderer = new ModelRenderer();
         this.renderer.addRenderer(new PerspectiveRenderer(this));
@@ -67,11 +67,12 @@ public class MainRenderer extends AbstractRenderer {
     protected void computeScene(GLAutoDrawable drawable) {
         application.next();
 
-        // TODO: place this into the method
-        double x = drawable.getWidth();
-        double y = drawable.getHeight();
-        double aratio = Math.sqrt(x * x + y * y) / y;
-        double z = computeZNear(aratio);
+
+//        // TODO: place this into the method
+//        double x = drawable.getWidth();
+//        double y = drawable.getHeight();
+//        double aratio = Math.sqrt(x * x + y * y) / y;
+        double z =  ModelHolder.getModel().getCamera().getDistance();
         z = z / 10.0d;
         if (z < znear/2) {
             znear = z;
@@ -149,9 +150,6 @@ public class MainRenderer extends AbstractRenderer {
             double radiusAngle = Math.atan2(dp.getRadius(), distance);
             viewCoordinates.setRadius(radiusAngle);
             RendererModel.getInstance().addViewCoordinates(dp, viewCoordinates);
-            if (dp instanceof Satellite) {
-                NewtonianTrajectory trajectory = (NewtonianTrajectory) dp.getTrajectory();
-            }
         }
     }
 

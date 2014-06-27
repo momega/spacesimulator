@@ -1,6 +1,8 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.KeplerianTrajectory3d;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Trajectory;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.utils.MathUtils;
 import org.slf4j.Logger;
@@ -13,40 +15,39 @@ import javax.media.opengl.GLAutoDrawable;
  * The renderer of keplerian trajectory 2d
  * Created by martin on 4/21/14.
  */
-public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
+public class KeplerianTrajectoryRenderer extends AbstractRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(KeplerianTrajectoryRenderer.class);
+    private final MovingObject movingObject;
 
-    public KeplerianTrajectoryRenderer(KeplerianTrajectory3d trajectory) {
-        super(trajectory);
+    public KeplerianTrajectoryRenderer(MovingObject movingObject) {
+        this.movingObject = movingObject;
     }
 
-    @Override
     public void draw(GLAutoDrawable drawable) {
-        super.draw(drawable);
         GL2 gl = drawable.getGL().getGL2();
         gl.glPushMatrix();
 
-        GLUtils.translate(gl, getTrajectory().getCentralObject().getPosition());
-        gl.glRotated(Math.toDegrees(getTrajectory().getAscendingNode()), 0, 0, 1);
-        gl.glRotated(Math.toDegrees(getTrajectory().getInclination()), 1, 0, 0);
-        gl.glRotated(Math.toDegrees(getTrajectory().getArgumentOfPeriapsis()), 0, 0, 1);
+        GLUtils.translate(gl, getKeplerianElements().getCentralObject().getPosition());
+        gl.glRotated(Math.toDegrees(getKeplerianElements().getAscendingNode()), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(getKeplerianElements().getInclination()), 1, 0, 0);
+        gl.glRotated(Math.toDegrees(getKeplerianElements().getArgumentOfPeriapsis()), 0, 0, 1);
 
-        double a = getTrajectory().getSemimajorAxis();
-        double e = a * getTrajectory().getEccentricity();
+        double a = getKeplerianElements().getSemimajorAxis();
+        double e = a * getKeplerianElements().getEccentricity();
         double b;
-        if (getTrajectory().getEccentricity()<1) {
-            b = a * Math.sqrt(1 - getTrajectory().getEccentricity() * getTrajectory().getEccentricity());
+        if (getKeplerianElements().getEccentricity()<1) {
+            b = a * Math.sqrt(1 - getKeplerianElements().getEccentricity() * getKeplerianElements().getEccentricity());
         } else {
-            b = a * Math.sqrt(getTrajectory().getEccentricity() * getTrajectory().getEccentricity() - 1);
+            b = a * Math.sqrt(getKeplerianElements().getEccentricity() * getKeplerianElements().getEccentricity() - 1);
         }
 
         logger.debug("semi-major = {}", a);
 
-        gl.glColor3dv(getColor(), 0);
+        gl.glColor3dv(getTrajectory().getTrajectoryColor(), 0);
         gl.glLineWidth(1);
         gl.glTranslated(-e, 0, 0);
-        if (getTrajectory().getEccentricity()<1) {
+        if (getKeplerianElements().getEccentricity()<1) {
             GLUtils.drawEllipse(gl, a, b, 7200);
         } else {
             double HA = getHA();
@@ -58,15 +59,18 @@ public class KeplerianTrajectoryRenderer extends TrajectoryRenderer {
     }
 
     protected double getHA() {
-        double theta = getTrajectory().getTrueAnomaly();
-        double eccentricity = getTrajectory().getEccentricity();
+        double theta = getKeplerianElements().getTrueAnomaly();
+        double eccentricity = getKeplerianElements().getEccentricity();
         double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
         double HA = MathUtils.asinh(sinH);
         return HA;
     }
 
-    @Override
-    public KeplerianTrajectory3d getTrajectory() {
-        return (KeplerianTrajectory3d) super.getTrajectory();
+    public KeplerianElements getKeplerianElements() {
+        return movingObject.getKeplerianElements();
+    }
+
+    public Trajectory getTrajectory() {
+        return movingObject.getTrajectory();
     }
 }

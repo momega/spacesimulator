@@ -8,7 +8,6 @@ import com.momega.spacesimulator.utils.VectorUtils;
 import org.joda.time.DateTimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 
@@ -89,16 +88,23 @@ public abstract class AbstractModelBuilder {
      * @param ascendingNode the ascending node in degrees
      * @return new instance of the keplerian trajectory
      */
-    public KeplerianTrajectory3d createKeplerianTrajectory(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
-        KeplerianTrajectory3d trajectory = new KeplerianTrajectory3d();
-        trajectory.setCentralObject(centralObject);
-        trajectory.setSemimajorAxis(semimajorAxis);
-        trajectory.setEccentricity(eccentricity);
-        trajectory.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
-        trajectory.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
-        trajectory.setTimeOfPeriapsis(TimeUtils.createTime(timeOfPeriapsis));
-        trajectory.setInclination(Math.toRadians(inclination));
-        trajectory.setAscendingNode(Math.toRadians(ascendingNode));
+    public KeplerianElements createKeplerianElements(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
+        KeplerianElements keplerianElements = new KeplerianElements();
+        keplerianElements.setCentralObject(centralObject);
+        keplerianElements.setSemimajorAxis(semimajorAxis);
+        keplerianElements.setEccentricity(eccentricity);
+        keplerianElements.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
+        keplerianElements.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
+        keplerianElements.setTimeOfPeriapsis(TimeUtils.createTime(timeOfPeriapsis));
+        keplerianElements.setInclination(Math.toRadians(inclination));
+        keplerianElements.setAscendingNode(Math.toRadians(ascendingNode));
+        return keplerianElements;
+    }
+
+    public Trajectory createTrajectory(double[] trajectoryColor, TrajectorySolverType solverType) {
+        Trajectory trajectory = new Trajectory();
+        trajectory.setSolverType(solverType);
+        trajectory.setTrajectoryColor(trajectoryColor);
         return trajectory;
     }
 
@@ -124,9 +130,8 @@ public abstract class AbstractModelBuilder {
         satellite.setPosition(position);
         satellite.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
         satellite.setVelocity(velocity);
-        NewtonianTrajectory satelliteTrajectory = new NewtonianTrajectory();
-        satelliteTrajectory.setTrajectoryColor(new double[]{1, 1, 1});
-        satellite.setTrajectory(satelliteTrajectory);
+        Trajectory trajectory = createTrajectory(new double[]{1, 1, 1}, TrajectorySolverType.NEWTONIAN);
+        satellite.setTrajectory(trajectory);
         satellite.setMass(10 * 1E3);
         satellite.setRadius(10);
         return satellite;
@@ -162,8 +167,7 @@ public abstract class AbstractModelBuilder {
             model.setRootSoi(soi);
             return soi;
         } else {
-            Assert.isInstanceOf(KeplerianTrajectory2d.class, celestialBody.getTrajectory());
-            return addPlanetToSoiTree(celestialBody, parentSoi, (KeplerianTrajectory2d) celestialBody.getTrajectory());
+            return addPlanetToSoiTree(celestialBody, parentSoi, celestialBody.getKeplerianElements());
         }
     }
 
@@ -171,14 +175,14 @@ public abstract class AbstractModelBuilder {
      * The method adds the planet to the SOI tree and calculate the radius of the planet soi.
      * @param celestialBody the planet
      * @param parentSoi the parent soi
-     * @param trajectory the trajectory of the planet. It has to be specified when the the planet
+     * @param keplerianElements the keplerian elements of the planet. It has to be specified when the the planet
      *                   orbiting the bary-centre. In these cases it is not possible to calculate correctly sphere of influence. The example is
      *                   Earth -> (Earth/Moon Barycentre) -> Sun
      * @return new instance of the sphere of influence
      */
-    public SphereOfInfluence addPlanetToSoiTree(final CelestialBody celestialBody, final SphereOfInfluence parentSoi, KeplerianTrajectory2d trajectory) {
+    public SphereOfInfluence addPlanetToSoiTree(final CelestialBody celestialBody, final SphereOfInfluence parentSoi, KeplerianElements keplerianElements) {
         SphereOfInfluence soi = new SphereOfInfluence();
-        double radius = Math.pow(celestialBody.getMass() / parentSoi.getBody().getMass(), 0.4d) * trajectory.getSemimajorAxis();
+        double radius = Math.pow(celestialBody.getMass() / parentSoi.getBody().getMass(), 0.4d) * keplerianElements.getSemimajorAxis();
         soi.setRadius(radius);
         soi.setBody(celestialBody);
         soi.setParent(parentSoi);

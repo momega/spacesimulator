@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.opengl.MainRenderer;
+import com.momega.spacesimulator.opengl.MainGLRenderer;
 
 import java.awt.event.KeyEvent;
 
@@ -9,9 +9,9 @@ import java.awt.event.KeyEvent;
  */
 public class PerspectiveController extends AbstractController {
 
-    private final MainRenderer renderer;
+    private final MainGLRenderer renderer;
 
-    public PerspectiveController(MainRenderer renderer) {
+    public PerspectiveController(MainGLRenderer renderer) {
         this.renderer = renderer;
     }
 

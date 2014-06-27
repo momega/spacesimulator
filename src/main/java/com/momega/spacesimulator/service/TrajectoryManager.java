@@ -11,17 +11,10 @@ public interface TrajectoryManager {
 
     /**
      * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation
-     * @param movingObject
+     * @param movingObject the moving object
      * @param newTimestamp new timestamp
      */
     void computePosition(MovingObject movingObject, Timestamp newTimestamp);
-
-    /**
-     * Computes the prediction of the trajectory
-     * @param movingObject
-     * @return
-     */
-    void computePrediction(MovingObject movingObject);
 
     /**
      * Indicates whether or not the service supports the trajectory

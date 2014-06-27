@@ -9,7 +9,7 @@ import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.controller.*;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.opengl.DefaultWindow;
-import com.momega.spacesimulator.opengl.MainRenderer;
+import com.momega.spacesimulator.opengl.MainGLRenderer;
 
 
 /**
@@ -31,7 +31,7 @@ public class MainWindow extends DefaultWindow {
         Application application = new Application();
         Model model = application.init(builder);
 
-        MainRenderer mr = new MainRenderer(application);
+        MainGLRenderer mr = new MainGLRenderer(application);
         controller.addController(new QuitController(window));
         controller.addController(new TargetController());
         controller.addController(new CameraController(model.getCamera()));

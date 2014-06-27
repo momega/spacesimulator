@@ -37,7 +37,8 @@ public class Application {
         logger.info("time = {}", formatter.print(TimeUtils.getDateTime(ModelHolder.getModel().getTime())));
         next();
         modelBuilder.initSatellites();
-        predict();
+        next();
+        logger.info("model data built");
         return ModelHolder.getModel();
     }
 
@@ -50,10 +51,6 @@ public class Application {
         model.setTime(t);
         cameraService.updatePosition(model.getCamera());
         logger.debug("time = {}",  formatter.print(TimeUtils.getDateTime(model.getTime())));
-    }
-
-    public void predict() {
-        motionService.predict();
     }
 
     public void dispose() {
