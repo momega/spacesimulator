@@ -101,10 +101,18 @@ public abstract class AbstractModelBuilder {
         return keplerianElements;
     }
 
-    public Trajectory createTrajectory(double[] trajectoryColor, TrajectorySolverType solverType) {
+    public Trajectory createTrajectory(MovingObject movingObjects, String trajectoryColor, TrajectoryType trajectoryType) {
+        double r = (double) Integer.parseInt(trajectoryColor.substring(1, 3), 16);
+        double g = (double) Integer.parseInt(trajectoryColor.substring(3, 5), 16);
+        double b = (double) Integer.parseInt(trajectoryColor.substring(5, 7), 16);
+        return createTrajectory(movingObjects, new double[] {r / 255,g / 255,b / 255}, trajectoryType);
+    }
+
+    public Trajectory createTrajectory(MovingObject movingObjects, double[] trajectoryColor, TrajectoryType trajectoryType) {
         Trajectory trajectory = new Trajectory();
-        trajectory.setSolverType(solverType);
-        trajectory.setTrajectoryColor(trajectoryColor);
+        trajectory.setType(trajectoryType);
+        trajectory.setColor(trajectoryColor);
+        movingObjects.setTrajectory(trajectory);
         return trajectory;
     }
 
@@ -130,10 +138,15 @@ public abstract class AbstractModelBuilder {
         satellite.setPosition(position);
         satellite.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
         satellite.setVelocity(velocity);
-        Trajectory trajectory = createTrajectory(new double[]{1, 1, 1}, TrajectorySolverType.NEWTONIAN);
-        satellite.setTrajectory(trajectory);
+        createTrajectory(satellite, new double[]{1, 1, 0}, TrajectoryType.NEWTONIAN);
         satellite.setMass(10 * 1E3);
         satellite.setRadius(10);
+
+        HistoryTrajectory historyTrajectory = new HistoryTrajectory();
+        historyTrajectory.setType(TrajectoryType.HISTORY);
+        historyTrajectory.setColor(new double[]{1, 1, 1});
+        satellite.setHistoryTrajectory(historyTrajectory);
+
         return satellite;
     }
 

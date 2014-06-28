@@ -8,7 +8,7 @@ import java.math.BigDecimal;
  */
 public class KeplerianElements {
 
-    private DynamicalPoint centralObject;
+    private MovingObject centralObject;
     private double semimajorAxis; // (a)
     private double eccentricity; // epsilon
     private Timestamp timeOfPeriapsis; // seconds
@@ -34,7 +34,7 @@ public class KeplerianElements {
         return this.argumentOfPeriapsis;
     }
 
-    public DynamicalPoint getCentralObject() {
+    public MovingObject getCentralObject() {
         return centralObject;
     }
 
@@ -46,7 +46,7 @@ public class KeplerianElements {
         this.period = period;
     }
 
-    public void setCentralObject(DynamicalPoint centralObject) {
+    public void setCentralObject(MovingObject centralObject) {
         this.centralObject = centralObject;
     }
 

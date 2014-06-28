@@ -1,9 +1,7 @@
 package com.momega.spacesimulator.model;
 
-import org.joda.time.DateTime;
-
 /**
- * The class represents the planet. It is the {@link com.momega.spacesimulator.model.RotatingObject}
+ * The class represents the celestial such as planet. It is the {@link com.momega.spacesimulator.model.RotatingObject}
  * with defined texture
  *
  * Created by martin on 4/15/14.

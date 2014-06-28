@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents the Sphere of influence of the given body
+ * Represents the Sphere of influence of the given body. The sphere of influence is the area where the gravitation
+ * of the object is greater then any other gravitational influences.
  * Created by martin on 6/14/14.
  */
 public class SphereOfInfluence {

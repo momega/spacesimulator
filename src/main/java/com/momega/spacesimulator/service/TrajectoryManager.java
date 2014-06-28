@@ -18,8 +18,8 @@ public interface TrajectoryManager {
 
     /**
      * Indicates whether or not the service supports the trajectory
-     * @param movingObject the moving object
+     * @param trajectory the trajectory
      * @return returns boolean value
      */
-    boolean supports(MovingObject movingObject);
+    boolean supports(Trajectory trajectory);
 }

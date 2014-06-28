@@ -10,14 +10,11 @@ import com.momega.spacesimulator.utils.VectorUtils;
  */
 public class Vector3d {
 
-    public double x = 0d, y = 0d, z = 0d;
+    public final double x;
+    public final double y;
+    public final double z;
 
-    /**
-     * Constructs a new Vector3d, all coordinates are set to zero
-     */
-    public Vector3d() {
-        super();
-    }
+    public static final Vector3d ZERO = new Vector3d(0d, 0d, 0d);
 
     /**
      * Constructs a new Vector3d with the specified x, y and z components.

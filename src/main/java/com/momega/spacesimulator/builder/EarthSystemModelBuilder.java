@@ -19,14 +19,14 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         earth.setPosition(new Vector3d(0,0,0));
         earth.setVelocity(new Vector3d(0, 0, 0));
         Trajectory earthTrajectory = new Trajectory();
-        earth.setTrajectory(createTrajectory(new double[]{0, 0.5, 1}, TrajectorySolverType.STATIC));
+        createTrajectory(earth, new double[]{0, 0.5, 1}, TrajectoryType.STATIC);
         updateDynamicalPoint(earth, "Earth", 5.97219, 0.997269, 6.378, 23.5);
         earth.setTextureFileName("earth.jpg");
 
         CelestialBody moon = new CelestialBody();
         moon.setKeplerianElements(createKeplerianElements(earth, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.241500, 208.1199));
         updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687);
-        moon.setTrajectory(createTrajectory(new double[] {0.5,0.5,0.5}, TrajectorySolverType.KEPLERIAN));
+        createTrajectory(moon, new double[] {0.5,0.5,0.5}, TrajectoryType.KEPLERIAN);
         moon.setTextureFileName("moon.jpg");
 
         addDynamicalPoint(earth);

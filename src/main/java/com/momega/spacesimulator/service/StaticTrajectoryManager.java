@@ -17,7 +17,7 @@ public class StaticTrajectoryManager implements TrajectoryManager {
     }
 
     @Override
-    public boolean supports(MovingObject movingObject) {
-        return TrajectorySolverType.STATIC.equals(movingObject.getTrajectory().getSolverType());
+    public boolean supports(Trajectory trajectory) {
+        return TrajectoryType.STATIC.equals(trajectory.getType());
     }
 }

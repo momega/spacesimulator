@@ -44,7 +44,7 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
 
         logger.debug("semi-major = {}", a);
 
-        gl.glColor3dv(getTrajectory().getTrajectoryColor(), 0);
+        gl.glColor3dv(getTrajectory().getColor(), 0);
         gl.glLineWidth(1);
         gl.glTranslated(-e, 0, 0);
         if (getKeplerianElements().getEccentricity()<1) {
@@ -52,7 +52,7 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
         } else {
             double HA = getHA();
             logger.debug("HA = {}", HA);
-            GLUtils.drawHyperbolaPartial(gl, a, b, -Math.PI, -HA, 7200); // -HA because of a<0
+            GLUtils.drawHyperbolaPartial(gl, a, b, -2*Math.PI, -HA, 7200); // -HA because of a<0
         }
 
         gl.glPopMatrix();

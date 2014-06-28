@@ -2,6 +2,7 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.model.Trajectory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +31,15 @@ public class TrajectoryService {
      */
     public void move(MovingObject movingObject, Timestamp newTime) {
         logger.debug("new time = {}", newTime);
-        for(TrajectoryManager m : trajectoryManagers) {
-            Assert.notNull(movingObject);
-            Assert.notNull(movingObject.getTrajectory());
-            if (m.supports(movingObject)) {
+        Assert.notNull(movingObject);
+        Trajectory trajectory = movingObject.getTrajectory();
+        Assert.notNull(trajectory);
+        for (TrajectoryManager m : trajectoryManagers) {
+            if (m.supports(trajectory)) {
                 m.computePosition(movingObject, newTime);
                 movingObject.setTimestamp(newTime);
-                return;
             }
         }
-        throw new IllegalArgumentException("object " + movingObject.getName() + " has unknown trajectory type");
     }
 
     public void setTrajectoryManagers(List<TrajectoryManager> trajectoryManagers) {

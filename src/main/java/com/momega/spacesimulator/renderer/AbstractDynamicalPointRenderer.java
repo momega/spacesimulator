@@ -17,9 +17,8 @@ public abstract class AbstractDynamicalPointRenderer extends AbstractTextRendere
         drawText("D:" + String.format("%6.2f Mm", distance), x + 5, y);
         if (dynamicalPoint instanceof Satellite) {
             Satellite satellite = (Satellite) dynamicalPoint;
-            SatelliteData sd = RendererModel.getInstance().findSatelliteData(satellite);
-            //drawText("VR:" + String.format("%6.2f m/s", sd.getRelativeVelocity().length()), x + 5, y - 10);
-            //drawText("DR:" + String.format("%6.2f Mm", sd.getRelativePosition().length() / 1E6), x + 5, y - 20);
+            drawText("VR:" + String.format("%6.2f m/s", satellite.getRelativeVelocity().length()), x + 5, y - 10);
+            drawText("DR:" + String.format("%6.2f Mm", satellite.getRelativePosition().length() / 1E6), x + 5, y - 20);
         }
     }
 }

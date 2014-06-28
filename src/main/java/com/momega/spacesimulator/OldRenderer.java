@@ -24,7 +24,7 @@ public class OldRenderer implements GLEventListener {
     private static final Logger logger = LoggerFactory.getLogger(OldRenderer.class);
 
 
-    private Vector3d lightPosition = new Vector3d();
+    private Vector3d lightPosition = Vector3d.ZERO;
 
     private boolean specular = true;
     private boolean diffuse = false;
@@ -209,8 +209,8 @@ public class OldRenderer implements GLEventListener {
     }
 
     public void moveLight(float stepX, float stepY) {
-       this.lightPosition.x += stepX;
-       this.lightPosition.y += stepY;
+       //this.lightPosition.x += stepX;
+       //this.lightPosition.y += stepY;
     }
 
     public void switchEmmision() {

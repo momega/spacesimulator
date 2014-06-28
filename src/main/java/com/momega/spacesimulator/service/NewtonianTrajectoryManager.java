@@ -45,27 +45,26 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         movingObject.setVelocity(result[0]);
         movingObject.setPosition(result[1]);
 
-        computePrediction(movingObject);
-        updateHistory(movingObject);
+        Assert.isInstanceOf(Satellite.class, movingObject, "predication of trajectory is supported only for satellites");
+        Satellite satellite = (Satellite) movingObject;
+
+        computePrediction(satellite);
+        updateHistory(satellite);
     }
 
-    private void updateHistory(MovingObject movingObject) {
-        List<Vector3d> history = movingObject.getTrajectory().getHistory();
-        if (history.size()> maxHistory) {
-            history.remove(0);
+    private void updateHistory(Satellite satellite) {
+        List<Vector3d> positions = satellite.getHistoryTrajectory().getPositions();
+        if (positions.size()> maxHistory) {
+            positions.remove(0);
         }
-        history.add(movingObject.getPosition());
-
+        positions.add(satellite.getPosition());
     }
 
     /**
      * Computes the prediction of the trajectory. Currently the supports work only for {@link com.momega.spacesimulator.model.Satellite}s.
-     * @param movingObject the moving object which.
+     * @param satellite the satellite object which.
      */
-    public void computePrediction(MovingObject movingObject) {
-        Assert.isInstanceOf(Satellite.class, movingObject, "predication of trajectory is supported only for satellites");
-
-        Satellite satellite = (Satellite) movingObject;
+    public void computePrediction(Satellite satellite) {
         SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(satellite);
         CelestialBody soiCelestialBody = soi.getBody();
         Vector3d position = satellite.getPosition().subtract(soiCelestialBody.getPosition());
@@ -138,7 +137,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         logger.debug("theta = {}, inclination = {}", theta, i);
 
-        KeplerianElements keplerianElements = movingObject.getKeplerianElements();
+        KeplerianElements keplerianElements = satellite.getKeplerianElements();
         if (keplerianElements == null) {
             keplerianElements = new KeplerianElements();
         }
@@ -153,7 +152,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         keplerianElements.setArgumentOfPeriapsis(omega);
         keplerianElements.setTrueAnomaly(theta);
 
-        movingObject.setKeplerianElements(keplerianElements);
+        satellite.setRelativeVelocity(velocity);
+        satellite.setRelativePosition(position);
+        satellite.setKeplerianElements(keplerianElements);
     }
 
     /**
@@ -201,7 +202,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     }
 
     protected Vector3d getAcceleration(Vector3d position) {
-        Vector3d a = new Vector3d();
+        Vector3d a = Vector3d.ZERO;
         for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
             if (dp instanceof CelestialBody) {
                 CelestialBody celestialBody = (CelestialBody) dp;
@@ -214,8 +215,8 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     }
 
     @Override
-    public boolean supports(MovingObject movingObject) {
-        return TrajectorySolverType.NEWTONIAN.equals(movingObject.getTrajectory().getSolverType());
+    public boolean supports(Trajectory trajectory) {
+        return TrajectoryType.NEWTONIAN.equals(trajectory.getType());
     }
 
     public void setSphereOfInfluenceService(SphereOfInfluenceService sphereOfInfluenceService) {

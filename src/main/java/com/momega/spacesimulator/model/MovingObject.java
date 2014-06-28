@@ -33,12 +33,8 @@ public class MovingObject extends Object3d {
         this.name = name;
     }
 
-    /**
-     * Gets the trajectory for the moving object
-     * @return the instance of the trajectory
-     */
     public Trajectory getTrajectory() {
-        return this.trajectory;
+        return trajectory;
     }
 
     public void setTrajectory(Trajectory trajectory) {

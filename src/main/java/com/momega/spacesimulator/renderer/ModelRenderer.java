@@ -16,17 +16,17 @@ public class ModelRenderer extends CompositeRenderer {
     public ModelRenderer() {
         logger.info("initializing renderers");
         for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
-            if (!TrajectorySolverType.STATIC.equals(dp.getTrajectory().getSolverType())) {
+            if (!TrajectoryType.STATIC.equals(dp.getTrajectory().getType())) {
                 addRenderer(new KeplerianTrajectoryRenderer(dp));
             }
             if (dp instanceof CelestialBody) {
                 addRenderer(new CelestialBodyRenderer((CelestialBody) dp));
             } else if (dp instanceof Satellite) {
                 addRenderer(new SatelliteRenderer((Satellite) dp));
-                addRenderer(new HistoryRenderer(dp));
-                addRenderer(new ApsidesRenderer(dp));
+                addRenderer(new HistoryRenderer((Satellite) dp));
+                addRenderer(new ApsidesRenderer((Satellite) dp));
             }
-            addRenderer(new DynamicalPointLabelRenderer(dp));
+            addRenderer(new DynamicalPointRenderer(dp));
         }
 
         addRenderer(new CameraPositionRenderer());

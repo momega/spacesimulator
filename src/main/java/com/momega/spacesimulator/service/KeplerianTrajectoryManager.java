@@ -20,19 +20,19 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
 
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
-        KeplerianElements trajectory = movingObject.getKeplerianElements();
+        KeplerianElements keplerianElements = movingObject.getKeplerianElements();
 
-        Vector3d[] result = solveKeplerian2(trajectory, newTimestamp);
-        Vector3d r = result[0].add(trajectory.getCentralObject().getPosition());
-        Vector3d v = result[1].add(trajectory.getCentralObject().getVelocity());
+        Vector3d[] result = solveKeplerian2(keplerianElements, newTimestamp);
+        Vector3d r = result[0].add(keplerianElements.getCentralObject().getPosition());
+        Vector3d v = result[1].add(keplerianElements.getCentralObject().getVelocity());
 
         movingObject.setPosition(r);
         movingObject.setVelocity(v);
     }
 
     @Override
-    public boolean supports(MovingObject movingObject) {
-        return TrajectorySolverType.KEPLERIAN.equals(movingObject.getTrajectory().getSolverType());
+    public boolean supports(Trajectory trajectory) {
+        return TrajectoryType.KEPLERIAN.equals(trajectory.getType());
     }
 
     protected Vector3d[] solveKeplerian2(KeplerianElements keplerianElements, Timestamp time) {

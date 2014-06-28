@@ -2,6 +2,7 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Satellite;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.MathUtils;
 
@@ -13,19 +14,20 @@ import javax.media.opengl.GLAutoDrawable;
  */
 public class ApsidesRenderer extends AbstractTextRenderer {
 
-    private final MovingObject movingObject;
+    private final Satellite satellite;
 
-    public ApsidesRenderer(MovingObject movingObject) {
-        this.movingObject = movingObject;
+    public ApsidesRenderer(Satellite satellite) {
+        this.satellite = satellite;
     }
 
     @Override
     public void draw(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glPointSize(8);
+        gl.glColor3dv(this.satellite.getTrajectory().getColor(), 0);
         gl.glBegin(GL2.GL_POINTS);
 
-        KeplerianElements keplerianElements = movingObject.getKeplerianElements();
+        KeplerianElements keplerianElements = satellite.getKeplerianElements();
 
         double rp = keplerianElements.getSemimajorAxis()* (1 - keplerianElements.getEccentricity());
         double ra = keplerianElements.getSemimajorAxis()* (1 + keplerianElements.getEccentricity());

@@ -67,7 +67,6 @@ public class CelestialBodyRenderer extends AbstractRenderer {
 
     public void init(GL2 gl) {
         super.init(gl);
-
         this.listIndex = gl.glGenLists(1);
         if (this.listIndex==0) {
             throw new IllegalStateException("gl list not created");
@@ -104,8 +103,10 @@ public class CelestialBodyRenderer extends AbstractRenderer {
         gl.glPushMatrix();
 
         GLUtils.translate(gl, celestialBody.getPosition());
+
         double axialTilt = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), celestialBody.getOrientation().getV()));
         gl.glRotated(axialTilt, 1, 0, 0);
+        //TODO: fix the phi angle
         double phi = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 1, 0), celestialBody.getOrientation().getU()));
         gl.glRotated(phi, 0, 0, 1);
 

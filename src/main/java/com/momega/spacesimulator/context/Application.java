@@ -50,12 +50,12 @@ public class Application {
         Timestamp t = motionService.move(model.getTime(), model.getWarpFactor());
         model.setTime(t);
         cameraService.updatePosition(model.getCamera());
-        logger.debug("time = {}",  formatter.print(TimeUtils.getDateTime(model.getTime())));
+        logger.debug("time = {}", model.getTime());
     }
 
     public void dispose() {
         Model model = ModelHolder.getModel();
-        logger.info("time = {}",  formatter.print(TimeUtils.getDateTime(model.getTime())));
+        logger.info("dispose time = {}",  formatter.print(TimeUtils.getDateTime(model.getTime())));
     }
 
 }

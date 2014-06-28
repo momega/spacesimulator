@@ -9,31 +9,23 @@ import java.util.List;
  */
 public class Trajectory {
 
-    private double[] trajectoryColor;
-    private TrajectorySolverType solverType;
-    private List<Vector3d> history = new ArrayList<>();
+    private double[] color;
+    private TrajectoryType type;
 
-    public double[] getTrajectoryColor() {
-        return trajectoryColor;
+    public double[] getColor() {
+        return color;
     }
 
-    public void setTrajectoryColor(double[] trajectoryColor) {
-        this.trajectoryColor = trajectoryColor;
+    public void setColor(double[] color) {
+        this.color = color;
     }
 
-    public TrajectorySolverType getSolverType() {
-        return solverType;
+    public TrajectoryType getType() {
+        return type;
     }
 
-    public void setSolverType(TrajectorySolverType solverType) {
-        this.solverType = solverType;
+    public void setType(TrajectoryType type) {
+        this.type = type;
     }
 
-    public List<Vector3d> getHistory() {
-        return history;
-    }
-
-    public void setHistory(List<Vector3d> history) {
-        this.history = history;
-    }
 }

@@ -5,8 +5,9 @@ package com.momega.spacesimulator.model;
  * will be used to calculate the new position, velocity and all keplerian elements for the {@link com.momega.spacesimulator.model.MovingObject}
  * Created by martin on 6/27/14.
  */
-public enum TrajectorySolverType {
+public enum TrajectoryType {
     KEPLERIAN,
     NEWTONIAN,
-    STATIC
+    STATIC,
+    HISTORY
 }

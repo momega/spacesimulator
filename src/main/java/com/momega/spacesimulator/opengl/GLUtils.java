@@ -7,7 +7,6 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 
-import static javax.media.opengl.GL.GL_LINEAR;
 import static javax.media.opengl.GL.GL_LINE_LOOP;
 import static javax.media.opengl.GL.GL_LINE_STRIP;
 
@@ -67,19 +66,10 @@ public class GLUtils {
     }
 
     public static void drawHyperbolaPartial(GL2 gl, double a, double b, double startAngle, double stopAngle, int num_segments) {
-        if (startAngle > Math.PI) {
-            startAngle = startAngle - 2*Math.PI;
-        }
-        if (stopAngle > Math.PI) {
-            stopAngle = stopAngle - 2*Math.PI;
-        }
         gl.glBegin(GL_LINE_STRIP);
         double DEG2RAD = 2 * Math.PI / num_segments;
         int startIndex = (int) (startAngle / DEG2RAD);
         int stopIndex = (int) (stopAngle / DEG2RAD);
-        if (startIndex <= -num_segments/2) {
-            startIndex = -num_segments/2+1;
-        }
         for (int i= startIndex; i<=stopIndex; i++) {
             double degInRad = DEG2RAD * i;
             gl.glVertex2d(Math.cosh(degInRad) * a, Math.sinh(degInRad) * b);
