@@ -8,6 +8,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
 /**
+ * History renderer display past trajectory of the satellite
  * Created by martin on 6/27/14.
  */
 public class HistoryRenderer extends AbstractRenderer {

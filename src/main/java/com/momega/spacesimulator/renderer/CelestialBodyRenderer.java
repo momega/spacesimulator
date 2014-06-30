@@ -22,7 +22,7 @@ import java.io.InputStream;
 import static javax.media.opengl.GL.*;
 
 /**
- * The class renders the planet. It holds the {@link CelestialBody} instance and contains logic for rendering.
+ * The class renders the celestial body. It holds the {@link CelestialBody} instance and contains logic for rendering.
  * Created by martin on 4/19/14.
  */
 public class CelestialBodyRenderer extends AbstractRenderer {

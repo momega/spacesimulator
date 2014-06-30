@@ -14,7 +14,7 @@ public class Model {
     protected Timestamp time;
     protected BigDecimal warpFactor;
     protected Camera camera;
-    private DynamicalPoint selectedDynamicalPoint;
+    private NamedObject selectedDynamicalPoint;
     protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
     private SphereOfInfluence rootSoi;
 
@@ -46,11 +46,11 @@ public class Model {
         return warpFactor;
     }
 
-    public DynamicalPoint getSelectedDynamicalPoint() {
+    public NamedObject getSelectedDynamicalPoint() {
         return selectedDynamicalPoint;
     }
 
-    public void setSelectedDynamicalPoint(DynamicalPoint selectedDynamicalPoint) {
+    public void setSelectedDynamicalPoint(NamedObject selectedDynamicalPoint) {
         this.selectedDynamicalPoint = selectedDynamicalPoint;
     }
 

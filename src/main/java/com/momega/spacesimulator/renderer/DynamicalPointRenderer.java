@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.DynamicalPoint;
 import com.momega.spacesimulator.opengl.GLUtils;
 
@@ -9,8 +7,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
 /**
- * Renderer displays the attributes of the dynamical point's trajectory such as position, velocity and
- * distance from the camera.
+ * Renderer displays the point at the dynamical point position.
  * Created by martin on 4/28/14.
  */
 public class DynamicalPointRenderer extends AbstractRenderer {

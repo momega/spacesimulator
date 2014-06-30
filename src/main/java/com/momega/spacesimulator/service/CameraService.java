@@ -18,7 +18,7 @@ public class CameraService {
         if (camera == null) {
             return;
         }
-        Vector3d pos = camera.getDynamicalPoint().getPosition().scaleAdd(camera.getDistance(), camera.getOppositeOrientation().getN());
+        Vector3d pos = camera.getTargetObject().getPosition().scaleAdd(camera.getDistance(), camera.getOppositeOrientation().getN());
         Orientation orientation = MathUtils.createOrientation(camera.getOppositeOrientation().getN().negate(), camera.getOppositeOrientation().getV());
         logger.debug("New Position = {}", pos.asArray());
         camera.setPosition(pos);

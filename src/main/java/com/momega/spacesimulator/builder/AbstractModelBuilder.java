@@ -47,7 +47,7 @@ public abstract class AbstractModelBuilder {
 
     protected void initCamera() {
         Camera s = new Camera();
-        s.setDynamicalPoint(findDynamicalPoint("Earth"));
+        s.setTargetObject(findDynamicalPoint("Earth"));
         s.setDistance(100 * 1E6);
         s.setPosition(new Vector3d(s.getDistance(), 0, 0));
         s.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
@@ -138,7 +138,10 @@ public abstract class AbstractModelBuilder {
         satellite.setPosition(position);
         satellite.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
         satellite.setVelocity(velocity);
-        createTrajectory(satellite, new double[]{1, 1, 0}, TrajectoryType.NEWTONIAN);
+        SatelliteTrajectory satelliteTrajectory = new SatelliteTrajectory();
+        satelliteTrajectory.setColor(new double[]{1, 1, 0});
+        satelliteTrajectory.setType(TrajectoryType.NEWTONIAN);
+        satellite.setTrajectory(satelliteTrajectory);
         satellite.setMass(10 * 1E3);
         satellite.setRadius(10);
 

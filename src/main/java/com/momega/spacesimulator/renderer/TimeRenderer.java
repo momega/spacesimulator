@@ -16,10 +16,6 @@ public class TimeRenderer extends AbstractTextRenderer {
 
     private DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
 
-    public TimeRenderer() {
-        super();
-    }
-
     @Override
     public void renderTexts(GL2 gl, int width, int height) {
         Model model = ModelHolder.getModel();

@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
+import com.momega.spacesimulator.model.NamedObject;
+
 /**
  * Created by martin on 6/7/14.
  */
@@ -9,6 +11,7 @@ public class ViewCoordinates {
     private int y;
     private boolean visible;
     private double radius;
+    private NamedObject object;
 
     public int getX() {
         return x;
@@ -40,5 +43,13 @@ public class ViewCoordinates {
 
     public void setRadius(double radius) {
         this.radius = radius;
+    }
+
+    public NamedObject getObject() {
+        return object;
+    }
+
+    public void setObject(NamedObject object) {
+        this.object = object;
     }
 }

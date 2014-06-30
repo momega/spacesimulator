@@ -1,7 +1,10 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.DynamicalPoint;
-import com.momega.spacesimulator.model.Satellite;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.NamedObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +14,13 @@ import java.util.Map;
  */
 public class RendererModel {
 
+    private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
+
+    private final static int MIN_TARGET_SIZE = 8;
+
     private static RendererModel instance = new RendererModel();
-    private final Map<DynamicalPoint, ViewCoordinates> viewData = new HashMap<>();
-    private final Map<Satellite, SatelliteData> satelliteDataMap = new HashMap<>();
+
+    private final Map<NamedObject, ViewCoordinates> viewData = new HashMap<>();
 
     private RendererModel() {
         super();
@@ -25,23 +32,27 @@ public class RendererModel {
 
     /**
      * Adds the view coordinates the renderer model for the given dynamical point
-     * @param dp the dynamical point
      * @param viewCoordinates the view coordinates
      */
-    public void addViewCoordinates(DynamicalPoint dp, ViewCoordinates viewCoordinates) {
-        viewData.put(dp, viewCoordinates);
+    public void addViewCoordinates(ViewCoordinates viewCoordinates) {
+        viewData.put(viewCoordinates.getObject(), viewCoordinates);
     }
 
-    public ViewCoordinates findViewCoordinates(DynamicalPoint dp) {
-        return viewData.get(dp);
+    public ViewCoordinates findViewCoordinates(NamedObject namedObject) {
+        return viewData.get(namedObject);
     }
 
-    /**
-     * Finds the satellite data
-     * @param satellite
-     * @return
-     */
-    public SatelliteData findSatelliteData(Satellite satellite) {
-        return satelliteDataMap.get(satellite);
+    public void selectDynamicalPoint(int x, int y) {
+        Model model = ModelHolder.getModel();
+        for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {
+            ViewCoordinates viewCoordinates = entry.getValue();
+            if ((Math.abs(x - viewCoordinates.getX())< MIN_TARGET_SIZE) && (Math.abs(y - viewCoordinates.getY())< MIN_TARGET_SIZE)) {
+                model.getCamera().setTargetObject(viewCoordinates.getObject());
+                model.setSelectedDynamicalPoint(viewCoordinates.getObject());
+                logger.info("selected dynamical point changed to {}", viewCoordinates.getObject().getName());
+                return;
+            }
+        }
     }
+
 }

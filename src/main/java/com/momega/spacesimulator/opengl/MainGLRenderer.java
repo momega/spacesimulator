@@ -139,18 +139,37 @@ public class MainGLRenderer extends AbstractGLRenderer {
     protected void computeViewCoordinates(GLAutoDrawable drawable) {
         Camera camera = ModelHolder.getModel().getCamera();
         for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
-            ViewCoordinates viewCoordinates = new ViewCoordinates();
-            double[] xy = GLUtils.getProjectionCoordinates(drawable, dp.getPosition(), camera);
-            viewCoordinates.setVisible(xy != null);
-            if (xy != null) {
-                viewCoordinates.setX((int) xy[0]);
-                viewCoordinates.setY((int) xy[1]);
+            addViewCoordinates(drawable, dp, camera);
+            if (dp instanceof Satellite) {
+                SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) ((Satellite) dp).getTrajectory();
+                addViewCoordinates(drawable, satelliteTrajectory.getApoapsis(), camera);
+                addViewCoordinates(drawable, satelliteTrajectory.getPeriapsis(), camera);
             }
-            double distance = dp.getPosition().subtract(camera.getPosition()).length();
-            double radiusAngle = Math.atan2(dp.getRadius(), distance);
-            viewCoordinates.setRadius(radiusAngle);
-            RendererModel.getInstance().addViewCoordinates(dp, viewCoordinates);
         }
+    }
+
+    protected void addViewCoordinates(GLAutoDrawable drawable, NamedObject namedObject, Camera camera) {
+        if (namedObject == null) {
+            return;
+        }
+
+        ViewCoordinates viewCoordinates = new ViewCoordinates();
+        double[] xy = GLUtils.getProjectionCoordinates(drawable, namedObject.getPosition(), camera);
+        viewCoordinates.setVisible(xy != null);
+        if (xy != null) {
+            viewCoordinates.setX((int) xy[0]);
+            viewCoordinates.setY((int) xy[1]);
+        }
+        double distance = namedObject.getPosition().subtract(camera.getPosition()).length();
+        double radiusAngle;
+        if (namedObject instanceof DynamicalPoint) {
+            radiusAngle = Math.atan2(((DynamicalPoint)namedObject).getRadius(), distance);
+        } else {
+            radiusAngle = Math.atan2(1, distance);
+        }
+        viewCoordinates.setRadius(radiusAngle);
+        viewCoordinates.setObject(namedObject);
+        RendererModel.getInstance().addViewCoordinates(viewCoordinates);
     }
 
     @Override

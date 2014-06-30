@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
@@ -22,7 +23,7 @@ public class SolarSystemModelBuilder extends AbstractModelBuilder {
 
         DynamicalPoint earthMoonBarycenter = new DynamicalPoint();
         earthMoonBarycenter.setKeplerianElements(createKeplerianElements(sun, 149598.261d * 1E6, 0.0166739, 287.5824, 365.256814, 2456661.138788696378, 0.0018601064, 175.395d));
-        createTrajectory(earthMoonBarycenter, new double[] {0,0.5,1}, TrajectoryType.KEPLERIAN);
+        createTrajectory(earthMoonBarycenter, new double[]{0, 0.5, 1}, TrajectoryType.KEPLERIAN);
         updateDynamicalPoint(earthMoonBarycenter, "Earth-Moon Barycenter", 0, 0, 1, 6.687);
 
         CelestialBody earth = new CelestialBody();
@@ -139,9 +140,11 @@ public class SolarSystemModelBuilder extends AbstractModelBuilder {
         Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
         addDynamicalPoint(satellite);
 
-//        Vector3d sv = earth.getPosition().normalize().scale(-9500d).add(earth.getVelocity());
-//        Satellite satellite = createSatellite(earth, "Satellite 4", 250, sv);
-//        addDynamicalPoint(satellite);
+        position = VectorUtils.fromSphericalCoordinates(500 * 1E3 + earth.getRadius(), Math.PI/2, 0);
+        velocity = new Vector3d(0, 9000d, 0);
+        satellite = createSatellite(earth, "Satellite 2", position, velocity);
+        addDynamicalPoint(satellite);
+
 //
 //        sv = moon.getPosition().normalize().scale(1900d).add(moon.getVelocity());
 //        satellite = createSatellite(moon, "Satellite 6", 250, sv);

@@ -7,16 +7,16 @@ package com.momega.spacesimulator.model;
  */
 public class Camera extends Object3d {
 
-    private DynamicalPoint dynamicalPoint;
+    private Object3d targetObject;
     private Orientation oppositeOrientation;
     private double distance;
 
-    public DynamicalPoint getDynamicalPoint() {
-        return dynamicalPoint;
+    public Object3d getTargetObject() {
+        return targetObject;
     }
 
-    public void setDynamicalPoint(DynamicalPoint dynamicalPoint) {
-        this.dynamicalPoint = dynamicalPoint;
+    public void setTargetObject(Object3d targetObject) {
+        this.targetObject = targetObject;
     }
 
     public double getDistance() {

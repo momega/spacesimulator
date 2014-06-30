@@ -2,7 +2,7 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.DynamicalPoint;
+import com.momega.spacesimulator.model.NamedObject;
 
 import javax.media.opengl.GL2;
 
@@ -18,9 +18,9 @@ public class SelectedTargetRenderer extends AbstractDynamicalPointRenderer {
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
         Model model = ModelHolder.getModel();
-        DynamicalPoint sp = model.getSelectedDynamicalPoint();
-        if (sp != null) {
-            drawData(sp, model.getCamera(), width - 350, 50);
+        NamedObject namedObject = model.getSelectedDynamicalPoint();
+        if (namedObject != null) {
+            drawData(namedObject, model.getCamera(), width - 350, 50);
         }
     }
 

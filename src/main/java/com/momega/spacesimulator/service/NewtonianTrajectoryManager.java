@@ -2,6 +2,7 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,7 +50,37 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Satellite satellite = (Satellite) movingObject;
 
         computePrediction(satellite);
+        computeApsides(satellite);
         updateHistory(satellite);
+    }
+
+    private void computeApsides(Satellite satellite) {
+        KeplerianElements keplerianElements = satellite.getKeplerianElements();
+
+        double rp = keplerianElements.getSemimajorAxis()* (1 - keplerianElements.getEccentricity());
+        double ra = keplerianElements.getSemimajorAxis()* (1 + keplerianElements.getEccentricity());
+
+        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) satellite.getTrajectory();
+        Apsis periapsis = satelliteTrajectory.getPeriapsis();
+        if (periapsis == null) {
+            periapsis = new Apsis();
+            periapsis.setName("PA of " + satellite.getName());
+            periapsis.setType(ApsisType.PERIAPSIS);
+            satelliteTrajectory.setPeriapsis(periapsis);
+        }
+        periapsis.setPosition(MathUtils.getKeplerianPosition(keplerianElements, rp, 0d));
+
+        if (keplerianElements.getEccentricity()<1) {
+            Apsis apoapsis = satelliteTrajectory.getApoapsis();
+            if (apoapsis == null) {
+                apoapsis = new Apsis();
+                apoapsis.setName("AA of " + satellite.getName());
+                apoapsis.setType(ApsisType.APOAPSIS);
+                satelliteTrajectory.setApoapsis(apoapsis);
+            }
+            apoapsis.setPosition(MathUtils.getKeplerianPosition(keplerianElements, ra, Math.PI));
+        }
+
     }
 
     private void updateHistory(Satellite satellite) {
