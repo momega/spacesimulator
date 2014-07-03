@@ -143,7 +143,6 @@ public abstract class AbstractModelBuilder {
         satelliteTrajectory.setType(TrajectoryType.NEWTONIAN);
         satellite.setTrajectory(satelliteTrajectory);
         satellite.setMass(10 * 1E3);
-        satellite.setRadius(10);
 
         HistoryTrajectory historyTrajectory = new HistoryTrajectory();
         historyTrajectory.setType(TrajectoryType.HISTORY);
@@ -154,13 +153,13 @@ public abstract class AbstractModelBuilder {
     }
 
     public void updateDynamicalPoint(DynamicalPoint dp, double radius, double mass, double rotationPeriod, double axialTilt) {
-        dp.setRadius(radius * 1E6);
         dp.setMass(mass * 1E24);
         dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
         dp.getOrientation().twist(Math.toRadians(axialTilt));
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
             ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
+            ro.setRadius(radius * 1E6);
         }
     }
 

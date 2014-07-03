@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
+import java.awt.*;
 
 /**
  * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
@@ -22,6 +23,7 @@ import javax.media.opengl.glu.GLU;
 public class MainGLRenderer extends AbstractGLRenderer {
 
     public final static double UNIVERSE_RADIUS = 1E19;
+    public static final double FOVY = 45.0;
     private static final Logger logger = LoggerFactory.getLogger(MainGLRenderer.class);
 
     private final ModelRenderer renderer;
@@ -86,55 +88,55 @@ public class MainGLRenderer extends AbstractGLRenderer {
         }
     }
 
-    //TODO: Does not work exactly, new algorithm has to be created
-    public double computeZNear(double aratio) {
-        Vector3d viewVector = ModelHolder.getModel().getCamera().getOrientation().getN();
-        double znear = UNIVERSE_RADIUS * 2;
-
-        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
-
-            // only valid for object with radius
-            if (dp.getRadius() <= 0) {
-                continue;
-            }
-
-            double distance = dp.getPosition().subtract(ModelHolder.getModel().getCamera().getPosition()).length();
-            double distanceFactor = distance / dp.getRadius();
-            if (distanceFactor > UNIVERSE_RADIUS * 0.001) {
-                continue; // If it's too far to be visible discard it
-            }
-
-            // check whether the dynamic point is visible
-            Vector3d diffVector = dp.getPosition().subtract(ModelHolder.getModel().getCamera().getPosition()).normalize();
-            double dot = viewVector.dot(diffVector);
-            if (Math.abs(dot) < 0.01) {
-                continue;
-            }
-            double eyeAngle = Math.acos(dot);
-
-            double radiusAngle = Math.atan2(dp.getRadius(), distance);
-
-            double diffAngle = Math.abs(eyeAngle) -  Math.abs(radiusAngle);
-            if (diffAngle > Math.toRadians(aratio * 45)) {
-                continue;
-            }
-
-            double clip = Math.abs(Math.cos(diffAngle) * distance - dp.getRadius()) - 1;
-            if (clip < 1) {
-                clip = 1;
-            }
-
-            if (clip < znear) {
-                znear = clip;
-            }
-        }
-
-        if (znear > UNIVERSE_RADIUS * 0.001) {
-            znear = UNIVERSE_RADIUS * 0.001;
-        }
-
-        return znear;
-    }
+//    //TODO: Does not work exactly, new algorithm has to be created
+//    public double computeZNear(double aratio) {
+//        Vector3d viewVector = ModelHolder.getModel().getCamera().getOrientation().getN();
+//        double znear = UNIVERSE_RADIUS * 2;
+//
+//        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
+//
+//            // only valid for object with radius
+//            if (dp.getRadius() <= 0) {
+//                continue;
+//            }
+//
+//            double distance = dp.getPosition().subtract(ModelHolder.getModel().getCamera().getPosition()).length();
+//            double distanceFactor = distance / dp.getRadius();
+//            if (distanceFactor > UNIVERSE_RADIUS * 0.001) {
+//                continue; // If it's too far to be visible discard it
+//            }
+//
+//            // check whether the dynamic point is visible
+//            Vector3d diffVector = dp.getPosition().subtract(ModelHolder.getModel().getCamera().getPosition()).normalize();
+//            double dot = viewVector.dot(diffVector);
+//            if (Math.abs(dot) < 0.01) {
+//                continue;
+//            }
+//            double eyeAngle = Math.acos(dot);
+//
+//            double radiusAngle = Math.atan2(dp.getRadius(), distance);
+//
+//            double diffAngle = Math.abs(eyeAngle) -  Math.abs(radiusAngle);
+//            if (diffAngle > Math.toRadians(aratio * 45)) {
+//                continue;
+//            }
+//
+//            double clip = Math.abs(Math.cos(diffAngle) * distance - dp.getRadius()) - 1;
+//            if (clip < 1) {
+//                clip = 1;
+//            }
+//
+//            if (clip < znear) {
+//                znear = clip;
+//            }
+//        }
+//
+//        if (znear > UNIVERSE_RADIUS * 0.001) {
+//            znear = UNIVERSE_RADIUS * 0.001;
+//        }
+//
+//        return znear;
+//    }
 
     protected void computeViewCoordinates(GLAutoDrawable drawable) {
         Camera camera = ModelHolder.getModel().getCamera();
@@ -154,20 +156,19 @@ public class MainGLRenderer extends AbstractGLRenderer {
         }
 
         ViewCoordinates viewCoordinates = new ViewCoordinates();
-        double[] xy = GLUtils.getProjectionCoordinates(drawable, namedObject.getPosition(), camera);
-        viewCoordinates.setVisible(xy != null);
-        if (xy != null) {
-            viewCoordinates.setX((int) xy[0]);
-            viewCoordinates.setY((int) xy[1]);
-        }
-        double distance = namedObject.getPosition().subtract(camera.getPosition()).length();
+        Point point = GLUtils.getProjectionCoordinates(drawable, namedObject.getPosition(), camera);
+        viewCoordinates.setVisible(point != null);
+        viewCoordinates.setPoint(point);
         double radiusAngle;
-        if (namedObject instanceof DynamicalPoint) {
-            radiusAngle = Math.atan2(((DynamicalPoint)namedObject).getRadius(), distance);
+        if (namedObject instanceof RotatingObject) {
+            RotatingObject ro = (RotatingObject) namedObject;
+            Vector3d distance = namedObject.getPosition().subtract(camera.getPosition());
+            radiusAngle = Math.toDegrees(Math.atan2(ro.getRadius(), distance.length()));
+            double radius = (int)((radiusAngle/ FOVY) * drawable.getHeight());
+            viewCoordinates.setRadius(radius);
         } else {
-            radiusAngle = Math.atan2(1, distance);
+            viewCoordinates.setRadius(5);
         }
-        viewCoordinates.setRadius(radiusAngle);
         viewCoordinates.setObject(namedObject);
         RendererModel.getInstance().addViewCoordinates(viewCoordinates);
     }
@@ -187,7 +188,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
     }
 
     protected void setPerspective(GL2 gl, double aspect) {
-        glu.gluPerspective(45, aspect, znear, UNIVERSE_RADIUS * 10);
+        glu.gluPerspective(FOVY, aspect, znear, UNIVERSE_RADIUS * 10);
     }
 
     public double getZnear() {

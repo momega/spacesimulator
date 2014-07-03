@@ -1,14 +1,24 @@
 package com.momega.spacesimulator.opengl;
 
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureData;
+import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Vector3d;
+import org.apache.commons.io.IOUtils;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
 
-import static javax.media.opengl.GL.GL_LINE_LOOP;
-import static javax.media.opengl.GL.GL_LINE_STRIP;
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static javax.media.opengl.GL.*;
+import static javax.media.opengl.GL.GL_LINEAR;
+import static javax.media.opengl.GL.GL_TEXTURE_MAG_FILTER;
 
 /**
  * The class contains static handful methods to draw objects such as {#link drawCircle} or {#link drawEllipse}
@@ -100,7 +110,7 @@ public class GLUtils {
      * @return array of the coordinates, 0th coordinate is x, 1st coordinate is y, Result can be null if the point is behind
      * the camera
      */
-    public static double[] getProjectionCoordinates(GLAutoDrawable drawable, Vector3d position, Camera camera) {
+    public static Point getProjectionCoordinates(GLAutoDrawable drawable, Vector3d position, Camera camera) {
         Vector3d viewVector = camera.getOrientation().getN();
         Vector3d diffVector = position.subtract(camera.getPosition());
 
@@ -118,12 +128,28 @@ public class GLUtils {
             glu.gluProject(position.x, position.y, position.z,
                     modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
 
-            return my2DPoint;
+            return new Point((int)my2DPoint[0], (int)my2DPoint[1]);
         }
 
         return null;
     }
 
+    public static Texture loadTexture(GL2 gl, Class<?> clazz, String fileName) {
+        InputStream stream = null;
+        try {
+            stream = clazz.getResourceAsStream(fileName);
+            TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, true, "jpg");
+            Texture result = TextureIO.newTexture(data);
+            result.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            result.setTexParameteri(gl, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            return result;
+        }
+        catch (IOException exc) {
+            IOUtils.closeQuietly(stream);
+        }
+
+        return null;
+    }
 
     public static void translate(GL2 gl, Vector3d position) {
         gl.glTranslated(position.x, position.y, position.z);

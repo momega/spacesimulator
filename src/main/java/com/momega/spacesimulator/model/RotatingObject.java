@@ -8,6 +8,7 @@ package com.momega.spacesimulator.model;
 public class RotatingObject extends DynamicalPoint {
 
     private double rotationPeriod; // rotation period in seconds
+    private double radius;
 
     public void setRotationPeriod(double rotationPeriod) {
         this.rotationPeriod = rotationPeriod;
@@ -15,5 +16,17 @@ public class RotatingObject extends DynamicalPoint {
 
     public double getRotationPeriod() {
         return rotationPeriod;
+    }
+
+    /**
+     * Gets the radius in meters of the planet
+     * @return the value of the radius
+     */
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 }

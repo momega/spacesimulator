@@ -5,6 +5,8 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 /**
  * AbstractTextRenderer is superclass for the renderer which contains OPEN GL text renderer. It overrides the {@link #draw(javax.media.opengl.GLAutoDrawable)}, starts and closes
@@ -31,8 +33,17 @@ public abstract class AbstractTextRenderer implements Renderer {
         textRenderer.draw(str, x, y);
     }
 
+    protected void drawText(CharSequence str, double x, double y) {
+        textRenderer.draw(str, (int)x, (int)y);
+    }
+
     protected void setColor(int r, int g, int b) {
         textRenderer.setColor(new Color(r, g, b));
+    }
+
+    protected Point getTextSize(CharSequence str) {
+        Rectangle2D rectangle = textRenderer.getBounds(str);
+        return new Point((int)rectangle.getWidth(), (int)rectangle.getHeight());
     }
 
     protected abstract void renderTexts(GL2 gl, int width, int height);

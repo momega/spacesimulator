@@ -2,31 +2,24 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.NamedObject;
 
+import java.awt.*;
+
 /**
  * Created by martin on 6/7/14.
  */
 public class ViewCoordinates {
 
-    private int x;
-    private int y;
+    private Point point;
     private boolean visible;
     private double radius;
     private NamedObject object;
 
-    public int getX() {
-        return x;
+    public Point getPoint() {
+        return point;
     }
 
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
+    public void setPoint(Point point) {
+        this.point = point;
     }
 
     public boolean isVisible() {

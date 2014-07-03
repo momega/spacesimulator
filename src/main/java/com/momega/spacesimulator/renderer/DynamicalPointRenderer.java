@@ -5,12 +5,13 @@ import com.momega.spacesimulator.opengl.GLUtils;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+import java.awt.*;
 
 /**
  * Renderer displays the point at the dynamical point position.
  * Created by martin on 4/28/14.
  */
-public class DynamicalPointRenderer extends AbstractRenderer {
+public class DynamicalPointRenderer extends AbstractTextRenderer {
 
     private final DynamicalPoint dynamicalPoint;
 
@@ -32,6 +33,17 @@ public class DynamicalPointRenderer extends AbstractRenderer {
         gl.glEnd();
 
         gl.glPopMatrix();
+
+        super.draw(drawable);
+    }
+
+    @Override
+    protected void renderTexts(GL2 gl, int width, int height) {
+        ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(dynamicalPoint);
+        if (viewCoordinates.getRadius()<=5 && viewCoordinates.isVisible()) {
+            Point size = getTextSize(dynamicalPoint.getName());
+            drawText(dynamicalPoint.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+        }
     }
 
 }

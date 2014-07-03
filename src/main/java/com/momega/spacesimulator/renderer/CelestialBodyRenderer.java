@@ -1,25 +1,19 @@
 package com.momega.spacesimulator.renderer;
 
 import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureData;
-import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
-import java.io.IOException;
-import java.io.InputStream;
 
-import static javax.media.opengl.GL.*;
+import static javax.media.opengl.GL.GL_LINES;
 
 /**
  * The class renders the celestial body. It holds the {@link CelestialBody} instance and contains logic for rendering.
@@ -38,24 +32,7 @@ public class CelestialBodyRenderer extends AbstractRenderer {
     }
 
     public void loadTexture(GL2 gl) {
-        this.texture = loadTexture(gl, celestialBody.getTextureFileName());
-    }
-
-    private Texture loadTexture(GL2 gl, String fileName) {
-        InputStream stream = null;
-        try {
-            stream = getClass().getResourceAsStream(fileName);
-            TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, true, "jpg");
-            Texture result = TextureIO.newTexture(data);
-            result.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            result.setTexParameteri(gl, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            return result;
-        }
-        catch (IOException exc) {
-            IOUtils.closeQuietly(stream);
-        }
-
-        return null;
+        this.texture = GLUtils.loadTexture(gl, getClass(), celestialBody.getTextureFileName());
     }
 
     public void dispose(GL2 gl) {

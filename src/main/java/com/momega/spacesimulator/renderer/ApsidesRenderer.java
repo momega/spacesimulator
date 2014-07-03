@@ -6,6 +6,7 @@ import com.momega.spacesimulator.model.SatelliteTrajectory;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+import java.awt.*;
 
 /**
  * Created by martin on 6/15/14.
@@ -47,7 +48,10 @@ public class ApsidesRenderer extends AbstractTextRenderer {
         if (apsis == null) {
             return;
         }
+        Point size = getTextSize(apsis.getName());
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(apsis);
-        drawText(viewCoordinates.getObject().getName(), viewCoordinates.getX() + 6, viewCoordinates.getY());
+        if (viewCoordinates.isVisible()) {
+            drawText(apsis.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+        }
     }
 }

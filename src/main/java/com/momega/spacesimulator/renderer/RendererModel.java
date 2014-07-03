@@ -46,11 +46,13 @@ public class RendererModel {
         Model model = ModelHolder.getModel();
         for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {
             ViewCoordinates viewCoordinates = entry.getValue();
-            if ((Math.abs(x - viewCoordinates.getX())< MIN_TARGET_SIZE) && (Math.abs(y - viewCoordinates.getY())< MIN_TARGET_SIZE)) {
-                model.getCamera().setTargetObject(viewCoordinates.getObject());
-                model.setSelectedDynamicalPoint(viewCoordinates.getObject());
-                logger.info("selected dynamical point changed to {}", viewCoordinates.getObject().getName());
-                return;
+            if (viewCoordinates.isVisible()) {
+                if ((Math.abs(x - (int) viewCoordinates.getPoint().getX()) < MIN_TARGET_SIZE) && (Math.abs(y - (int) viewCoordinates.getPoint().getY()) < MIN_TARGET_SIZE)) {
+                    model.getCamera().setTargetObject(viewCoordinates.getObject());
+                    model.setSelectedDynamicalPoint(viewCoordinates.getObject());
+                    logger.info("selected dynamical point changed to {}", viewCoordinates.getObject().getName());
+                    return;
+                }
             }
         }
     }

@@ -64,7 +64,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Apsis periapsis = satelliteTrajectory.getPeriapsis();
         if (periapsis == null) {
             periapsis = new Apsis();
-            periapsis.setName("PA of " + satellite.getName());
+            periapsis.setName("Pe of " + satellite.getName());
             periapsis.setType(ApsisType.PERIAPSIS);
             satelliteTrajectory.setPeriapsis(periapsis);
         }
@@ -74,7 +74,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
             Apsis apoapsis = satelliteTrajectory.getApoapsis();
             if (apoapsis == null) {
                 apoapsis = new Apsis();
-                apoapsis.setName("AA of " + satellite.getName());
+                apoapsis.setName("Ap of " + satellite.getName());
                 apoapsis.setType(ApsisType.APOAPSIS);
                 satelliteTrajectory.setApoapsis(apoapsis);
             }
