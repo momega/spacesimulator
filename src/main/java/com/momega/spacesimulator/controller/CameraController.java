@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.utils.VectorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,14 @@ public class CameraController extends AbstractController {
     }
 
     public void changeDistance(double factor) {
-        camera.setDistance(camera.getDistance() * factor);
+        double radius = 0;
+        if (camera.getTargetObject() instanceof RotatingObject) {
+            RotatingObject ro = (RotatingObject) camera.getTargetObject();
+            radius = ro.getRadius();
+        }
+        double newAltitude = (camera.getDistance() - radius) * factor;
+        logger.info("new altitude of the camera = {}", newAltitude);
+        camera.setDistance(radius + newAltitude);
     }
 
     @Override
@@ -78,9 +86,9 @@ public class CameraController extends AbstractController {
         String message;
         int notches = e.getWheelRotation();
         if (notches < 0) {
-            changeDistance(0.8);
+            changeDistance(0.9);
         } else {
-            changeDistance(1.2);
+            changeDistance(1.1);
         }
     }
 

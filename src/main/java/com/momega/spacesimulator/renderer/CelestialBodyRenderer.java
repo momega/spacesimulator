@@ -64,14 +64,14 @@ public class CelestialBodyRenderer extends AbstractRenderer {
         glu.gluQuadricTexture(quadric, true);
         glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
-        glu.gluSphere(quadric, celestialBody.getRadius(), 64, 64);
+        glu.gluSphere(quadric, celestialBody.getRadius(), 320, 320);
         glu.gluDeleteQuadric(quadric);
         texture.disable(gl);
 
-        gl.glLineWidth(2.5f);
+        gl.glLineWidth(2f);
         gl.glBegin(GL_LINES);
-        gl.glVertex3d(0, 0, celestialBody.getRadius() * 2);
-        gl.glVertex3d(0, 0, -celestialBody.getRadius() * 2);
+        gl.glVertex3d(0, 0, celestialBody.getRadius() * 1.2);
+        gl.glVertex3d(0, 0, -celestialBody.getRadius() * 1.2);
         gl.glEnd();
     }
 
