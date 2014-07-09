@@ -18,8 +18,7 @@ public class Orientation {
     /**
      * Returns the n vector of the object3d.
      */
-    public Vector3d getN()
-    {
+    public Vector3d getN() {
         return n;
     }
 
@@ -60,7 +59,11 @@ public class Orientation {
     }
 
     public void lookLeft(double step) {
-        rotate(new Vector3d(0, 0, 1), step);
+        rotate(new Vector3d(0,0,1), step);
+    }
+
+    public void lookAroundV(double step) {
+        rotate(this.v, step);
     }
 
     public void twist(double step) {

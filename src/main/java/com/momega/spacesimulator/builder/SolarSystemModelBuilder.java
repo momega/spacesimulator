@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
@@ -143,9 +142,9 @@ public class SolarSystemModelBuilder extends AbstractModelBuilder {
         position = VectorUtils.fromSphericalCoordinates(500 * 1E3 + earth.getRadius(), Math.PI/2, 0);
         velocity = new Vector3d(0, 9000d, 0);
         satellite = createSatellite(earth, "Satellite 2", position, velocity);
+        satellite.getTrajectory().setColor(new double[] {1, 0.5, 0});
         addDynamicalPoint(satellite);
 
-//
 //        sv = moon.getPosition().normalize().scale(1900d).add(moon.getVelocity());
 //        satellite = createSatellite(moon, "Satellite 6", 250, sv);
 //        addDynamicalPoint(satellite);

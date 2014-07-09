@@ -82,12 +82,15 @@ public class CelestialBodyRenderer extends AbstractRenderer {
         GLUtils.translate(gl, celestialBody.getPosition());
 
         double axialTilt = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), celestialBody.getOrientation().getV()));
-        gl.glRotated(axialTilt, 1, 0, 0);
-        //TODO: fix the phi angle
-        double phi = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 1, 0), celestialBody.getOrientation().getU()));
-        gl.glRotated(phi, 0, 0, 1);
+        gl.glRotated(axialTilt, 0, 1, 0);
 
+        logger.debug("N = {}", celestialBody.getOrientation().getN().asArray());
+        double phi = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(1, 0, 0), celestialBody.getOrientation().getN()));
+        if (celestialBody.getOrientation().getN().z<0) {
+            phi = 360 - phi;
+        }
         logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);
+        gl.glRotated(phi, 0, 0, 1);
 
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();

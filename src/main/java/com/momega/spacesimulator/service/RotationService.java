@@ -21,6 +21,6 @@ public class RotationService {
         double dt = TimeUtils.subtract(newTime, rotatingObject.getTimestamp()).getValue().doubleValue();
         double phi = dt / rotatingObject.getRotationPeriod();
         phi *= (2*Math.PI);
-        rotatingObject.getOrientation().lookLeft(phi);
+        rotatingObject.getOrientation().lookAroundV(phi);
     }
 }
