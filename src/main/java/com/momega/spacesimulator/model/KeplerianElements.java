@@ -17,6 +17,7 @@ public class KeplerianElements {
     private double inclination; // i
     private double ascendingNode; // uppercase omega
     private double trueAnomaly; // theta;
+    private double hyperbolicAnomaly; // HA
 
     public double getSemimajorAxis() {
         return this.semimajorAxis;
@@ -104,5 +105,13 @@ public class KeplerianElements {
 
     public void setTrueAnomaly(double trueAnomaly) {
         this.trueAnomaly = trueAnomaly;
+    }
+
+    public double getHyperbolicAnomaly() {
+        return hyperbolicAnomaly;
+    }
+
+    public void setHyperbolicAnomaly(double hyperbolicAnomaly) {
+        this.hyperbolicAnomaly = hyperbolicAnomaly;
     }
 }

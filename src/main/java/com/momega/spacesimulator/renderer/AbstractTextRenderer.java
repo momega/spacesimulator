@@ -5,7 +5,6 @@ import com.jogamp.opengl.util.awt.TextRenderer;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -13,7 +12,7 @@ import java.awt.geom.Rectangle2D;
  * text rendering "transaction". The {@link #renderTexts(javax.media.opengl.GL2, int, int)} in declared to override by any subclass to render text
  * Created by martin on 4/29/14.
  */
-public abstract class AbstractTextRenderer implements Renderer {
+public abstract class AbstractTextRenderer extends AbstractRenderer {
 
     private TextRenderer textRenderer;
 

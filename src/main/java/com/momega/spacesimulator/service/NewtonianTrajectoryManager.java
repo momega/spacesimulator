@@ -59,16 +59,21 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         double rp = keplerianElements.getSemimajorAxis()* (1 - keplerianElements.getEccentricity());
         double ra = keplerianElements.getSemimajorAxis()* (1 + keplerianElements.getEccentricity());
+        double HA = keplerianElements.getHyperbolicAnomaly();
 
         SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) satellite.getTrajectory();
-        Apsis periapsis = satelliteTrajectory.getPeriapsis();
-        if (periapsis == null) {
-            periapsis = new Apsis();
-            periapsis.setName("Pe of " + satellite.getName());
-            periapsis.setType(ApsisType.PERIAPSIS);
-            satelliteTrajectory.setPeriapsis(periapsis);
+        if (keplerianElements.getEccentricity()<1 || (keplerianElements.getEccentricity()>1 && HA<0)) {
+            Apsis periapsis = satelliteTrajectory.getPeriapsis();
+            if (periapsis == null) {
+                periapsis = new Apsis();
+                periapsis.setName("Pe of " + satellite.getName());
+                periapsis.setType(ApsisType.PERIAPSIS);
+                satelliteTrajectory.setPeriapsis(periapsis);
+            }
+            periapsis.setPosition(MathUtils.getKeplerianPosition(keplerianElements, rp, 0d));
+        } else {
+            satelliteTrajectory.setPeriapsis(null);
         }
-        periapsis.setPosition(MathUtils.getKeplerianPosition(keplerianElements, rp, 0d));
 
         if (keplerianElements.getEccentricity()<1) {
             Apsis apoapsis = satelliteTrajectory.getApoapsis();
@@ -79,6 +84,8 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
                 satelliteTrajectory.setApoapsis(apoapsis);
             }
             apoapsis.setPosition(MathUtils.getKeplerianPosition(keplerianElements, ra, Math.PI));
+        } else {
+            satelliteTrajectory.setApoapsis(null);
         }
 
     }
@@ -183,9 +190,24 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         keplerianElements.setArgumentOfPeriapsis(omega);
         keplerianElements.setTrueAnomaly(theta);
 
+        if (e < 1) {
+            keplerianElements.setHyperbolicAnomaly(0);
+        } else {
+            keplerianElements.setHyperbolicAnomaly(getHA(keplerianElements));
+        }
+
         satellite.setRelativeVelocity(velocity);
         satellite.setRelativePosition(position);
         satellite.setKeplerianElements(keplerianElements);
+    }
+
+    protected double getHA(KeplerianElements keplerianElements) {
+        double theta = keplerianElements.getTrueAnomaly();
+        double eccentricity = keplerianElements.getEccentricity();
+        double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
+        double HA = MathUtils.asinh(sinH);
+        logger.debug("HA = {}", HA);
+        return HA;
     }
 
     /**

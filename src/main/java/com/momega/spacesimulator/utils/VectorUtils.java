@@ -2,11 +2,15 @@ package com.momega.spacesimulator.utils;
 
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Vector3d;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by martin on 6/22/14.
  */
 public class VectorUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(VectorUtils.class);
 
     private final static double EPSILON = 0.0001;
     public final static double SMALL_EPSILON = 0.0001;
@@ -65,4 +69,5 @@ public class VectorUtils {
         if(cosAlpha > 1) cosAlpha = 1;
         return Math.acos(cosAlpha);
     }
+
 }

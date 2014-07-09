@@ -45,26 +45,19 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
         logger.debug("semi-major = {}", a);
 
         gl.glColor3dv(getTrajectory().getColor(), 0);
-        gl.glLineWidth(1);
+        gl.glLineWidth(1.5f);
         gl.glTranslated(-e, 0, 0);
         if (getKeplerianElements().getEccentricity()<1) {
             GLUtils.drawEllipse(gl, a, b, 7200);
         } else {
-            double HA = getHA();
-            logger.debug("HA = {}", HA);
+            double HA = getKeplerianElements().getHyperbolicAnomaly();
             GLUtils.drawHyperbolaPartial(gl, a, b, -2*Math.PI, -HA, 7200); // -HA because of a<0
         }
 
         gl.glPopMatrix();
     }
 
-    protected double getHA() {
-        double theta = getKeplerianElements().getTrueAnomaly();
-        double eccentricity = getKeplerianElements().getEccentricity();
-        double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
-        double HA = MathUtils.asinh(sinH);
-        return HA;
-    }
+
 
     public KeplerianElements getKeplerianElements() {
         return movingObject.getKeplerianElements();
