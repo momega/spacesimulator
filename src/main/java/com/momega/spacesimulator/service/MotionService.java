@@ -34,11 +34,13 @@ public class MotionService {
         BigDecimal timestamp = time.getValue().add(warpFactor);
         Timestamp newTimestamp = TimeUtils.newTime(timestamp);
         logger.debug("time={}", timestamp);
-        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
-            if (dp instanceof RotatingObject) {
-                rotationService.rotate((RotatingObject) dp, newTimestamp);
+        if (!warpFactor.equals(BigDecimal.ZERO)) {
+            for (DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
+                if (dp instanceof RotatingObject) {
+                    rotationService.rotate((RotatingObject) dp, newTimestamp);
+                }
+                trajectoryService.move(dp, newTimestamp);
             }
-            trajectoryService.move(dp, newTimestamp);
         }
         return newTimestamp;
     }

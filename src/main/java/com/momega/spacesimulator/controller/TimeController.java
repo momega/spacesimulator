@@ -23,7 +23,22 @@ public class TimeController extends AbstractController {
             case KeyEvent.VK_PERIOD:
                 changeWarpFactor(2);
                 break;
+
+            case KeyEvent.VK_SEMICOLON:
+                pauseOrStart();
+                break;
         }
+    }
+
+    private void pauseOrStart() {
+        Model model = ModelHolder.getModel();
+        BigDecimal warpFactor = model.getWarpFactor();
+        if (!warpFactor.equals(BigDecimal.ZERO)) {
+            warpFactor = BigDecimal.ZERO;
+        } else {
+            warpFactor = BigDecimal.ONE;
+        }
+        model.setWarpFactor(warpFactor);
     }
 
     public void changeWarpFactor(double ratio) {
