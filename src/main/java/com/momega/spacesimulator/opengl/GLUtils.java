@@ -11,14 +11,11 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
-
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
 import static javax.media.opengl.GL.*;
-import static javax.media.opengl.GL.GL_LINEAR;
-import static javax.media.opengl.GL.GL_TEXTURE_MAG_FILTER;
 
 /**
  * The class contains static handful methods to draw objects such as {#link drawCircle} or {#link drawEllipse}
@@ -44,8 +41,7 @@ public class GLUtils {
         float y = 0;
 
         gl.glBegin(GL_LINE_LOOP);
-        for(int ii = 0; ii < num_segments; ii++)
-        {
+        for(int ii = 0; ii < num_segments; ii++) {
             gl.glVertex2f(x + cx, y + cy);//output vertex
 
             //apply the rotation matrix
@@ -93,6 +89,38 @@ public class GLUtils {
         for (int i= -num_segments/2 + 1; i<=num_segments/2-1 ; i++) {
             double degInRad = DEG2RAD * i;
             gl.glVertex2d(Math.cosh(degInRad) * a, Math.sinh(degInRad) * b);
+        }
+        gl.glEnd();
+    }
+
+    /**
+     * Draws the ring and setup the point of the texture
+     * @param gl the open GL context
+     * @param minorRadius inner radius
+     * @param majorRadius outer radius
+     * @param num_segments number of the segments
+     * @param num_slices number of the disk slices
+     */
+    public static void drawRing(GL2 gl, double minorRadius, double majorRadius, int num_segments, int num_slices) {
+        gl.glBegin(GL2.GL_QUAD_STRIP);
+        double DEG2RAD = 2.0 * Math.PI / num_segments;
+        for (int j=0; j<num_slices; j++){
+            double rmin = minorRadius + j * ((majorRadius - minorRadius) / (double)num_slices);
+            double rmax = minorRadius + (j+1) * ((majorRadius - minorRadius) / (double)num_slices);
+            double jmin = (double)j / (double) num_slices;
+            double jmax = (double)(j+1) / (double) num_slices;
+            for (int i=0; i<=num_segments ; i++) {
+                double degInRad = DEG2RAD * i;
+                gl.glTexCoord2d(1 - jmin, 0);
+                gl.glVertex2d(Math.cos(degInRad) * rmin, Math.sin(degInRad) * rmin);
+                gl.glTexCoord2d(1 - jmax, 0);
+                gl.glVertex2d(Math.cos(degInRad) * rmax, Math.sin(degInRad) * rmax);
+                degInRad = DEG2RAD * (i + 1);
+                gl.glTexCoord2d(1 - jmin, 1);
+                gl.glVertex2d(Math.cos(degInRad) * rmin, Math.sin(degInRad) * rmin);
+                gl.glTexCoord2d(1- jmax, 1);
+                gl.glVertex2d(Math.cos(degInRad) * rmax, Math.sin(degInRad) * rmax);
+            }
         }
         gl.glEnd();
     }

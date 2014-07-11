@@ -21,6 +21,12 @@ public class ModelRenderer extends CompositeRenderer {
             }
             if (dp instanceof CelestialBody) {
                 addRenderer(new CelestialBodyRenderer((CelestialBody) dp));
+                if (dp instanceof Planet) {
+                    Planet p = (Planet) dp;
+                    for(Ring ring : p.getRings()) {
+                        addRenderer(new PlanetRingRenderer(p, ring));
+                    }
+                }
             } else if (dp instanceof Satellite) {
                 addRenderer(new SatelliteRenderer((Satellite) dp));
                 addRenderer(new HistoryRenderer((Satellite) dp));

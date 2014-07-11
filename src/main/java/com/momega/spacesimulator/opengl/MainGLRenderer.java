@@ -76,12 +76,12 @@ public class MainGLRenderer extends AbstractGLRenderer {
 //        double aratio = Math.sqrt(x * x + y * y) / y;
         double z =  ModelHolder.getModel().getCamera().getDistance();
         z = z / 10.0d;
-        if (z < znear/2) {
+        if (z < znear) {
             znear = z;
             reshape = true;
             logger.info("new z-near = {}", znear);
         }
-        if (z > znear*2) {
+        if (z > znear) {
             znear = z;
             reshape =true;
             logger.info("new z-near = {}", znear);
@@ -188,7 +188,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
     }
 
     protected void setPerspective(GL2 gl, double aspect) {
-        glu.gluPerspective(FOVY, aspect, znear, UNIVERSE_RADIUS * 10);
+        glu.gluPerspective(FOVY, aspect, znear, UNIVERSE_RADIUS);
     }
 
     public double getZnear() {

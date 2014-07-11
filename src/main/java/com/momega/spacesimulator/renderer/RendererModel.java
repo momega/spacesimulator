@@ -1,8 +1,10 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.NamedObject;
+import com.momega.spacesimulator.model.RotatingObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +50,14 @@ public class RendererModel {
             ViewCoordinates viewCoordinates = entry.getValue();
             if (viewCoordinates.isVisible()) {
                 if ((Math.abs(x - (int) viewCoordinates.getPoint().getX()) < MIN_TARGET_SIZE) && (Math.abs(y - (int) viewCoordinates.getPoint().getY()) < MIN_TARGET_SIZE)) {
-                    model.getCamera().setTargetObject(viewCoordinates.getObject());
+                    Camera camera = model.getCamera();
+                    camera.setTargetObject(viewCoordinates.getObject());
+                    if (viewCoordinates.getObject() instanceof RotatingObject) {
+                        RotatingObject ro = (RotatingObject) viewCoordinates.getObject();
+                        if (camera.getDistance() < ro.getRadius()) {
+                            camera.setDistance(ro.getRadius() * 10);
+                        }
+                    }
                     model.setSelectedDynamicalPoint(viewCoordinates.getObject());
                     logger.info("selected dynamical point changed to {}", viewCoordinates.getObject().getName());
                     return;

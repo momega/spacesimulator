@@ -35,8 +35,13 @@ public abstract class AbstractGLRenderer implements GLEventListener {
 
         gl.glShadeModel(GL2.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
         gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-        gl.glEnable(GL.GL_BLEND);
-        gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
+        //gl.glEnable(GL.GL_BLEND);
+
+        gl.glEnable( GL2.GL_POINT_SMOOTH );
+        gl.glEnable( GL2.GL_LINE_SMOOTH );
+        gl.glHint(GL.GL_LINE_SMOOTH_HINT, GL.GL_NICEST);
+
+        //gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
 
         init(gl);
         logger.info("renderer initialized");

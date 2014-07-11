@@ -163,9 +163,27 @@ public abstract class AbstractModelBuilder {
         }
     }
 
+    /**
+     * Updates data about the dynamical point
+     * @param dp the already created dynamical point
+     * @param name the name
+     * @param mass the mass in 1E24 kilograms
+     * @param rotationPeriod rotation period in days
+     * @param radius radius in kilometers
+     * @param axialTilt axial tilt
+     */
     public void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
         dp.setName(name);
         updateDynamicalPoint(dp, radius, mass, rotationPeriod, axialTilt);
+    }
+
+    public Ring addRing(Planet planet, double min, double max, String textureFileName) {
+        Ring ring = new Ring();
+        ring.setMinDistance(min);
+        ring.setMaxDistance(max);
+        ring.setTextureFileName(textureFileName);
+        planet.getRings().add(ring);
+        return ring;
     }
 
     /**

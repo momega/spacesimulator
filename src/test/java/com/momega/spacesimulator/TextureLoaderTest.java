@@ -39,10 +39,9 @@ public class TextureLoaderTest implements GLEventListener {
                 break;
             }
             case BufferedImage.TYPE_INT_ARGB: {
-
                 System.out.println("int rgb");
                 int[] data = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
-                dest = ByteBuffer.allocateDirect(data.length * 4);
+                dest = ByteBuffer.allocateDirect(data.length * Integer.SIZE / 8);
                 dest.order(ByteOrder.nativeOrder());
                 dest.asIntBuffer().put(data, 0, data.length);
                 break;
@@ -65,28 +64,27 @@ public class TextureLoaderTest implements GLEventListener {
 
         GL2 gl = drawable.getGL().getGL2();
 
-        gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f); //sky color background
-        //    gl.glClearColor(0.0f, 0.0f, 0.1f, 0.0f); //black background
+//        //gl.glClearColor(0.17f, 0.65f, 0.92f, 0.0f); //sky color background
+//        gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f); //black background
         gl.glEnable(GL.GL_DEPTH_TEST);
         gl.glEnable(GL.GL_TEXTURE_2D);
 
         final int[] tmp = new int[1];
         gl.glGenTextures(1, IntBuffer.wrap(tmp));
-
         texture = tmp[0];
+//
+//        System.out.println("texture: "+texture);
 
-        System.out.println("texture: "+texture);
-
-        gl.glBindTexture(GL_TEXTURE_2D, texture);
+        //gl.glBindTexture(GL_TEXTURE_2D, texture);
 
 
         makeRGBTexture(gl, glu, getImage());
 
-        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR);
+        gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_LINEAR_MIPMAP_LINEAR);
         gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MAG_FILTER, GL.GL_LINEAR);
 
-        gl.glEnable(GL_BLEND);
-        gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        //gl.glEnable(GL_BLEND);
+        //gl.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         //return tmp[0];
     }
@@ -101,11 +99,11 @@ public class TextureLoaderTest implements GLEventListener {
         graph.scale(1, -1);
         graph.translate(0, -img.getHeight()+1);
 
-        graph.setColor(Color.red);
+        //graph.setColor(Color.green);
         graph.drawOval(0, 0, img.getWidth()-1, img.getHeight());
         graph.drawLine(0, 0, img.getWidth()-5, img.getHeight());
 
-        graph.setColor(Color.BLACK);
+       // graph.setColor(Color.red);
         graph.drawString("string", 10, 10);
 
         graph.dispose();
@@ -117,79 +115,146 @@ public class TextureLoaderTest implements GLEventListener {
 
 
     public void dispose(GLAutoDrawable drawable) {
+
     }
     private int angleX = 0;
     private int angleY = 0;
 
     public void display(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
+        gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
+        gl.glLoadIdentity();  // reset the model-view matrix
 
-        GL2 gl = drawable.getGL().getGL2();
 
-        gl.glClearColor(1, 1, 0, 1);
+//
+//        // ----- Your OpenGL rendering code here (Render a white triangle for testing) -----
+//        gl.glTranslatef(0.0f, 0.0f, 0f); // translate into the screen
+//        gl.glColor3d(1, 1, 1);
+//        gl.glBegin(GL2.GL_TRIANGLES); // draw using triangles
+//        gl.glVertex3f(0.0f, 1.0f, 0.0f);
+//        gl.glVertex3f(-1.0f, -1.0f, 0.0f);
+//        gl.glVertex3f(1.0f, -1.0f, 0.0f);
+//        gl.glEnd();
 
-        gl.glClear(GL_COLOR_BUFFER_BIT);
-        gl.glMatrixMode(GL_MODELVIEW);
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glPushMatrix();
+        gl.glOrtho(0, 1, 0, 1, -1000, 1000);
+
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+        gl.glPushMatrix();
         gl.glLoadIdentity();
 
-        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        gl.glTranslated(0, 0, -2);
-
-        gl.glColor3d(0, 0, 0);
-        gl.glBegin(GL_LINES);
-
-        gl.glVertex2d(0, 0);
-        gl.glVertex2d(width, height);
-
-        gl.glEnd();
-
-
-        gl.glBindTexture(GL.GL_TEXTURE_2D, texture);
-
-        gl.glEnable(GL_TEXTURE_2D);
-
-        gl.glColor3d(1, 1, 1);
+        // No depth buffer writes for background.
+        //gl.glDepthMask( false );
 
         gl.glBegin(GL_QUADS);
         {
-            gl.glTexCoord2d(0, 0);
             gl.glVertex2d(0, 0);
+            gl.glVertex2d(0, 0.1);
 
-            gl.glTexCoord2d(0, 1);
-            gl.glVertex2d(0, 64);
+            gl.glVertex2d(0.1, 0.1);
 
-            gl.glTexCoord2d(1, 1);
-            gl.glVertex2d(64, 64);
-
-            gl.glTexCoord2d(1, 0);
-            gl.glVertex2d(64, 0);
+            gl.glVertex2d(0.1, 0);
         }
         gl.glEnd();
 
-        gl.glDisable(GL_TEXTURE_2D);
+        //gl.glDepthMask( true );
 
+        gl.glPopMatrix();
+        gl.glMatrixMode(GL2.GL_PROJECTION);
+        gl.glPopMatrix();
+        gl.glMatrixMode(GL2.GL_MODELVIEW);
+
+ //       glu.gluLookAt(0, 0, 10, 0, 0, 0, 0, 1, 0);
     }
+
+//        //gl.glClearColor(0, 0, 0, 1);
+//
+//        gl.glClear(GL_COLOR_BUFFER_BIT);
+//        gl.glMatrixMode(GL_MODELVIEW);
+//        gl.glLoadIdentity();
+//
+//        gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//
+//        gl.glTranslated(0, 0, 0);
+//
+//        gl.glColor3d(0, 0, 0);
+//        gl.glBegin(GL_LINES);
+//
+//        gl.glVertex2d(0, 0);
+//        gl.glVertex2d(width, height);
+//
+//        gl.glEnd();
+//
+//
+//        gl.glBindTexture(GL.GL_TEXTURE_2D, texture);
+//
+//        gl.glEnable(GL_TEXTURE_2D);
+//
+//        gl.glColor3d(1, 1, 1);
+//
+//        gl.glBegin(GL_QUADS);
+//        {
+//            gl.glTexCoord2d(0, 0);
+//            gl.glVertex2d(0, 0);
+//
+//            gl.glTexCoord2d(0, 1);
+//            gl.glVertex2d(0, 64);
+//
+//            gl.glTexCoord2d(1, 1);
+//            gl.glVertex2d(64, 64);
+//
+//            gl.glTexCoord2d(1, 0);
+//            gl.glVertex2d(64, 0);
+//        }
+//        gl.glEnd();
+//
+//        gl.glDisable(GL_TEXTURE_2D);
+
+//    }
     private int width, height;
 
+
+    /*
+     * Whenever the window is reshaped, redefine the coordinate system and
+     * redraw the stencil area.
+     */
     public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+        GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
 
-        this.width = width;
-        this.height = height;
+        if (height == 0) {
+            height = 1;   // prevent divide by zero
+        }
+        double aspect = (double) width / height;
 
-        GL2 gl = drawable.getGL().getGL2();
-
+        // Set the view port (display area) to cover the entire window
         gl.glViewport(0, 0, width, height);
-
-        gl.glMatrixMode(GL_PROJECTION);
-        gl.glLoadIdentity();
-
-        // gl.glFrustum(-50, 50, -50, 50, 50, 150);
-
-        //gl.glOrtho(height, height, width, y, height, angleX);
-
-        gl.glOrtho(0, width, 0, height, 1, 3);
-
+        gl.glMatrixMode(GL_PROJECTION);  // choose projection matrix
+        gl.glLoadIdentity();             // reset projection matrix
+        glu.gluPerspective(45, aspect, 1, 20);
+        gl.glMatrixMode(GL_MODELVIEW);
+        gl.glLoadIdentity(); // reset
     }
+
+//    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+//
+//        this.width = width;
+//        this.height = height;
+//
+//        GL2 gl = drawable.getGL().getGL2();
+//
+//        gl.glViewport(0, 0, width, height);
+//
+//        gl.glMatrixMode(GL_PROJECTION);
+//        gl.glLoadIdentity();
+//
+//        // gl.glFrustum(-50, 50, -50, 50, 50, 150);
+//
+//        //gl.glOrtho(height, height, width, y, height, angleX);
+//
+//        gl.glOrtho(0, width, 0, height, -1, 1);
+//
+//    }
 
     public static void main(String[] args) {
 

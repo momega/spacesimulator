@@ -40,10 +40,10 @@ public class SimpleGLRenderer extends AbstractGLRenderer {
         gl.glVertex3f(1.0f, -1.0f, 0.0f);
         gl.glEnd();
 
-
+        // here start ortho and bitmap rendering
         gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glPushMatrix();
-        gl.glOrtho(0, drawable.getWidth(), drawable.getHeight(), 0, 0, 10);
+        gl.glOrtho(0, drawable.getWidth(), 0, drawable.getHeight(), 0, 1);
         //gl.glOrtho(0, 5, 0, 20, 0, 1);
         //glu.gluPerspective(45, (double)drawable.getHeight() / (double)drawable.getWidth(), 1, 10);
         //glu.gluLookAt(0, 0, 10, 0, 0, 0, 0, 1, 0);
@@ -60,9 +60,9 @@ public class SimpleGLRenderer extends AbstractGLRenderer {
         gl.glNormal3d(0.0, 0.0, 1.0);
         gl.glBegin( GL2.GL_QUADS ); {
             gl.glTexCoord2d(0, 0); gl.glVertex2f(0, 0);
-            gl.glTexCoord2d(0, 1); gl.glVertex2f(0, 2);
-            gl.glTexCoord2d(1, 1); gl.glVertex2f(2, 2);
-            gl.glTexCoord2d(1, 0); gl.glVertex2f(2, 0);
+            gl.glTexCoord2d(0, 1); gl.glVertex2f(0, 100);
+            gl.glTexCoord2d(1, 1); gl.glVertex2f(100, 100);
+            gl.glTexCoord2d(1, 0); gl.glVertex2f(100, 0);
         } gl.glEnd();
         texture.disable(gl);
 
