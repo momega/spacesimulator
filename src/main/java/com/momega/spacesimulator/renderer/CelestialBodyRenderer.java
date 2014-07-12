@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 
@@ -42,11 +43,22 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
         glu.gluDeleteQuadric(quadric);
     }
 
+    @Override
+    protected void prepareObject(GL2 gl) {
+        super.prepareObject(gl);
+
+        gl.glLineWidth(2f);
+        gl.glBegin(GL2.GL_LINES);
+        gl.glVertex3d(0, 0, celestialBody.getRadius() * 1.2);
+        gl.glVertex3d(0, 0, -celestialBody.getRadius() * 1.2);
+        gl.glEnd();
+    }
+
     public void setMatrix(GL2 gl ) {
         GLUtils.translate(gl, celestialBody.getPosition());
 
         double axialTilt = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), celestialBody.getOrientation().getV()));
-        gl.glRotated(axialTilt, 0, 1, 0);
+        gl.glRotated(axialTilt, 1, 0, 0);
 
         logger.debug("N = {}", celestialBody.getOrientation().getN().asArray());
         double phi = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(1, 0, 0), celestialBody.getOrientation().getN()));
@@ -57,4 +69,8 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
         gl.glRotated(phi, 0, 0, 1);
     }
 
+    @Override
+    public void draw(GLAutoDrawable drawable) {
+        super.draw(drawable);
+    }
 }

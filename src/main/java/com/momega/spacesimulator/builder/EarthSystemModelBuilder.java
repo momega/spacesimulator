@@ -22,17 +22,17 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         updateDynamicalPoint(earth, "Earth", 5.97219, 0.997269, 6.378, 23.5);
         earth.setTextureFileName("earth.jpg");
 
-//        CelestialBody moon = new CelestialBody();
-//        moon.setKeplerianElements(createKeplerianElements(earth, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.241500, 208.1199));
-//        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687);
-//        createTrajectory(moon, new double[] {0.5,0.5,0.5}, TrajectoryType.KEPLERIAN);
-//        moon.setTextureFileName("moon.jpg");
+        CelestialBody moon = new CelestialBody();
+        createKeplerianElements(moon, earth, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.145, 208.1199);
+        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687);
+        createTrajectory(moon, new double[] {0.5,0.5,0.5}, TrajectoryType.KEPLERIAN);
+        moon.setTextureFileName("moon.jpg");
 
         addDynamicalPoint(earth);
-//        addDynamicalPoint(moon);
+        addDynamicalPoint(moon);
 
-        SphereOfInfluence rootSoi = addPlanetToSoiTree(earth, null);
-//        addPlanetToSoiTree(moon, rootSoi);
+        SphereOfInfluence earthSoi = addPlanetToSoiTree(earth, null);
+        addPlanetToSoiTree(moon, earthSoi);
 
         model.setSelectedDynamicalPoint(earth);
     }
@@ -41,6 +41,14 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
     public void initSatellites() {
         CelestialBody earth = (CelestialBody) findDynamicalPoint("Earth");
         CelestialBody moon = (CelestialBody) findDynamicalPoint("Moon");
+
+        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);
+        Orientation o = MathUtils.createOrientation(new Vector3d(0, 1d, 0), new Vector3d(0, 0, 1d));
+        o.lookUp(Math.toRadians(-23.75d));
+        Vector3d velocity = o.getN().scale(9000d);
+        Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
+        addDynamicalPoint(satellite);
+
 
 //        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);
 //        Vector3d velocity = new Vector3d(0, 10000d, 0);

@@ -38,6 +38,6 @@ public class PlanetRingRenderer extends AbstractTextureRenderer {
         GLUtils.translate(gl, celestialBody.getPosition());
 
         double axialTilt = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), celestialBody.getOrientation().getV()));
-        gl.glRotated(axialTilt, 0, 1, 0);
+        gl.glRotated(axialTilt, 1, 0, 0);
     }
 }

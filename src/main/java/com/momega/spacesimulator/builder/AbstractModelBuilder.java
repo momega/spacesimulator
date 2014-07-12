@@ -78,6 +78,7 @@ public abstract class AbstractModelBuilder {
 
     /**
      * Creates the keplerian trajectory
+     * @param dynamicalPoint the dynamical point
      * @param centralObject the central object
      * @param semimajorAxis the semimajor axis
      * @param eccentricity the eccentricity
@@ -88,7 +89,7 @@ public abstract class AbstractModelBuilder {
      * @param ascendingNode the ascending node in degrees
      * @return new instance of the keplerian trajectory
      */
-    public KeplerianElements createKeplerianElements(DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
+    public KeplerianElements createKeplerianElements(DynamicalPoint dynamicalPoint, DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setCentralObject(centralObject);
         keplerianElements.setSemimajorAxis(semimajorAxis);
@@ -98,6 +99,7 @@ public abstract class AbstractModelBuilder {
         keplerianElements.setTimeOfPeriapsis(TimeUtils.createTime(timeOfPeriapsis));
         keplerianElements.setInclination(Math.toRadians(inclination));
         keplerianElements.setAscendingNode(Math.toRadians(ascendingNode));
+        dynamicalPoint.setKeplerianElements(keplerianElements);
         return keplerianElements;
     }
 

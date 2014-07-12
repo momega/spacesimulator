@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * The planet is the celestial body which might have rings. Nowdays there is now other objects in our solar system with
- * the rings
+ * the rings.
  * Created by martin on 7/11/14.
  */
 public class Planet extends CelestialBody {

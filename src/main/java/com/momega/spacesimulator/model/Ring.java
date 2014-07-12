@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
+ * The ring of the {@link com.momega.spacesimulator.model.Planet}.
  * Created by martin on 7/11/14.
  */
 public class Ring {
