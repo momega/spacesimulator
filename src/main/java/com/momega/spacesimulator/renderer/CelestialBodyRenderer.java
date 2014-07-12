@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
@@ -33,6 +34,11 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
     @Override
     protected void drawObject(GL2 gl) {
+
+        gl.glDisable(GL2.GL_BLEND);
+        gl.glEnable(GL2.GL_CULL_FACE);
+        gl.glShadeModel(GL2.GL_SMOOTH);
+
         GLU glu = new GLU();
         GLUquadric quadric = glu.gluNewQuadric();
         gl.glColor3d(1, 1, 1);
@@ -41,6 +47,9 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
         glu.gluSphere(quadric, celestialBody.getRadius(), 64, 64);
         glu.gluDeleteQuadric(quadric);
+
+        gl.glShadeModel(GL2.GL_FLAT);
+        gl.glDisable(GL2.GL_CULL_FACE);
     }
 
     @Override
@@ -70,7 +79,14 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     }
 
     @Override
-    public void draw(GLAutoDrawable drawable) {
-        super.draw(drawable);
+    protected void additionalDraw(GL2 gl) {
+        super.additionalDraw(gl);
+
+        if (ModelHolder.getModel().getSelectedDynamicalPoint() == celestialBody) {
+            for (int i = 1; i <= 5; i++) {
+                GLUtils.drawCircle(gl, 0, 0, celestialBody.getRadius() * i, 360);
+            }
+            GLUtils.drawBeams(gl, 0, 0, celestialBody.getRadius() * 5, 18);
+        }
     }
 }

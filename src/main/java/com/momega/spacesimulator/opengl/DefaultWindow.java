@@ -88,6 +88,7 @@ public class DefaultWindow {
                         canvas.addKeyListener(controller);
                         canvas.addMouseMotionListener(controller);
                         canvas.addMouseWheelListener(controller);
+                        canvas.addComponentListener(controller);
                     }
                 });
 

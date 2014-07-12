@@ -63,4 +63,20 @@ public abstract class AbstractController implements Controller {
         // do nothing
     }
 
+    public void componentResized(ComponentEvent e) {
+        // do nothing
+    }
+
+    public void componentMoved(ComponentEvent e) {
+        // do nothing
+    }
+
+    public void componentShown(ComponentEvent e) {
+        // do nothing
+    }
+
+    public void componentHidden(ComponentEvent e) {
+        // do nothing
+    }
+
 }

@@ -2,6 +2,7 @@ package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
  * Super class for all model builders
  * Created by martin on 6/18/14.
  */
-public abstract class AbstractModelBuilder {
+public abstract class AbstractModelBuilder implements ModelBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModelBuilder.class);
 
@@ -35,6 +36,7 @@ public abstract class AbstractModelBuilder {
     public final Model init() {
         initTime();
         initPlanets();
+        initSatellites();
         initCamera();
         logger.info("model initialized");
         return model;
@@ -47,7 +49,7 @@ public abstract class AbstractModelBuilder {
 
     protected void initCamera() {
         Camera s = new Camera();
-        s.setTargetObject(findDynamicalPoint("Earth"));
+        s.setTargetObject(getModel().getSelectedDynamicalPoint());
         s.setDistance(100 * 1E6);
         s.setPosition(new Vector3d(s.getDistance(), 0, 0));
         s.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
@@ -60,7 +62,7 @@ public abstract class AbstractModelBuilder {
      */
     protected abstract void initPlanets();
 
-    public abstract void initSatellites();
+    protected abstract void initSatellites();
 
     /**
      * Astronautical unit
@@ -100,6 +102,10 @@ public abstract class AbstractModelBuilder {
         keplerianElements.setInclination(Math.toRadians(inclination));
         keplerianElements.setAscendingNode(Math.toRadians(ascendingNode));
         dynamicalPoint.setKeplerianElements(keplerianElements);
+
+        // initialize position
+        KeplerianUtils.getInstance().computePosition(dynamicalPoint, model.getTime());
+
         return keplerianElements;
     }
 
@@ -156,7 +162,7 @@ public abstract class AbstractModelBuilder {
 
     public void updateDynamicalPoint(DynamicalPoint dp, double radius, double mass, double rotationPeriod, double axialTilt) {
         dp.setMass(mass * 1E24);
-        dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        dp.setOrientation(MathUtils.createOrientation(/* n */ new Vector3d(1, 0, 0), /* v */ new Vector3d(0, 0, 1)));
         dp.getOrientation().twist(Math.toRadians(axialTilt));
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;

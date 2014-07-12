@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.context;
 
-import com.momega.spacesimulator.builder.AbstractModelBuilder;
+import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.service.CameraService;
@@ -32,11 +32,9 @@ public class Application {
         this.cameraService = applicationContext.getBean(CameraService.class);
     }
 
-    public Model init(AbstractModelBuilder modelBuilder) {
+    public Model init(ModelBuilder modelBuilder) {
         modelBuilder.init();
         logger.info("time = {}", formatter.print(TimeUtils.getDateTime(ModelHolder.getModel().getTime())));
-        next();
-        modelBuilder.initSatellites();
         next();
         logger.info("model data built");
         return ModelHolder.getModel();

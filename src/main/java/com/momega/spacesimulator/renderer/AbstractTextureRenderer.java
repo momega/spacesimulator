@@ -60,8 +60,14 @@ public abstract class AbstractTextureRenderer extends AbstractRenderer {
 
         setMatrix(gl);
 
+        additionalDraw(gl);
+
         gl.glCallList(this.listIndex);
         gl.glPopMatrix();
+    }
+
+    protected void additionalDraw(GL2 gl) {
+        // do nothing, reader for override
     }
 
     protected abstract void setMatrix(GL2 gl);

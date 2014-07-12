@@ -18,7 +18,7 @@ public class RendererModel {
 
     private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
 
-    private final static int MIN_TARGET_SIZE = 8;
+    private final static int MIN_TARGET_SIZE = 5;
 
     private static RendererModel instance = new RendererModel();
 

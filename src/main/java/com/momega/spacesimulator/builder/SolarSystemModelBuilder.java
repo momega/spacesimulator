@@ -10,9 +10,12 @@ import com.momega.spacesimulator.utils.VectorUtils;
  */
 public class SolarSystemModelBuilder extends AbstractModelBuilder {
 
+    protected CelestialBody sun;
+    protected SphereOfInfluence sunSoi;
+
     @Override
     public void initPlanets() {
-        CelestialBody sun = new CelestialBody();
+        sun = new CelestialBody();
         sun.setName("Sun");
 
         sun.setPosition(new Vector3d(0, 0, 0));
@@ -40,7 +43,7 @@ public class SolarSystemModelBuilder extends AbstractModelBuilder {
 
         CelestialBody mars = new Planet();
         createKeplerianElements(mars, sun, 227939.1d * 1E6, 0.093315, 286.537, 686.9363, 2457003.918154194020, 1.84844, 49.5147);
-        updateDynamicalPoint(mars, "Mars", 0.64185, 1.02595, 3.3895, 25.19);
+        updateDynamicalPoint(mars, "Mars", 0.64185, 1.02595, 3.3895, -25.19);
         createTrajectory(mars, new double[]{1, 0, 0}, TrajectoryType.KEPLERIAN);
         mars.setTextureFileName("mars.jpg");
 
@@ -100,20 +103,20 @@ public class SolarSystemModelBuilder extends AbstractModelBuilder {
         addDynamicalPoint(callisto);
 
         CelestialBody phobos = new CelestialBody();
-        createKeplerianElements(phobos, mars, 9.3772 * 1E6, 0.0151, 121.451, 0.319, 2456821.639245583210, 1.082, 82.446);
+        createKeplerianElements(phobos, mars, 9.3772 * 1E6, 0.0151, 121.451, 0.319, 2456821.639245583210, 0, 82.446);
         createTrajectory(phobos, new double[]{1, 1, 1}, TrajectoryType.KEPLERIAN);
         updateDynamicalPoint(phobos, "Phobos", 1.08E-8, 0.319, 13.1E-3, 0d);
         phobos.setTextureFileName("phobos.jpg");
         addDynamicalPoint(phobos);
 
         CelestialBody deimos = new CelestialBody();
-        createKeplerianElements(deimos, mars, 23.4632 * 1E6, 0.00033, 306.201, 1.263, 2456821.036168867722, 1.791, 78.74157);
+        createKeplerianElements(deimos, mars, 23.4632 * 1E6, 0.00033, 306.201, 1.263, 2456821.036168867722, 0, 78.74157);
         createTrajectory(deimos, new double[]{1, 1, 1}, TrajectoryType.KEPLERIAN);
         updateDynamicalPoint(deimos, "Deimos", 1.80E-9, 1.263, 7.8E-3, 0d);
         deimos.setTextureFileName("deimos.jpg");
         addDynamicalPoint(deimos);
 
-        SphereOfInfluence sunSoi = addPlanetToSoiTree(sun, null);
+        sunSoi = addPlanetToSoiTree(sun, null);
         addPlanetToSoiTree(mercury, sunSoi);
         addPlanetToSoiTree(venus, sunSoi);
         SphereOfInfluence earthSoi = addPlanetToSoiTree(earth, sunSoi, earthMoonBarycenter.getKeplerianElements());
@@ -127,7 +130,7 @@ public class SolarSystemModelBuilder extends AbstractModelBuilder {
         addPlanetToSoiTree(ganymede, jupiterSoi);
         addPlanetToSoiTree(callisto, jupiterSoi);
 
-        model.setSelectedDynamicalPoint(earth);
+        model.setSelectedDynamicalPoint(mars);
     }
 
     @Override

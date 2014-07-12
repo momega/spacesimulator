@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.controller;
 
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -89,6 +90,30 @@ public class EventBusController extends AbstractController {
     public void mouseWheelMoved(MouseWheelEvent e) {
         for(Controller controller : controllers) {
             controller.mouseWheelMoved(e);
+        }
+    }
+
+    public void componentResized(ComponentEvent e) {
+        for(Controller controller : controllers) {
+            controller.componentResized(e);
+        }
+    }
+
+    public void componentMoved(ComponentEvent e) {
+        for(Controller controller : controllers) {
+            controller.componentMoved(e);
+        }
+    }
+
+    public void componentShown(ComponentEvent e) {
+        for(Controller controller : controllers) {
+            controller.componentShown(e);
+        }
+    }
+
+    public void componentHidden(ComponentEvent e) {
+        for(Controller controller : controllers) {
+            controller.componentHidden(e);
         }
     }
 

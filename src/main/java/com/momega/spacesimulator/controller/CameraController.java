@@ -1,12 +1,15 @@
 package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.NamedObject;
 import com.momega.spacesimulator.model.RotatingObject;
-import com.momega.spacesimulator.utils.VectorUtils;
+import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -19,6 +22,8 @@ public class CameraController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(CameraController.class);
 
     private final Camera camera;
+
+    private double height;
 
     private Point mouseLast;
 
@@ -38,12 +43,22 @@ public class CameraController extends AbstractController {
                 changeDistance(2);
                 break;
         }
+    }
 
+    @Override
+    public void componentResized(ComponentEvent e) {
+        logger.info("width = {}, height = {}", e.getComponent().getWidth(), e.getComponent().getHeight());
+        this.height = e.getComponent().getHeight();
     }
 
     public void changeDistance(double factor) {
         double radius = 0;
-        if (camera.getTargetObject() instanceof RotatingObject) {
+        if (camera.getTargetObject() instanceof NamedObject) {
+            ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates((com.momega.spacesimulator.model.NamedObject) camera.getTargetObject());
+            logger.info("view radius = {}", viewCoordinates.getRadius());
+            if (viewCoordinates.getRadius() * 2 > this.height && factor<1) {
+                return;
+            }
             RotatingObject ro = (RotatingObject) camera.getTargetObject();
             radius = ro.getRadius();
         }
@@ -83,7 +98,6 @@ public class CameraController extends AbstractController {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        String message;
         int notches = e.getWheelRotation();
         if (notches < 0) {
             changeDistance(0.9);
