@@ -52,19 +52,16 @@ public class CameraController extends AbstractController {
     }
 
     public void changeDistance(double factor) {
-        double radius = 0;
         if (camera.getTargetObject() instanceof NamedObject) {
-            ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates((com.momega.spacesimulator.model.NamedObject) camera.getTargetObject());
+            ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates((NamedObject) camera.getTargetObject());
             logger.info("view radius = {}", viewCoordinates.getRadius());
             if (viewCoordinates.getRadius() * 2 > this.height && factor<1) {
                 return;
             }
-            RotatingObject ro = (RotatingObject) camera.getTargetObject();
-            radius = ro.getRadius();
         }
-        double newAltitude = (camera.getDistance() - radius) * factor;
-        logger.info("new altitude of the camera = {}", newAltitude);
-        camera.setDistance(radius + newAltitude);
+        double newDistance = camera.getDistance() * factor;
+        logger.info("new distance of the camera = {}", newDistance);
+        camera.setDistance(newDistance);
     }
 
     @Override

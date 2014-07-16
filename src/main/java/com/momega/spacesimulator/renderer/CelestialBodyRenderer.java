@@ -66,15 +66,17 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     public void setMatrix(GL2 gl ) {
         GLUtils.translate(gl, celestialBody.getPosition());
 
-        double axialTilt = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), celestialBody.getOrientation().getV()));
+        double axialTilt = -Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), celestialBody.getOrientation().getV()));
         gl.glRotated(axialTilt, 1, 0, 0);
 
         logger.debug("N = {}", celestialBody.getOrientation().getN().asArray());
-        double phi = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(1, 0, 0), celestialBody.getOrientation().getN()));
-        if (celestialBody.getOrientation().getN().z<0) {
-            phi = 360 - phi;
+        double phi = -Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 1, 0), celestialBody.getOrientation().getN()));
+        if (celestialBody.getOrientation().getN().z>0) {
+            phi = - phi;
         }
-        logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);
+        if (celestialBody.getName().equals("Earth")) {
+            logger.info("axialTilt = {}, rotate = {}", axialTilt, phi);
+        }
         gl.glRotated(phi, 0, 0, 1);
     }
 

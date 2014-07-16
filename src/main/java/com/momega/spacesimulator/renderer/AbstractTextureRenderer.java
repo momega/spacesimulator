@@ -9,6 +9,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
 /**
+ * Abstract renderer with prepares and uses the texture
  * Created by martin on 7/9/14.
  */
 public abstract class AbstractTextureRenderer extends AbstractRenderer {
@@ -47,6 +48,10 @@ public abstract class AbstractTextureRenderer extends AbstractRenderer {
 
     protected abstract void drawObject(GL2 gl);
 
+    /**
+     * Prepares the texture during initialization of the renderer
+     * @param gl the OPENGL context
+     */
     protected void prepareObject(GL2 gl) {
         texture.enable(gl);
         texture.bind(gl);

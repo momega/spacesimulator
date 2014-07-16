@@ -22,6 +22,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     protected Model model = ModelHolder.getModel();
 
+    private static final Matrix3d TO_ECLIPTIC = MathUtils.rotationMatrix1(Math.toRadians(23.439291));
+
     /**
      * Returns newly created instance
      * @return the instance of the model
@@ -160,17 +162,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return satellite;
     }
 
-    public void updateDynamicalPoint(DynamicalPoint dp, double radius, double mass, double rotationPeriod, double axialTilt) {
-        dp.setMass(mass * 1E24);
-        dp.setOrientation(MathUtils.createOrientation(/* n */ new Vector3d(1, 0, 0), /* v */ new Vector3d(0, 0, 1)));
-        dp.getOrientation().twist(Math.toRadians(axialTilt));
-        if (dp instanceof RotatingObject) {
-            RotatingObject ro = (RotatingObject) dp;
-            ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
-            ro.setRadius(radius * 1E6);
-        }
-    }
-
     /**
      * Updates data about the dynamical point
      * @param dp the already created dynamical point
@@ -182,7 +173,28 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      */
     public void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
         dp.setName(name);
-        updateDynamicalPoint(dp, radius, mass, rotationPeriod, axialTilt);
+        dp.setMass(mass * 1E24);
+        dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        if (dp instanceof RotatingObject) {
+            dp.getOrientation().twist(Math.toRadians(axialTilt));
+
+            RotatingObject ro = (RotatingObject) dp;
+            ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
+            ro.setRadius(radius * 1E6);
+        }
+    }
+
+    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec) {
+        dp.setName(name);
+        dp.setMass(mass * 1E24);
+        if (dp instanceof RotatingObject) {
+            Orientation orientation = MathUtils.rotateByAngles(Math.toRadians(ra), Math.toRadians(dec));
+            dp.setOrientation(orientation);
+
+            RotatingObject ro = (RotatingObject) dp;
+            ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
+            ro.setRadius(radius * 1E6);
+        }
     }
 
     public Ring addRing(Planet planet, double min, double max, String textureFileName) {

@@ -8,8 +8,11 @@ import com.momega.spacesimulator.model.*;
 public abstract class AbstractDynamicalPointRenderer extends AbstractTextRenderer {
 
     protected void drawData(NamedObject namedObject, Camera camera, int x, int y) {
-        drawText(namedObject.getName(), x + 5, y + 30);
-        drawText("P:" + namedObject.getPosition().toString(), x + 5, y + 20);
+        drawText(namedObject.getName(), x + 5, y + 60);
+        drawText("P:" + namedObject.getPosition().toString(), x + 5, y + 50);
+        drawText("N:" + namedObject.getOrientation().getN().toString(), x + 5, y + 40);
+        drawText("U:" + namedObject.getOrientation().getU().toString(), x + 5, y + 30);
+        drawText("V:" + namedObject.getOrientation().getV().toString(), x + 5, y + 20);
         double distance = namedObject.getPosition().subtract(camera.getPosition()).length() / 1E6;
         drawText("D:" + String.format("%6.2f Mm", distance), x + 5, y);
         if (namedObject instanceof MovingObject) {

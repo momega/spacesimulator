@@ -8,6 +8,7 @@ import com.momega.spacesimulator.model.RotatingObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.text.View;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +43,11 @@ public class RendererModel {
 
     public ViewCoordinates findViewCoordinates(NamedObject namedObject) {
         return viewData.get(namedObject);
+    }
+
+    public boolean isVisibleOnScreen(NamedObject namedObject) {
+        ViewCoordinates viewCoordinates = findViewCoordinates(namedObject);
+        return (viewCoordinates != null && viewCoordinates.isVisible());
     }
 
     public void selectDynamicalPoint(int x, int y) {

@@ -5,6 +5,7 @@ package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.builder.AbstractModelBuilder;
 import com.momega.spacesimulator.builder.EarthSystemModelBuilder;
+import com.momega.spacesimulator.builder.SimpleSolarSystemModelBuilder;
 import com.momega.spacesimulator.builder.SolarSystemModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.controller.*;
