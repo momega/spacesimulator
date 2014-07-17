@@ -1,6 +1,8 @@
 package com.momega.spacesimulator.utils;
 
 import com.momega.spacesimulator.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Set of mathematical helper functions
@@ -8,6 +10,8 @@ import com.momega.spacesimulator.model.*;
  * Created by martin on 5/6/14.
  */
 public class MathUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(MathUtils.class);
 
     public static final double AU = 149597870700d;
 
@@ -78,8 +82,12 @@ public class MathUtils {
         Matrix3d r1t = rotationMatrix1(Math.PI/2 - delta).transpose();
         Matrix3d transformationMatrix =  r3t.multiple(r1t);
 
-        Matrix3d eclipticTransformation = transformationMatrix.multiple(ECLIPTIC_MATRIX);
+        Matrix3d eclipticTransformation = transformationMatrix.multiple(ECLIPTIC_MATRIX.transpose());
         Orientation orientation = transformByMatrix(eclipticTransformation, createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+
+        double angle = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), orientation.getV()));
+        logger.info("angle = {}", angle);
+
         return orientation;
     }
 

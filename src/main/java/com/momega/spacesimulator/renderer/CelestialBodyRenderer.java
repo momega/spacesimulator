@@ -74,9 +74,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
         if (celestialBody.getOrientation().getN().z>0) {
             phi = - phi;
         }
-        if (celestialBody.getName().equals("Earth")) {
-            logger.info("axialTilt = {}, rotate = {}", axialTilt, phi);
-        }
+        logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);
         gl.glRotated(phi, 0, 0, 1);
     }
 

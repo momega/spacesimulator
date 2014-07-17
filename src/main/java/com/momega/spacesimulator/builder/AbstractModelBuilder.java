@@ -171,7 +171,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param radius radius in kilometers
      * @param axialTilt axial tilt
      */
-    public void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
+    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
         dp.setName(name);
         dp.setMass(mass * 1E24);
         dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));

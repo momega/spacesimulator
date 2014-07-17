@@ -73,7 +73,8 @@ public class SolarSystemModelBuilder extends SimpleSolarSystemModelBuilder {
         addDynamicalPoint(callisto);
 
         CelestialBody phobos = new CelestialBody();
-        createKeplerianElements(phobos, mars, 9.3772 * 1E6, 0.0151, 121.451, 0.319, 2456821.639245583210, 27.768, 82.446);
+        createKeplerianElements(phobos, mars, 9.3772 * 1E6, 0.0151, 121.451, 0.319, 2456821.639245583210, 27.7682593856, 82.446);
+        //createKeplerianElements(phobos, mars, 9.3772 * 1E6, 0.0151, 161.2251, 0.319, 2456821.639245583210, 38.05, 48.531);
         createTrajectory(phobos, new double[]{1, 1, 1}, TrajectoryType.KEPLERIAN);
         updateDynamicalPoint(phobos, "Phobos", 1.08E-8, 0.319, 13.1E-3, 0d);
         phobos.setTextureFileName("phobos.jpg");
@@ -94,6 +95,8 @@ public class SolarSystemModelBuilder extends SimpleSolarSystemModelBuilder {
         addPlanetToSoiTree(europa, jupiterSoi);
         addPlanetToSoiTree(ganymede, jupiterSoi);
         addPlanetToSoiTree(callisto, jupiterSoi);
+
+        model.setSelectedDynamicalPoint(mars);
     }
 
     @Override
