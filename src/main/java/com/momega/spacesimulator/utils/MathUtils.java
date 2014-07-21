@@ -69,24 +69,22 @@ public class MathUtils {
         return createMatrix(Math.cos(angle), Math.sin(angle), 0, -Math.sin(angle), Math.cos(angle), 0, 0, 0, 1);
     }
 
-    private static final Matrix3d ECLIPTIC_MATRIX = rotationMatrix1(Math.toRadians(-23.439291));
+    private static final Matrix3d ECLIPTIC_MATRIX = MathUtils.rotationMatrix1(Math.toRadians(23.439291));
 
     /**
      * Creates the rotation transformation
-     * @param alpha
-     * @param delta
+     * @param alpha right ascension
+     * @param delta declination of the north-pole
      * @return the transformation matrix
      */
-    public static Orientation rotateByAngles(double alpha, double delta) {
+    public static Orientation rotateByAngles(double alpha, double delta, boolean toEcliptic) {
         Matrix3d r3t = rotationMatrix3(Math.PI/2 + alpha).transpose();
         Matrix3d r1t = rotationMatrix1(Math.PI/2 - delta).transpose();
         Matrix3d transformationMatrix =  r3t.multiple(r1t);
-
-        Matrix3d eclipticTransformation = transformationMatrix.multiple(ECLIPTIC_MATRIX.transpose());
-        Orientation orientation = transformByMatrix(eclipticTransformation, createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
-
-        double angle = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), orientation.getV()));
-        logger.info("angle = {}", angle);
+        if (toEcliptic) {
+            transformationMatrix = ECLIPTIC_MATRIX.multiple(transformationMatrix);
+        }
+        Orientation orientation = transformByMatrix(transformationMatrix, createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
 
         return orientation;
     }

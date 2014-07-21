@@ -15,14 +15,36 @@ public class VectorUtils {
     private final static double EPSILON = 0.0001;
     public final static double SMALL_EPSILON = 0.0001;
 
+    /**
+     * Creates the vector from spherical coordinates
+     * @param r distance
+     * @param theta the angle from the z-axis
+     * @param phi the angle from the x-axis
+     * @return new instance of the vector
+     *
+     * @seelink http://en.wikipedia.org/wiki/Spherical_coordinate_system
+     */
     public static Vector3d fromSphericalCoordinates(double r, double theta, double phi) {
-        return new Vector3d(r * Math.sin(theta)* Math.cos(phi), r*Math.sin(theta) * Math.sin(phi), r * Math.cos(theta));
+        return new Vector3d(r * Math.sin(theta)* Math.cos(phi),
+                            r * Math.sin(theta) * Math.sin(phi),
+                            r * Math.cos(theta));
+    }
+
+    public static double[] getVectorAngles(Vector3d vector) {
+        double length = vector.length();
+        double theta = Math.acos(vector.z / length);
+        double phi = Math.atan2(vector.y, vector.x);
+        return new double[] {length, theta, phi};
     }
 
     public static Vector3d[] transformCoordinateSystem(MovingObject source, MovingObject target, Vector3d[] vectors) {
         Vector3d position = vectors[0].add(source.getPosition()).subtract(target.getPosition());
         Vector3d velocity = vectors[1].add(source.getVelocity()).subtract(target.getVelocity());
         return new Vector3d[] {position, velocity};
+    }
+
+    public static boolean equals(Vector3d v1, Vector3d v2, double precision) {
+        return v1.subtract(v2).length()<precision;
     }
 
 
@@ -42,8 +64,7 @@ public class VectorUtils {
      * @return				A (new) vector containing the result of the rotation
      * @throws Error	If any of the preconditions are not met
      */
-    public static Vector3d rotateAboutAxis(final Vector3d v, final double angle, final Vector3d axis)
-    {
+    public static Vector3d rotateAboutAxis(final Vector3d v, final double angle, final Vector3d axis) {
         // Check the preconditions.
         if(v == null || axis == null) {
             throw new IllegalArgumentException("axis or vector is null");

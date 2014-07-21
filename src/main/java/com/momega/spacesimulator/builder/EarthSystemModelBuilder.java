@@ -24,7 +24,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
 
         CelestialBody moon = new CelestialBody();
         createKeplerianElements(moon, earth, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.145, 208.1199);
-        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687);
+        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 269.9949, 66.5392);
         createTrajectory(moon, new double[] {0.5,0.5,0.5}, TrajectoryType.KEPLERIAN);
         moon.setTextureFileName("moon.jpg");
 

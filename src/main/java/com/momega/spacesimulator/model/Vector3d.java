@@ -7,6 +7,8 @@ import com.momega.spacesimulator.utils.VectorUtils;
  * Note that the class can be used to represent both point vectors and
  * free vectors. This is by design and is intended to make working with
  * vectors easier.
+ *
+ * TODO: rename method to  yaw, pitch, and roll
  */
 public class Vector3d {
 

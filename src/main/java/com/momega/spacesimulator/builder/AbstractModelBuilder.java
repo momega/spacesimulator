@@ -45,7 +45,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     }
 
     protected void initTime() {
-        model.setTime(TimeUtils.createTime(2456820d));
+        model.setTime(TimeUtils.createTime(2456850d));
         model.setWarpFactor(BigDecimal.ONE);
     }
 
@@ -188,7 +188,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         dp.setName(name);
         dp.setMass(mass * 1E24);
         if (dp instanceof RotatingObject) {
-            Orientation orientation = MathUtils.rotateByAngles(Math.toRadians(ra), Math.toRadians(dec));
+            Orientation orientation = MathUtils.rotateByAngles(Math.toRadians(ra), Math.toRadians(dec), true);
             dp.setOrientation(orientation);
 
             RotatingObject ro = (RotatingObject) dp;

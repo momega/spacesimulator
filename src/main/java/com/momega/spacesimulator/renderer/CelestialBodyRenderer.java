@@ -2,14 +2,12 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
 import javax.media.opengl.glu.GLUquadric;
 
@@ -34,7 +32,6 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
     @Override
     protected void drawObject(GL2 gl) {
-
         gl.glDisable(GL2.GL_BLEND);
         gl.glEnable(GL2.GL_CULL_FACE);
         gl.glShadeModel(GL2.GL_SMOOTH);
@@ -64,18 +61,21 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     }
 
     public void setMatrix(GL2 gl ) {
+        double[] angles = VectorUtils.getVectorAngles(celestialBody.getOrientation().getV());
+
         GLUtils.translate(gl, celestialBody.getPosition());
+        gl.glRotated(Math.toDegrees(angles[2]), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(angles[1]), 0, 1, 0);
 
-        double axialTilt = -Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), celestialBody.getOrientation().getV()));
-        gl.glRotated(axialTilt, 1, 0, 0);
+        logger.debug("object = {}, ra = {}, dec = {}", new Object[] {celestialBody.getName(), Math.toDegrees(angles[2]), 90-Math.toDegrees(angles[1])});
 
-        logger.debug("N = {}", celestialBody.getOrientation().getN().asArray());
-        double phi = -Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 1, 0), celestialBody.getOrientation().getN()));
-        if (celestialBody.getOrientation().getN().z>0) {
-            phi = - phi;
-        }
-        logger.debug("axialTilt = {}, rotate = {}", axialTilt, phi);
-        gl.glRotated(phi, 0, 0, 1);
+//        logger.debug("N = {}", celestialBody.getOrientation().getN().asArray());
+//        double phi = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(1, 0, 0), celestialBody.getOrientation().getN()));
+//        if (celestialBody.getOrientation().getN().z>0) {
+//            phi = - phi;
+//        }
+
+//        gl.glRotated(phi, 0, 0, 1);
     }
 
     @Override
@@ -88,5 +88,11 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
             }
             GLUtils.drawBeams(gl, 0, 0, celestialBody.getRadius() * 5, 18);
         }
+
+        gl.glColor3dv(celestialBody.getTrajectory().getColor(), 0);
+        gl.glPointSize(6);
+        gl.glBegin(GL2.GL_POINTS);
+        gl.glVertex3dv(new double[] {0d, 0d, 0d}, 0);
+        gl.glEnd();
     }
 }

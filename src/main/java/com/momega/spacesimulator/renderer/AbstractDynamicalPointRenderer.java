@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
  * Created by martin on 6/8/14.
@@ -13,11 +14,15 @@ public abstract class AbstractDynamicalPointRenderer extends AbstractTextRendere
         drawText("N:" + namedObject.getOrientation().getN().toString(), x + 5, y + 40);
         drawText("U:" + namedObject.getOrientation().getU().toString(), x + 5, y + 30);
         drawText("V:" + namedObject.getOrientation().getV().toString(), x + 5, y + 20);
+
+        double[] angles = VectorUtils.getVectorAngles(namedObject.getOrientation().getV());
+        drawText("RA = " + String.valueOf(Math.toDegrees(angles[2])) + ", DEC = " + String.valueOf(90-Math.toDegrees(angles[1])), x+5, y+10);
+
         double distance = namedObject.getPosition().subtract(camera.getPosition()).length() / 1E6;
         drawText("D:" + String.format("%6.2f Mm", distance), x + 5, y);
         if (namedObject instanceof MovingObject) {
             MovingObject movingObject = (MovingObject) namedObject;
-            drawText("V:" + String.format("%6.2f m/s", movingObject.getVelocity().length()), x + 5, y + 10);
+            drawText("V:" + String.format("%6.2f m/s", movingObject.getVelocity().length()), x + 5, y - 10);
         }
         if (namedObject instanceof Satellite) {
             Satellite satellite = (Satellite) namedObject;

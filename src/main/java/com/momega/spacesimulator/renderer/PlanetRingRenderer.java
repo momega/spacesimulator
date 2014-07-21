@@ -35,9 +35,11 @@ public class PlanetRingRenderer extends AbstractTextureRenderer {
 
     @Override
     protected void setMatrix(GL2 gl) {
+        double[] angles = VectorUtils.getVectorAngles(celestialBody.getOrientation().getV());
+
         GLUtils.translate(gl, celestialBody.getPosition());
 
-        double axialTilt = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(0, 0, 1), celestialBody.getOrientation().getV()));
-        gl.glRotated(axialTilt, 1, 0, 0);
+        gl.glRotated(Math.toDegrees(angles[2]), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(angles[1]), 0, 1, 0);
     }
 }

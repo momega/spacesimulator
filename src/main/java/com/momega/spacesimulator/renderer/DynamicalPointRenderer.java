@@ -20,24 +20,6 @@ public class DynamicalPointRenderer extends AbstractTextRenderer {
     }
 
     @Override
-    public void draw(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2();
-        gl.glPushMatrix();
-
-        GLUtils.translate(gl, dynamicalPoint.getPosition());
-
-        gl.glBegin(GL2.GL_POINTS);
-        gl.glColor3dv(dynamicalPoint.getTrajectory().getColor(), 0);
-        gl.glPointSize(6);
-        gl.glVertex3dv(new double[] {0d, 0d, 0d}, 0);
-        gl.glEnd();
-
-        gl.glPopMatrix();
-
-        super.draw(drawable);
-    }
-
-    @Override
     protected void renderTexts(GL2 gl, int width, int height) {
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(dynamicalPoint);
         if (viewCoordinates.getRadius()<=5 && viewCoordinates.isVisible()) {
