@@ -2,13 +2,13 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Ring;
-import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 
 import javax.media.opengl.GL2;
 
 /**
+ * This renderer displays the ring of the planet
  * Created by martin on 7/9/14.
  */
 public class PlanetRingRenderer extends AbstractTextureRenderer {

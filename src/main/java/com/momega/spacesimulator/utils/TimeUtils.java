@@ -13,6 +13,9 @@ import java.math.BigDecimal;
  */
 public class TimeUtils {
 
+    /**
+     * Julian Day 2000 timestamp instance
+     */
     public static final Timestamp JD2000 = createTime(2000.0);
 
     /**
@@ -42,8 +45,8 @@ public class TimeUtils {
 
     /**
      * Converts the timestamp to JODA date time
-     * @param timestamp
-     * @return
+     * @param timestamp the timestamp instance
+     * @return the instance of the JODA time
      */
     public static DateTime getDateTime(Timestamp timestamp) {
         return new DateTime(timestamp.getValue().multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue());

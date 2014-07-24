@@ -32,6 +32,10 @@ public class RotatingObject extends DynamicalPoint {
         this.radius = radius;
     }
 
+    /**
+     * The angle of the prime meridian at epoch JD2000
+     * @return the angle in radians of the prime meridian at epoch JD2000.
+     */
     public double getPrimeMeridianJd2000() {
         return primeMeridianJd2000;
     }
