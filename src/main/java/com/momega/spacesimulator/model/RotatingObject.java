@@ -9,6 +9,8 @@ public class RotatingObject extends DynamicalPoint {
 
     private double rotationPeriod; // rotation period in seconds
     private double radius;
+    private double primeMeridianJd2000;
+    private double primeMeridian;
 
     public void setRotationPeriod(double rotationPeriod) {
         this.rotationPeriod = rotationPeriod;
@@ -28,5 +30,21 @@ public class RotatingObject extends DynamicalPoint {
 
     public void setRadius(double radius) {
         this.radius = radius;
+    }
+
+    public double getPrimeMeridianJd2000() {
+        return primeMeridianJd2000;
+    }
+
+    public void setPrimeMeridianJd2000(double primeMeridianJd2000) {
+        this.primeMeridianJd2000 = primeMeridianJd2000;
+    }
+
+    public double getPrimeMeridian() {
+        return primeMeridian;
+    }
+
+    public void setPrimeMeridian(double primeMeridian) {
+        this.primeMeridian = primeMeridian;
     }
 }

@@ -22,8 +22,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     protected Model model = ModelHolder.getModel();
 
-    private static final Matrix3d TO_ECLIPTIC = MathUtils.rotationMatrix1(Math.toRadians(23.439291));
-
     /**
      * Returns newly created instance
      * @return the instance of the model
@@ -162,6 +160,17 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return satellite;
     }
 
+    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius) {
+        dp.setName(name);
+        dp.setMass(mass * 1E24);
+        dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        if (dp instanceof RotatingObject) {
+            RotatingObject ro = (RotatingObject) dp;
+            ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
+            ro.setRadius(radius * 1E6);
+        }
+    }
+
     /**
      * Updates data about the dynamical point
      * @param dp the already created dynamical point
@@ -172,28 +181,46 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param axialTilt axial tilt
      */
     protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
-        dp.setName(name);
-        dp.setMass(mass * 1E24);
-        dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius);
         if (dp instanceof RotatingObject) {
             dp.getOrientation().twist(Math.toRadians(axialTilt));
-
-            RotatingObject ro = (RotatingObject) dp;
-            ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
-            ro.setRadius(radius * 1E6);
         }
     }
 
+    /**
+     * Updates data about the dynamical point
+     * @param dp the already created dynamical point
+     * @param name the name
+     * @param mass the mass in 1E24 kilograms
+     * @param rotationPeriod rotation period in days
+     * @param radius radius in kilometers
+     * @param ra right ascension RA of the north pole
+     * @param dec declination 0of the north pole
+     */
     protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec) {
-        dp.setName(name);
-        dp.setMass(mass * 1E24);
+        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius);
         if (dp instanceof RotatingObject) {
             Orientation orientation = MathUtils.rotateByAngles(Math.toRadians(ra), Math.toRadians(dec), true);
             dp.setOrientation(orientation);
+        }
+    }
 
+    /**
+     * Updates data about the dynamical point
+     * @param dp the already created dynamical point
+     * @param name the name
+     * @param mass the mass in 1E24 kilograms
+     * @param rotationPeriod rotation period in days
+     * @param radius radius in kilometers
+     * @param ra right ascension RA of the north pole
+     * @param dec declination 0of the north pole
+     * @param primeMeridianJd2000 prime meridian at JD2000 epoch
+     */
+    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, double primeMeridianJd2000) {
+        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, ra, dec);
+        if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
-            ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
-            ro.setRadius(radius * 1E6);
+            ro.setPrimeMeridianJd2000(Math.toRadians(primeMeridianJd2000));
         }
     }
 

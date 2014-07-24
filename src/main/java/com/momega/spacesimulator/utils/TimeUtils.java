@@ -13,6 +13,8 @@ import java.math.BigDecimal;
  */
 public class TimeUtils {
 
+    public static final Timestamp JD2000 = createTime(2000.0);
+
     /**
      * Creates the time from julian day
      * @param julianDay julian day as double value

@@ -2,6 +2,8 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 import org.slf4j.Logger;
@@ -53,10 +55,18 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     protected void prepareObject(GL2 gl) {
         super.prepareObject(gl);
 
+        double rad = celestialBody.getRadius() * 1.2;
+
         gl.glLineWidth(2f);
         gl.glBegin(GL2.GL_LINES);
-        gl.glVertex3d(0, 0, celestialBody.getRadius() * 1.2);
-        gl.glVertex3d(0, 0, -celestialBody.getRadius() * 1.2);
+        gl.glVertex3d(0, 0, rad);
+        gl.glVertex3d(0, 0, -rad);
+        gl.glEnd();
+
+        gl.glBegin(GL2.GL_LINE_STRIP);
+        gl.glVertex3d(rad, 0,  0);
+        gl.glVertex3d(0, 0, 0);
+        gl.glVertex3d(0, -rad, 0);
         gl.glEnd();
     }
 
@@ -66,16 +76,10 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
         GLUtils.translate(gl, celestialBody.getPosition());
         gl.glRotated(Math.toDegrees(angles[2]), 0, 0, 1);
         gl.glRotated(Math.toDegrees(angles[1]), 0, 1, 0);
-
         logger.debug("object = {}, ra = {}, dec = {}", new Object[] {celestialBody.getName(), Math.toDegrees(angles[2]), 90-Math.toDegrees(angles[1])});
 
-//        logger.debug("N = {}", celestialBody.getOrientation().getN().asArray());
-//        double phi = Math.toDegrees(VectorUtils.angleBetween(new Vector3d(1, 0, 0), celestialBody.getOrientation().getN()));
-//        if (celestialBody.getOrientation().getN().z>0) {
-//            phi = - phi;
-//        }
-
-//        gl.glRotated(phi, 0, 0, 1);
+        double phi = Math.toDegrees(celestialBody.getPrimeMeridian());
+        gl.glRotated(phi, 0, 0, 1);
     }
 
     @Override

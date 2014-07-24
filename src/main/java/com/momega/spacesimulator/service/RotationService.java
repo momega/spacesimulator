@@ -2,6 +2,7 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +19,12 @@ public class RotationService {
      * @param newTime new time
      */
     public void rotate(RotatingObject rotatingObject, Timestamp newTime) {
-        double dt = TimeUtils.subtract(newTime, rotatingObject.getTimestamp()).getValue().doubleValue();
+        double dt = TimeUtils.subtract(newTime, TimeUtils.JD2000).getValue().doubleValue();
         double phi = dt / rotatingObject.getRotationPeriod();
-        phi *= (2*Math.PI);
+        phi = MathUtils.normalizeAngle(phi * 2 * Math.PI);
+        phi += Math.PI/2; //TODO : why?
+
         rotatingObject.getOrientation().lookAroundV(phi);
+        rotatingObject.setPrimeMeridian(rotatingObject.getPrimeMeridianJd2000() + phi);
     }
 }
