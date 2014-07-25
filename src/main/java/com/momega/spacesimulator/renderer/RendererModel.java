@@ -8,7 +8,6 @@ import com.momega.spacesimulator.model.RotatingObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.text.View;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,26 +49,31 @@ public class RendererModel {
         return (viewCoordinates != null && viewCoordinates.isVisible());
     }
 
-    public void selectDynamicalPoint(int x, int y) {
+    public ViewCoordinates findViewCoordinates(int x, int y) {
         Model model = ModelHolder.getModel();
         for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {
             ViewCoordinates viewCoordinates = entry.getValue();
             if (viewCoordinates.isVisible()) {
                 if ((Math.abs(x - (int) viewCoordinates.getPoint().getX()) < MIN_TARGET_SIZE) && (Math.abs(y - (int) viewCoordinates.getPoint().getY()) < MIN_TARGET_SIZE)) {
-                    Camera camera = model.getCamera();
-                    camera.setTargetObject(viewCoordinates.getObject());
-                    if (viewCoordinates.getObject() instanceof RotatingObject) {
-                        RotatingObject ro = (RotatingObject) viewCoordinates.getObject();
-                        if (camera.getDistance() < ro.getRadius()) {
-                            camera.setDistance(ro.getRadius() * 10);
-                        }
-                    }
-                    model.setSelectedDynamicalPoint(viewCoordinates.getObject());
-                    logger.info("selected dynamical point changed to {}", viewCoordinates.getObject().getName());
-                    return;
+                    return viewCoordinates;
                 }
             }
         }
+        return null;
+    }
+
+    public void selectDynamicalPoint(ViewCoordinates viewCoordinates) {
+        Model model = ModelHolder.getModel();
+        Camera camera = model.getCamera();
+        camera.setTargetObject(viewCoordinates.getObject());
+        if (viewCoordinates.getObject() instanceof RotatingObject) {
+            RotatingObject ro = (RotatingObject) viewCoordinates.getObject();
+            if (camera.getDistance() < ro.getRadius()) {
+                camera.setDistance(ro.getRadius() * 10);
+            }
+        }
+        model.setSelectedDynamicalPoint(viewCoordinates.getObject());
+        logger.info("selected dynamical point changed to {}", viewCoordinates.getObject().getName());
     }
 
 }

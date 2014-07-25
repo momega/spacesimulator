@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -53,9 +54,6 @@ public class DefaultWindow {
 
                         logger.info("GL {}", caps.toString());
 
-                        Frame frame = new Frame(title);
-                        frame.setLayout(new java.awt.BorderLayout());
-
                         canvas = new GLCanvas(caps);
                         canvas.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 
@@ -63,6 +61,9 @@ public class DefaultWindow {
 
                         // Create a animator that drives canvas' display() at the specified FPS.
                         animator = new FPSAnimator(canvas, FPS, true);
+
+                        final Frame frame = new Frame(title);
+                        frame.setLayout(new java.awt.BorderLayout());
                         frame.add(canvas);
 
                         canvas.addGLEventListener(renderer);
@@ -80,6 +81,7 @@ public class DefaultWindow {
                             @Override
                             public void windowClosing(WindowEvent e) {
                                 logger.info("Closing window");
+                                frame.dispose();
                                 stopAnimator();
                             }
                         });
@@ -89,6 +91,8 @@ public class DefaultWindow {
                         canvas.addMouseMotionListener(controller);
                         canvas.addMouseWheelListener(controller);
                         canvas.addComponentListener(controller);
+
+                        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
                     }
                 });
 
@@ -96,7 +100,7 @@ public class DefaultWindow {
                 e1.printStackTrace();
             }
 
-            sleep(1000);
+            sleep(500);
             logger.info("main method finished");
     }
 
