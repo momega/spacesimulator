@@ -8,6 +8,7 @@ import com.momega.spacesimulator.model.RotatingObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,8 +50,9 @@ public class RendererModel {
         return (viewCoordinates != null && viewCoordinates.isVisible());
     }
 
-    public ViewCoordinates findViewCoordinates(int x, int y) {
-        Model model = ModelHolder.getModel();
+    public ViewCoordinates findViewCoordinates(Point point) {
+        double x = point.getX();
+        double y = point.getY();
         for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {
             ViewCoordinates viewCoordinates = entry.getValue();
             if (viewCoordinates.isVisible()) {

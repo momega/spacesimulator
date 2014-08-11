@@ -162,7 +162,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return satellite;
     }
 
-    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius) {
+    private void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, String wiki) {
         dp.setName(name);
         dp.setMass(mass * 1E24);
         dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
@@ -170,6 +170,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
             RotatingObject ro = (RotatingObject) dp;
             ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
             ro.setRadius(radius * 1E6);
+        }
+        if (dp instanceof CelestialBody) {
+            CelestialBody cb = (CelestialBody) dp;
+            cb.setWiki(wiki);
         }
     }
 
@@ -181,9 +185,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param rotationPeriod rotation period in days
      * @param radius radius in kilometers
      * @param axialTilt axial tilt
+     * @param wiki the wiki page
      */
-    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt) {
-        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius);
+    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt, String wiki) {
+        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki);
         if (dp instanceof RotatingObject) {
             dp.getOrientation().twist(Math.toRadians(axialTilt));
         }
@@ -198,9 +203,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param radius radius in kilometers
      * @param ra right ascension RA of the north pole
      * @param dec declination 0of the north pole
+     * @param wiki the wiki page
      */
-    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec) {
-        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius);
+    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, String wiki) {
+        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki);
         if (dp instanceof RotatingObject) {
             Orientation orientation = MathUtils.rotateByAngles(Math.toRadians(ra), Math.toRadians(dec), true);
             dp.setOrientation(orientation);
@@ -218,8 +224,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param dec declination 0of the north pole
      * @param primeMeridianJd2000 prime meridian at JD2000 epoch
      */
-    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, double primeMeridianJd2000) {
-        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, ra, dec);
+    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, double primeMeridianJd2000, String wiki) {
+        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, ra, dec, wiki);
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
             ro.setPrimeMeridianJd2000(Math.toRadians(primeMeridianJd2000));

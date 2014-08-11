@@ -26,8 +26,8 @@ public class MainWindow extends DefaultWindow {
         EventBusController controller = new EventBusController();
 
         //AbstractModelBuilder builder = new EarthSystemModelBuilder();
-        //AbstractModelBuilder builder = new SolarSystemModelBuilder();
-        AbstractModelBuilder builder = new FullSolarSystemModelBuilder();
+        AbstractModelBuilder builder = new SolarSystemModelBuilder();
+        //AbstractModelBuilder builder = new FullSolarSystemModelBuilder();
 
         Application application = new Application();
         Model model = application.init(builder);

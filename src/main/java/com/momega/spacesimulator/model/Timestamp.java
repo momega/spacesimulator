@@ -1,9 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.DateTimeUtils;
-
 import java.math.BigDecimal;
 
 /**

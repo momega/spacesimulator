@@ -9,6 +9,7 @@ package com.momega.spacesimulator.model;
 public class CelestialBody extends RotatingObject {
 
     private String textureFileName;
+    private String wiki;
 
     public String getTextureFileName() {
         return textureFileName;
@@ -16,5 +17,13 @@ public class CelestialBody extends RotatingObject {
 
     public void setTextureFileName(String textureFileName) {
         this.textureFileName = textureFileName;
+    }
+
+    public String getWiki() {
+        return wiki;
+    }
+
+    public void setWiki(String wiki) {
+        this.wiki = wiki;
     }
 }
