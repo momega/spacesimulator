@@ -6,7 +6,9 @@ import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
+import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +45,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     }
 
     protected void initTime() {
-        model.setTime(TimeUtils.createTime(2456850d));
+        model.setTime(TimeUtils.createTime(new DateTime(2014, 8, 10, 0, 0, DateTimeZone.UTC)));
         model.setWarpFactor(BigDecimal.ONE);
     }
 

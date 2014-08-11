@@ -29,6 +29,17 @@ public class TimeUtils {
         return time;
     }
 
+    /**
+     * Creates the time
+     * @param datetime datetime
+     * @return new instance of the time
+     */
+    public static Timestamp createTime(DateTime datetime) {
+        Timestamp time = new Timestamp();
+        time.setValue(BigDecimal.valueOf(datetime.getMillis() / DateTimeConstants.MILLIS_PER_SECOND));
+        return time;
+    }
+
     public static Timestamp newTime(BigDecimal value) {
         Timestamp t = new Timestamp();
         t.setValue(value);

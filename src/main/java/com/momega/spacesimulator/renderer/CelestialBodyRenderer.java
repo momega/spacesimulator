@@ -30,6 +30,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     @Override
     protected void loadTexture(GL2 gl) {
         loadTexture(gl, celestialBody.getTextureFileName());
+        logger.info("texture object is created {}", celestialBody.getTextureFileName());
     }
 
     @Override

@@ -63,18 +63,22 @@ public abstract class AbstractController implements Controller {
         // do nothing
     }
 
+    @Override
     public void componentResized(ComponentEvent e) {
         // do nothing
     }
 
+    @Override
     public void componentMoved(ComponentEvent e) {
         // do nothing
     }
 
+    @Override
     public void componentShown(ComponentEvent e) {
         // do nothing
     }
 
+    @Override
     public void componentHidden(ComponentEvent e) {
         // do nothing
     }

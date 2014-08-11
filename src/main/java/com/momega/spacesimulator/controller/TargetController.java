@@ -4,6 +4,7 @@ import javax.media.opengl.awt.GLCanvas;
 
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.swing.DetailDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ public class TargetController extends AbstractController {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        GLCanvas canvas  = (GLCanvas) e.getSource();
+        final GLCanvas canvas  = (GLCanvas) e.getSource();
         GLDrawable drawable = canvas.getDelegatedDrawable();
         int x = e.getX();
         int y = e.getY();
@@ -37,6 +38,13 @@ public class TargetController extends AbstractController {
 
             JMenuItem detailItem = new JMenuItem("Detail");
             popup.add(detailItem);
+            detailItem.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), viewCoordinates.getObject());
+                    dialog.setVisible(true);
+                }
+            });
             JMenuItem selectItem = new JMenuItem("Select");
             popup.add(selectItem);
             selectItem.addActionListener(new ActionListener() {

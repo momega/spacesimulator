@@ -43,7 +43,6 @@ public abstract class AbstractTextureRenderer extends AbstractRenderer {
         gl.glNewList(this.listIndex, GL2.GL_COMPILE);
         prepareObject(gl);
         gl.glEndList();
-        logger.info("texture object is created");
     }
 
     protected abstract void drawObject(GL2 gl);
