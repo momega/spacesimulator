@@ -17,25 +17,25 @@ public class SolarSystemModelBuilder extends SimpleSolarSystemModelBuilder {
 
         CelestialBody mars = new Planet();
         createKeplerianElements(mars, centerSolarSystem, 227939.1d * 1E6, 0.093315, 286.537, 686.9363, 2457003.918154194020, 1.84844, 49.5147);
-        updateDynamicalPoint(mars, "Mars", 0.64185, 1.02595, 3.3895, 317.68143, 52.88650, "Mars_(planet)");
+        updateDynamicalPoint(mars, "Mars", 0.64185, 1.02595, 3.3895, 317.68143, 52.88650, 176.630, "Mars_(planet)");
         createTrajectory(mars, new double[]{1, 0, 0}, TrajectoryType.KEPLERIAN);
         mars.setTextureFileName("mars.jpg");
 
         CelestialBody venus = new Planet();
         createKeplerianElements(venus, centerSolarSystem, 108208d * 1E6, 0.0067, 54.6820, 224.699, 2456681.501144, 3.3945, 76.6408);
-        updateDynamicalPoint(venus, "Venus", 4.8685, 243.0185, 6.0518, 272.76, 67.16, "Venus_(planet)");
+        updateDynamicalPoint(venus, "Venus", 4.8685, 243.0185, 6.0518, 272.76, 67.16, 160.20, "Venus_(planet)");
         createTrajectory(venus, "#FF9933", TrajectoryType.KEPLERIAN);
         venus.setTextureFileName("venus.jpg");
 
         CelestialBody mercury = new Planet();
         createKeplerianElements(mercury, centerSolarSystem, 57909.05d * 1E6, 0.20563, 29.124, 87.96890, 2456780.448693044949, 7.0, 48.313);
-        updateDynamicalPoint(mercury, "Mercury", 0.3302, 58.646, 2.4397, 281.01, 61.45, "Mercury_(planet)");
+        updateDynamicalPoint(mercury, "Mercury", 0.3302, 58.646, 2.4397, 281.01, 61.45, 329.5469, "Mercury_(planet)");
         createTrajectory(mercury, new double[]{0.2, 0.2, 0.2}, TrajectoryType.KEPLERIAN);
         mercury.setTextureFileName("mercury.jpg");
 
         CelestialBody jupiter = new Planet();
         createKeplerianElements(jupiter, centerSolarSystem, 778547.2d * 1E6, 0.048775, 274.008653, 4332.59, 2455638.655976880342, 1.303541, 100.5118);
-        updateDynamicalPoint(jupiter, "Jupiter", 1898.13, 9.925d / 24, 69.911, 268.05, 64.49, "Jupiter_(planet)");
+        updateDynamicalPoint(jupiter, "Jupiter", 1898.13, 9.925d / 24, 69.911, 268.05, 64.49, 284.95, "Jupiter_(planet)");
         createTrajectory(jupiter, new double[]{1,0.65,0.0}, TrajectoryType.KEPLERIAN);
         jupiter.setTextureFileName("jupiter.jpg");
 

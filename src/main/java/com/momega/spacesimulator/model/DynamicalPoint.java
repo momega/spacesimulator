@@ -6,6 +6,20 @@ package com.momega.spacesimulator.model;
  */
 public class DynamicalPoint extends MovingObject {
 
+    private Orientation orientation;
+
+    /**
+     * Gets the orientation of the 3d object
+     * @return the orientation
+     */
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    public void setOrientation(Orientation orientation) {
+        this.orientation = orientation;
+    }
+
     private double mass;
     /**
      * Gets the mass of the dynamical point in kilograms

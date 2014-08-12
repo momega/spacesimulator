@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
+ * The class represents 3x3 matrix used for coordinate transformation
  * Created by martin on 7/15/14.
  */
 public class Matrix3d {

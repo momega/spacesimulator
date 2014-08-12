@@ -45,7 +45,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     }
 
     protected void initTime() {
-        model.setTime(TimeUtils.createTime(new DateTime(2014, 8, 10, 0, 0, DateTimeZone.UTC)));
+        model.setTime(TimeUtils.createTime(new DateTime(2014, 8, 12, 12, 0, DateTimeZone.UTC)));
         model.setWarpFactor(BigDecimal.ONE);
     }
 

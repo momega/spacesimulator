@@ -11,16 +11,18 @@ public abstract class AbstractDynamicalPointRenderer extends AbstractTextRendere
     protected void drawData(NamedObject namedObject, Camera camera, int x, int y) {
         drawText(namedObject.getName(), x + 5, y + 60);
         drawText("P:" + namedObject.getPosition().toString(), x + 5, y + 50);
-        drawText("N:" + namedObject.getOrientation().getN().toString(), x + 5, y + 40);
-        drawText("U:" + namedObject.getOrientation().getU().toString(), x + 5, y + 30);
-        drawText("V:" + namedObject.getOrientation().getV().toString(), x + 5, y + 20);
-
-        double[] angles = VectorUtils.toSphericalCoordinates(namedObject.getOrientation().getV());
-        drawText("RA = " + String.valueOf(Math.toDegrees(angles[2])) + ", DEC = " + String.valueOf(90-Math.toDegrees(angles[1])), x+5, y+10);
 
         if (namedObject instanceof MovingObject) {
             MovingObject movingObject = (MovingObject) namedObject;
             drawText("V:" + String.format("%6.2f m/s", movingObject.getVelocity().length()), x + 5, y - 10);
+        }
+        if (namedObject instanceof DynamicalPoint) {
+            DynamicalPoint dynamicalPoint = (DynamicalPoint) namedObject;
+            drawText("N:" + dynamicalPoint.getOrientation().getN().toString(), x + 5, y + 40);
+            drawText("U:" + dynamicalPoint.getOrientation().getU().toString(), x + 5, y + 30);
+            drawText("V:" + dynamicalPoint.getOrientation().getV().toString(), x + 5, y + 20);
+            double[] angles = VectorUtils.toSphericalCoordinates(dynamicalPoint.getOrientation().getV());
+            drawText("RA = " + String.valueOf(Math.toDegrees(angles[2])) + ", DEC = " + String.valueOf(90-Math.toDegrees(angles[1])), x+5, y+10);
         }
         if (namedObject instanceof Satellite) {
             Satellite satellite = (Satellite) namedObject;

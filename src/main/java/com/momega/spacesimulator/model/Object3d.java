@@ -7,19 +7,6 @@ package com.momega.spacesimulator.model;
 public class Object3d {
 
     private Vector3d position;
-    private Orientation orientation;
-
-    /**
-     * Gets the orientation of the 3d object
-     * @return the orientation
-     */
-    public Orientation getOrientation() {
-        return orientation;
-    }
-
-    public void setOrientation(Orientation orientation) {
-        this.orientation = orientation;
-    }
 
     /**
      * Returns the position of the object
