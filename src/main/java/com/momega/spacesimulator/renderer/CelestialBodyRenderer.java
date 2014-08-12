@@ -70,7 +70,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     }
 
     public void setMatrix(GL2 gl ) {
-        double[] angles = VectorUtils.getVectorAngles(celestialBody.getOrientation().getV());
+        double[] angles = VectorUtils.toSphericalCoordinates(celestialBody.getOrientation().getV());
 
         GLUtils.translate(gl, celestialBody.getPosition());
         gl.glRotated(Math.toDegrees(angles[2]), 0, 0, 1);

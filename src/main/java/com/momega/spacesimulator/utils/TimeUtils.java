@@ -4,6 +4,8 @@ import com.momega.spacesimulator.model.Timestamp;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 
 import java.math.BigDecimal;
 
@@ -17,6 +19,8 @@ public class TimeUtils {
      * Julian Day 2000 timestamp instance
      */
     public static final Timestamp JD2000 = createTime(2000.0);
+
+    private static DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
 
     /**
      * Creates the time from julian day
@@ -61,6 +65,10 @@ public class TimeUtils {
      */
     public static DateTime getDateTime(Timestamp timestamp) {
         return new DateTime(timestamp.getValue().multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue());
+    }
+
+    public static String timeAsString(Timestamp timestamp) {
+        return formatter.print(TimeUtils.getDateTime(timestamp));
     }
 
 }

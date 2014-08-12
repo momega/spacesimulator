@@ -1,6 +1,10 @@
 package com.momega.spacesimulator.swing;
 
+import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.NamedObject;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
+import com.momega.spacesimulator.renderer.ModelChangeListener;
+import com.momega.spacesimulator.renderer.RendererModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,16 +12,25 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 /**
+ * The detail dialog. The dialog is modal less dialog showing data about single object.
+ * The dialog also display data actualization because it implements {@link com.momega.spacesimulator.renderer.ModelChangeListener}.
  * Created by martin on 8/11/14.
  */
-public class DetailDialog extends JDialog {
+public class DetailDialog extends JDialog implements ModelChangeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(DetailDialog.class);
     private final NamedObject namedObject;
+    private java.util.List<AttributesPanel> attributesPanelList = new ArrayList<>();
 
-    public DetailDialog(Frame parent, NamedObject namedObject) {
+    public DetailDialog(Frame parent, final NamedObject namedObject) {
         super(parent, namedObject.getName(), true);
         this.namedObject = namedObject;
         JPanel mainPanel = new JPanel();
@@ -34,11 +47,30 @@ public class DetailDialog extends JDialog {
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                RendererModel.getInstance().removeModelChangeListener(DetailDialog.this);
                 setVisible(false);
                 dispose();
             }
         });
         buttonsPanel.add(okButton);
+        if (namedObject instanceof CelestialBody) {
+            JButton wikiButton = new JButton("Wiki");
+            final CelestialBody celestialBody = (CelestialBody) namedObject;
+            if (celestialBody.getWiki() != null) {
+                try {
+                    final URI wikiUri = new URI("http://en.wikipedia.org/wiki/" + celestialBody.getWiki());
+                    wikiButton.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            open(wikiUri);
+                        }
+                    });
+                    buttonsPanel.add(wikiButton);
+                } catch (URISyntaxException urie) {
+                    throw new IllegalArgumentException(urie);
+                }
+            }
+        }
 
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         mainPanel.add(buttonsPanel, BorderLayout.PAGE_END);
@@ -46,26 +78,40 @@ public class DetailDialog extends JDialog {
         setContentPane(mainPanel);
         setModalityType(ModalityType.MODELESS);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setPreferredSize(new Dimension(400, 400));
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                logger.info("closing detail dialog for {}", namedObject.getName());
+            }
+        });
+        setPreferredSize(new Dimension(500, 400));
         pack();
+
+        RendererModel.getInstance().addModelChangeListener(DetailDialog.this);
     }
 
     protected JPanel createBasicPanel() {
-        String[] labels = {"Name", "Position X", "Position Y", "Position Z", "Velocity X", "Velocity Y", "Velocity Z", "Wiki"};
-        String[] fields = {"#obj.name", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#obj.velocity.x", "#obj.velocity.y", "#obj.velocity.z", "#obj.wiki"};
-        return new AttributesPanel(labels, namedObject, fields);
+        String[] labels = {"Name", "Position X", "Position Y", "Position Z", "Velocity", "Velocity X", "Velocity Y", "Velocity Z"};
+        String[] fields = {"#obj.name", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#obj.velocity.length()", "#obj.velocity.x", "#obj.velocity.y", "#obj.velocity.z"};
+        AttributesPanel result = new AttributesPanel(labels, namedObject, fields);
+        attributesPanelList.add(result);
+        return result;
     }
 
     protected JPanel createPhysicalPanel() {
         String[] labels = {"Mass", "Radius", "Rotation Period", "North Pole RA", "North Pole DEC", "Prime Meridian", "Prime Meridian JD2000"};
-        String[] fields = {"#obj.mass", "#obj.radius", "#obj.rotationPeriod", "#toDegrees(#getVectorAngles(#obj.orientation.v)[2])", "#toDegrees(#getVectorAngles(#obj.orientation.v)[1])", "#toDegrees(#obj.primeMeridian)", "#toDegrees(#obj.primeMeridianJd2000)"};
-        return new AttributesPanel(labels, namedObject, fields);
+        String[] fields = {"#obj.mass", "#obj.radius", "#obj.rotationPeriod", "#toDegrees(#toSphericalCoordinates(#obj.orientation.v)[2])", "#toDegrees(#toSphericalCoordinates(#obj.orientation.v)[1])", "#toDegrees(#obj.primeMeridian)", "#toDegrees(#obj.primeMeridianJd2000)"};
+        AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);
+        attributesPanelList.add(result);
+        return result;
     }
 
     protected JPanel createOrbitalPanel() {
-        String[] labels = {"Central Object", "Semimajor Axis", "Eccentricity", "Time Of Periapsis", "Period", "Argument Of Periapsis", "Inclination", "Ascending Node", "True Anomaly"};
-        String[] fields = {"#obj.keplerianElements.centralObject.name", "#obj.keplerianElements.semimajorAxis", "#obj.keplerianElements.eccentricity", "#obj.keplerianElements.timeOfPeriapsis.value", "#obj.keplerianElements.period", "#toDegrees(#obj.keplerianElements.argumentOfPeriapsis)", "#toDegrees(#obj.keplerianElements.inclination)", "#toDegrees(#obj.keplerianElements.ascendingNode)", "#toDegrees(#obj.keplerianElements.trueAnomaly)"};
-        return new AttributesPanel(labels, namedObject, fields);
+        String[] labels = {"Central Object", "Semimajor Axis", "Eccentricity", "Time Of Periapsis", "Period", "Argument Of Periapsis", "Inclination", "Ascending Node", "True Anomaly", "Eccentric Anomaly", "Hyperbolic Anomaly"};
+        String[] fields = {"#obj.keplerianElements.centralObject.name", "#obj.keplerianElements.semimajorAxis", "#obj.keplerianElements.eccentricity", "#timeAsString(#obj.keplerianElements.timeOfPeriapsis)", "#obj.keplerianElements.period", "#toDegrees(#obj.keplerianElements.argumentOfPeriapsis)", "#toDegrees(#obj.keplerianElements.inclination)", "#toDegrees(#obj.keplerianElements.ascendingNode)", "#toDegrees(#obj.keplerianElements.trueAnomaly)", "#toDegrees(#obj.keplerianElements.eccentricAnomaly)", "#toDegrees(#obj.keplerianElements.hyperbolicAnomaly)"};
+        AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);
+        attributesPanelList.add(result);
+        return result;
     }
 
     /** Returns an ImageIcon, or null if the path was invalid. */
@@ -76,6 +122,29 @@ public class DetailDialog extends JDialog {
         } else {
             logger.warn("Couldn't find file: {}", path);
             return null;
+        }
+    }
+
+    private static void open(URI uri) {
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().browse(uri);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null,
+                    "Failed to launch the link, " +
+                            "your computer is likely misconfigured.",
+                    "Cannot Launch Link",JOptionPane.WARNING_MESSAGE); }
+        } else {
+            JOptionPane.showMessageDialog(null,
+                "Java is not able to launch links on your computer.",
+                "Cannot Launch Link",JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    @Override
+    public void modelChanged(ModelChangeEvent event) {
+        for(AttributesPanel ap : attributesPanelList) {
+            ap.updateValues();
         }
     }
 }

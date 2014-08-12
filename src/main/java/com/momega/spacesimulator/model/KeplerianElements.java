@@ -17,7 +17,8 @@ public class KeplerianElements {
     private double inclination; // i
     private double ascendingNode; // uppercase omega
     private double trueAnomaly; // theta;
-    private double hyperbolicAnomaly; // HA
+    private Double hyperbolicAnomaly; // HA
+    private Double eccentricAnomaly; //EA
 
     public double getSemimajorAxis() {
         return this.semimajorAxis;
@@ -107,11 +108,27 @@ public class KeplerianElements {
         this.trueAnomaly = trueAnomaly;
     }
 
-    public double getHyperbolicAnomaly() {
+    /**
+     * The hyperbolic anomaly of the keplerian trajectory. It can be null for elliptic trajectories
+     * @return HA
+     */
+    public Double getHyperbolicAnomaly() {
         return hyperbolicAnomaly;
     }
 
-    public void setHyperbolicAnomaly(double hyperbolicAnomaly) {
+    public void setHyperbolicAnomaly(Double hyperbolicAnomaly) {
         this.hyperbolicAnomaly = hyperbolicAnomaly;
+    }
+
+    /**
+     * The eccentric anomaly of the keplerian trajectory. It can be null for hyperbolic trajectories
+     * @return EA
+     */
+    public Double getEccentricAnomaly() {
+        return eccentricAnomaly;
+    }
+
+    public void setEccentricAnomaly(Double eccentricAnomaly) {
+        this.eccentricAnomaly = eccentricAnomaly;
     }
 }

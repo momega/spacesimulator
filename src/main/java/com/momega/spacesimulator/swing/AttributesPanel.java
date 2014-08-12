@@ -1,15 +1,19 @@
 package com.momega.spacesimulator.swing;
 
 import com.momega.spacesimulator.model.NamedObject;
+import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 import org.springframework.expression.EvaluationContext;
+import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import javax.swing.*;
+import javax.swing.text.JTextComponent;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +28,7 @@ import java.util.Map;
 public class AttributesPanel extends JPanel {
 
     private final NamedObject namedObject;
-    protected Map<JTextField, Expression> jFields = new HashMap<>();
+    protected Map<JComponent, Expression> jFields = new HashMap<>();
     protected List<JLabel> jLabels = new ArrayList<>();
 
     public AttributesPanel(String[] labels, NamedObject namedObject, String[] fields) {
@@ -33,7 +37,6 @@ public class AttributesPanel extends JPanel {
         GridLayout layout = new GridLayout(numPairs, 2, 5, 5);
         setLayout(layout);
         ExpressionParser parser = new SpelExpressionParser();
-        EvaluationContext  evaluationContext = createContext();
 
         for (int i = 0; i < numPairs; i++) {
             JLabel label = new JLabel(labels[i] + ": ", JLabel.TRAILING);
@@ -50,17 +53,23 @@ public class AttributesPanel extends JPanel {
             Expression exp = parser.parseExpression(fields[i]);
             jFields.put(textField, exp);
         }
-
-
-        updateValues(evaluationContext);
     }
 
-    protected void updateValues(EvaluationContext evaluationContext) {
-        for(Map.Entry<JTextField, Expression> entry : jFields.entrySet()) {
+    protected void updateValues() {
+        EvaluationContext evaluationContext = createContext();
+        for(Map.Entry<JComponent, Expression> entry : jFields.entrySet()) {
             if (entry.getValue()!=null) {
                 Expression e = entry.getValue();
-                String textValue = e.getValue(evaluationContext, String.class);
-                entry.getKey().setText(textValue);
+                String textValue = null;
+                try {
+                    textValue = e.getValue(evaluationContext, String.class);
+                } catch (EvaluationException ee) {
+                    // do nothing
+                }
+                if ( entry.getKey() instanceof JTextComponent) {
+                    JTextComponent tc = (JTextComponent) entry.getKey();
+                    tc.setText(textValue);
+                }
             }
         }
     }
@@ -69,8 +78,9 @@ public class AttributesPanel extends JPanel {
         try {
             StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
             evaluationContext.setVariable("obj", namedObject);
-            evaluationContext.registerFunction("getVectorAngles", VectorUtils.class.getDeclaredMethod("getVectorAngles", Vector3d.class));
+            evaluationContext.registerFunction("toSphericalCoordinates", VectorUtils.class.getDeclaredMethod("toSphericalCoordinates", Vector3d.class));
             evaluationContext.registerFunction("toDegrees", Math.class.getDeclaredMethod("toDegrees", double.class));
+            evaluationContext.registerFunction("timeAsString", TimeUtils.class.getDeclaredMethod("timeAsString", Timestamp.class));
             return evaluationContext;
         } catch (NoSuchMethodException nsme) {
             throw new IllegalArgumentException(nsme);

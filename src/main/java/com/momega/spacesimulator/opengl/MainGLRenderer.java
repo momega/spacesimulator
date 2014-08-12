@@ -143,11 +143,12 @@ public class MainGLRenderer extends AbstractGLRenderer {
         for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
             addViewCoordinates(drawable, dp, camera);
             if (dp instanceof Satellite) {
-                SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) ((Satellite) dp).getTrajectory();
+                SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) dp.getTrajectory();
                 addViewCoordinates(drawable, satelliteTrajectory.getApoapsis(), camera);
                 addViewCoordinates(drawable, satelliteTrajectory.getPeriapsis(), camera);
             }
         }
+        RendererModel.getInstance().modelChanged();
     }
 
     protected void addViewCoordinates(GLAutoDrawable drawable, NamedObject namedObject, Camera camera) {

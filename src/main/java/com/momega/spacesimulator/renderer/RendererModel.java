@@ -8,9 +8,7 @@ import com.momega.spacesimulator.model.RotatingObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by martin on 6/20/14.
@@ -25,12 +23,30 @@ public class RendererModel {
 
     private final Map<NamedObject, ViewCoordinates> viewData = new HashMap<>();
 
+    private final java.util.List<ModelChangeListener> modelChangeListeners = new ArrayList<>();
+
     private RendererModel() {
         super();
     }
 
     public static RendererModel getInstance() {
         return instance;
+    }
+
+    public void addModelChangeListener(ModelChangeListener listener) {
+        modelChangeListeners.add(listener);
+    }
+
+    public void removeModelChangeListener(ModelChangeListener listener) {
+        modelChangeListeners.remove(listener);
+    }
+
+    public void modelChanged() {
+        Model model = ModelHolder.getModel();
+        ModelChangeEvent event = new ModelChangeEvent(model);
+        for(ModelChangeListener listener : modelChangeListeners) {
+            listener.modelChanged(event);
+        }
     }
 
     /**
@@ -50,7 +66,7 @@ public class RendererModel {
         return (viewCoordinates != null && viewCoordinates.isVisible());
     }
 
-    public ViewCoordinates findViewCoordinates(Point point) {
+    public ViewCoordinates findViewCoordinates(java.awt.Point point) {
         double x = point.getX();
         double y = point.getY();
         for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {

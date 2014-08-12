@@ -1,6 +1,5 @@
 package com.momega.spacesimulator;
 
-import com.momega.spacesimulator.model.Matrix3d;
 import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.MathUtils;
@@ -23,12 +22,12 @@ public class RotationTest {
         double delta = Math.toRadians(52.88650);
 
         Vector3d v = VectorUtils.fromSphericalCoordinates(1, Math.PI/2 - delta, alpha);
-        double[] angles2 = VectorUtils.getVectorAngles(v);
+        double[] angles2 = VectorUtils.toSphericalCoordinates(v);
         logger.info("directly dec = {}, ra = {}", 90-Math.toDegrees(angles2[1]), Math.toDegrees(angles2[2]));
 
         Orientation orientation = MathUtils.rotateByAngles(alpha, delta,false);
 
-        double[] angles = VectorUtils.getVectorAngles(orientation.getV());
+        double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
 
         Assert.assertTrue(VectorUtils.equals(v, orientation.getV(), 0.00000001));
@@ -40,12 +39,12 @@ public class RotationTest {
         double delta = Math.toRadians(90);
 
         Vector3d v = VectorUtils.fromSphericalCoordinates(1, Math.PI/2 - delta, alpha);
-        double[] angles2 = VectorUtils.getVectorAngles(v);
+        double[] angles2 = VectorUtils.toSphericalCoordinates(v);
         logger.info("directly dec = {}, ra = {}", 90-Math.toDegrees(angles2[1]), Math.toDegrees(angles2[2]));
 
         Orientation orientation = MathUtils.rotateByAngles(alpha, delta, false);
 
-        double[] angles = VectorUtils.getVectorAngles(orientation.getV());
+        double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
 
         Assert.assertTrue(VectorUtils.equals(v, orientation.getV(), 0.00000001));
@@ -57,7 +56,7 @@ public class RotationTest {
         double delta = Math.toRadians(66.56071);
 
         Vector3d v = VectorUtils.fromSphericalCoordinates(1, Math.PI/2 - delta, alpha);
-        double[] angles2 = VectorUtils.getVectorAngles(v);
+        double[] angles2 = VectorUtils.toSphericalCoordinates(v);
         logger.info("directly dec = {}, ra = {}", 90-Math.toDegrees(angles2[1]), Math.toDegrees(angles2[2]));
 
         alpha = Math.toRadians(0);
@@ -65,7 +64,7 @@ public class RotationTest {
 
         Orientation orientation = MathUtils.rotateByAngles(alpha, delta, true);
 
-        double[] angles = VectorUtils.getVectorAngles(orientation.getV());
+        double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
 
         Assert.assertTrue(VectorUtils.equals(v, orientation.getV(), 0.000001));
@@ -77,7 +76,7 @@ public class RotationTest {
         double delta = Math.toRadians(63.28205);
 
         Vector3d v = VectorUtils.fromSphericalCoordinates(1, Math.PI/2 - delta, alpha);
-        double[] angles2 = VectorUtils.getVectorAngles(v);
+        double[] angles2 = VectorUtils.toSphericalCoordinates(v);
         logger.info("directly dec = {}, ra = {}", 90-Math.toDegrees(angles2[1]), Math.toDegrees(angles2[2]));
 
         alpha = Math.toRadians(317.68143);
@@ -85,7 +84,7 @@ public class RotationTest {
 
         Orientation orientation = MathUtils.rotateByAngles(alpha, delta, true);
 
-        double[] angles = VectorUtils.getVectorAngles(orientation.getV());
+        double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
 
         Assert.assertTrue(VectorUtils.equals(v, orientation.getV(), 0.000001));

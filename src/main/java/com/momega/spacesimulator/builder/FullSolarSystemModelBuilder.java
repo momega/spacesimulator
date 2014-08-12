@@ -13,8 +13,8 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         super.initPlanets();
 
         Planet saturn = new Planet();
-        createKeplerianElements(saturn, sun, 1433449.370d * 1E6, 0.055723219, 336.013862, 10759.22, 2452827.261731969193, 2.485240, 113.642811);
-        updateDynamicalPoint(saturn, "Saturn", 568.46, 10.57d / 24, 58.232, 40.589, 83.537, null);
+        createKeplerianElements(saturn, centerSolarSystem, 1433449.370d * 1E6, 0.055723219, 336.013862, 10759.22, 2452827.261731969193, 2.485240, 113.642811);
+        updateDynamicalPoint(saturn, "Saturn", 568.46, 10.57d / 24, 58.232, 40.589, 83.537, "Saturn_(planet)");
         createTrajectory(saturn, new double[]{1,0.1,0.7}, TrajectoryType.KEPLERIAN);
         saturn.setTextureFileName("saturn.jpg");
         addRing(saturn, 74.500E6, 136.780E6, "saturnring.jpg");

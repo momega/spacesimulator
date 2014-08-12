@@ -67,6 +67,12 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     protected abstract void initSatellites();
 
     /**
+     * Returns the central object of the system
+     * @return the moving object
+     */
+    protected abstract MovingObject getCentralObject();
+
+    /**
      * Astronautical unit
      */
     public static final double AU = 149597870700d;
@@ -139,8 +145,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         Satellite satellite = new Satellite();
         satellite.setName(name);
 
-        if (centralPoint != model.getRootSoi().getBody()) {
-            Vector3d[] vectors = VectorUtils.transformCoordinateSystem(centralPoint, model.getRootSoi().getBody(), new Vector3d[] {position, velocity});
+        if (centralPoint != getCentralObject()) {
+            Vector3d[] vectors = VectorUtils.transformCoordinateSystem(centralPoint, getCentralObject(), new Vector3d[] {position, velocity});
             position = vectors[0];
             velocity = vectors[1];
         }

@@ -73,6 +73,8 @@ public abstract class AbstractGLRenderer implements GLEventListener {
 
     protected abstract void draw(GLAutoDrawable drawable);
 
+    protected abstract void setPerspective(GL2 gl, double aspect);
+
     public abstract void setCamera();
 
     protected abstract void init(GL2 gl);
@@ -113,7 +115,5 @@ public abstract class AbstractGLRenderer implements GLEventListener {
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");
     }
-
-    protected abstract void setPerspective(GL2 gl, double aspect);
 
 }

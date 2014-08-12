@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * The class contains set of the methods for computing position and velocity from keplerian elements. The class
+ * is thread safe.
  * Created by martin on 7/12/14.
  */
 public final class KeplerianUtils {
@@ -36,6 +38,7 @@ public final class KeplerianUtils {
 
     protected Vector3d[] solveKeplerian2(KeplerianElements keplerianElements, Timestamp time) {
         double E = solveEccentricAnomaly(keplerianElements, time);
+        keplerianElements.setEccentricAnomaly(E);
 
         double theta = solveTheta1(E, keplerianElements.getEccentricity());
         keplerianElements.setTrueAnomaly(theta);

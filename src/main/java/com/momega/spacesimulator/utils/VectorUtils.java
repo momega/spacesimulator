@@ -30,7 +30,7 @@ public class VectorUtils {
                             r * Math.cos(theta));
     }
 
-    public static double[] getVectorAngles(Vector3d vector) {
+    public static double[] toSphericalCoordinates(Vector3d vector) {
         double length = vector.length();
         double theta = Math.acos(vector.z / length);
         double phi = Math.atan2(vector.y, vector.x);

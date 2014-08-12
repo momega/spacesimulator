@@ -11,9 +11,11 @@ import com.momega.spacesimulator.utils.VectorUtils;
  */
 public class EarthSystemModelBuilder extends AbstractModelBuilder {
 
+    private CelestialBody earth;
+
     @Override
     public void initPlanets() {
-        CelestialBody earth = new Planet();
+        earth = new Planet();
         earth.setName("Earth");
         earth.setPosition(new Vector3d(0,0,0));
         earth.setVelocity(new Vector3d(0, 0, 0));
@@ -49,7 +51,6 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
         addDynamicalPoint(satellite);
 
-
 //        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);
 //        Vector3d velocity = new Vector3d(0, 10000d, 0);
 //        Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
@@ -68,6 +69,11 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
 //        sv = moon.getPosition().normalize().scale(1700d).add(moon.getVelocity());
 //        satellite = createSatellite(moon, "Satellite 5", 80, sv);
 //        addDynamicalPoint(satellite);
+    }
+
+    @Override
+    protected MovingObject getCentralObject() {
+        return earth;
     }
 
     protected void initCamera() {

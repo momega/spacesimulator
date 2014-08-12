@@ -16,26 +16,26 @@ public class SolarSystemModelBuilder extends SimpleSolarSystemModelBuilder {
         super.initPlanets();
 
         CelestialBody mars = new Planet();
-        createKeplerianElements(mars, sun, 227939.1d * 1E6, 0.093315, 286.537, 686.9363, 2457003.918154194020, 1.84844, 49.5147);
-        updateDynamicalPoint(mars, "Mars", 0.64185, 1.02595, 3.3895, 317.68143, 52.88650, null);
+        createKeplerianElements(mars, centerSolarSystem, 227939.1d * 1E6, 0.093315, 286.537, 686.9363, 2457003.918154194020, 1.84844, 49.5147);
+        updateDynamicalPoint(mars, "Mars", 0.64185, 1.02595, 3.3895, 317.68143, 52.88650, "Mars_(planet)");
         createTrajectory(mars, new double[]{1, 0, 0}, TrajectoryType.KEPLERIAN);
         mars.setTextureFileName("mars.jpg");
 
         CelestialBody venus = new Planet();
-        createKeplerianElements(venus, sun, 108208d * 1E6, 0.0067, 54.6820, 224.699, 2456681.501144, 3.3945, 76.6408);
-        updateDynamicalPoint(venus, "Venus", 4.8685, 243.0185, 6.0518, 272.76, 67.16, null);
+        createKeplerianElements(venus, centerSolarSystem, 108208d * 1E6, 0.0067, 54.6820, 224.699, 2456681.501144, 3.3945, 76.6408);
+        updateDynamicalPoint(venus, "Venus", 4.8685, 243.0185, 6.0518, 272.76, 67.16, "Venus_(planet)");
         createTrajectory(venus, "#FF9933", TrajectoryType.KEPLERIAN);
         venus.setTextureFileName("venus.jpg");
 
         CelestialBody mercury = new Planet();
-        createKeplerianElements(mercury, sun, 57909.05d * 1E6, 0.20563, 29.124, 87.96890, 2456780.448693044949, 7.0, 48.313);
+        createKeplerianElements(mercury, centerSolarSystem, 57909.05d * 1E6, 0.20563, 29.124, 87.96890, 2456780.448693044949, 7.0, 48.313);
         updateDynamicalPoint(mercury, "Mercury", 0.3302, 58.646, 2.4397, 281.01, 61.45, "Mercury_(planet)");
         createTrajectory(mercury, new double[]{0.2, 0.2, 0.2}, TrajectoryType.KEPLERIAN);
         mercury.setTextureFileName("mercury.jpg");
 
         CelestialBody jupiter = new Planet();
-        createKeplerianElements(jupiter, sun, 778547.2d * 1E6, 0.048775, 274.008653, 4332.59, 2455638.655976880342, 1.303541, 100.5118);
-        updateDynamicalPoint(jupiter, "Jupiter", 1898.13, 9.925d / 24, 69.911, 268.05, 64.49, null);
+        createKeplerianElements(jupiter, centerSolarSystem, 778547.2d * 1E6, 0.048775, 274.008653, 4332.59, 2455638.655976880342, 1.303541, 100.5118);
+        updateDynamicalPoint(jupiter, "Jupiter", 1898.13, 9.925d / 24, 69.911, 268.05, 64.49, "Jupiter_(planet)");
         createTrajectory(jupiter, new double[]{1,0.65,0.0}, TrajectoryType.KEPLERIAN);
         jupiter.setTextureFileName("jupiter.jpg");
 
@@ -47,14 +47,14 @@ public class SolarSystemModelBuilder extends SimpleSolarSystemModelBuilder {
         CelestialBody io = new CelestialBody();
         createKeplerianElements(io, jupiter, 421.769 * 1E6, 0.0041, 136.11730, 1.769138, 2456821.035697427578, 2.24147, 337.181);
         createTrajectory(io, new double[]{1, 1, 1}, TrajectoryType.KEPLERIAN);
-        updateDynamicalPoint(io, "Io",  893.3E-4, 1.769138, 1.8213, 0d, null);
+        updateDynamicalPoint(io, "Io",  893.3E-4, 1.769138, 1.8213, 0d, "Io_(moon)");
         io.setTextureFileName("io.jpg");
         addDynamicalPoint(io);
 
         CelestialBody europa = new CelestialBody();
         createKeplerianElements(europa, jupiter, 671.079 * 1E6, 0.0101, 302.75, 3.551810, 2456822.782242114656, 2.62907342, 343.685);
         createTrajectory(europa, new double[]{1, 1, 1}, TrajectoryType.KEPLERIAN);
-        updateDynamicalPoint(europa, "Europa", 479.7E-4, 3.551810, 1.565, 0.1d, null);
+        updateDynamicalPoint(europa, "Europa", 479.7E-4, 3.551810, 1.565, 0.1d, "Europa_(moon)");
         europa.setTextureFileName("europa.jpg");
         addDynamicalPoint(europa);
 
@@ -75,14 +75,14 @@ public class SolarSystemModelBuilder extends SimpleSolarSystemModelBuilder {
         CelestialBody phobos = new CelestialBody();
         createKeplerianElements(phobos, mars, 9.3772 * 1E6, 0.0151, 121.451, 0.319, 2456821.639245583210, 27.7682593856, 82.446);
         createTrajectory(phobos, new double[]{1, 1, 1}, TrajectoryType.KEPLERIAN);
-        updateDynamicalPoint(phobos, "Phobos", 1.08E-8, 0.319, 13.1E-3, 0d, null);
+        updateDynamicalPoint(phobos, "Phobos", 1.08E-8, 0.319, 13.1E-3, 0d, "Phobos_(moon)");
         phobos.setTextureFileName("phobos.jpg");
         addDynamicalPoint(phobos);
 
         CelestialBody deimos = new CelestialBody();
         createKeplerianElements(deimos, mars, 23.4632 * 1E6, 0.00033, 306.201, 1.263, 2456821.036168867722, 26.1262612, 78.74157);
         createTrajectory(deimos, new double[]{1, 1, 1}, TrajectoryType.KEPLERIAN);
-        updateDynamicalPoint(deimos, "Deimos", 1.80E-9, 1.263, 7.8E-3, 0d, null);
+        updateDynamicalPoint(deimos, "Deimos", 1.80E-9, 1.263, 7.8E-3, 0d, "Deimos_(moon)");
         deimos.setTextureFileName("deimos.jpg");
         addDynamicalPoint(deimos);
 
@@ -94,8 +94,6 @@ public class SolarSystemModelBuilder extends SimpleSolarSystemModelBuilder {
         addPlanetToSoiTree(europa, jupiterSoi);
         addPlanetToSoiTree(ganymede, jupiterSoi);
         addPlanetToSoiTree(callisto, jupiterSoi);
-
-        model.setSelectedDynamicalPoint(mars);
     }
 
     @Override

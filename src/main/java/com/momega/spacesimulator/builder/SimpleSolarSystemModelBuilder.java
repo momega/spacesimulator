@@ -1,43 +1,49 @@
 package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
  * Created by martin on 7/14/14.
  */
 public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
 
-    protected CelestialBody sun;
+    protected DynamicalPoint centerSolarSystem;
     protected SphereOfInfluence sunSoi;
 
     @Override
     public void initPlanets() {
-        sun = new CelestialBody();
-        sun.setName("Sun");
+        centerSolarSystem = new DynamicalPoint();
+        createTrajectory(centerSolarSystem, new double[] {1, 0.7, 0}, TrajectoryType.STATIC);
+        centerSolarSystem.setPosition(new Vector3d(0, 0, 0));
+        centerSolarSystem.setVelocity(new Vector3d(0, 0, 0));
+        updateDynamicalPoint(centerSolarSystem, "Solar System Barycenter", 0, 0, 1, 0, null);
 
-        sun.setPosition(new Vector3d(0, 0, 0));
-        sun.setVelocity(new Vector3d(0, 0, 0));
-        createTrajectory(sun, new double[]{1, 0.7, 0}, TrajectoryType.STATIC);
-        updateDynamicalPoint(sun, "Sun", 1.989 * 1E6, 25.05, 696.342, 286.13, 63.87, null);
+        CelestialBody sun = new CelestialBody();
+        createKeplerianElements(sun, centerSolarSystem, 1.414217969794719E-03 * AU, 8.563543676803891E-01, 7.933041962602029E+01, 4.031013592923514E+02, 2456666.926864971407, 2.618659421740932, 6.302423113645358E+01);
+        updateDynamicalPoint(sun, "Sun", 1.989 * 1E6, 25.05, 696.342, 286.13, 63.87, "Sun");
+        createTrajectory(sun, new double[] {1, 0.7, 0}, TrajectoryType.KEPLERIAN);
         sun.setTextureFileName("sun.jpg");
 
         DynamicalPoint earthMoonBarycenter = new DynamicalPoint();
-        createKeplerianElements(earthMoonBarycenter, sun, 149598.261d * 1E6, 0.0166739, 287.5824, 365.256814, 2456661.138788696378, 0.0018601064, 175.395d);
+        createKeplerianElements(earthMoonBarycenter, centerSolarSystem, 149598.261d * 1E6, 0.0166739, 287.5824, 365.256814, 2456661.138788696378, 0.0018601064, 175.395d);
         updateDynamicalPoint(earthMoonBarycenter, "Earth-Moon Barycenter", 0, 0, 1, 0, null);
         createTrajectory(earthMoonBarycenter, new double[]{0, 0.5, 1}, TrajectoryType.KEPLERIAN);
 
         CelestialBody earth = new Planet();
         createKeplerianElements(earth, earthMoonBarycenter, 4.686955382086 * 1E6, 0.055557, 264.7609, 27.427302, 2456796.39770, 5.241500, 208.1199);
-        updateDynamicalPoint(earth, "Earth", 5.97219, 0.997269, 6.371, 0d, 90d, 190.147d, null);
+        updateDynamicalPoint(earth, "Earth", 5.97219, 0.997269, 6.371, 0d, 90d, 190.147d,  "Earth");
         createTrajectory(earth, new double[]{0, 0.5, 1}, TrajectoryType.KEPLERIAN);
         earth.setTextureFileName("earth.jpg");
 
         CelestialBody moon = new Planet();
         createKeplerianElements(moon, earthMoonBarycenter, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.241500, 208.1199);
-        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687, null);
+        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687, "Moon");
         createTrajectory(moon, new double[]{0.5,0.5,0.5}, TrajectoryType.KEPLERIAN);
         moon.setTextureFileName("moon.jpg");
 
+        addDynamicalPoint(centerSolarSystem);
         addDynamicalPoint(sun);
         addDynamicalPoint(earthMoonBarycenter);
         addDynamicalPoint(earth);
@@ -54,11 +60,15 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
     public void initSatellites() {
         CelestialBody earth = (CelestialBody) findDynamicalPoint("Earth");
 
-//        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI / 2, 0);
-//        Orientation o = MathUtils.createOrientation(new Vector3d(0, 1d, 0), new Vector3d(0, 0, 1d));
-//        Vector3d velocity = o.getN().scale(9000d);
-//        Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
-//        addDynamicalPoint(satellite);
+        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI / 2, 0);
+        Orientation o = earth.getOrientation();
+        Vector3d velocity = o.getN().scale(9000d);
+        Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
+        addDynamicalPoint(satellite);
     }
 
+    @Override
+    protected MovingObject getCentralObject() {
+        return centerSolarSystem;
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -49,7 +50,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         Assert.isInstanceOf(Satellite.class, movingObject, "predication of trajectory is supported only for satellites");
         Satellite satellite = (Satellite) movingObject;
 
-        computePrediction(satellite);
+        computePrediction(satellite, newTimestamp);
         computeApsides(satellite);
         updateHistory(satellite);
     }
@@ -59,10 +60,10 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         double rp = keplerianElements.getSemimajorAxis()* (1 - keplerianElements.getEccentricity());
         double ra = keplerianElements.getSemimajorAxis()* (1 + keplerianElements.getEccentricity());
-        double HA = keplerianElements.getHyperbolicAnomaly();
+        Double HA = keplerianElements.getHyperbolicAnomaly();
 
         SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) satellite.getTrajectory();
-        if (keplerianElements.getEccentricity()<1 || (keplerianElements.getEccentricity()>1 && HA<0)) {
+        if (keplerianElements.getEccentricity()<1 || (keplerianElements.getEccentricity()>1 && HA!=null)) {
             Apsis periapsis = satelliteTrajectory.getPeriapsis();
             if (periapsis == null) {
                 periapsis = new Apsis();
@@ -101,8 +102,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     /**
      * Computes the prediction of the trajectory. Currently the supports work only for {@link com.momega.spacesimulator.model.Satellite}s.
      * @param satellite the satellite object which.
+     * @param newTimestamp new timestamp
      */
-    public void computePrediction(Satellite satellite) {
+    public void computePrediction(Satellite satellite, Timestamp newTimestamp) {
         SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(satellite);
         CelestialBody soiCelestialBody = soi.getBody();
         Vector3d position = satellite.getPosition().subtract(soiCelestialBody.getPosition());
@@ -120,10 +122,10 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         logger.debug("e = {}", e);
 
-        double a = h*h / ( 1- e*e) / mi;
+        double a = h*h / (1- e*e) / mi;
 
         double OMEGA = 0d;
-        double omega = 0d; // this is for circular, equatorial Orbit
+        double omega = 0d; // this is for circular, equatorial orbit
         double theta;
 
         if (i > MINOR_ERROR) {
@@ -146,7 +148,6 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
                 }
 
             } else {
-
                 theta = Math.acos(nVector.dot(position) / n / position.length());
                 if (position.z<0) {
                     theta = 2* Math.PI - theta;
@@ -190,15 +191,40 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         keplerianElements.setArgumentOfPeriapsis(omega);
         keplerianElements.setTrueAnomaly(theta);
 
-        if (e < 1) {
-            keplerianElements.setHyperbolicAnomaly(0);
+        double period = 0;
+        if (e < 1) {  // TODO: add here MINOR_ERROR for e
+            keplerianElements.setHyperbolicAnomaly(null);
+            double EA = getEA(keplerianElements);
+            keplerianElements.setEccentricAnomaly(EA);
+
+            double nn = Math.sqrt(mi / (a*a*a));
+            period = 2* Math.PI / nn;
+            double T = newTimestamp.getValue().doubleValue() - (EA - e * Math.sin(EA)) / nn;
+            keplerianElements.setTimeOfPeriapsis(TimeUtils.newTime(BigDecimal.valueOf(T)));
+
         } else {
             keplerianElements.setHyperbolicAnomaly(getHA(keplerianElements));
+            keplerianElements.setEccentricAnomaly(null);
+
+            double nn = Math.sqrt(-mi / (a*a*a)); // a < 0
+            period = 2* Math.PI / nn;
         }
+
+        keplerianElements.setPeriod(BigDecimal.valueOf(period));
+
 
         satellite.setRelativeVelocity(velocity);
         satellite.setRelativePosition(position);
         satellite.setKeplerianElements(keplerianElements);
+    }
+
+    protected double getEA(KeplerianElements keplerianElements) {
+        double eccentricity = keplerianElements.getEccentricity();
+        double theta = keplerianElements.getTrueAnomaly();
+        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
+        double EA = 2 * Math.atan(Math.tan(theta/2) / param);
+        logger.debug("EA = {}", EA);
+        return EA;
     }
 
     protected double getHA(KeplerianElements keplerianElements) {
@@ -254,6 +280,12 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         return u1.scaleAdd(2, u2).scaleAdd(2, u3).add(u4).scale(1.0 / 6);
     }
 
+    /**
+     * Computes the total gravitational force (acceleration) from all celestial bodies in the system on the point defined
+     * in the 3D.
+     * @param position the given position vector
+     * @return total acceleration/force
+     */
     protected Vector3d getAcceleration(Vector3d position) {
         Vector3d a = Vector3d.ZERO;
         for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
