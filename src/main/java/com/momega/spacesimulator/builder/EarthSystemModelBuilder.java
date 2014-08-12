@@ -80,8 +80,6 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         Camera s = new Camera();
         s.setTargetObject(findDynamicalPoint("Earth"));
         s.setDistance(100 * 1E6);
-        s.setPosition(new Vector3d(s.getDistance(), 0, 0));
-        s.setOrientation(MathUtils.createOrientation(new Vector3d(-1, 0, 0), new Vector3d(0, 0, 1)));
         s.setOppositeOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
         model.setCamera(s);
     }

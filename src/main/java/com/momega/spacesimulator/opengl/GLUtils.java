@@ -169,10 +169,10 @@ public class GLUtils {
      * the camera
      */
     public static Point getProjectionCoordinates(GLAutoDrawable drawable, Vector3d position, Camera camera) {
-        Vector3d viewVector = camera.getOrientation().getN();
+        Vector3d viewVector = camera.getOppositeOrientation().getN();
         Vector3d diffVector = position.subtract(camera.getPosition());
 
-        if (viewVector.dot(diffVector) > 0) {  // object is in front of the camera
+        if (viewVector.dot(diffVector) < 0) {  // object is in front of the camera
             double modelView[] = new double[16];
             double projection[] = new double[16];
             int viewport[] = new int[4];

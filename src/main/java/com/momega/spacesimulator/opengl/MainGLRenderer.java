@@ -179,13 +179,16 @@ public class MainGLRenderer extends AbstractGLRenderer {
         Camera camera = ModelHolder.getModel().getCamera();
         Vector3d p = camera.getPosition();
         logger.debug("Camera Position = {}", p.asArray());
+
+        Vector3d n = camera.getOppositeOrientation().getN().negate();
+
         glu.gluLookAt(p.x, p.y, p.z,
-                p.x + camera.getOrientation().getN().x * 1E8,
-                p.y + camera.getOrientation().getN().y * 1E8,
-                p.z + camera.getOrientation().getN().z * 1E8,
-                camera.getOrientation().getV().x,
-                camera.getOrientation().getV().y,
-                camera.getOrientation().getV().z);
+                p.x + n.x * 1E8,
+                p.y + n.y * 1E8,
+                p.z + n.z * 1E8,
+                camera.getOppositeOrientation().getV().x,
+                camera.getOppositeOrientation().getV().y,
+                camera.getOppositeOrientation().getV().z);
     }
 
     protected void setPerspective(GL2 gl, double aspect) {

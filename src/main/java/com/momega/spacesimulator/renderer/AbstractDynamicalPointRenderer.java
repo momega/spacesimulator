@@ -18,8 +18,6 @@ public abstract class AbstractDynamicalPointRenderer extends AbstractTextRendere
         double[] angles = VectorUtils.toSphericalCoordinates(namedObject.getOrientation().getV());
         drawText("RA = " + String.valueOf(Math.toDegrees(angles[2])) + ", DEC = " + String.valueOf(90-Math.toDegrees(angles[1])), x+5, y+10);
 
-        double distance = namedObject.getPosition().subtract(camera.getPosition()).length() / 1E6;
-        drawText("D:" + String.format("%6.2f Mm", distance), x + 5, y);
         if (namedObject instanceof MovingObject) {
             MovingObject movingObject = (MovingObject) namedObject;
             drawText("V:" + String.format("%6.2f m/s", movingObject.getVelocity().length()), x + 5, y - 10);

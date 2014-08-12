@@ -10,14 +10,6 @@ public class Object3d {
     private Orientation orientation;
 
     /**
-     * Returns the position of the object
-     * @return the [x,y,z] coordinates
-     */
-    public Vector3d getPosition() {
-        return position;
-    }
-
-    /**
      * Gets the orientation of the 3d object
      * @return the orientation
      */
@@ -27,6 +19,14 @@ public class Object3d {
 
     public void setOrientation(Orientation orientation) {
         this.orientation = orientation;
+    }
+
+    /**
+     * Returns the position of the object
+     * @return the [x,y,z] coordinates
+     */
+    public Vector3d getPosition() {
+        return position;
     }
 
     public void setPosition(Vector3d position) {

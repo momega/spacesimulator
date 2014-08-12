@@ -5,8 +5,9 @@ package com.momega.spacesimulator.model;
  *
  * Created by martin on 4/15/14.
  */
-public class Camera extends Object3d {
+public class Camera {
 
+    private Vector3d position;
     private Object3d targetObject;
     private Orientation oppositeOrientation;
     private double distance;
@@ -33,5 +34,17 @@ public class Camera extends Object3d {
 
     public Orientation getOppositeOrientation() {
         return oppositeOrientation;
+    }
+
+    /**
+     * Returns the position of the object
+     * @return the [x,y,z] coordinates
+     */
+    public Vector3d getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector3d position) {
+        this.position = position;
     }
 }

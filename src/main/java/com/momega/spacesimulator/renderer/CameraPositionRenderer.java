@@ -16,9 +16,9 @@ public class CameraPositionRenderer extends AbstractTextRenderer {
         Camera c = ModelHolder.getModel().getCamera();
         drawText("Distance:" + c.getDistance(), 10, 50);
         drawText("Position:" + c.getPosition().toString(), 10, 40);
-        drawText("N:" + c.getOrientation().getN().toString(), 10, 30);
-        drawText("U:" + c.getOrientation().getU().toString(), 10, 20);
-        drawText("V:" + c.getOrientation().getV().toString(), 10, 10);
+        drawText("N:" + c.getOppositeOrientation().getN().toString(), 10, 30);
+        drawText("U:" + c.getOppositeOrientation().getU().toString(), 10, 20);
+        drawText("V:" + c.getOppositeOrientation().getV().toString(), 10, 10);
     }
 
 }

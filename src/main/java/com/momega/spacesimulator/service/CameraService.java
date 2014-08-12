@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -19,9 +19,7 @@ public class CameraService {
             return;
         }
         Vector3d pos = camera.getTargetObject().getPosition().scaleAdd(camera.getDistance(), camera.getOppositeOrientation().getN());
-        Orientation orientation = MathUtils.createOrientation(camera.getOppositeOrientation().getN().negate(), camera.getOppositeOrientation().getV());
         logger.debug("New Position = {}", pos.asArray());
         camera.setPosition(pos);
-        camera.setOrientation(orientation);
     }
 }
