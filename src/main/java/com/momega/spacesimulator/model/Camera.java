@@ -8,15 +8,15 @@ package com.momega.spacesimulator.model;
 public class Camera {
 
     private Vector3d position;
-    private Object3d targetObject;
+    private PositionProvider targetObject;
     private Orientation oppositeOrientation;
     private double distance;
 
-    public Object3d getTargetObject() {
+    public PositionProvider getTargetObject() {
         return targetObject;
     }
 
-    public void setTargetObject(Object3d targetObject) {
+    public void setTargetObject(PositionProvider targetObject) {
         this.targetObject = targetObject;
     }
 

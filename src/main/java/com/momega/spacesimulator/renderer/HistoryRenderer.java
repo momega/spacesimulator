@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
+import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Satellite;
-import com.momega.spacesimulator.model.Vector3d;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -25,8 +25,8 @@ public class HistoryRenderer extends AbstractRenderer {
         gl.glPushMatrix();
         gl.glColor3dv(satellite.getHistoryTrajectory().getColor(), 0);
         gl.glBegin(GL.GL_LINE_STRIP);
-        for (Vector3d v : satellite.getHistoryTrajectory().getPositions()) {
-            gl.glVertex3dv(v.asArray(), 0);
+        for (HistoryPoint hp : satellite.getHistoryTrajectory().getHistoryPoints()) {
+            gl.glVertex3dv(hp.getPosition().asArray(), 0);
         }
         gl.glEnd();
         gl.glPopMatrix();

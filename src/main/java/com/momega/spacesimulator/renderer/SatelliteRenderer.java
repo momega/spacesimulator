@@ -28,7 +28,7 @@ public class SatelliteRenderer extends AbstractRenderer {
             GLU glu = new GLU();
 
             gl.glPushMatrix();
-            GLUtils.translate(gl, satellite.getPosition());
+            GLUtils.translate(gl, satellite.getCartesianState().getPosition());
             gl.glRotatef(45, 0, 0, -1);
             gl.glRotated(45d, 0, 1, 0);
 

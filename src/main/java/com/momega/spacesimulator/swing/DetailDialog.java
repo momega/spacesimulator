@@ -37,9 +37,9 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         mainPanel.setLayout(new BorderLayout());
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Basic", createImageIcon("/images/application.png"), createBasicPanel(), "Basic Information");
-        tabbedPane.addTab("Physical", createImageIcon("/images/world.png"), createPhysicalPanel(), "Physical Information");
-        tabbedPane.addTab("Orbital", createImageIcon("/images/time.png"), createOrbitalPanel(), "Orbital Information");
+        tabbedPane.addTab("Basic", createImageIcon("/images/application.png"), createPhysicalPanel(), "Basic Information");
+        tabbedPane.addTab("Cartesian", createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
+        tabbedPane.addTab("Keplerian", createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
         JPanel buttonsPanel = new JPanel(new FlowLayout());
@@ -90,23 +90,23 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         RendererModel.getInstance().addModelChangeListener(DetailDialog.this);
     }
 
-    protected JPanel createBasicPanel() {
-        String[] labels = {"Name", "Position X", "Position Y", "Position Z", "Velocity", "Velocity X", "Velocity Y", "Velocity Z"};
-        String[] fields = {"#obj.name", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#obj.velocity.length()", "#obj.velocity.x", "#obj.velocity.y", "#obj.velocity.z"};
+    protected JPanel createCartesianPanel() {
+        String[] labels = {"Position X", "Position Y", "Position Z", "Velocity", "Velocity X", "Velocity Y", "Velocity Z"};
+        String[] fields = {"#obj.cartesianState.position.x", "#obj.cartesianState.position.y", "#obj.cartesianState.position.z", "#obj.cartesianState.velocity.length()", "#obj.cartesianState.velocity.x", "#obj.cartesianState.velocity.y", "#obj.cartesianState.velocity.z"};
         AttributesPanel result = new AttributesPanel(labels, namedObject, fields);
         attributesPanelList.add(result);
         return result;
     }
 
     protected JPanel createPhysicalPanel() {
-        String[] labels = {"Mass", "Radius", "Rotation Period", "North Pole RA", "North Pole DEC", "Prime Meridian", "Prime Meridian JD2000"};
-        String[] fields = {"#obj.mass", "#obj.radius", "#obj.rotationPeriod", "#toDegrees(#toSphericalCoordinates(#obj.orientation.v)[2])", "#toDegrees(#toSphericalCoordinates(#obj.orientation.v)[1])", "#toDegrees(#obj.primeMeridian)", "#toDegrees(#obj.primeMeridianJd2000)"};
+        String[] labels = {"Name", "Mass", "Radius", "Rotation Period", "North Pole RA", "North Pole DEC", "Prime Meridian", "Prime Meridian JD2000"};
+        String[] fields = {"#obj.name", "#obj.mass", "#obj.radius", "#obj.rotationPeriod", "#toDegrees(#toSphericalCoordinates(#obj.orientation.v)[2])", "#toDegrees(#toSphericalCoordinates(#obj.orientation.v)[1])", "#toDegrees(#obj.primeMeridian)", "#toDegrees(#obj.primeMeridianJd2000)"};
         AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);
         attributesPanelList.add(result);
         return result;
     }
 
-    protected JPanel createOrbitalPanel() {
+    protected JPanel createKeplerianPanel() {
         String[] labels = {"Central Object", "Semimajor Axis", "Eccentricity", "Time Of Periapsis", "Period", "Argument Of Periapsis", "Inclination", "Ascending Node", "True Anomaly", "Eccentric Anomaly", "Hyperbolic Anomaly"};
         String[] fields = {"#obj.keplerianElements.centralObject.name", "#obj.keplerianElements.semimajorAxis", "#obj.keplerianElements.eccentricity", "#timeAsString(#obj.keplerianElements.timeOfPeriapsis)", "#obj.keplerianElements.period", "#toDegrees(#obj.keplerianElements.argumentOfPeriapsis)", "#toDegrees(#obj.keplerianElements.inclination)", "#toDegrees(#obj.keplerianElements.ascendingNode)", "#toDegrees(#obj.keplerianElements.trueAnomaly)", "#toDegrees(#obj.keplerianElements.eccentricAnomaly)", "#toDegrees(#obj.keplerianElements.hyperbolicAnomaly)"};
         AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);

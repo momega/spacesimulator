@@ -28,15 +28,12 @@ public final class KeplerianUtils {
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
         KeplerianElements keplerianElements = movingObject.getKeplerianElements();
 
-        Vector3d[] result = solveKeplerian2(keplerianElements, newTimestamp);
-        Vector3d r = result[0].add(keplerianElements.getCentralObject().getPosition());
-        Vector3d v = result[1].add(keplerianElements.getCentralObject().getVelocity());
-
-        movingObject.setPosition(r);
-        movingObject.setVelocity(v);
+        CartesianState cartesianState = solveKeplerian2(keplerianElements, newTimestamp);
+        cartesianState = cartesianState.add(keplerianElements.getCentralObject().getCartesianState());
+        movingObject.setCartesianState(cartesianState);
     }
 
-    protected Vector3d[] solveKeplerian2(KeplerianElements keplerianElements, Timestamp time) {
+    protected CartesianState solveKeplerian2(KeplerianElements keplerianElements, Timestamp time) {
         double E = solveEccentricAnomaly(keplerianElements, time);
         keplerianElements.setEccentricAnomaly(E);
 
@@ -67,27 +64,10 @@ public final class KeplerianUtils {
         double derE = n / (1 - e* Math.cos(E));
         Vector3d v = P.scale(-a * Math.sin(E) * derE).scaleAdd(a * Math.sqrt(1 - e*e) * Math.cos(E) * derE, Q);
 
-        return new Vector3d[] { r, v };
-    }
-
-    /**
-     * Solves the keplerian problem for the given time
-     * @param time the time
-     * @return the array with the radius (r) and theta (real anomaly)
-     */
-    protected Vector3d[] solveKeplerian(KeplerianElements keplerianElements, Timestamp time) {
-
-        double eccentricity = keplerianElements.getEccentricity();
-        double p = keplerianElements.getSemimajorAxis() * (1 - eccentricity* eccentricity);
-
-        double E = solveEccentricAnomaly(keplerianElements, time);
-        double theta = solveTheta1(E, eccentricity);
-
-        double r = p / (1 + eccentricity * Math.cos(theta));
-        logger.debug("r = {}, theta = {}", r, theta);
-
-        Vector3d position = MathUtils.getKeplerianPosition(keplerianElements, r, theta);
-        return new Vector3d[] {position, new Vector3d(0d,0d,0d)};
+        CartesianState cartesianState = new CartesianState();
+        cartesianState.setPosition(r);
+        cartesianState.setVelocity(v);
+        return cartesianState;
     }
 
     protected double solveTheta1(double E, double eccentricity) {
@@ -139,4 +119,13 @@ public final class KeplerianUtils {
         return E;
     }
 
+    public Vector3d getCartesianPosition(KeplerianElements keplerianElements, double theta) {
+        double u =  theta + keplerianElements.getArgumentOfPeriapsis();
+        double e = keplerianElements.getEccentricity();
+        double r = keplerianElements.getSemimajorAxis() * (1 - e*e) / (1 + e * Math.cos(theta));
+        double x = r * (Math.cos(u) * Math.cos(keplerianElements.getAscendingNode()) - Math.sin(u) * Math.cos(keplerianElements.getInclination()) * Math.sin(keplerianElements.getAscendingNode()));
+        double y = r * (Math.cos(u) * Math.sin(keplerianElements.getAscendingNode()) + Math.sin(u) * Math.cos(keplerianElements.getInclination()) * Math.cos(keplerianElements.getAscendingNode()));
+        double z = r * (Math.sin(u) * Math.sin(keplerianElements.getInclination()));
+        return keplerianElements.getCentralObject().getCartesianState().getPosition().add(new Vector3d(x, y, z));
+    }
 }

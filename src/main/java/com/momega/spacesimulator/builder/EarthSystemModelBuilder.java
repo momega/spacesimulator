@@ -17,9 +17,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
     public void initPlanets() {
         earth = new Planet();
         earth.setName("Earth");
-        earth.setPosition(new Vector3d(0,0,0));
-        earth.setVelocity(new Vector3d(0, 0, 0));
-        Trajectory earthTrajectory = new Trajectory();
+        setCentralPoint(earth);
         createTrajectory(earth, new double[]{0, 0.5, 1}, TrajectoryType.STATIC);
         updateDynamicalPoint(earth, "Earth", 5.97219, 0.997269, 6.378, 23.5, null);
         earth.setTextureFileName("earth.jpg");

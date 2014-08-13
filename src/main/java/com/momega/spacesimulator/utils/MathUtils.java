@@ -21,14 +21,6 @@ public class MathUtils {
         return numer;
     }
 
-    public static Vector3d getKeplerianPosition(KeplerianElements keplerianElements, double r, double theta) {
-        double u =  theta + keplerianElements.getArgumentOfPeriapsis();
-        double x = r * (Math.cos(u) * Math.cos(keplerianElements.getAscendingNode()) - Math.sin(u) * Math.cos(keplerianElements.getInclination()) * Math.sin(keplerianElements.getAscendingNode()));
-        double y = r * (Math.cos(u) * Math.sin(keplerianElements.getAscendingNode()) + Math.sin(u) * Math.cos(keplerianElements.getInclination()) * Math.cos(keplerianElements.getAscendingNode()));
-        double z = r * (Math.sin(u) * Math.sin(keplerianElements.getInclination()));
-        return keplerianElements.getCentralObject().getPosition().add(new Vector3d(x, y, z));
-    }
-
     /**
      * Normalize angle between 0..2pi
      * @param angle the angle

@@ -2,6 +2,7 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
@@ -36,30 +37,24 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         double dt = TimeUtils.subtract(newTimestamp, movingObject.getTimestamp()).getValue().doubleValue();
 
-        Vector3d velocity = movingObject.getVelocity();
-        Vector3d position = movingObject.getPosition();
-
 //        Vector3d[] result = rk4Solver(position, velocity, dt);
 //        movingObject.setVelocity(result[0]);
 //        movingObject.setPosition(result[1]);
 
-        Vector3d[] result = eulerSolver(position, velocity, dt);
-        movingObject.setVelocity(result[0]);
-        movingObject.setPosition(result[1]);
+        CartesianState cartesianState = eulerSolver(movingObject.getCartesianState(), dt);
+        movingObject.setCartesianState(cartesianState);
 
         Assert.isInstanceOf(Satellite.class, movingObject, "predication of trajectory is supported only for satellites");
         Satellite satellite = (Satellite) movingObject;
 
         computePrediction(satellite, newTimestamp);
         computeApsides(satellite);
-        updateHistory(satellite);
+        updateHistory(satellite, newTimestamp);
     }
 
     private void computeApsides(Satellite satellite) {
         KeplerianElements keplerianElements = satellite.getKeplerianElements();
 
-        double rp = keplerianElements.getSemimajorAxis()* (1 - keplerianElements.getEccentricity());
-        double ra = keplerianElements.getSemimajorAxis()* (1 + keplerianElements.getEccentricity());
         Double HA = keplerianElements.getHyperbolicAnomaly();
 
         SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) satellite.getTrajectory();
@@ -71,7 +66,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
                 periapsis.setType(ApsisType.PERIAPSIS);
                 satelliteTrajectory.setPeriapsis(periapsis);
             }
-            periapsis.setPosition(MathUtils.getKeplerianPosition(keplerianElements, rp, 0d));
+            periapsis.setPosition(KeplerianUtils.getInstance().getCartesianPosition(keplerianElements, 0d));
         } else {
             satelliteTrajectory.setPeriapsis(null);
         }
@@ -84,19 +79,23 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
                 apoapsis.setType(ApsisType.APOAPSIS);
                 satelliteTrajectory.setApoapsis(apoapsis);
             }
-            apoapsis.setPosition(MathUtils.getKeplerianPosition(keplerianElements, ra, Math.PI));
+            apoapsis.setPosition(KeplerianUtils.getInstance().getCartesianPosition(keplerianElements, Math.PI));
         } else {
             satelliteTrajectory.setApoapsis(null);
         }
 
     }
 
-    private void updateHistory(Satellite satellite) {
-        List<Vector3d> positions = satellite.getHistoryTrajectory().getPositions();
-        if (positions.size()> maxHistory) {
-            positions.remove(0);
+    private void updateHistory(Satellite satellite, Timestamp timestamp) {
+        List<HistoryPoint> historyPoints = satellite.getHistoryTrajectory().getHistoryPoints();
+        if (historyPoints.size()> maxHistory) {
+            historyPoints.remove(0);
         }
-        positions.add(satellite.getPosition());
+
+        HistoryPoint hp = new HistoryPoint();
+        hp.setPosition(satellite.getCartesianState().getPosition());
+        hp.setTimestamp(timestamp);
+        historyPoints.add(hp);
     }
 
     /**
@@ -107,8 +106,9 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     public void computePrediction(Satellite satellite, Timestamp newTimestamp) {
         SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(satellite);
         CelestialBody soiCelestialBody = soi.getBody();
-        Vector3d position = satellite.getPosition().subtract(soiCelestialBody.getPosition());
-        Vector3d velocity = satellite.getVelocity().subtract(soiCelestialBody.getVelocity());
+        CartesianState cartesianState = satellite.getCartesianState().subtract(soiCelestialBody.getCartesianState());
+        Vector3d position = cartesianState.getPosition();
+        Vector3d velocity = cartesianState.getVelocity();
 
         Vector3d hVector = position.cross(velocity);
         double h = hVector.length();
@@ -179,6 +179,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         KeplerianElements keplerianElements = satellite.getKeplerianElements();
         if (keplerianElements == null) {
             keplerianElements = new KeplerianElements();
+            satellite.setKeplerianElements(keplerianElements);
         }
         if (keplerianElements.getCentralObject() != soiBody) {
             logger.info("changing soi to {} for satellite {}", soiBody.getName(), satellite.getName());
@@ -211,11 +212,6 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         }
 
         keplerianElements.setPeriod(BigDecimal.valueOf(period));
-
-
-        satellite.setRelativeVelocity(velocity);
-        satellite.setRelativePosition(position);
-        satellite.setKeplerianElements(keplerianElements);
     }
 
     protected double getEA(KeplerianElements keplerianElements) {
@@ -238,17 +234,24 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     /**
      * Solves the velocity and position by the simple Euler method
-     * @param position the current position
-     * @param velocity the current velocity
+     * @param cartesianState the cartesian state
      * @param dt time interval
      * @return the position
      */
-    protected Vector3d[] eulerSolver(Vector3d position, Vector3d velocity, double dt) {
+    protected CartesianState eulerSolver(CartesianState cartesianState, double dt) {
         // Euler's method
+        Vector3d position = cartesianState.getPosition();
+        Vector3d velocity = cartesianState.getVelocity();
+
         Vector3d acceleration = getAcceleration(position);
+
         velocity = velocity.scaleAdd(dt, acceleration); // velocity: v(i) = v(i) + a(i) * dt
         position = position.scaleAdd(dt, velocity); // position: r(i) = r(i) * v(i) * dt
-        return new Vector3d[] {velocity, position};
+        // cartesian state
+        CartesianState result = new CartesianState();
+        result.setVelocity(velocity);
+        result.setPosition(position);
+        return result;
     }
 
     /**
@@ -291,7 +294,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
             if (dp instanceof CelestialBody) {
                 CelestialBody celestialBody = (CelestialBody) dp;
-                Vector3d r = celestialBody.getPosition().subtract(position);
+                Vector3d r = celestialBody.getCartesianState().getPosition().subtract(position);
                 double dist3 = r.lengthSquared() * r.length();
                 a = a.scaleAdd(G * celestialBody.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
             }

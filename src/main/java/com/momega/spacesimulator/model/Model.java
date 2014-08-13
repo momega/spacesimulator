@@ -11,9 +11,9 @@ import java.util.List;
  */
 public class Model {
 
-    protected Timestamp time;
-    protected BigDecimal warpFactor;
-    protected Camera camera;
+    private Timestamp time;
+    private BigDecimal warpFactor;
+    private Camera camera;
     private NamedObject selectedDynamicalPoint;
     protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
     private SphereOfInfluence rootSoi;

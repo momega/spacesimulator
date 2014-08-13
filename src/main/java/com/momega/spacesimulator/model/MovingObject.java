@@ -8,17 +8,17 @@ package com.momega.spacesimulator.model;
  */
 public class MovingObject extends NamedObject {
 
-    private Vector3d velocity;
-    private Trajectory trajectory;
+    private CartesianState cartesianState;
     private KeplerianElements keplerianElements;
+    private Trajectory trajectory;
     private Timestamp timestamp;
 
-    public Vector3d getVelocity() {
-        return velocity;
+    public CartesianState getCartesianState() {
+        return cartesianState;
     }
 
-    public void setVelocity(Vector3d velocity) {
-        this.velocity = velocity;
+    public void setCartesianState(CartesianState cartesianState) {
+        this.cartesianState = cartesianState;
     }
 
     public Trajectory getTrajectory() {
@@ -43,6 +43,15 @@ public class MovingObject extends NamedObject {
 
     public KeplerianElements getKeplerianElements() {
         return keplerianElements;
+    }
+
+    @Override
+    public Vector3d getPosition() {
+        if (getCartesianState() == null) {
+            return null;
+        } else {
+            return getCartesianState().getPosition();
+        }
     }
 }
 

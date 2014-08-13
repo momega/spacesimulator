@@ -1,7 +1,9 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.NamedObject;
+import com.momega.spacesimulator.model.PositionProvider;
 
+import javax.lang.model.element.Name;
 import java.awt.*;
 
 /**

@@ -29,7 +29,7 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
             GL2 gl = drawable.getGL().getGL2();
             gl.glPushMatrix();
 
-            GLUtils.translate(gl, getKeplerianElements().getCentralObject().getPosition());
+            GLUtils.translate(gl, getKeplerianElements().getCentralObject().getCartesianState().getPosition());
             gl.glRotated(Math.toDegrees(getKeplerianElements().getAscendingNode()), 0, 0, 1);
             gl.glRotated(Math.toDegrees(getKeplerianElements().getInclination()), 1, 0, 0);
             gl.glRotated(Math.toDegrees(getKeplerianElements().getArgumentOfPeriapsis()), 0, 0, 1);

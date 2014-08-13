@@ -5,6 +5,16 @@ package com.momega.spacesimulator.model;
  */
 public class Apsis extends NamedObject {
 
+    private Vector3d position;
+
+    public Vector3d getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector3d position) {
+        this.position = position;
+    }
+
     private ApsisType type;
 
     public ApsisType getType() {

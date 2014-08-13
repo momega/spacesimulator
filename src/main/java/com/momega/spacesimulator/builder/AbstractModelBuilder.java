@@ -45,7 +45,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     }
 
     protected void initTime() {
-        model.setTime(TimeUtils.createTime(new DateTime(2014, 8, 12, 12, 0, DateTimeZone.UTC)));
+        model.setTime(TimeUtils.createTime(new DateTime(2014, 8, 12, 20, 0, DateTimeZone.UTC)));
         model.setWarpFactor(BigDecimal.ONE);
     }
 
@@ -55,6 +55,11 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         s.setDistance(100 * 1E6);
         s.setOppositeOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
         model.setCamera(s);
+    }
+
+    protected void setCentralPoint(DynamicalPoint dynamicalPoint) {
+        dynamicalPoint.getCartesianState().setPosition(new Vector3d(0,0,0));
+        dynamicalPoint.getCartesianState().setVelocity(new Vector3d(0, 0, 0));
     }
 
     /**
@@ -143,15 +148,16 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         Satellite satellite = new Satellite();
         satellite.setName(name);
 
+        CartesianState cartesianState = new CartesianState();
+        cartesianState.setPosition(position);
+        cartesianState.setVelocity(velocity);
+
         if (centralPoint != getCentralObject()) {
-            Vector3d[] vectors = VectorUtils.transformCoordinateSystem(centralPoint, getCentralObject(), new Vector3d[] {position, velocity});
-            position = vectors[0];
-            velocity = vectors[1];
+            cartesianState = VectorUtils.transformCoordinateSystem(centralPoint, getCentralObject(), cartesianState);
         }
 
-        satellite.setPosition(position);
+        satellite.setCartesianState(cartesianState);
         satellite.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
-        satellite.setVelocity(velocity);
         SatelliteTrajectory satelliteTrajectory = new SatelliteTrajectory();
         satelliteTrajectory.setColor(new double[]{1, 1, 0});
         satelliteTrajectory.setType(TrajectoryType.NEWTONIAN);
@@ -169,6 +175,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     private void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, String wiki) {
         dp.setName(name);
         dp.setMass(mass * 1E24);
+        if (dp.getCartesianState() == null) {
+            dp.setCartesianState(new CartesianState());
+        }
         dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;

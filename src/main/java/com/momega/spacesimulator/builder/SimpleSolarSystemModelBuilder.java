@@ -16,9 +16,8 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
     public void initPlanets() {
         centerSolarSystem = new DynamicalPoint();
         createTrajectory(centerSolarSystem, new double[] {1, 0.7, 0}, TrajectoryType.STATIC);
-        centerSolarSystem.setPosition(new Vector3d(0, 0, 0));
-        centerSolarSystem.setVelocity(new Vector3d(0, 0, 0));
         updateDynamicalPoint(centerSolarSystem, "Solar System Barycenter", 0, 0, 1, 0, null);
+        setCentralPoint(centerSolarSystem);
 
         CelestialBody sun = new CelestialBody();
         createKeplerianElements(sun, centerSolarSystem, 1.414217969794719E-03 * AU, 8.563543676803891E-01, 7.933041962602029E+01, 4.031013592923514E+02, 2456666.926864971407, 2.618659421740932, 6.302423113645358E+01);
@@ -60,9 +59,9 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
     public void initSatellites() {
         CelestialBody earth = (CelestialBody) findDynamicalPoint("Earth");
 
-        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI / 2, 0);
+        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.PI);
         Orientation o = earth.getOrientation();
-        Vector3d velocity = o.getN().scale(9000d);
+        Vector3d velocity = o.getN().scale(9000d).negate();
         Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
         addDynamicalPoint(satellite);
     }

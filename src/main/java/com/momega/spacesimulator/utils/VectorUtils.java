@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.utils;
 
+import com.momega.spacesimulator.model.CartesianState;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Vector3d;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ public class VectorUtils {
      * @param phi the angle from the x-axis
      * @return new instance of the vector
      *
-     * @seelink http://en.wikipedia.org/wiki/Spherical_coordinate_system
+     * @link http://en.wikipedia.org/wiki/Spherical_coordinate_system
      */
     public static Vector3d fromSphericalCoordinates(double r, double theta, double phi) {
         return new Vector3d(r * Math.sin(theta)* Math.cos(phi),
@@ -37,10 +38,9 @@ public class VectorUtils {
         return new double[] {length, theta, phi};
     }
 
-    public static Vector3d[] transformCoordinateSystem(MovingObject source, MovingObject target, Vector3d[] vectors) {
-        Vector3d position = vectors[0].add(source.getPosition()).subtract(target.getPosition());
-        Vector3d velocity = vectors[1].add(source.getVelocity()).subtract(target.getVelocity());
-        return new Vector3d[] {position, velocity};
+    public static CartesianState transformCoordinateSystem(MovingObject source, MovingObject target, CartesianState cartesianState) {
+        CartesianState result = cartesianState.add(source.getCartesianState()).subtract(target.getCartesianState());
+        return result;
     }
 
     public static boolean equals(Vector3d v1, Vector3d v2, double precision) {
@@ -87,7 +87,9 @@ public class VectorUtils {
 
     public static double angleBetween(Vector3d a, Vector3d b) {
         double cosAlpha = a.dot(b) / a.length() / b.length();
-        if(cosAlpha > 1) cosAlpha = 1;
+        if(cosAlpha > 1) {
+            cosAlpha = 1;
+        }
         return Math.acos(cosAlpha);
     }
 

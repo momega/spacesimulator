@@ -8,13 +8,13 @@ import java.util.List;
  */
 public class HistoryTrajectory extends Trajectory {
 
-    private List<Vector3d> positions = new ArrayList<>();
+    private List<HistoryPoint> historyPoints = new ArrayList<>();
 
-    public List<Vector3d> getPositions() {
-        return positions;
+    public List<HistoryPoint> getHistoryPoints() {
+        return historyPoints;
     }
 
-    public void setPositions(List<Vector3d> positions) {
-        this.positions = positions;
+    public void setHistoryPoints(List<HistoryPoint> historyPoints) {
+        this.historyPoints = historyPoints;
     }
 }

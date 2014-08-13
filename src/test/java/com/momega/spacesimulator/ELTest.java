@@ -1,5 +1,6 @@
 package com.momega.spacesimulator;
 
+import com.momega.spacesimulator.model.CartesianState;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.MathUtils;
@@ -19,7 +20,8 @@ public class ELTest {
     @Test
     public void elTest() throws NoSuchMethodException {
         Planet namedObject = new Planet();
-        namedObject.setPosition(new Vector3d(1,2,3));
+        namedObject.setCartesianState(new CartesianState());
+        namedObject.getCartesianState().setPosition(new Vector3d(1,2,3));
         namedObject.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(1, 0, 0)));
 
         ExpressionParser parser = new SpelExpressionParser();
@@ -29,7 +31,7 @@ public class ELTest {
         evaluationContext.registerFunction("toDegrees", Math.class.getDeclaredMethod("toDegrees", double.class));
 
         // 1
-        String exp = "#obj.position.x";
+        String exp = "#obj.cartesianState.position.x";
         Expression e = parser.parseExpression(exp);
         String textValue = e.getValue(evaluationContext, String.class);
         Assert.assertEquals("1.0", textValue);
