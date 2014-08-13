@@ -18,7 +18,8 @@ public class KeplerianTrajectoryManager implements TrajectoryManager {
 
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
-        KeplerianUtils.getInstance().computePosition(movingObject, newTimestamp);
+        CartesianState cartesianState = KeplerianUtils.getInstance().computePosition(movingObject.getKeplerianElements(), newTimestamp);
+        movingObject.setCartesianState(cartesianState);
     }
 
     @Override

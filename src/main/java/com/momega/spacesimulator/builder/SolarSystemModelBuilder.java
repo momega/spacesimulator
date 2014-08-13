@@ -96,8 +96,4 @@ public class SolarSystemModelBuilder extends SimpleSolarSystemModelBuilder {
         addPlanetToSoiTree(callisto, jupiterSoi);
     }
 
-    @Override
-    public void initSatellites() {
-        super.initSatellites();
-    }
 }

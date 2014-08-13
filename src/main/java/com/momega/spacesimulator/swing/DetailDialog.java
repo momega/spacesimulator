@@ -5,6 +5,7 @@ import com.momega.spacesimulator.model.NamedObject;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,15 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             }
         });
         buttonsPanel.add(okButton);
+        JButton selectButton = new JButton("Select");
+        selectButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(namedObject);
+                RendererModel.getInstance().selectDynamicalPoint(viewCoordinates);
+            }
+        });
+        buttonsPanel.add(selectButton);
         if (namedObject instanceof CelestialBody) {
             JButton wikiButton = new JButton("Wiki");
             final CelestialBody celestialBody = (CelestialBody) namedObject;
@@ -92,7 +102,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
     protected JPanel createCartesianPanel() {
         String[] labels = {"Position X", "Position Y", "Position Z", "Velocity", "Velocity X", "Velocity Y", "Velocity Z"};
-        String[] fields = {"#obj.cartesianState.position.x", "#obj.cartesianState.position.y", "#obj.cartesianState.position.z", "#obj.cartesianState.velocity.length()", "#obj.cartesianState.velocity.x", "#obj.cartesianState.velocity.y", "#obj.cartesianState.velocity.z"};
+        String[] fields = {"#obj.position.x", "#obj.position.y", "#obj.position.z", "#obj.cartesianState.velocity.length()", "#obj.cartesianState.velocity.x", "#obj.cartesianState.velocity.y", "#obj.cartesianState.velocity.z"};
         AttributesPanel result = new AttributesPanel(labels, namedObject, fields);
         attributesPanelList.add(result);
         return result;

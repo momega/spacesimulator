@@ -47,7 +47,6 @@ public class VectorUtils {
         return v1.subtract(v2).length()<precision;
     }
 
-
     /**
      * Rotates vector v anticlockwise about the specified axis by the specified angle (in degrees).
      *

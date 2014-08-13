@@ -19,6 +19,10 @@ public class CelestialBody extends RotatingObject {
         this.textureFileName = textureFileName;
     }
 
+    /**
+     * Gets the wiki page of the celestial body
+     * @return the wiki page
+     */
     public String getWiki() {
         return wiki;
     }

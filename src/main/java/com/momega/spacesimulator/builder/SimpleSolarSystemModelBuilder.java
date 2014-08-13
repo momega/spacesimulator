@@ -1,8 +1,7 @@
 package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.VectorUtils;
+import com.momega.spacesimulator.utils.KeplerianUtils;
 
 /**
  * Created by martin on 7/14/14.
@@ -59,9 +58,9 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
     public void initSatellites() {
         CelestialBody earth = (CelestialBody) findDynamicalPoint("Earth");
 
-        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.PI);
-        Orientation o = earth.getOrientation();
-        Vector3d velocity = o.getN().scale(9000d).negate();
+        Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
+        Vector3d top = earth.getOrientation().getV();
+        Vector3d velocity = position.normalize().cross(top).scale(9000d).negate();
         Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
         addDynamicalPoint(satellite);
     }

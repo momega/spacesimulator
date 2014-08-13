@@ -25,12 +25,10 @@ public final class KeplerianUtils {
         super();
     }
 
-    public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
-        KeplerianElements keplerianElements = movingObject.getKeplerianElements();
-
+    public CartesianState computePosition(KeplerianElements keplerianElements, Timestamp newTimestamp) {
         CartesianState cartesianState = solveKeplerian2(keplerianElements, newTimestamp);
         cartesianState = cartesianState.add(keplerianElements.getCentralObject().getCartesianState());
-        movingObject.setCartesianState(cartesianState);
+        return cartesianState;
     }
 
     protected CartesianState solveKeplerian2(KeplerianElements keplerianElements, Timestamp time) {
@@ -54,15 +52,15 @@ public final class KeplerianUtils {
 
         Vector3d Q = new Vector3d(
                 -Math.sin(omega) * Math.cos(OMEGA) - Math.cos(omega) * Math.cos(i) * Math.sin(OMEGA),
-                - Math.sin(omega) * Math.sin(OMEGA) + Math.cos(omega) * Math.cos(i) * Math.cos(OMEGA),
+                -Math.sin(omega) * Math.sin(OMEGA) + Math.cos(omega) * Math.cos(i) * Math.cos(OMEGA),
                 Math.cos(omega) * Math.sin(i)
         );
 
-        Vector3d r = P.scale(a * (Math.cos(E) - e)).scaleAdd(a * Math.sqrt(1 - e*e) * Math.sin(E), Q);
+        Vector3d r = P.scale(a * (Math.cos(E) - e)).scaleAdd(a * Math.sqrt(1 - e * e) * Math.sin(E), Q);
 
         double n = 2 * Math.PI / keplerianElements.getPeriod().doubleValue();
-        double derE = n / (1 - e* Math.cos(E));
-        Vector3d v = P.scale(-a * Math.sin(E) * derE).scaleAdd(a * Math.sqrt(1 - e*e) * Math.cos(E) * derE, Q);
+        double derE = n / (1 - e * Math.cos(E));
+        Vector3d v = P.scale(-a * Math.sin(E) * derE).scaleAdd(a * Math.sqrt(1 - e * e) * Math.cos(E) * derE, Q);
 
         CartesianState cartesianState = new CartesianState();
         cartesianState.setPosition(r);
@@ -71,19 +69,19 @@ public final class KeplerianUtils {
     }
 
     protected double solveTheta1(double E, double eccentricity) {
-        double cosTheta = (Math.cos(E) - eccentricity) / ( 1.0 - eccentricity * Math.cos(E));
+        double cosTheta = (Math.cos(E) - eccentricity) / (1.0 - eccentricity * Math.cos(E));
         double theta;
         if (E < Math.PI) {
             theta = Math.acos(cosTheta);
         } else {
-            theta = 2*Math.PI - Math.acos(cosTheta);
+            theta = 2 * Math.PI - Math.acos(cosTheta);
         }
         return theta;
     }
 
     protected double solveTheta2(double E, double eccentricity) {
-        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
-        double theta = 2*Math.atan(param * Math.tan(E/2));
+        double param = Math.sqrt((1 + eccentricity) / (1 - eccentricity));
+        double theta = 2 * Math.atan(param * Math.tan(E / 2));
         if (theta < 0) {
             theta = Math.PI * 2 + theta;
         }
@@ -91,8 +89,8 @@ public final class KeplerianUtils {
     }
 
     protected double solveTheta3(double E, double eccentricity) {
-        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
-        double theta = Math.atan(param * Math.sin(E) / (Math.cos(E) - eccentricity) );
+        double param = Math.sqrt((1 + eccentricity) / (1 - eccentricity));
+        double theta = Math.atan(param * Math.sin(E) / (Math.cos(E) - eccentricity));
         return theta;
     }
 
@@ -108,10 +106,10 @@ public final class KeplerianUtils {
         logger.debug("M = {}", M);
         double eccentricity = keplerianElements.getEccentricity();
         double F = E - eccentricity * Math.sin(M) - M;
-        for(int i=0; i<50; i++) {
+        for (int i = 0; i < 50; i++) {
             E = E - F / (1.0 - eccentricity * Math.cos(E));
             F = E - eccentricity * Math.sin(E) - M;
-            if (Math.abs(F)<MINOR_ERROR) {
+            if (Math.abs(F) < MINOR_ERROR) {
                 break;
             }
         }
@@ -119,13 +117,28 @@ public final class KeplerianUtils {
         return E;
     }
 
+    /**
+     * Gets the position in cartesian state based on the keplerian elements with given angle theta.
+     * @param keplerianElements the keplerian elements
+     * @param theta the angle theta is used instead of true anomaly in keplerian elements
+     * @return the 3d vector
+     */
     public Vector3d getCartesianPosition(KeplerianElements keplerianElements, double theta) {
-        double u =  theta + keplerianElements.getArgumentOfPeriapsis();
+        double argumentOfPeriapsis = keplerianElements.getArgumentOfPeriapsis();
         double e = keplerianElements.getEccentricity();
-        double r = keplerianElements.getSemimajorAxis() * (1 - e*e) / (1 + e * Math.cos(theta));
-        double x = r * (Math.cos(u) * Math.cos(keplerianElements.getAscendingNode()) - Math.sin(u) * Math.cos(keplerianElements.getInclination()) * Math.sin(keplerianElements.getAscendingNode()));
-        double y = r * (Math.cos(u) * Math.sin(keplerianElements.getAscendingNode()) + Math.sin(u) * Math.cos(keplerianElements.getInclination()) * Math.cos(keplerianElements.getAscendingNode()));
-        double z = r * (Math.sin(u) * Math.sin(keplerianElements.getInclination()));
-        return keplerianElements.getCentralObject().getCartesianState().getPosition().add(new Vector3d(x, y, z));
+        double r = keplerianElements.getSemimajorAxis() * (1 - e * e) / (1 + e * Math.cos(theta));
+        double inclination = keplerianElements.getInclination();
+        double ascendingNode = keplerianElements.getAscendingNode();
+        Vector3d v = getCartesianPosition(r, theta, inclination, ascendingNode, argumentOfPeriapsis );
+        return keplerianElements.getCentralObject().getCartesianState().getPosition().add(v);
     }
+
+    public Vector3d getCartesianPosition(double r, double theta, double inclination, double ascendingNode, double argumentOfPeriapsis) {
+        double u = theta + argumentOfPeriapsis;
+        double x = r * (Math.cos(u) * Math.cos(ascendingNode) - Math.sin(u) * Math.cos(inclination) * Math.sin(ascendingNode));
+        double y = r * (Math.cos(u) * Math.sin(ascendingNode) + Math.sin(u) * Math.cos(inclination) * Math.cos(ascendingNode));
+        double z = r * (Math.sin(u) * Math.sin(inclination));
+        return new Vector3d(x, y, z);
+    }
+
 }

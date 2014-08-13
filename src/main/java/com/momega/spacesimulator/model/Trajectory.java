@@ -1,8 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The trajectory definition
  * Created by martin on 10.5.2014.

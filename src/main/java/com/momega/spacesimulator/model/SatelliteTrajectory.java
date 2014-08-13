@@ -1,8 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by martin on 6/29/14.
  */
