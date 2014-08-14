@@ -15,7 +15,7 @@ public class ModelRenderer extends CompositeRenderer {
 
     public ModelRenderer() {
         logger.info("initializing renderers");
-        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
+        for(PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
             if (!TrajectoryType.STATIC.equals(dp.getTrajectory().getType())) {
                 addRenderer(new KeplerianTrajectoryRenderer(dp));
             }
@@ -27,12 +27,12 @@ public class ModelRenderer extends CompositeRenderer {
                         addRenderer(new PlanetRingRenderer(p, ring));
                     }
                 }
-            } else if (dp instanceof Satellite) {
-                addRenderer(new SatelliteRenderer((Satellite) dp));
-                addRenderer(new HistoryRenderer((Satellite) dp));
-                addRenderer(new ApsidesRenderer((Satellite) dp));
+            } else if (dp instanceof ArtificialBody) {
+                addRenderer(new SatelliteRenderer((ArtificialBody) dp));
+                addRenderer(new HistoryRenderer((ArtificialBody) dp));
+                addRenderer(new ApsidesRenderer((ArtificialBody) dp));
             }
-            addRenderer(new DynamicalPointRenderer(dp));
+            addRenderer(new PhysicalBodyRenderer(dp));
         }
 
         addRenderer(new CameraPositionRenderer());

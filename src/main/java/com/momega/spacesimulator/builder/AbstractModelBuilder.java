@@ -57,9 +57,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         model.setCamera(s);
     }
 
-    protected void setCentralPoint(DynamicalPoint dynamicalPoint) {
-        dynamicalPoint.getCartesianState().setPosition(new Vector3d(0,0,0));
-        dynamicalPoint.getCartesianState().setVelocity(new Vector3d(0, 0, 0));
+    protected void setCentralPoint(PhysicalBody physicalBody) {
+        physicalBody.getCartesianState().setPosition(new Vector3d(0,0,0));
+        physicalBody.getCartesianState().setVelocity(new Vector3d(0, 0, 0));
     }
 
     /**
@@ -84,14 +84,14 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * Register the dynamical point to the universe
      * @param dp the instance of the dynamical point
      */
-    public void addDynamicalPoint(DynamicalPoint dp) {
+    public void addDynamicalPoint(PhysicalBody dp) {
         dp.setTimestamp(model.getTime());
-        model.getDynamicalPoints().add(dp);
+        model.getPhysicalBodies().add(dp);
     }
 
     /**
      * Creates the keplerian trajectory
-     * @param dynamicalPoint the dynamical point
+     * @param physicalBody the dynamical point
      * @param centralObject the central object
      * @param semimajorAxis the semimajor axis
      * @param eccentricity the eccentricity
@@ -102,7 +102,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param ascendingNode the ascending node in degrees
      * @return new instance of the keplerian trajectory
      */
-    public KeplerianElements createKeplerianElements(DynamicalPoint dynamicalPoint, DynamicalPoint centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
+    public KeplerianElements createKeplerianElements(PhysicalBody physicalBody, PhysicalBody centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setCentralObject(centralObject);
         keplerianElements.setSemimajorAxis(semimajorAxis);
@@ -112,11 +112,11 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         keplerianElements.setTimeOfPeriapsis(TimeUtils.createTime(timeOfPeriapsis));
         keplerianElements.setInclination(Math.toRadians(inclination));
         keplerianElements.setAscendingNode(Math.toRadians(ascendingNode));
-        dynamicalPoint.setKeplerianElements(keplerianElements);
+        physicalBody.setKeplerianElements(keplerianElements);
 
         // initialize position
         CartesianState cartesianState = KeplerianUtils.getInstance().computePosition(keplerianElements, model.getTime());
-        dynamicalPoint.setCartesianState(cartesianState);
+        physicalBody.setCartesianState(cartesianState);
 
         return keplerianElements;
     }
@@ -145,9 +145,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param velocity the initial velocity
      * @return new instance of the satellite
      */
-    public Satellite createSatellite(DynamicalPoint centralPoint, String name, Vector3d position, Vector3d velocity) {
-        Satellite satellite = new Satellite();
-        satellite.setName(name);
+    public ArtificialBody createSatellite(PhysicalBody centralPoint, String name, Vector3d position, Vector3d velocity) {
+        ArtificialBody artificialBody = new ArtificialBody();
+        artificialBody.setName(name);
 
         CartesianState cartesianState = new CartesianState();
         cartesianState.setPosition(position);
@@ -157,23 +157,23 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
             cartesianState = VectorUtils.transformCoordinateSystem(centralPoint, getCentralObject(), cartesianState);
         }
 
-        satellite.setCartesianState(cartesianState);
-        satellite.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
+        artificialBody.setCartesianState(cartesianState);
+        artificialBody.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
         SatelliteTrajectory satelliteTrajectory = new SatelliteTrajectory();
         satelliteTrajectory.setColor(new double[]{1, 1, 0});
         satelliteTrajectory.setType(TrajectoryType.NEWTONIAN);
-        satellite.setTrajectory(satelliteTrajectory);
-        satellite.setMass(10 * 1E3);
+        artificialBody.setTrajectory(satelliteTrajectory);
+        artificialBody.setMass(10 * 1E3);
 
         HistoryTrajectory historyTrajectory = new HistoryTrajectory();
         historyTrajectory.setType(TrajectoryType.HISTORY);
         historyTrajectory.setColor(new double[]{1, 1, 1});
-        satellite.setHistoryTrajectory(historyTrajectory);
+        artificialBody.setHistoryTrajectory(historyTrajectory);
 
-        return satellite;
+        return artificialBody;
     }
 
-    private void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, String wiki) {
+    private void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, String wiki) {
         dp.setName(name);
         dp.setMass(mass * 1E24);
         if (dp.getCartesianState() == null) {
@@ -201,7 +201,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param axialTilt axial tilt
      * @param wiki the wiki page
      */
-    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double axialTilt, String wiki) {
+    protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double axialTilt, String wiki) {
         updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki);
         if (dp instanceof RotatingObject) {
             dp.getOrientation().twist(Math.toRadians(axialTilt));
@@ -219,7 +219,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param dec declination 0of the north pole
      * @param wiki the wiki page
      */
-    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, String wiki) {
+    protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, String wiki) {
         updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki);
         if (dp instanceof RotatingObject) {
             Orientation orientation = MathUtils.rotateByAngles(Math.toRadians(ra), Math.toRadians(dec), true);
@@ -238,7 +238,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param dec declination 0of the north pole
      * @param primeMeridianJd2000 prime meridian at JD2000 epoch
      */
-    protected void updateDynamicalPoint(DynamicalPoint dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, double primeMeridianJd2000, String wiki) {
+    protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, double primeMeridianJd2000, String wiki) {
         updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, ra, dec, wiki);
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
@@ -297,8 +297,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param name the name of the dynamical point
      * @return the instance of dynamical point or null
      */
-    public DynamicalPoint findDynamicalPoint(String name) {
-        for(DynamicalPoint dp : model.getDynamicalPoints()) {
+    public PhysicalBody findDynamicalPoint(String name) {
+        for(PhysicalBody dp : model.getPhysicalBodies()) {
             if (name.equals(dp.getName())) {
                 return dp;
             }

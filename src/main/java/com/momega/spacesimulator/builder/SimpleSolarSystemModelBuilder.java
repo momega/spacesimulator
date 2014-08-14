@@ -8,12 +8,12 @@ import com.momega.spacesimulator.utils.KeplerianUtils;
  */
 public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
 
-    protected DynamicalPoint centerSolarSystem;
+    protected PhysicalBody centerSolarSystem;
     protected SphereOfInfluence sunSoi;
 
     @Override
     public void initPlanets() {
-        centerSolarSystem = new DynamicalPoint();
+        centerSolarSystem = new PhysicalBody();
         createTrajectory(centerSolarSystem, new double[] {1, 0.7, 0}, TrajectoryType.STATIC);
         updateDynamicalPoint(centerSolarSystem, "Solar System Barycenter", 0, 0, 1, 0, null);
         setCentralPoint(centerSolarSystem);
@@ -24,7 +24,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         createTrajectory(sun, new double[] {1, 0.7, 0}, TrajectoryType.KEPLERIAN);
         sun.setTextureFileName("sun.jpg");
 
-        DynamicalPoint earthMoonBarycenter = new DynamicalPoint();
+        PhysicalBody earthMoonBarycenter = new PhysicalBody();
         createKeplerianElements(earthMoonBarycenter, centerSolarSystem, 149598.261d * 1E6, 0.0166739, 287.5824, 365.256814, 2456661.138788696378, 0.0018601064, 175.395d);
         updateDynamicalPoint(earthMoonBarycenter, "Earth-Moon Barycenter", 0, 0, 1, 0, null);
         createTrajectory(earthMoonBarycenter, new double[]{0, 0.5, 1}, TrajectoryType.KEPLERIAN);
@@ -61,8 +61,8 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(9000d).negate();
-        Satellite satellite = createSatellite(earth, "Satellite 1", position, velocity);
-        addDynamicalPoint(satellite);
+        ArtificialBody artificialBody = createSatellite(earth, "ArtificialBody 1", position, velocity);
+        addDynamicalPoint(artificialBody);
     }
 
     @Override

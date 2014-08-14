@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.DynamicalPoint;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.utils.TimeUtils;
@@ -35,7 +35,7 @@ public class MotionService {
         Timestamp newTimestamp = TimeUtils.newTime(timestamp);
         logger.debug("time={}", timestamp);
         if (!warpFactor.equals(BigDecimal.ZERO)) {
-            for (DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
+            for (PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
                 if (dp instanceof RotatingObject) {
                     rotationService.rotate((RotatingObject) dp, newTimestamp);
                 }

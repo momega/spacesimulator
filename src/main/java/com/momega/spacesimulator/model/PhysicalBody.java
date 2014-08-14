@@ -1,11 +1,12 @@
 package com.momega.spacesimulator.model;
 
 /**
- * Dynamical point in space. It is the {@link com.momega.spacesimulator.model.MovingObject} with the mass and radius.
+ * Physical body in space. It is the {@link com.momega.spacesimulator.model.MovingObject} with the mass and the given orientation.
  * Created by martin on 4/27/14.
  */
-public class DynamicalPoint extends MovingObject {
+public class PhysicalBody extends MovingObject {
 
+    private double mass;
     private Orientation orientation;
 
     /**
@@ -20,7 +21,6 @@ public class DynamicalPoint extends MovingObject {
         this.orientation = orientation;
     }
 
-    private double mass;
     /**
      * Gets the mass of the dynamical point in kilograms
      * @return the mass in kilograms

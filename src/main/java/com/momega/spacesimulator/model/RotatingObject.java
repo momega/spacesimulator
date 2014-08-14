@@ -1,11 +1,11 @@
 package com.momega.spacesimulator.model;
 
 /**
- * The rotation object is the {@link com.momega.spacesimulator.model.DynamicalPoint} with defined rotation period. The {@link CelestialBody}
- * is the typical subclass of the rotation object
+ * The rotation object is the {@link PhysicalBody} with defined radius and the rotation period. The {@link CelestialBody}
+ * is the typical subclass of the rotation object.
  * Created by martin on 5/25/14.
  */
-public class RotatingObject extends DynamicalPoint {
+public class RotatingObject extends PhysicalBody {
 
     private double rotationPeriod; // rotation period in seconds
     private double radius;

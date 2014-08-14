@@ -15,7 +15,7 @@ public class Model {
     private BigDecimal warpFactor;
     private Camera camera;
     private NamedObject selectedDynamicalPoint;
-    protected final List<DynamicalPoint> dynamicalPoints = new ArrayList<>();
+    protected final List<PhysicalBody> physicalBodies = new ArrayList<>();
     private SphereOfInfluence rootSoi;
 
     public Camera getCamera() {
@@ -58,8 +58,8 @@ public class Model {
      * Gets the list of the dynamical points. It includes all celestial bodies and satellites.
      * @return the list of the dynamical points
      */
-    public List<DynamicalPoint> getDynamicalPoints() {
-        return dynamicalPoints;
+    public List<PhysicalBody> getPhysicalBodies() {
+        return physicalBodies;
     }
 
     /**

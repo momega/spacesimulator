@@ -93,7 +93,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
 //        Vector3d viewVector = ModelHolder.getModel().getCamera().getOrientation().getN();
 //        double znear = UNIVERSE_RADIUS * 2;
 //
-//        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
+//        for(PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
 //
 //            // only valid for object with radius
 //            if (dp.getRadius() <= 0) {
@@ -140,9 +140,9 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     protected void computeViewCoordinates(GLAutoDrawable drawable) {
         Camera camera = ModelHolder.getModel().getCamera();
-        for(DynamicalPoint dp : ModelHolder.getModel().getDynamicalPoints()) {
+        for(PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
             addViewCoordinates(drawable, dp, camera);
-            if (dp instanceof Satellite) {
+            if (dp instanceof ArtificialBody) {
                 SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) dp.getTrajectory();
                 addViewCoordinates(drawable, satelliteTrajectory.getApoapsis(), camera);
                 addViewCoordinates(drawable, satelliteTrajectory.getPeriapsis(), camera);
