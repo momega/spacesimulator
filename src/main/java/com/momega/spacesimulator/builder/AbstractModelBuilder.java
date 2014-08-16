@@ -11,6 +11,7 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
 
@@ -80,6 +81,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      */
     public static final double AU = 149597870700d;
 
+    public static final double G0 = 9.80665d;
+
     /**
      * Register the dynamical point to the universe
      * @param dp the instance of the dynamical point
@@ -145,9 +148,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param velocity the initial velocity
      * @return new instance of the satellite
      */
-    public ArtificialBody createSatellite(PhysicalBody centralPoint, String name, Vector3d position, Vector3d velocity) {
-        ArtificialBody artificialBody = new ArtificialBody();
-        artificialBody.setName(name);
+    public Spacecraft createSatellite(PhysicalBody centralPoint, String name, Vector3d position, Vector3d velocity) {
+        Spacecraft spacecraft = new Spacecraft();
+        spacecraft.setName(name);
 
         CartesianState cartesianState = new CartesianState();
         cartesianState.setPosition(position);
@@ -157,20 +160,26 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
             cartesianState = VectorUtils.transformCoordinateSystem(centralPoint, getCentralObject(), cartesianState);
         }
 
-        artificialBody.setCartesianState(cartesianState);
-        artificialBody.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
+        spacecraft.setCartesianState(cartesianState);
+        spacecraft.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
         SatelliteTrajectory satelliteTrajectory = new SatelliteTrajectory();
         satelliteTrajectory.setColor(new double[]{1, 1, 0});
         satelliteTrajectory.setType(TrajectoryType.NEWTONIAN);
-        artificialBody.setTrajectory(satelliteTrajectory);
-        artificialBody.setMass(10 * 1E3);
+        spacecraft.setTrajectory(satelliteTrajectory);
+        spacecraft.setMass(0d);
 
         HistoryTrajectory historyTrajectory = new HistoryTrajectory();
         historyTrajectory.setType(TrajectoryType.HISTORY);
         historyTrajectory.setColor(new double[]{1, 1, 1});
-        artificialBody.setHistoryTrajectory(historyTrajectory);
+        spacecraft.setHistoryTrajectory(historyTrajectory);
 
-        return artificialBody;
+        return spacecraft;
+    }
+
+    public void addSpacecraftSubsystem(Spacecraft spacecraft, SpacecraftSubsystem subsystem) {
+        Assert.notNull(subsystem);
+        spacecraft.getSubsystems().add(subsystem);
+        spacecraft.setMass(spacecraft.getMass()  + subsystem.getMass());
     }
 
     private void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, String wiki) {

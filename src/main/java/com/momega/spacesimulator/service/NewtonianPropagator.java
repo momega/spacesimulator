@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
@@ -20,11 +19,9 @@ import java.util.List;
  * Created by martin on 5/21/14.
  */
 @Component
-public class NewtonianTrajectoryManager implements TrajectoryManager {
+public class NewtonianPropagator implements Propagator {
 
-    private static final Logger logger = LoggerFactory.getLogger(NewtonianTrajectoryManager.class);
-
-    public static final double G = 6.67384*1E-11;
+    private static final Logger logger = LoggerFactory.getLogger(NewtonianPropagator.class);
 
     private static double MINOR_ERROR = Math.pow(10, -12);
     private int maxHistory = 100000;
@@ -32,37 +29,36 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
     @Autowired
     private SphereOfInfluenceService sphereOfInfluenceService;
 
+    @Autowired
+    private List<ForceModel> forceModels;
+
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
 
+        Assert.isInstanceOf(Spacecraft.class, movingObject, "predication of trajectory is supported only for satellites");
+        Spacecraft spacecraft = (Spacecraft) movingObject;
+
         double dt = TimeUtils.subtract(newTimestamp, movingObject.getTimestamp()).getValue().doubleValue();
 
-//        Vector3d[] result = rk4Solver(position, velocity, dt);
-//        movingObject.setVelocity(result[0]);
-//        movingObject.setPosition(result[1]);
-
-        CartesianState cartesianState = eulerSolver(movingObject.getCartesianState(), dt);
+        CartesianState cartesianState = eulerSolver(spacecraft, dt);
         movingObject.setCartesianState(cartesianState);
 
-        Assert.isInstanceOf(ArtificialBody.class, movingObject, "predication of trajectory is supported only for satellites");
-        ArtificialBody artificialBody = (ArtificialBody) movingObject;
-
-        computePrediction(artificialBody, newTimestamp);
-        computeApsides(artificialBody);
-        updateHistory(artificialBody, newTimestamp);
+        computePrediction(spacecraft, newTimestamp);
+        computeApsides(spacecraft);
+        updateHistory(spacecraft, newTimestamp);
     }
 
-    private void computeApsides(ArtificialBody artificialBody) {
-        KeplerianElements keplerianElements = artificialBody.getKeplerianElements();
+    private void computeApsides(Spacecraft spacecraft) {
+        KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
 
         Double HA = keplerianElements.getHyperbolicAnomaly();
 
-        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) artificialBody.getTrajectory();
+        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) spacecraft.getTrajectory();
         if (keplerianElements.getEccentricity()<1 || (keplerianElements.getEccentricity()>1 && HA!=null)) {
             Apsis periapsis = satelliteTrajectory.getPeriapsis();
             if (periapsis == null) {
                 periapsis = new Apsis();
-                periapsis.setName("Pe of " + artificialBody.getName());
+                periapsis.setName("Pe of " + spacecraft.getName());
                 periapsis.setType(ApsisType.PERIAPSIS);
                 satelliteTrajectory.setPeriapsis(periapsis);
             }
@@ -75,7 +71,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
             Apsis apoapsis = satelliteTrajectory.getApoapsis();
             if (apoapsis == null) {
                 apoapsis = new Apsis();
-                apoapsis.setName("Ap of " + artificialBody.getName());
+                apoapsis.setName("Ap of " + spacecraft.getName());
                 apoapsis.setType(ApsisType.APOAPSIS);
                 satelliteTrajectory.setApoapsis(apoapsis);
             }
@@ -86,27 +82,27 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     }
 
-    private void updateHistory(ArtificialBody artificialBody, Timestamp timestamp) {
-        List<HistoryPoint> historyPoints = artificialBody.getHistoryTrajectory().getHistoryPoints();
+    private void updateHistory(Spacecraft spacecraft, Timestamp timestamp) {
+        List<HistoryPoint> historyPoints = spacecraft.getHistoryTrajectory().getHistoryPoints();
         if (historyPoints.size()> maxHistory) {
             historyPoints.remove(0);
         }
 
         HistoryPoint hp = new HistoryPoint();
-        hp.setPosition(artificialBody.getCartesianState().getPosition());
+        hp.setPosition(spacecraft.getCartesianState().getPosition());
         hp.setTimestamp(timestamp);
         historyPoints.add(hp);
     }
 
     /**
-     * Computes the prediction of the trajectory. Currently the supports work only for {@link com.momega.spacesimulator.model.ArtificialBody}s.
-     * @param artificialBody the artificialBody object which.
+     * Computes the prediction of the trajectory. Currently the supports work only for {@link com.momega.spacesimulator.model.Spacecraft}s.
+     * @param spacecraft the spacecraft object which.
      * @param newTimestamp new timestamp
      */
-    public void computePrediction(ArtificialBody artificialBody, Timestamp newTimestamp) {
-        SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(artificialBody);
+    public void computePrediction(Spacecraft spacecraft, Timestamp newTimestamp) {
+        SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(spacecraft);
         CelestialBody soiCelestialBody = soi.getBody();
-        CartesianState cartesianState = artificialBody.getCartesianState().subtract(soiCelestialBody.getCartesianState());
+        CartesianState cartesianState = spacecraft.getCartesianState().subtract(soiCelestialBody.getCartesianState());
         Vector3d position = cartesianState.getPosition();
         Vector3d velocity = cartesianState.getVelocity();
 
@@ -115,7 +111,7 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         double i = Math.acos(hVector.z / h);
 
         PhysicalBody soiBody = soi.getBody();
-        double mi = soiBody.getMass() * G;
+        double mi = soiBody.getMass() * MathUtils.G;
 
         Vector3d eVector = velocity.cross(hVector).scale(1/mi).subtract(position.normalize());
         double e = eVector.length();
@@ -176,13 +172,13 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
         logger.debug("theta = {}, inclination = {}", theta, i);
 
-        KeplerianElements keplerianElements = artificialBody.getKeplerianElements();
+        KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
         if (keplerianElements == null) {
             keplerianElements = new KeplerianElements();
-            artificialBody.setKeplerianElements(keplerianElements);
+            spacecraft.setKeplerianElements(keplerianElements);
         }
         if (keplerianElements.getCentralObject() != soiBody) {
-            logger.info("changing soi to {} for artificialBody {}", soiBody.getName(), artificialBody.getName());
+            logger.info("changing soi to {} for spacecraft {}", soiBody.getName(), spacecraft.getName());
         }
         keplerianElements.setCentralObject(soiBody);
         keplerianElements.setInclination(i);
@@ -234,16 +230,20 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
 
     /**
      * Solves the velocity and position by the simple Euler method
-     * @param cartesianState the cartesian state
+     * @param spacecraft the spacecraft
      * @param dt time interval
      * @return the position
      */
-    protected CartesianState eulerSolver(CartesianState cartesianState, double dt) {
+    protected CartesianState eulerSolver(Spacecraft spacecraft, double dt) {
         // Euler's method
-        Vector3d position = cartesianState.getPosition();
-        Vector3d velocity = cartesianState.getVelocity();
+        Vector3d position = spacecraft.getCartesianState().getPosition();
+        Vector3d velocity = spacecraft.getCartesianState().getVelocity();
 
-        Vector3d acceleration = getAcceleration(position);
+        // iterate all force models
+        Vector3d acceleration = Vector3d.ZERO;
+        for(ForceModel forceModel : forceModels) {
+            acceleration = acceleration.add(forceModel.getAcceleration(spacecraft, dt));
+        }
 
         velocity = velocity.scaleAdd(dt, acceleration); // velocity: v(i) = v(i) + a(i) * dt
         position = position.scaleAdd(dt, velocity); // position: r(i) = r(i) * v(i) * dt
@@ -254,52 +254,8 @@ public class NewtonianTrajectoryManager implements TrajectoryManager {
         return result;
     }
 
-    /**
-     * Solves the velocity and position by RK4 method (Runge-Kutta method, 4th order)
-     * @param position the current position
-     * @param velocity the current velocity
-     * @param dt time interval
-     * @return new position
-     */
-    protected Vector3d[] rk4Solver(Vector3d position, Vector3d velocity, double dt) {
-        // k[i]v are velocities
-        // k[i]x are position
-
-        Vector3d k1v = getAcceleration(position).scale(dt);
-        Vector3d k1x = velocity.scale(dt);
-        Vector3d k2v = getAcceleration(position.scaleAdd(dt/2, k1x)).scale(dt);
-        Vector3d k2x = velocity.scaleAdd(1.0/2, k1v).scale(dt);
-        Vector3d k3v = getAcceleration(position.scaleAdd(dt/2, k2x)).scale(dt);
-        Vector3d k3x = velocity.scaleAdd(1.0/2, k2v).scale(dt);
-        Vector3d k4v = getAcceleration(position.scaleAdd(dt, k3x)).scale(dt);
-        Vector3d k4x = velocity.scaleAdd(1.0, k3v).scale(dt);
-
-        velocity = velocity.add(rk4(k1v, k2v, k3v, k4v));
-        position = position.add(rk4(k1x, k2x, k3x, k4x));
-        return new Vector3d[] {velocity, position};
-    }
-
     protected Vector3d rk4(Vector3d u1, Vector3d u2, Vector3d u3, Vector3d u4) {
         return u1.scaleAdd(2, u2).scaleAdd(2, u3).add(u4).scale(1.0 / 6);
-    }
-
-    /**
-     * Computes the total gravitational force (acceleration) from all celestial bodies in the system on the point defined
-     * in the 3D.
-     * @param position the given position vector
-     * @return total acceleration/force
-     */
-    protected Vector3d getAcceleration(Vector3d position) {
-        Vector3d a = Vector3d.ZERO;
-        for(PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
-            if (dp instanceof CelestialBody) {
-                CelestialBody celestialBody = (CelestialBody) dp;
-                Vector3d r = celestialBody.getCartesianState().getPosition().subtract(position);
-                double dist3 = r.lengthSquared() * r.length();
-                a = a.scaleAdd(G * celestialBody.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
-            }
-        }
-        return a;
     }
 
     @Override

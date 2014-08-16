@@ -3,7 +3,7 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.ArtificialBody;
+import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SphereOfInfluence;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SphereOfInfluenceService {
 
-    public SphereOfInfluence findCurrentSoi(ArtificialBody artificialBody) {
-        SphereOfInfluence soi = checkSoiOfPlanet(artificialBody, ModelHolder.getModel().getRootSoi());
+    public SphereOfInfluence findCurrentSoi(Spacecraft spacecraft) {
+        SphereOfInfluence soi = checkSoiOfPlanet(spacecraft, ModelHolder.getModel().getRootSoi());
         return soi;
     }
 

@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.Apsis;
-import com.momega.spacesimulator.model.ArtificialBody;
+import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SatelliteTrajectory;
 
 import javax.media.opengl.GL2;
@@ -13,18 +13,18 @@ import java.awt.*;
  */
 public class ApsidesRenderer extends AbstractTextRenderer {
 
-    private final ArtificialBody artificialBody;
+    private final Spacecraft spacecraft;
 
-    public ApsidesRenderer(ArtificialBody artificialBody) {
-        this.artificialBody = artificialBody;
+    public ApsidesRenderer(Spacecraft spacecraft) {
+        this.spacecraft = spacecraft;
     }
 
     @Override
     public void draw(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glPointSize(8);
-        gl.glColor3dv(this.artificialBody.getTrajectory().getColor(), 0);
-        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) artificialBody.getTrajectory();
+        gl.glColor3dv(this.spacecraft.getTrajectory().getColor(), 0);
+        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) spacecraft.getTrajectory();
         gl.glBegin(GL2.GL_POINTS);
         if (satelliteTrajectory.getApoapsis() != null) {
             gl.glVertex3dv(satelliteTrajectory.getApoapsis().getPosition().asArray(), 0);
@@ -39,7 +39,7 @@ public class ApsidesRenderer extends AbstractTextRenderer {
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) artificialBody.getTrajectory();
+        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) spacecraft.getTrajectory();
         renderApsis(satelliteTrajectory.getApoapsis());
         renderApsis(satelliteTrajectory.getPeriapsis());
     }

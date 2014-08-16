@@ -7,7 +7,7 @@ import com.momega.spacesimulator.model.Trajectory;
 /**
  * Created by martin on 5/21/14.
  */
-public interface TrajectoryManager {
+public interface Propagator {
 
     /**
      * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation

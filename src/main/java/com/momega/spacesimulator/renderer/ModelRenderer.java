@@ -27,10 +27,10 @@ public class ModelRenderer extends CompositeRenderer {
                         addRenderer(new PlanetRingRenderer(p, ring));
                     }
                 }
-            } else if (dp instanceof ArtificialBody) {
-                addRenderer(new SatelliteRenderer((ArtificialBody) dp));
-                addRenderer(new HistoryRenderer((ArtificialBody) dp));
-                addRenderer(new ApsidesRenderer((ArtificialBody) dp));
+            } else if (dp instanceof Spacecraft) {
+                addRenderer(new SatelliteRenderer((Spacecraft) dp));
+                addRenderer(new HistoryRenderer((Spacecraft) dp));
+                addRenderer(new ApsidesRenderer((Spacecraft) dp));
             }
             addRenderer(new PhysicalBodyRenderer(dp));
         }

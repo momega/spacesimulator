@@ -2,10 +2,6 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.KeplerianUtils;
-import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +10,7 @@ import org.springframework.stereotype.Component;
  * Created by martin on 5/21/14.
  */
 @Component
-public class KeplerianTrajectoryManager implements TrajectoryManager {
+public class KeplerianPropagator implements Propagator {
 
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {

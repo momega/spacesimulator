@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.ArtificialBody;
+import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.opengl.GLUtils;
 
 import javax.media.opengl.GL2;
@@ -15,25 +15,25 @@ public class SatelliteRenderer extends AbstractRenderer {
 
     private final double size = 1d;
 
-    private final ArtificialBody artificialBody;
+    private final Spacecraft spacecraft;
 
-    public SatelliteRenderer(ArtificialBody artificialBody) {
-        this.artificialBody = artificialBody;
+    public SatelliteRenderer(Spacecraft spacecraft) {
+        this.spacecraft = spacecraft;
     }
 
     public void draw(GLAutoDrawable drawable) {
-        ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(artificialBody);
+        ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(spacecraft);
         if ((viewCoordinates!=null) && (viewCoordinates.getRadius()>0.001)) {
             GL2 gl = drawable.getGL().getGL2();
             GLU glu = new GLU();
 
             gl.glPushMatrix();
-            GLUtils.translate(gl, artificialBody.getCartesianState().getPosition());
+            GLUtils.translate(gl, spacecraft.getCartesianState().getPosition());
             gl.glRotatef(45, 0, 0, -1);
             gl.glRotated(45d, 0, 1, 0);
 
-            //TODO: there is no structure of the artificialBody yet
-            // Draw artificialBody body.
+            //TODO: there is no structure of the spacecraft yet
+            // Draw spacecraft body.
             gl.glColor3d(0.4d, 0.4d, 0.4d);
             final double cylinderRadius = 1d * size;
             final double cylinderHeight = 3d * size;

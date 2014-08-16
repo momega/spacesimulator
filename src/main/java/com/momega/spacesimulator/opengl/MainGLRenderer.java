@@ -142,7 +142,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
         Camera camera = ModelHolder.getModel().getCamera();
         for(PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
             addViewCoordinates(drawable, dp, camera);
-            if (dp instanceof ArtificialBody) {
+            if (dp instanceof Spacecraft) {
                 SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) dp.getTrajectory();
                 addViewCoordinates(drawable, satelliteTrajectory.getApoapsis(), camera);
                 addViewCoordinates(drawable, satelliteTrajectory.getPeriapsis(), camera);

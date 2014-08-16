@@ -22,7 +22,7 @@ public class TrajectoryService {
     private static final Logger logger = LoggerFactory.getLogger(TrajectoryService.class);
 
     @Autowired
-    private List<TrajectoryManager> trajectoryManagers = new ArrayList<>();
+    private List<Propagator> propagators = new ArrayList<>();
 
     /**
      * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation
@@ -34,7 +34,7 @@ public class TrajectoryService {
         Assert.notNull(movingObject);
         Trajectory trajectory = movingObject.getTrajectory();
         Assert.notNull(trajectory);
-        for (TrajectoryManager m : trajectoryManagers) {
+        for (Propagator m : propagators) {
             if (m.supports(trajectory)) {
                 m.computePosition(movingObject, newTime);
                 movingObject.setTimestamp(newTime);
@@ -42,7 +42,7 @@ public class TrajectoryService {
         }
     }
 
-    public void setTrajectoryManagers(List<TrajectoryManager> trajectoryManagers) {
-        this.trajectoryManagers = trajectoryManagers;
+    public void setPropagators(List<Propagator> propagators) {
+        this.propagators = propagators;
     }
 }

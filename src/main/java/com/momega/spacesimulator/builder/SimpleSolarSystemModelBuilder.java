@@ -61,8 +61,21 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(9000d).negate();
-        ArtificialBody artificialBody = createSatellite(earth, "ArtificialBody 1", position, velocity);
-        addDynamicalPoint(artificialBody);
+        Spacecraft spacecraft = createSatellite(earth, "Spacecraft 1", position, velocity);
+
+        Propulsion propulsion = new Propulsion();
+        propulsion.setMass(9000);
+        propulsion.setFuel(8000);
+        propulsion.setMassFlow(5);
+        propulsion.setSpecificImpulse(311);
+        addSpacecraftSubsystem(spacecraft, propulsion);
+
+        HabitableModule habitableModule = new HabitableModule();
+        habitableModule.setCrewCapacity(1);
+        habitableModule.setMass(1000);
+        addSpacecraftSubsystem(spacecraft, habitableModule);
+
+        addDynamicalPoint(spacecraft);
     }
 
     @Override

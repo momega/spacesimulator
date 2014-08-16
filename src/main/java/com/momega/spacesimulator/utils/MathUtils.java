@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.utils;
 
-import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.model.Orientation;
+import com.momega.spacesimulator.model.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,9 +12,25 @@ import org.slf4j.LoggerFactory;
  */
 public class MathUtils {
 
-    private static final Logger logger = LoggerFactory.getLogger(MathUtils.class);
-
+    /**
+     * Astronomical unit
+     */
     public static final double AU = 149597870700d;
+
+    /**
+     * Gravitational constant
+     */
+    public static final double G = 6.67384*1E-11;
+
+    /**
+     * Standard gravity constant
+     */
+    public static final double G0 = 9.80665d;
+
+    /**
+     * Get the angle of the ecliptic
+     */
+    public static final double ECLIPTIC = Math.toRadians(23.439291);
 
     public static double fmod(double numer, double denom) {
         double z = Math.floor(numer / denom);
@@ -42,27 +59,6 @@ public class MathUtils {
         return o;
     }
 
-    public static Matrix3d createMatrix(double x11, double x12, double x13, double x21, double x22, double x23, double x31, double x32, double x33) {
-        Matrix3d result = new Matrix3d(new Vector3d(x11, x12, x13), new Vector3d(x21, x22, x23), new Vector3d(x31, x32, x33));
-        return result;
-    }
-
-    public static Orientation transformByMatrix(Matrix3d matrix, Orientation orientation) {
-        Vector3d nt = matrix.multiple(orientation.getN());
-        Vector3d vt = matrix.multiple(orientation.getV());
-        return createOrientation(nt, vt);
-    }
-
-    public static Matrix3d rotationMatrix1(double angle) {
-        return createMatrix(1, 0, 0, 0, Math.cos(angle), Math.sin(angle), 0, -Math.sin(angle), Math.cos(angle));
-    }
-
-    public static Matrix3d rotationMatrix3(double angle) {
-        return createMatrix(Math.cos(angle), Math.sin(angle), 0, -Math.sin(angle), Math.cos(angle), 0, 0, 0, 1);
-    }
-
-    private static final Matrix3d ECLIPTIC_MATRIX = MathUtils.rotationMatrix1(Math.toRadians(23.439291));
-
     /**
      * Creates the rotation transformation
      * @param alpha right ascension
@@ -70,15 +66,11 @@ public class MathUtils {
      * @return the transformation matrix
      */
     public static Orientation rotateByAngles(double alpha, double delta, boolean toEcliptic) {
-        Matrix3d r3t = rotationMatrix3(Math.PI/2 + alpha).transpose();
-        Matrix3d r1t = rotationMatrix1(Math.PI/2 - delta).transpose();
-        Matrix3d transformationMatrix =  r3t.multiple(r1t);
-        if (toEcliptic) {
-            transformationMatrix = ECLIPTIC_MATRIX.multiple(transformationMatrix);
-        }
-        Orientation orientation = transformByMatrix(transformationMatrix, createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
-
-        return orientation;
+        Orientation o = MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
+        o.lookUp(Math.PI / 2 - delta);
+        o.lookLeft(alpha);
+        o.rotate(new Vector3d(1, 0, 0), -ECLIPTIC);
+        return o;
     }
 
 }

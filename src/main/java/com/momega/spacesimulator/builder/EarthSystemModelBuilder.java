@@ -46,27 +46,27 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         Orientation o = MathUtils.createOrientation(new Vector3d(0, 1d, 0), new Vector3d(0, 0, 1d));
         o.lookUp(Math.toRadians(-23.75d));
         Vector3d velocity = o.getN().scale(9000d);
-        ArtificialBody artificialBody = createSatellite(earth, "ArtificialBody 1", position, velocity);
-        addDynamicalPoint(artificialBody);
+        Spacecraft spacecraft = createSatellite(earth, "Spacecraft 1", position, velocity);
+        addDynamicalPoint(spacecraft);
 
 //        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);
 //        Vector3d velocity = new Vector3d(0, 10000d, 0);
-//        ArtificialBody artificialBody = createSatellite(earth, "ArtificialBody 1", position, velocity);
-//        addDynamicalPoint(artificialBody);
+//        Spacecraft spacecraft = createSatellite(earth, "Spacecraft 1", position, velocity);
+//        addDynamicalPoint(spacecraft);
 
 //        position = VectorUtils.fromSphericalCoordinates(50 * 1E3 + moon.getRadius(), Math.PI/2, 0);
 //        velocity = new Vector3d(0, 2350d, 0);
-//        artificialBody = createSatellite(moon, "ArtificialBody 3", position, velocity);
-//        addDynamicalPoint(artificialBody);
+//        spacecraft = createSatellite(moon, "Spacecraft 3", position, velocity);
+//        addDynamicalPoint(spacecraft);
 
 //        Vector3d position = VectorUtils.fromSphericalCoordinates(2000 * 1E3 + moon.getRadius(), Math.PI/2, -Math.PI / 4);
 //        Vector3d velocity = new Vector3d(0, 1950d, 0);
-//        ArtificialBody artificialBody = createSatellite(moon, "ArtificialBody 4", position, velocity);
-//        addDynamicalPoint(artificialBody);
+//        Spacecraft spacecraft = createSatellite(moon, "Spacecraft 4", position, velocity);
+//        addDynamicalPoint(spacecraft);
 
 //        sv = moon.getPosition().normalize().scale(1700d).add(moon.getVelocity());
-//        artificialBody = createSatellite(moon, "ArtificialBody 5", 80, sv);
-//        addDynamicalPoint(artificialBody);
+//        spacecraft = createSatellite(moon, "Spacecraft 5", 80, sv);
+//        addDynamicalPoint(spacecraft);
     }
 
     @Override
