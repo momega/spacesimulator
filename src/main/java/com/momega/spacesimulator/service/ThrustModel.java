@@ -4,6 +4,8 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ThrustModel implements ForceModel {
+
+    private static final Logger logger = LoggerFactory.getLogger(RotationService.class);
 
     @Override
     public Vector3d getAcceleration(Spacecraft spacecraft, double dt) {
@@ -26,7 +30,7 @@ public class ThrustModel implements ForceModel {
         }
 
         double dm = propulsion.getMassFlow() * maneuver.getThrottle() * dt;
-        if (dm < propulsion.getFuel()) {
+        if (dm > propulsion.getFuel()) {
             // there is no fuel left
             return Vector3d.ZERO;
         }
@@ -34,12 +38,16 @@ public class ThrustModel implements ForceModel {
         double thrust = propulsion.getMassFlow() * maneuver.getThrottle() * propulsion.getSpecificImpulse() * MathUtils.G0;
         double a = thrust / spacecraft.getMass();
 
+        logger.info("Engine is running, thrust = {}, acc = {}", thrust, a);
+
         Vector3d n = spacecraft.getCartesianState().getVelocity().normalize();
-        Vector3d acceleration = n.scale(a);
+        Vector3d acceleration = n.scale(-a);
 
         // decrease the mass of the spacecraft
         spacecraft.setMass( spacecraft.getMass() - dm);
         propulsion.setFuel( propulsion.getFuel() - dm);
+
+        logger.info("fuel level = {}", propulsion.getFuel());
 
         return acceleration;
     }

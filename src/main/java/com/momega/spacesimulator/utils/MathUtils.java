@@ -2,6 +2,7 @@ package com.momega.spacesimulator.utils;
 
 import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Vector3d;
+import com.sun.java.swing.plaf.gtk.GTKConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,9 +68,15 @@ public class MathUtils {
      */
     public static Orientation rotateByAngles(double alpha, double delta, boolean toEcliptic) {
         Orientation o = MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
+        return rotateByAngles(o, alpha, delta, toEcliptic);
+    }
+
+    public static Orientation rotateByAngles(Orientation o, double alpha, double delta, boolean toEcliptic) {
         o.lookUp(Math.PI / 2 - delta);
         o.lookLeft(alpha);
-        o.rotate(new Vector3d(1, 0, 0), -ECLIPTIC);
+        if (toEcliptic) {
+            o.rotate(new Vector3d(1, 0, 0), -ECLIPTIC);
+        }
         return o;
     }
 

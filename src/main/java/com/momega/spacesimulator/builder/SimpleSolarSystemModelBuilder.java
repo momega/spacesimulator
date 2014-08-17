@@ -4,6 +4,8 @@ import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 
 /**
+ * The builder creates very simple model of the solar system just with the sun, moon and earth.
+ * The moon and earth are orbiting common barycentre.
  * Created by martin on 7/14/14.
  */
 public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
@@ -74,6 +76,8 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         habitableModule.setCrewCapacity(1);
         habitableModule.setMass(1000);
         addSpacecraftSubsystem(spacecraft, habitableModule);
+
+        addManeuver(spacecraft, 900d, 200d, 1d);
 
         addDynamicalPoint(spacecraft);
     }

@@ -52,6 +52,11 @@ public class TimeUtils {
         return t;
     }
 
+    public static Timestamp add(Timestamp u, double delta) {
+        BigDecimal val = u.getValue().add(BigDecimal.valueOf(delta));
+        return newTime(val);
+    }
+
     public static Timestamp subtract(Timestamp u, Timestamp v) {
         return newTime(u.getValue().subtract(v.getValue()));
     }
@@ -75,8 +80,8 @@ public class TimeUtils {
         Assert.notNull(interval.getStartTime());
         Assert.notNull(interval.getEndTime());
 
-        return (interval.getStartTime().getValue().compareTo(timestamp.getValue()) >=0) &&
-                (interval.getEndTime().getValue().compareTo(timestamp.getValue()) <= 0);
+        return (interval.getStartTime().getValue().compareTo(timestamp.getValue()) <=0) &&
+                (interval.getEndTime().getValue().compareTo(timestamp.getValue()) >= 0);
     }
 
     public static String timeAsString(Timestamp timestamp) {

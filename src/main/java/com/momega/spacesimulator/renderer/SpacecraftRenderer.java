@@ -11,13 +11,13 @@ import javax.media.opengl.glu.GLUquadric;
 /**
  * Created by martin on 5/6/14.
  */
-public class SatelliteRenderer extends AbstractRenderer {
+public class SpacecraftRenderer extends AbstractRenderer {
 
     private final double size = 1d;
 
     private final Spacecraft spacecraft;
 
-    public SatelliteRenderer(Spacecraft spacecraft) {
+    public SpacecraftRenderer(Spacecraft spacecraft) {
         this.spacecraft = spacecraft;
     }
 

@@ -255,6 +255,14 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         }
     }
 
+    /**
+     * Adds the ring for the planet
+     * @param planet
+     * @param min
+     * @param max
+     * @param textureFileName
+     * @return
+     */
     public Ring addRing(Planet planet, double min, double max, String textureFileName) {
         Ring ring = new Ring();
         ring.setMinDistance(min);
@@ -263,6 +271,19 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         planet.getRings().add(ring);
         return ring;
     }
+
+    public Maneuver addManeuver(Spacecraft spacecraft, double startTime, double duration, double throttle) {
+        Maneuver maneuver = new Maneuver();
+        Timestamp start = TimeUtils.add(getModel().getTime(), startTime);
+        Timestamp end = TimeUtils.add(getModel().getTime(), startTime + duration);
+        maneuver.setStartTime(start);
+        maneuver.setEndTime(end);
+        maneuver.setThrottle(throttle);
+
+        spacecraft.getManeuvers().add(maneuver);
+        return maneuver;
+    }
+
 
     /**
      * The method adds the planet to the SOI tree and calculate the radius of the planet soi. The trajectory comes directly

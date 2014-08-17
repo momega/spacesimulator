@@ -7,6 +7,10 @@ public abstract class SpacecraftSubsystem {
 
     private double mass;
 
+    /**
+     * The mass of the subsystem
+     * @return the subsystem mass in kilograms
+     */
     public double getMass() {
         return mass;
     }

@@ -2,6 +2,7 @@ package com.momega.spacesimulator.swing;
 
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.NamedObject;
+import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
@@ -80,6 +81,10 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
                     throw new IllegalArgumentException(urie);
                 }
             }
+        }
+        if (namedObject instanceof Spacecraft) {
+            Spacecraft spacecraft = (Spacecraft) namedObject;
+            tabbedPane.addTab("Maneuver", createImageIcon("/images/hourglass.png"), new ManeuverPanel(spacecraft), "Maneuver");
         }
 
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
