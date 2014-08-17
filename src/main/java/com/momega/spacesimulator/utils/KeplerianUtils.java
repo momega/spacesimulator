@@ -98,7 +98,7 @@ public final class KeplerianUtils {
         logger.debug("time = {}", time);
 
         double E = Math.PI; //  eccentric anomaly
-        double dt = TimeUtils.subtract(time, keplerianElements.getTimeOfPeriapsis()).getValue().doubleValue();
+        double dt = time.subtract(keplerianElements.getTimeOfPeriapsis()).doubleValue();
         double n = 2 * Math.PI / keplerianElements.getPeriod().doubleValue();
         double M = n * dt;   // mean anomaly
         M = MathUtils.normalizeAngle(M);
@@ -115,6 +115,18 @@ public final class KeplerianUtils {
         }
 
         return E;
+    }
+
+    public static double getAltitude(KeplerianElements keplerianElements, double theta) {
+        double e = keplerianElements.getEccentricity();
+        double r = keplerianElements.getSemimajorAxis() * (1 - e * e) / (1 + e * Math.cos(theta));
+        double radius = 0;
+        if (keplerianElements.getCentralObject() instanceof RotatingObject) {
+            RotatingObject ro = (RotatingObject) keplerianElements.getCentralObject();
+            radius = ro.getRadius();
+        }
+        r =  r - radius;
+        return r;
     }
 
     /**

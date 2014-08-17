@@ -21,7 +21,7 @@ public class RotationService {
      * @param newTime new time
      */
     public void rotate(RotatingObject rotatingObject, Timestamp newTime) {
-        double dt = TimeUtils.subtract(newTime, TimeUtils.JD2000).getValue().doubleValue();
+        double dt = newTime.subtract(TimeUtils.JD2000).doubleValue();
         double phi = dt / rotatingObject.getRotationPeriod();
         phi = MathUtils.normalizeAngle(phi * 2 * Math.PI);
         phi += Math.PI/2; //TODO : why?

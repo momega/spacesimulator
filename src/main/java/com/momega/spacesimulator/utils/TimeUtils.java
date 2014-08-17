@@ -46,21 +46,6 @@ public class TimeUtils {
         return time;
     }
 
-    public static Timestamp newTime(BigDecimal value) {
-        Timestamp t = new Timestamp();
-        t.setValue(value);
-        return t;
-    }
-
-    public static Timestamp add(Timestamp u, double delta) {
-        BigDecimal val = u.getValue().add(BigDecimal.valueOf(delta));
-        return newTime(val);
-    }
-
-    public static Timestamp subtract(Timestamp u, Timestamp v) {
-        return newTime(u.getValue().subtract(v.getValue()));
-    }
-
     private static BigDecimal julianDayAsTimestamp(double julianDay) {
         return BigDecimal.valueOf(DateTimeUtils.fromJulianDay(julianDay) / DateTimeConstants.MILLIS_PER_SECOND);
     }

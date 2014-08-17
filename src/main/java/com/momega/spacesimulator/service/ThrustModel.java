@@ -38,16 +38,16 @@ public class ThrustModel implements ForceModel {
         double thrust = propulsion.getMassFlow() * maneuver.getThrottle() * propulsion.getSpecificImpulse() * MathUtils.G0;
         double a = thrust / spacecraft.getMass();
 
-        logger.info("Engine is running, thrust = {}, acc = {}", thrust, a);
+        logger.info("Engine is running, thrust = {}", thrust);
 
-        Vector3d n = spacecraft.getCartesianState().getVelocity().normalize();
-        Vector3d acceleration = n.scale(-a);
+        Vector3d n = spacecraft.getCartesianState().getVelocity().normalize(); // TODO: this is wrong, fix it
+        Vector3d acceleration = n.scale(a);
 
         // decrease the mass of the spacecraft
         spacecraft.setMass( spacecraft.getMass() - dm);
         propulsion.setFuel( propulsion.getFuel() - dm);
 
-        logger.info("fuel level = {}", propulsion.getFuel());
+        logger.info("fuel level = {}, acc = {}", propulsion.getFuel(), acceleration.toString());
 
         return acceleration;
     }

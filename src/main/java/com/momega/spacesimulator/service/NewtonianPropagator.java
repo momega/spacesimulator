@@ -38,7 +38,7 @@ public class NewtonianPropagator implements Propagator {
         Assert.isInstanceOf(Spacecraft.class, movingObject, "predication of trajectory is supported only for satellites");
         Spacecraft spacecraft = (Spacecraft) movingObject;
 
-        double dt = TimeUtils.subtract(newTimestamp, movingObject.getTimestamp()).getValue().doubleValue();
+        double dt = newTimestamp.subtract(movingObject.getTimestamp()).doubleValue();
 
         CartesianState cartesianState = eulerSolver(spacecraft, dt);
         movingObject.setCartesianState(cartesianState);
@@ -197,7 +197,7 @@ public class NewtonianPropagator implements Propagator {
             double nn = Math.sqrt(mi / (a*a*a));
             period = 2* Math.PI / nn;
             double T = newTimestamp.getValue().doubleValue() - (EA - e * Math.sin(EA)) / nn;
-            keplerianElements.setTimeOfPeriapsis(TimeUtils.newTime(BigDecimal.valueOf(T)));
+            keplerianElements.setTimeOfPeriapsis(Timestamp.newTime(BigDecimal.valueOf(T)));
 
         } else {
             keplerianElements.setHyperbolicAnomaly(getHA(keplerianElements));

@@ -77,7 +77,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         habitableModule.setMass(1000);
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
-        addManeuver(spacecraft, 900d, 200d, 1d);
+        addManeuver(spacecraft, 600d, 400d, 1d);
 
         addDynamicalPoint(spacecraft);
     }

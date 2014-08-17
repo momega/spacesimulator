@@ -31,9 +31,8 @@ public class MotionService {
     private RotationService rotationService;
 
     public Timestamp move(Timestamp time, BigDecimal warpFactor) {
-        BigDecimal timestamp = time.getValue().add(warpFactor);
-        Timestamp newTimestamp = TimeUtils.newTime(timestamp);
-        logger.debug("time={}", timestamp);
+        Timestamp newTimestamp = time.add(warpFactor);
+        logger.debug("time={}", newTimestamp.getValue());
         if (!warpFactor.equals(BigDecimal.ZERO)) {
             for (PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
                 if (dp instanceof RotatingObject) {

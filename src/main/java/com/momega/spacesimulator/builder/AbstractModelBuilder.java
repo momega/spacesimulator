@@ -180,6 +180,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         Assert.notNull(subsystem);
         spacecraft.getSubsystems().add(subsystem);
         spacecraft.setMass(spacecraft.getMass()  + subsystem.getMass());
+        spacecraft.setStartTime(getModel().getTime());
     }
 
     private void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, String wiki) {
@@ -257,11 +258,11 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     /**
      * Adds the ring for the planet
-     * @param planet
+     * @param planet the planet
      * @param min
      * @param max
-     * @param textureFileName
-     * @return
+     * @param textureFileName texture of the ring
+     * @return new instance of the ring
      */
     public Ring addRing(Planet planet, double min, double max, String textureFileName) {
         Ring ring = new Ring();
@@ -274,8 +275,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     public Maneuver addManeuver(Spacecraft spacecraft, double startTime, double duration, double throttle) {
         Maneuver maneuver = new Maneuver();
-        Timestamp start = TimeUtils.add(getModel().getTime(), startTime);
-        Timestamp end = TimeUtils.add(getModel().getTime(), startTime + duration);
+        Timestamp start = getModel().getTime().add(startTime);
+        Timestamp end = getModel().getTime().add(startTime + duration);
         maneuver.setStartTime(start);
         maneuver.setEndTime(end);
         maneuver.setThrottle(throttle);
