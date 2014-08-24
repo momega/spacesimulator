@@ -11,7 +11,7 @@ public class Spacecraft extends PhysicalBody {
     private HistoryTrajectory historyTrajectory;
     private List<SpacecraftSubsystem> subsystems = new ArrayList<>();
     private List<Maneuver> maneuvers = new ArrayList<>();
-    private Timestamp startTime;
+    private Maneuver currentManeuver;
 
     public HistoryTrajectory getHistoryTrajectory() {
         return historyTrajectory;
@@ -37,11 +37,11 @@ public class Spacecraft extends PhysicalBody {
         this.maneuvers = maneuvers;
     }
 
-    public Timestamp getStartTime() {
-        return startTime;
+    public Maneuver getCurrentManeuver() {
+        return currentManeuver;
     }
 
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
+    public void setCurrentManeuver(Maneuver currentManeuver) {
+        this.currentManeuver = currentManeuver;
     }
 }

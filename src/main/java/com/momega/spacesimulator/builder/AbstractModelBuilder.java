@@ -39,7 +39,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     public final Model build() {
         initTime();
         initPlanets();
-        initSatellites();
+        initSpacecrafts();
         initCamera();
         logger.info("model initialized");
         return model;
@@ -68,7 +68,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      */
     protected abstract void initPlanets();
 
-    protected abstract void initSatellites();
+    protected abstract void initSpacecrafts();
 
     /**
      * Returns the central object of the system
@@ -144,7 +144,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     public Spacecraft createSpacecraft(PhysicalBody centralPoint, String name, Vector3d position, Vector3d velocity) {
         Spacecraft spacecraft = new Spacecraft();
         spacecraft.setName(name);
-        spacecraft.setStartTime(getModel().getTime());
 
         CartesianState cartesianState = new CartesianState();
         cartesianState.setPosition(position);
@@ -166,6 +165,14 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         historyTrajectory.setType(TrajectoryType.HISTORY);
         historyTrajectory.setColor(new double[]{1, 1, 1});
         spacecraft.setHistoryTrajectory(historyTrajectory);
+
+        HistoryPoint hp = new HistoryPoint();
+        hp.setName("Start of " + name);
+        hp.setPosition(cartesianState.getPosition());
+        hp.setTimestamp(getModel().getTime());
+
+        spacecraft.getHistoryTrajectory().getHistoryPoints().add(hp);
+        spacecraft.getHistoryTrajectory().getNamedHistoryPoints().add(hp);
 
         return spacecraft;
     }
@@ -271,8 +278,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return ring;
     }
 
-    public Maneuver addManeuver(Spacecraft spacecraft, Double startTime, ApsisType apsisType, double duration, double throttle, double throttleAlpha, double throttleDelta) {
+    public Maneuver addManeuver(Spacecraft spacecraft, String name, Double startTime, ApsisType apsisType, double duration, double throttle, double throttleAlpha, double throttleDelta) {
         Maneuver maneuver = new Maneuver();
+        maneuver.setName(name);
         if (startTime != null) {
             TimeManeuverCondition condition = new TimeManeuverCondition();
             Timestamp start = getModel().getTime().add(startTime);

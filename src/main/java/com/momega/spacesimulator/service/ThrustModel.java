@@ -6,6 +6,7 @@ import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,22 +18,35 @@ public class ThrustModel implements ForceModel {
 
     private static final Logger logger = LoggerFactory.getLogger(ThrustModel.class);
 
+    @Autowired
+    private HistoryPointService historyPointService;
+
     @Override
     public Vector3d getAcceleration(Spacecraft spacecraft, double dt) {
         Propulsion propulsion = findPropulsion(spacecraft);
+
         if (propulsion == null) {
+            // no propulsion installed in the spacecraft
             return Vector3d.ZERO;
         }
 
-        Maneuver maneuver = findManeuver(spacecraft);
+        Maneuver currentManeuver = spacecraft.getCurrentManeuver();
+        Maneuver maneuver = findManeuver(spacecraft, currentManeuver);
         if (maneuver == null) {
+            endOfManeuver(spacecraft, currentManeuver);
             return Vector3d.ZERO;
         }
 
         double dm = propulsion.getMassFlow() * maneuver.getThrottle() * dt;
         if (dm > propulsion.getFuel()) {
-            // there is no fuel left
+            endOfManeuver(spacecraft, currentManeuver);
             return Vector3d.ZERO;
+        }
+
+        if (currentManeuver == null) {
+            // start of the burn
+            historyPointService.startManeuver(spacecraft, maneuver);
+            spacecraft.setCurrentManeuver(maneuver);
         }
 
         double thrust = propulsion.getMassFlow() * maneuver.getThrottle() * propulsion.getSpecificImpulse() * MathUtils.G0;
@@ -53,6 +67,13 @@ public class ThrustModel implements ForceModel {
         return acceleration;
     }
 
+    protected void endOfManeuver(Spacecraft spacecraft, Maneuver maneuver) {
+        if (maneuver != null) {
+            spacecraft.setCurrentManeuver(null);
+            historyPointService.endManeuver(spacecraft, maneuver);
+        }
+    }
+
     protected Propulsion findPropulsion(Spacecraft spacecraft) {
         for(SpacecraftSubsystem subsystem : spacecraft.getSubsystems()) {
             if (subsystem instanceof Propulsion) {
@@ -62,7 +83,7 @@ public class ThrustModel implements ForceModel {
         return null;
     }
 
-    protected Maneuver findManeuver(Spacecraft spacecraft) {
+    protected Maneuver findManeuver(Spacecraft spacecraft, Maneuver currentManeuver) {
         Timestamp timestamp = ModelHolder.getModel().getTime();
         for(Maneuver maneuver : spacecraft.getManeuvers()) {
             if (maneuver.getManeuverCondition() instanceof TimeManeuverCondition) {
@@ -72,7 +93,8 @@ public class ThrustModel implements ForceModel {
                 }
             } else if (maneuver.getManeuverCondition() instanceof KeplerianManeuverCondition) {
                 KeplerianManeuverCondition kmc = (KeplerianManeuverCondition) maneuver.getManeuverCondition();
-
+                double trueAnomaly = spacecraft.getKeplerianElements().getTrueAnomaly();
+                //TODO: implement later
             }
         }
         return null;

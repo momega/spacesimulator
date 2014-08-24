@@ -58,7 +58,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
     }
 
     @Override
-    public void initSatellites() {
+    public void initSpacecrafts() {
         CelestialBody earth = (CelestialBody) findDynamicalPoint("Earth");
 
         Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
@@ -67,8 +67,8 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity);
 
         Propulsion propulsion = new Propulsion();
-        propulsion.setMass(9000);
-        propulsion.setFuel(8000);
+        propulsion.setMass(19000);
+        propulsion.setFuel(18000);
         propulsion.setMassFlow(5);
         propulsion.setSpecificImpulse(311);
         propulsion.setName("Main Engine");
@@ -80,7 +80,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         habitableModule.setName("Habitat");
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
-        addManeuver(spacecraft, 600d, null, 400d, 1d, 0, Math.toRadians(0));
+        addManeuver(spacecraft, "M1", 1d, null, 1000d, 1d, 0, Math.toRadians(45));
 
         addDynamicalPoint(spacecraft);
     }

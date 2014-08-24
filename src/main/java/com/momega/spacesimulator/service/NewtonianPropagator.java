@@ -24,7 +24,6 @@ public class NewtonianPropagator implements Propagator {
     private static final Logger logger = LoggerFactory.getLogger(NewtonianPropagator.class);
 
     private static double MINOR_ERROR = Math.pow(10, -12);
-    private int maxHistory = 100000;
 
     @Autowired
     private SphereOfInfluenceService sphereOfInfluenceService;
@@ -34,7 +33,6 @@ public class NewtonianPropagator implements Propagator {
 
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
-
         Assert.isInstanceOf(Spacecraft.class, movingObject, "predication of trajectory is supported only for satellites");
         Spacecraft spacecraft = (Spacecraft) movingObject;
 
@@ -45,7 +43,6 @@ public class NewtonianPropagator implements Propagator {
 
         computePrediction(spacecraft, newTimestamp);
         computeApsides(spacecraft);
-        updateHistory(spacecraft, newTimestamp);
     }
 
     private void computeApsides(Spacecraft spacecraft) {
@@ -79,19 +76,6 @@ public class NewtonianPropagator implements Propagator {
         } else {
             satelliteTrajectory.setApoapsis(null);
         }
-
-    }
-
-    private void updateHistory(Spacecraft spacecraft, Timestamp timestamp) {
-        List<HistoryPoint> historyPoints = spacecraft.getHistoryTrajectory().getHistoryPoints();
-        if (historyPoints.size()> maxHistory) {
-            historyPoints.remove(0);
-        }
-
-        HistoryPoint hp = new HistoryPoint();
-        hp.setPosition(spacecraft.getCartesianState().getPosition());
-        hp.setTimestamp(timestamp);
-        historyPoints.add(hp);
     }
 
     /**
@@ -273,7 +257,4 @@ public class NewtonianPropagator implements Propagator {
         this.sphereOfInfluenceService = sphereOfInfluenceService;
     }
 
-    public void setMaxHistory(int maxHistory) {
-        this.maxHistory = maxHistory;
-    }
 }

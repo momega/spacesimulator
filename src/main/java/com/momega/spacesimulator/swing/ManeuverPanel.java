@@ -88,7 +88,7 @@ public class ManeuverPanel extends JPanel {
     class ManeuverTableModel extends AbstractTableModel {
 
         private final List<Maneuver> maneuvers;
-        private String[] columnNames = {"Start Time", "Start Time (mins)", "End Time", "Duration", "Throttle", "Throttle Alpha", "Throttle Dec"};
+        private String[] columnNames = {"Name", "Start Time", "Start Time (mins)", "End Time", "Duration", "Throttle", "Throttle Alpha", "Throttle Dec"};
 
         ManeuverTableModel(List<Maneuver> maneuvers) {
             this.maneuvers = maneuvers;
@@ -117,62 +117,63 @@ public class ManeuverPanel extends JPanel {
         public Object getValueAt(int rowIndex, int columnIndex) {
             Maneuver m = maneuvers.get(rowIndex);
             switch (columnIndex) {
-                case 0: return m.getStartTime();
-                case 1: return m.getStartTime().subtract(spacecraft.getStartTime()).doubleValue() / 60d;
-                case 2: return m.getEndTime();
-                case 3: return m.getEndTime().subtract(m.getStartTime());
-                case 4: return m.getThrottle();
-                case 5: return Math.toDegrees(m.getThrottleAlpha());
-                case 6: return Math.toDegrees(m.getThrottleDelta());
+                case 0: return m.getName();
+//                case 1: return m.getStartTime();
+//                case 2: return m.getStartTime().subtract(spacecraft.getStartTime()).doubleValue() / 60d;
+//                case 3: return m.getEndTime();
+//                case 4: return m.getEndTime().subtract(m.getStartTime());
+//                case 5: return m.getThrottle();
+//                case 6: return Math.toDegrees(m.getThrottleAlpha());
+//                case 7: return Math.toDegrees(m.getThrottleDelta());
             }
             return 0d;
         }
 
         public void setValueAt(Object value, int row, int col) {
             Maneuver m = maneuvers.get(row);
-            switch (col) {
-                case 1:
-                    Double min = (Double) value;
-                    BigDecimal duration = m.getEndTime().subtract(m.getStartTime());
-                    m.setStartTime(spacecraft.getStartTime().add(min.doubleValue() * 60));
-                    m.setEndTime(m.getStartTime().add(duration));
-                    fireTableRowsUpdated(row, row);
-                    break;
-                case 3:
-                    BigDecimal val = (BigDecimal) value;
-                    m.setEndTime(m.getStartTime().add(val));
-                    fireTableCellUpdated(row, col-1);
-                    break;
-                case 4: m.setThrottle((Double)value);
-                    break;
-                case 5: m.setThrottleAlpha(Math.toRadians((Double)value));
-                    break;
-                case 6: m.setThrottleDelta(Math.toRadians((Double)value));
-                    break;
-            }
+//            switch (col) {
+//                case 1:
+//                    Double min = (Double) value;
+//                    BigDecimal duration = m.getEndTime().subtract(m.getStartTime());
+//                    m.setStartTime(spacecraft.getStartTime().add(min.doubleValue() * 60));
+//                    m.setEndTime(m.getStartTime().add(duration));
+//                    fireTableRowsUpdated(row, row);
+//                    break;
+//                case 3:
+//                    BigDecimal val = (BigDecimal) value;
+//                    m.setEndTime(m.getStartTime().add(val));
+//                    fireTableCellUpdated(row, col-1);
+//                    break;
+//                case 4: m.setThrottle((Double)value);
+//                    break;
+//                case 5: m.setThrottleAlpha(Math.toRadians((Double)value));
+//                    break;
+//                case 6: m.setThrottleDelta(Math.toRadians((Double)value));
+//                    break;
+//            }
             fireTableCellUpdated(row, col);
         }
 
-        public boolean isCellEditable(int row, int col) {
-            Maneuver m = maneuvers.get(row);
-            if (TimeUtils.isIntervalInPast(ModelHolder.getModel().getTime(), m)) {
-                return false;
-            }
-            if (col == 0 || col == 2) {
-                return false;
-            } else {
-                return true;
-            }
-        }
+//        public boolean isCellEditable(int row, int col) {
+//            Maneuver m = maneuvers.get(row);
+//            if (TimeUtils.isIntervalInPast(ModelHolder.getModel().getTime(), m)) {
+//                return false;
+//            }
+//            if (col == 0 || col == 2) {
+//                return false;
+//            } else {
+//                return true;
+//            }
+//        }
 
         public void newManeuver() {
             Maneuver m = new Maneuver();
 
-            Timestamp start = ModelHolder.getModel().getTime().add(3600); // +1h
-            m.setStartTime(start);
-            Timestamp end = start.add(60);
-            m.setEndTime(end);
-            m.setThrottle(1d);
+//            Timestamp start = ModelHolder.getModel().getTime().add(3600); // +1h
+//            m.setStartTime(start);
+//            Timestamp end = start.add(60);
+//            m.setEndTime(end);
+//            m.setThrottle(1d);
 
             maneuvers.add(m);
             fireTableRowsInserted(maneuvers.size()-1, maneuvers.size()-1);

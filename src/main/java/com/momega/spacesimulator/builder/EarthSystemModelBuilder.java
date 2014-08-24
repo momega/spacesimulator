@@ -38,7 +38,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
     }
 
     @Override
-    public void initSatellites() {
+    public void initSpacecrafts() {
         CelestialBody earth = (CelestialBody) findDynamicalPoint("Earth");
         CelestialBody moon = (CelestialBody) findDynamicalPoint("Moon");
 

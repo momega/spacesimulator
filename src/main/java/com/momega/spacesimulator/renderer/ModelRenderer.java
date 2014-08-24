@@ -31,6 +31,7 @@ public class ModelRenderer extends CompositeRenderer {
                 addRenderer(new SpacecraftRenderer((Spacecraft) dp));
                 addRenderer(new HistoryRenderer((Spacecraft) dp));
                 addRenderer(new ApsidesRenderer((Spacecraft) dp));
+                addRenderer(new NamedHistoryRenderer((Spacecraft) dp));
             }
             addRenderer(new PhysicalBodyRenderer(dp));
         }

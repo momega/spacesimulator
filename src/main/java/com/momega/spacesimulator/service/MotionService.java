@@ -3,6 +3,7 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
@@ -30,6 +31,9 @@ public class MotionService {
     @Autowired
     private RotationService rotationService;
 
+    @Autowired
+    private HistoryPointService historyPointService;
+
     public Timestamp move(Timestamp time, BigDecimal warpFactor) {
         Timestamp newTimestamp = time.add(warpFactor);
         logger.debug("time={}", newTimestamp.getValue());
@@ -39,6 +43,10 @@ public class MotionService {
                     rotationService.rotate((RotatingObject) dp, newTimestamp);
                 }
                 trajectoryService.move(dp, newTimestamp);
+                if (dp instanceof Spacecraft) {
+                    Spacecraft spacecraft = (Spacecraft) dp;
+                    historyPointService.updateHistory(spacecraft);
+                }
             }
         }
         return newTimestamp;
@@ -52,4 +60,7 @@ public class MotionService {
         this.rotationService = rotationService;
     }
 
+    public void setHistoryPointService(HistoryPointService historyPointService) {
+        this.historyPointService = historyPointService;
+    }
 }
