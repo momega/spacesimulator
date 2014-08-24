@@ -52,14 +52,14 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     protected void initCamera() {
         Camera s = new Camera();
-        s.setTargetObject(getModel().getSelectedDynamicalPoint());
+        s.setTargetObject(getModel().getSelectedObject());
         s.setDistance(100 * 1E6);
         s.setOppositeOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
         model.setCamera(s);
     }
 
     protected void setCentralPoint(PhysicalBody physicalBody) {
-        physicalBody.getCartesianState().setPosition(new Vector3d(0,0,0));
+        physicalBody.getCartesianState().setPosition(new Vector3d(0, 0, 0));
         physicalBody.getCartesianState().setVelocity(new Vector3d(0, 0, 0));
     }
 
@@ -141,9 +141,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param velocity the initial velocity
      * @return new instance of the satellite
      */
-    public Spacecraft createSatellite(PhysicalBody centralPoint, String name, Vector3d position, Vector3d velocity) {
+    public Spacecraft createSpacecraft(PhysicalBody centralPoint, String name, Vector3d position, Vector3d velocity) {
         Spacecraft spacecraft = new Spacecraft();
         spacecraft.setName(name);
+        spacecraft.setStartTime(getModel().getTime());
 
         CartesianState cartesianState = new CartesianState();
         cartesianState.setPosition(position);
@@ -169,11 +170,15 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return spacecraft;
     }
 
+    /**
+     * Adds the subsystem to the spacecraft
+     * @param spacecraft the spacecraft
+     * @param subsystem the instance of the subsystem
+     */
     public void addSpacecraftSubsystem(Spacecraft spacecraft, SpacecraftSubsystem subsystem) {
         Assert.notNull(subsystem);
         spacecraft.getSubsystems().add(subsystem);
-        spacecraft.setMass(spacecraft.getMass()  + subsystem.getMass());
-        spacecraft.setStartTime(getModel().getTime());
+        spacecraft.setMass(spacecraft.getMass() + subsystem.getMass());
     }
 
     private void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, String wiki) {
@@ -252,8 +257,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     /**
      * Adds the ring for the planet
      * @param planet the planet
-     * @param min
-     * @param max
+     * @param min the minimum distance
+     * @param max the maximum distance
      * @param textureFileName texture of the ring
      * @return new instance of the ring
      */
@@ -266,12 +271,22 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return ring;
     }
 
-    public Maneuver addManeuver(Spacecraft spacecraft, double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
+    public Maneuver addManeuver(Spacecraft spacecraft, Double startTime, ApsisType apsisType, double duration, double throttle, double throttleAlpha, double throttleDelta) {
         Maneuver maneuver = new Maneuver();
-        Timestamp start = getModel().getTime().add(startTime);
-        Timestamp end = getModel().getTime().add(startTime + duration);
-        maneuver.setStartTime(start);
-        maneuver.setEndTime(end);
+        if (startTime != null) {
+            TimeManeuverCondition condition = new TimeManeuverCondition();
+            Timestamp start = getModel().getTime().add(startTime);
+            Timestamp end = getModel().getTime().add(startTime + duration);
+            condition.setStartTime(start);
+            condition.setEndTime(end);
+            maneuver.setManeuverCondition(condition);
+        } else if (apsisType != null) {
+            KeplerianManeuverCondition condition = new KeplerianManeuverCondition();
+            condition.setDuration(duration);
+            condition.setTheta(apsisType.getAngle());
+            maneuver.setManeuverCondition(condition);
+        }
+        Assert.notNull(maneuver.getManeuverCondition());
         maneuver.setThrottle(throttle);
         maneuver.setThrottleAlpha(throttleAlpha);
         maneuver.setThrottleDelta(throttleDelta);

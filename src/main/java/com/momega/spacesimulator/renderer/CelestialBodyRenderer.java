@@ -85,7 +85,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     protected void additionalDraw(GL2 gl) {
         super.additionalDraw(gl);
 
-        if (ModelHolder.getModel().getSelectedDynamicalPoint() == celestialBody) {
+        if (ModelHolder.getModel().getSelectedObject() == celestialBody) {
             for (int i = 1; i <= 5; i++) {
                 GLUtils.drawCircle(gl, 0, 0, celestialBody.getRadius() * i, 360);
             }

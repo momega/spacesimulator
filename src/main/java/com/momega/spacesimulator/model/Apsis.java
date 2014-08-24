@@ -3,7 +3,7 @@ package com.momega.spacesimulator.model;
 /**
  * Created by martin on 6/29/14.
  */
-public class Apsis extends NamedObject {
+public class Apsis extends NamedObject implements PositionProvider {
 
     private Vector3d position;
 

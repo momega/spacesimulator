@@ -34,7 +34,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         SphereOfInfluence earthSoi = addPlanetToSoiTree(earth, null);
         addPlanetToSoiTree(moon, earthSoi);
 
-        model.setSelectedDynamicalPoint(earth);
+        model.setSelectedObject(earth);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         Orientation o = MathUtils.createOrientation(new Vector3d(0, 1d, 0), new Vector3d(0, 0, 1d));
         o.lookUp(Math.toRadians(-23.75d));
         Vector3d velocity = o.getN().scale(9000d);
-        Spacecraft spacecraft = createSatellite(earth, "Spacecraft 1", position, velocity);
+        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity);
         addDynamicalPoint(spacecraft);
 
 //        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);

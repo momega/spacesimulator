@@ -3,7 +3,7 @@ package com.momega.spacesimulator.model;
 /**
  * Created by martin on 6/30/14.
  */
-public abstract class NamedObject implements PositionProvider {
+public abstract class NamedObject {
 
     private String name;
 

@@ -1,9 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.NamedObject;
 import com.momega.spacesimulator.model.PositionProvider;
 
-import javax.lang.model.element.Name;
 import java.awt.*;
 
 /**
@@ -14,7 +12,7 @@ public class ViewCoordinates {
     private Point point;
     private boolean visible;
     private double radius;
-    private NamedObject object;
+    private PositionProvider object;
 
     public Point getPoint() {
         return point;
@@ -40,11 +38,11 @@ public class ViewCoordinates {
         this.radius = radius;
     }
 
-    public NamedObject getObject() {
+    public PositionProvider getObject() {
         return object;
     }
 
-    public void setObject(NamedObject object) {
+    public void setObject(PositionProvider object) {
         this.object = object;
     }
 }

@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ThrustModel implements ForceModel {
 
-    private static final Logger logger = LoggerFactory.getLogger(RotationService.class);
+    private static final Logger logger = LoggerFactory.getLogger(ThrustModel.class);
 
     @Override
     public Vector3d getAcceleration(Spacecraft spacecraft, double dt) {
@@ -65,8 +65,14 @@ public class ThrustModel implements ForceModel {
     protected Maneuver findManeuver(Spacecraft spacecraft) {
         Timestamp timestamp = ModelHolder.getModel().getTime();
         for(Maneuver maneuver : spacecraft.getManeuvers()) {
-            if (TimeUtils.isTimestampInInterval(timestamp, maneuver)) {
-                return maneuver;
+            if (maneuver.getManeuverCondition() instanceof TimeManeuverCondition) {
+                TimeManeuverCondition tmc = (TimeManeuverCondition) maneuver.getManeuverCondition();
+                if (TimeUtils.isTimestampInInterval(timestamp, tmc)) {
+                    return maneuver;
+                }
+            } else if (maneuver.getManeuverCondition() instanceof KeplerianManeuverCondition) {
+                KeplerianManeuverCondition kmc = (KeplerianManeuverCondition) maneuver.getManeuverCondition();
+
             }
         }
         return null;

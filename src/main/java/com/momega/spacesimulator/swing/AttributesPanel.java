@@ -27,7 +27,7 @@ import java.util.Map;
  * The value are computed by the Spring EL expressions.
  * Created by martin on 8/11/14.
  */
-public class AttributesPanel extends JPanel {
+public class AttributesPanel extends JPanel implements UpdatablePanel {
 
     private final NamedObject namedObject;
     protected Map<JComponent, Expression> jFields = new HashMap<>();
@@ -57,7 +57,8 @@ public class AttributesPanel extends JPanel {
         }
     }
 
-    protected void updateValues() {
+    @Override
+    public void updateValues() {
         EvaluationContext evaluationContext = createContext();
         for(Map.Entry<JComponent, Expression> entry : jFields.entrySet()) {
             if (entry.getValue()!=null) {

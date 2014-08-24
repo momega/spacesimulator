@@ -107,6 +107,8 @@ public class NewtonianPropagator implements Propagator {
         Vector3d velocity = cartesianState.getVelocity();
 
         Vector3d hVector = position.cross(velocity);
+        double A = position.dot(velocity);
+        logger.debug("Apoapsis = {}", A);
 
         Orientation orientation = MathUtils.createOrientation(velocity, hVector);
         spacecraft.setOrientation(orientation);

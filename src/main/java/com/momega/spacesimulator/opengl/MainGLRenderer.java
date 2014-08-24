@@ -151,7 +151,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
         RendererModel.getInstance().modelChanged();
     }
 
-    protected void addViewCoordinates(GLAutoDrawable drawable, NamedObject namedObject, Camera camera) {
+    protected void addViewCoordinates(GLAutoDrawable drawable, PositionProvider namedObject, Camera camera) {
         if (namedObject == null) {
             return;
         }

@@ -54,7 +54,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         SphereOfInfluence earthSoi = addPlanetToSoiTree(earth, sunSoi, earthMoonBarycenter.getKeplerianElements());
         addPlanetToSoiTree(moon, earthSoi);
 
-        model.setSelectedDynamicalPoint(earth);
+        model.setSelectedObject(earth);
     }
 
     @Override
@@ -64,21 +64,23 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(9000d).negate();
-        Spacecraft spacecraft = createSatellite(earth, "Spacecraft 1", position, velocity);
+        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity);
 
         Propulsion propulsion = new Propulsion();
         propulsion.setMass(9000);
         propulsion.setFuel(8000);
         propulsion.setMassFlow(5);
         propulsion.setSpecificImpulse(311);
+        propulsion.setName("Main Engine");
         addSpacecraftSubsystem(spacecraft, propulsion);
 
         HabitableModule habitableModule = new HabitableModule();
         habitableModule.setCrewCapacity(1);
         habitableModule.setMass(1000);
+        habitableModule.setName("Habitat");
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
-        addManeuver(spacecraft, 600d, 400d, 1d, 0, Math.toRadians(20));
+        addManeuver(spacecraft, 600d, null, 400d, 1d, 0, Math.toRadians(0));
 
         addDynamicalPoint(spacecraft);
     }

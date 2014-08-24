@@ -6,7 +6,7 @@ package com.momega.spacesimulator.model;
  * The state of the object is defined for the given {@link #getTimestamp()}.
  * Created by martin on 10.5.2014.
  */
-public class MovingObject extends NamedObject {
+public class MovingObject extends NamedObject implements PositionProvider {
 
     private CartesianState cartesianState;
     private KeplerianElements keplerianElements;

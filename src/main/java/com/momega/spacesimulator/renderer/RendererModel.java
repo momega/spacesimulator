@@ -1,13 +1,9 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.NamedObject;
-import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -22,7 +18,7 @@ public class RendererModel {
 
     private static RendererModel instance = new RendererModel();
 
-    private final Map<NamedObject, ViewCoordinates> viewData = new HashMap<>();
+    private final Map<PositionProvider, ViewCoordinates> viewData = new HashMap<>();
 
     private final java.util.List<ModelChangeListener> modelChangeListeners = new ArrayList<>();
 
@@ -70,7 +66,7 @@ public class RendererModel {
     public ViewCoordinates findViewCoordinates(java.awt.Point point) {
         double x = point.getX();
         double y = point.getY();
-        for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {
+        for (Map.Entry<PositionProvider, ViewCoordinates> entry : viewData.entrySet()) {
             ViewCoordinates viewCoordinates = entry.getValue();
             if (viewCoordinates.isVisible()) {
                 if ((Math.abs(x - (int) viewCoordinates.getPoint().getX()) < MIN_TARGET_SIZE) && (Math.abs(y - (int) viewCoordinates.getPoint().getY()) < MIN_TARGET_SIZE)) {
@@ -85,7 +81,7 @@ public class RendererModel {
         if (name == null) {
             return null;
         }
-        for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {
+        for (Map.Entry<PositionProvider, ViewCoordinates> entry : viewData.entrySet()) {
             ViewCoordinates viewCoordinates = entry.getValue();
             if (name.equals(viewCoordinates.getObject().getName())) {
                 return viewCoordinates;
@@ -96,7 +92,7 @@ public class RendererModel {
 
     public String[] findVisibleObjects() {
         List<String> list = new ArrayList<>();
-        for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {
+        for (Map.Entry<PositionProvider, ViewCoordinates> entry : viewData.entrySet()) {
             ViewCoordinates viewCoordinates = entry.getValue();
             if (viewCoordinates.isVisible()) {
                 list.add(viewCoordinates.getObject().getName());
@@ -116,7 +112,7 @@ public class RendererModel {
                 camera.setDistance(ro.getRadius() * 10);
             }
         }
-        model.setSelectedDynamicalPoint(viewCoordinates.getObject());
+        model.setSelectedObject(viewCoordinates.getObject());
         logger.info("selected dynamical point changed to {}", viewCoordinates.getObject().getName());
     }
 

@@ -39,7 +39,7 @@ public class TargetController extends AbstractController {
                 detailItem.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), viewCoordinates.getObject());
+                        DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), (com.momega.spacesimulator.model.NamedObject) viewCoordinates.getObject());
                         dialog.setLocation(position);
                         dialog.setVisible(true);
 

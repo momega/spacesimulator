@@ -30,7 +30,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
     private static final Logger logger = LoggerFactory.getLogger(DetailDialog.class);
     private final NamedObject namedObject;
-    private java.util.List<AttributesPanel> attributesPanelList = new ArrayList<>();
+    private java.util.List<UpdatablePanel> attributesPanelList = new ArrayList<>();
 
     public DetailDialog(Frame parent, final NamedObject namedObject) {
         super(parent, namedObject.getName(), true);
@@ -84,7 +84,11 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         }
         if (namedObject instanceof Spacecraft) {
             Spacecraft spacecraft = (Spacecraft) namedObject;
-            tabbedPane.addTab("Maneuver", createImageIcon("/images/hourglass.png"), new ManeuverPanel(spacecraft), "Maneuver");
+            tabbedPane.addTab("Maneuvers", createImageIcon("/images/hourglass.png"), new ManeuverPanel(spacecraft), "Spacecraft Maneuvers");
+
+            SpacecraftPanel spacecraftPanel = new SpacecraftPanel(spacecraft);
+            attributesPanelList.add(spacecraftPanel);
+            tabbedPane.addTab("Subsystems", createImageIcon("/images/cog.png"), spacecraftPanel, "Spacecraft Subsystems");
         }
 
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
@@ -129,7 +133,6 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         return result;
     }
 
-    /** Returns an ImageIcon, or null if the path was invalid. */
     protected ImageIcon createImageIcon(String path) {
         java.net.URL imgURL = getClass().getResource(path);
         if (imgURL != null) {
@@ -158,7 +161,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
     @Override
     public void modelChanged(ModelChangeEvent event) {
-        for(AttributesPanel ap : attributesPanelList) {
+        for(UpdatablePanel ap : attributesPanelList) {
             ap.updateValues();
         }
     }
