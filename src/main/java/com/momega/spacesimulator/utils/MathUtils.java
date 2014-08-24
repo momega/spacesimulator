@@ -56,7 +56,7 @@ public class MathUtils {
         Orientation o = new Orientation();
         o.setN(nVector.normalize());
         o.setV(vVector.normalize());
-        o.setU(vVector.cross(nVector));
+        o.setU(o.getV().cross(o.getN()));
         return o;
     }
 

@@ -16,7 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
 /**
- * Controller which enables selecting the target
+ * Controller which enables functionality after clicking to the screen
  * Created by martin on 6/7/14.
  */
 public class TargetController extends AbstractController {
@@ -30,26 +30,51 @@ public class TargetController extends AbstractController {
         final Point position = getPosition(drawable, e);
         logger.info("click count = {}, button  = {}", e.getClickCount(), e.getButton());
         final ViewCoordinates  viewCoordinates = RendererModel.getInstance().findViewCoordinates(position);
-        if (viewCoordinates != null && e.getButton() >= MouseEvent.BUTTON2) {
+        if (e.getButton() >= MouseEvent.BUTTON2) {
             final JPopupMenu popup = new JPopupMenu();
 
-            JMenuItem detailItem = new JMenuItem("Detail");
-            popup.add(detailItem);
-            detailItem.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), viewCoordinates.getObject());
-                    dialog.setLocation(position);
-                    dialog.setVisible(true);
+            if (viewCoordinates!=null) {
+                JMenuItem detailItem = new JMenuItem("Detail...");
+                popup.add(detailItem);
+                detailItem.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), viewCoordinates.getObject());
+                        dialog.setLocation(position);
+                        dialog.setVisible(true);
 
-                }
-            });
-            JMenuItem selectItem = new JMenuItem("Select");
-            popup.add(selectItem);
-            selectItem.addActionListener(new ActionListener() {
+                    }
+                });
+                JMenuItem selectItem = new JMenuItem("Select");
+                popup.add(selectItem);
+                selectItem.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        select(viewCoordinates);
+                    }
+                });
+
+                popup.addSeparator();
+            }
+
+            JMenuItem onScreenItem = new JMenuItem("On Screen...");
+            popup.add(onScreenItem);
+            onScreenItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    select(viewCoordinates);
+                    String[] possibilities = RendererModel.getInstance().findVisibleObjects();
+                    String selectedName = (String)JOptionPane.showInputDialog(
+                            null,
+                            "Please select the visible object:",
+                            "On the screen",
+                            JOptionPane.PLAIN_MESSAGE,
+                            null,
+                            possibilities,
+                            null);
+                    ViewCoordinates vc = RendererModel.getInstance().findByName(selectedName);
+                    if (vc !=null) {
+                        select(vc);
+                    }
                 }
             });
 

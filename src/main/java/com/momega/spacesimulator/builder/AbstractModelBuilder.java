@@ -36,7 +36,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     /**
      * Initialize model
      */
-    public final Model init() {
+    public final Model build() {
         initTime();
         initPlanets();
         initSatellites();
@@ -75,13 +75,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @return the moving object
      */
     protected abstract MovingObject getCentralObject();
-
-    /**
-     * Astronautical unit
-     */
-    public static final double AU = 149597870700d;
-
-    public static final double G0 = 9.80665d;
 
     /**
      * Register the dynamical point to the universe
@@ -273,13 +266,15 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return ring;
     }
 
-    public Maneuver addManeuver(Spacecraft spacecraft, double startTime, double duration, double throttle) {
+    public Maneuver addManeuver(Spacecraft spacecraft, double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
         Maneuver maneuver = new Maneuver();
         Timestamp start = getModel().getTime().add(startTime);
         Timestamp end = getModel().getTime().add(startTime + duration);
         maneuver.setStartTime(start);
         maneuver.setEndTime(end);
         maneuver.setThrottle(throttle);
+        maneuver.setThrottleAlpha(throttleAlpha);
+        maneuver.setThrottleDelta(throttleDelta);
 
         spacecraft.getManeuvers().add(maneuver);
         return maneuver;

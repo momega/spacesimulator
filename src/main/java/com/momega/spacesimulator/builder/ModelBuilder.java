@@ -8,8 +8,8 @@ import com.momega.spacesimulator.model.Model;
 public interface ModelBuilder {
 
     /**
-     * Initializes the builder
+     * Builds the model
      * @return the instance of the model
      */
-    Model init();
+    Model build();
 }

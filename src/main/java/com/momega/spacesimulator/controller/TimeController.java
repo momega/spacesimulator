@@ -25,6 +25,7 @@ public class TimeController extends AbstractController {
                 break;
 
             case KeyEvent.VK_SEMICOLON:
+            case KeyEvent.VK_0:
                 pauseOrStart();
                 break;
         }

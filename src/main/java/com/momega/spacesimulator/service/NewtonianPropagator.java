@@ -107,6 +107,10 @@ public class NewtonianPropagator implements Propagator {
         Vector3d velocity = cartesianState.getVelocity();
 
         Vector3d hVector = position.cross(velocity);
+
+        Orientation orientation = MathUtils.createOrientation(velocity, hVector);
+        spacecraft.setOrientation(orientation);
+
         double h = hVector.length();
         double i = Math.acos(hVector.z / h);
 

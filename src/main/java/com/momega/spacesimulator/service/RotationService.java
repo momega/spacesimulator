@@ -15,6 +15,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class RotationService {
 
+    private static final Logger logger = LoggerFactory.getLogger(RotationService.class);
+
     /**
      * Rotate the object along its axis
      * @param rotatingObject the rotating object, possibly planet or sun
@@ -25,6 +27,8 @@ public class RotationService {
         double phi = dt / rotatingObject.getRotationPeriod();
         phi = MathUtils.normalizeAngle(phi * 2 * Math.PI);
         phi += Math.PI/2; //TODO : why?
+
+        logger.debug("phi = {}", phi);
 
         rotatingObject.setPrimeMeridian(rotatingObject.getPrimeMeridianJd2000() + phi);
     }

@@ -69,6 +69,22 @@ public class TimeUtils {
                 (interval.getEndTime().getValue().compareTo(timestamp.getValue()) >= 0);
     }
 
+    public static boolean isIntervalInFuture(Timestamp timestamp, TimeInterval interval) {
+        Assert.notNull(timestamp);
+        Assert.notNull(interval);
+        Assert.notNull(interval.getStartTime());
+
+        return interval.getStartTime().getValue().compareTo(timestamp.getValue()) > 0;
+    }
+
+    public static boolean isIntervalInPast(Timestamp timestamp, TimeInterval interval) {
+        Assert.notNull(timestamp);
+        Assert.notNull(interval);
+        Assert.notNull(interval.getEndTime());
+
+        return interval.getEndTime().getValue().compareTo(timestamp.getValue()) < 0;
+    }
+
     public static String timeAsString(Timestamp timestamp) {
         return formatter.print(TimeUtils.getDateTime(timestamp));
     }

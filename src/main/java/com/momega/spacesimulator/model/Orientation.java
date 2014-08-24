@@ -70,6 +70,14 @@ public class Orientation {
         rotate(this.n, step);
     }
 
+    public Orientation clone() {
+        Orientation o = new Orientation();
+        o.setN(getN().clone());
+        o.setV(getV().clone());
+        o.setU(getU().clone());
+        return o;
+    }
+
     /**
      * Rotates the object3d anticlockwise by the specified angle about the specified axis.
      * @param axis	The axis about which to rotate

@@ -40,7 +40,8 @@ public class ThrustModel implements ForceModel {
 
         logger.info("Engine is running, thrust = {}", thrust);
 
-        Vector3d n = spacecraft.getCartesianState().getVelocity().normalize(); // TODO: this is wrong, fix it
+        Orientation o = MathUtils.rotateByAngles(spacecraft.getOrientation().clone(), maneuver.getThrottleAlpha(), maneuver.getThrottleDelta(), false);
+        Vector3d n = o.getN();
         Vector3d acceleration = n.scale(a);
 
         // decrease the mass of the spacecraft

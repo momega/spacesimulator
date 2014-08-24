@@ -2,6 +2,7 @@ package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.KeplerianUtils;
+import com.momega.spacesimulator.utils.MathUtils;
 
 /**
  * The builder creates very simple model of the solar system just with the sun, moon and earth.
@@ -21,7 +22,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         setCentralPoint(centerSolarSystem);
 
         CelestialBody sun = new CelestialBody();
-        createKeplerianElements(sun, centerSolarSystem, 1.414217969794719E-03 * AU, 8.563543676803891E-01, 7.933041962602029E+01, 4.031013592923514E+02, 2456666.926864971407, 2.618659421740932, 6.302423113645358E+01);
+        createKeplerianElements(sun, centerSolarSystem, 1.414217969794719E-03 * MathUtils.AU, 8.563543676803891E-01, 7.933041962602029E+01, 4.031013592923514E+02, 2456666.926864971407, 2.618659421740932, 6.302423113645358E+01);
         updateDynamicalPoint(sun, "Sun", 1.989 * 1E6, 25.05, 696.342, 286.13, 63.87, "Sun");
         createTrajectory(sun, new double[] {1, 0.7, 0}, TrajectoryType.KEPLERIAN);
         sun.setTextureFileName("sun.jpg");
@@ -77,7 +78,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         habitableModule.setMass(1000);
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
-        addManeuver(spacecraft, 600d, 400d, 1d);
+        addManeuver(spacecraft, 600d, 400d, 1d, 0, Math.toRadians(20));
 
         addDynamicalPoint(spacecraft);
     }

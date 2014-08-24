@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
+ * History point contains one timestamp of the trajectory of the spacecraft
  * Created by martin on 8/13/14.
  */
 public class HistoryPoint extends NamedObject {

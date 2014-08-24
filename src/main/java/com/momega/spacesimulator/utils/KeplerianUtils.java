@@ -26,12 +26,12 @@ public final class KeplerianUtils {
     }
 
     public CartesianState computePosition(KeplerianElements keplerianElements, Timestamp newTimestamp) {
-        CartesianState cartesianState = solveKeplerian2(keplerianElements, newTimestamp);
+        CartesianState cartesianState = solveKeplerian(keplerianElements, newTimestamp);
         cartesianState = cartesianState.add(keplerianElements.getCentralObject().getCartesianState());
         return cartesianState;
     }
 
-    protected CartesianState solveKeplerian2(KeplerianElements keplerianElements, Timestamp time) {
+    protected CartesianState solveKeplerian(KeplerianElements keplerianElements, Timestamp time) {
         double E = solveEccentricAnomaly(keplerianElements, time);
         keplerianElements.setEccentricAnomaly(E);
 

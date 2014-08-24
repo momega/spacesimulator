@@ -122,6 +122,8 @@ public class ManeuverPanel extends JPanel {
                 case 2: return m.getEndTime();
                 case 3: return m.getEndTime().subtract(m.getStartTime());
                 case 4: return m.getThrottle();
+                case 5: return Math.toDegrees(m.getThrottleAlpha());
+                case 6: return Math.toDegrees(m.getThrottleDelta());
             }
             return 0d;
         }
@@ -143,11 +145,19 @@ public class ManeuverPanel extends JPanel {
                     break;
                 case 4: m.setThrottle((Double)value);
                     break;
+                case 5: m.setThrottleAlpha(Math.toRadians((Double)value));
+                    break;
+                case 6: m.setThrottleDelta(Math.toRadians((Double)value));
+                    break;
             }
             fireTableCellUpdated(row, col);
         }
 
         public boolean isCellEditable(int row, int col) {
+            Maneuver m = maneuvers.get(row);
+            if (TimeUtils.isIntervalInPast(ModelHolder.getModel().getTime(), m)) {
+                return false;
+            }
             if (col == 0 || col == 2) {
                 return false;
             } else {

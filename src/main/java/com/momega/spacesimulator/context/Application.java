@@ -33,7 +33,7 @@ public class Application {
     }
 
     public Model init(ModelBuilder modelBuilder) {
-        modelBuilder.init();
+        modelBuilder.build();
         logger.info("time = {}", formatter.print(TimeUtils.getDateTime(ModelHolder.getModel().getTime())));
         next();
         logger.info("model data built");

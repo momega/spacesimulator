@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.MathUtils;
 
 /**
  * The builder of the solar system
@@ -85,14 +86,14 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         addDynamicalPoint(phoebe);
 
         Planet ceres = new Planet();
-        createKeplerianElements(ceres, centerSolarSystem, 2.7668 * AU, 0.075797, 7.240455940332073E+01, 1680.99, 2456551.647886344232, 10.59386305801516, 8.032841384703973E+01);
+        createKeplerianElements(ceres, centerSolarSystem, 2.7668 * MathUtils.AU, 0.075797, 7.240455940332073E+01, 1680.99, 2456551.647886344232, 10.59386305801516, 8.032841384703973E+01);
         updateDynamicalPoint(ceres, "Ceres", 9.43E-04, 0.3781d, 0.4762, 291, 59, 170.90, "Ceres_(dwarf_planet)");
         createTrajectory(ceres, new double[]{139d / 255d, 119d / 255d, 101d / 255d}, TrajectoryType.KEPLERIAN);
         ceres.setTextureFileName("vesta.jpg");
         addDynamicalPoint(ceres);
 
         Planet vesta = new Planet();
-        createKeplerianElements(vesta, centerSolarSystem, 2.362 * AU, 0.08862, 149.84, 1325.653, 2456923.721471834928, 7.134, 103.91);
+        createKeplerianElements(vesta, centerSolarSystem, 2.362 * MathUtils.AU, 0.08862, 149.84, 1325.653, 2456923.721471834928, 7.134, 103.91);
         updateDynamicalPoint(vesta, "Vesta", 2.59076E-04, 0.2226d, 0.5254, 305.8, 41.4, 292, "4_Vesta");
         createTrajectory(vesta, new double[] {211d/255d, 211d/255d, 211d/255d}, TrajectoryType.KEPLERIAN);
         vesta.setTextureFileName("vesta.jpg");

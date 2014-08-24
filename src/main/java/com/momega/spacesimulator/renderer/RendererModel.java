@@ -7,6 +7,7 @@ import com.momega.spacesimulator.model.NamedObject;
 import com.momega.spacesimulator.model.RotatingObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import java.util.*;
 
@@ -78,6 +79,31 @@ public class RendererModel {
             }
         }
         return null;
+    }
+
+    public ViewCoordinates findByName(String name) {
+        if (name == null) {
+            return null;
+        }
+        for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {
+            ViewCoordinates viewCoordinates = entry.getValue();
+            if (name.equals(viewCoordinates.getObject().getName())) {
+                return viewCoordinates;
+            }
+        }
+        return null;
+    }
+
+    public String[] findVisibleObjects() {
+        List<String> list = new ArrayList<>();
+        for (Map.Entry<NamedObject, ViewCoordinates> entry : viewData.entrySet()) {
+            ViewCoordinates viewCoordinates = entry.getValue();
+            if (viewCoordinates.isVisible()) {
+                list.add(viewCoordinates.getObject().getName());
+            }
+        }
+        Collections.sort(list);
+        return list.toArray(new String[list.size()]);
     }
 
     public void selectDynamicalPoint(ViewCoordinates viewCoordinates) {
