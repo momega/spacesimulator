@@ -4,15 +4,33 @@ package com.momega.spacesimulator.model;
  * Defines the maneuver of the spacecraft
  * Created by martin on 8/16/14.
  */
-public class Maneuver extends NamedObject {
+public class Maneuver extends NamedObject implements TimeInterval {
 
     private double throttle;
     private double throttleAlpha;
     private double throttleDelta;
-    private ManeuverCondition maneuverCondition;
+
+    private Timestamp startTime;
+    private Timestamp endTime;
 
     private HistoryPoint startPoint;
     private HistoryPoint endPoint;
+
+    public Timestamp getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Timestamp startTime) {
+        this.startTime = startTime;
+    }
+
+    public Timestamp getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Timestamp endTime) {
+        this.endTime = endTime;
+    }
 
     public double getThrottle() {
         return throttle;
@@ -36,14 +54,6 @@ public class Maneuver extends NamedObject {
 
     public void setThrottleDelta(double throttleDelta) {
         this.throttleDelta = throttleDelta;
-    }
-
-    public ManeuverCondition getManeuverCondition() {
-        return maneuverCondition;
-    }
-
-    public void setManeuverCondition(ManeuverCondition maneuverCondition) {
-        this.maneuverCondition = maneuverCondition;
     }
 
     public HistoryPoint getEndPoint() {

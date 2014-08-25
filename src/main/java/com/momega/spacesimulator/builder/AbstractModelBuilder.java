@@ -278,23 +278,15 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return ring;
     }
 
-    public Maneuver addManeuver(Spacecraft spacecraft, String name, Double startTime, ApsisType apsisType, double duration, double throttle, double throttleAlpha, double throttleDelta) {
+    public Maneuver addManeuver(Spacecraft spacecraft, String name, Double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
         Maneuver maneuver = new Maneuver();
         maneuver.setName(name);
-        if (startTime != null) {
-            TimeManeuverCondition condition = new TimeManeuverCondition();
-            Timestamp start = getModel().getTime().add(startTime);
-            Timestamp end = getModel().getTime().add(startTime + duration);
-            condition.setStartTime(start);
-            condition.setEndTime(end);
-            maneuver.setManeuverCondition(condition);
-        } else if (apsisType != null) {
-            KeplerianManeuverCondition condition = new KeplerianManeuverCondition();
-            condition.setDuration(duration);
-            condition.setTheta(apsisType.getAngle());
-            maneuver.setManeuverCondition(condition);
-        }
-        Assert.notNull(maneuver.getManeuverCondition());
+
+        Timestamp start = getModel().getTime().add(startTime);
+        Timestamp end = getModel().getTime().add(startTime + duration);
+        maneuver.setStartTime(start);
+        maneuver.setEndTime(end);
+
         maneuver.setThrottle(throttle);
         maneuver.setThrottleAlpha(throttleAlpha);
         maneuver.setThrottleDelta(throttleDelta);

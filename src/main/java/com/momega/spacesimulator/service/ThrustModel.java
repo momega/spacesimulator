@@ -31,7 +31,7 @@ public class ThrustModel implements ForceModel {
         }
 
         Maneuver currentManeuver = spacecraft.getCurrentManeuver();
-        Maneuver maneuver = findManeuver(spacecraft, currentManeuver);
+        Maneuver maneuver = findManeuver(spacecraft);
         if (maneuver == null) {
             endOfManeuver(spacecraft, currentManeuver);
             return Vector3d.ZERO;
@@ -83,18 +83,11 @@ public class ThrustModel implements ForceModel {
         return null;
     }
 
-    protected Maneuver findManeuver(Spacecraft spacecraft, Maneuver currentManeuver) {
+    protected Maneuver findManeuver(Spacecraft spacecraft) {
         Timestamp timestamp = ModelHolder.getModel().getTime();
         for(Maneuver maneuver : spacecraft.getManeuvers()) {
-            if (maneuver.getManeuverCondition() instanceof TimeManeuverCondition) {
-                TimeManeuverCondition tmc = (TimeManeuverCondition) maneuver.getManeuverCondition();
-                if (TimeUtils.isTimestampInInterval(timestamp, tmc)) {
-                    return maneuver;
-                }
-            } else if (maneuver.getManeuverCondition() instanceof KeplerianManeuverCondition) {
-                KeplerianManeuverCondition kmc = (KeplerianManeuverCondition) maneuver.getManeuverCondition();
-                double trueAnomaly = spacecraft.getKeplerianElements().getTrueAnomaly();
-                //TODO: implement later
+            if (TimeUtils.isTimestampInInterval(timestamp, maneuver)) {
+                return maneuver;
             }
         }
         return null;

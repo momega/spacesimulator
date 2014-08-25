@@ -1,8 +1,6 @@
 package com.momega.spacesimulator.swing;
 
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.NamedObject;
-import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
@@ -39,10 +37,26 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         mainPanel.setLayout(new BorderLayout());
 
         JTabbedPane tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("Basic", createImageIcon("/images/application.png"), createPhysicalPanel(), "Basic Information");
-        tabbedPane.addTab("Cartesian", createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
-        tabbedPane.addTab("Keplerian", createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
+        if (namedObject instanceof MovingObject) {
+            tabbedPane.addTab("Basic", createImageIcon("/images/application.png"), createPhysicalPanel(), "Basic Information");
+            tabbedPane.addTab("Cartesian", createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
+            tabbedPane.addTab("Keplerian", createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
+        }
+
+        if (namedObject instanceof Spacecraft) {
+            Spacecraft spacecraft = (Spacecraft) namedObject;
+            tabbedPane.addTab("Maneuvers", createImageIcon("/images/hourglass.png"), new ManeuverPanel(spacecraft), "Spacecraft Maneuvers");
+
+            SpacecraftPanel spacecraftPanel = new SpacecraftPanel(spacecraft);
+            attributesPanelList.add(spacecraftPanel);
+            tabbedPane.addTab("Subsystems", createImageIcon("/images/cog.png"), spacecraftPanel, "Spacecraft Subsystems");
+        }
+
+        if (namedObject instanceof Apsis) {
+            tabbedPane.addTab("Apsis", createImageIcon("/images/application.png"), createApsisPanel(), "Apsis Information");
+        }
 
         JPanel buttonsPanel = new JPanel(new FlowLayout());
         JButton okButton = new JButton("Ok");
@@ -82,14 +96,6 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
                 }
             }
         }
-        if (namedObject instanceof Spacecraft) {
-            Spacecraft spacecraft = (Spacecraft) namedObject;
-            tabbedPane.addTab("Maneuvers", createImageIcon("/images/hourglass.png"), new ManeuverPanel(spacecraft), "Spacecraft Maneuvers");
-
-            SpacecraftPanel spacecraftPanel = new SpacecraftPanel(spacecraft);
-            attributesPanelList.add(spacecraftPanel);
-            tabbedPane.addTab("Subsystems", createImageIcon("/images/cog.png"), spacecraftPanel, "Spacecraft Subsystems");
-        }
 
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         mainPanel.add(buttonsPanel, BorderLayout.PAGE_END);
@@ -128,6 +134,14 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     protected JPanel createKeplerianPanel() {
         String[] labels = {"Central Object", "Semimajor Axis", "Eccentricity", "Time Of Periapsis", "Period", "Argument Of Periapsis", "Inclination", "Ascending Node", "True Anomaly", "Eccentric Anomaly", "Hyperbolic Anomaly", "Periapsis Altitude", "Apoapsis Altitude"};
         String[] fields = {"#obj.keplerianElements.centralObject.name", "#obj.keplerianElements.semimajorAxis", "#obj.keplerianElements.eccentricity", "#timeAsString(#obj.keplerianElements.timeOfPeriapsis)", "#obj.keplerianElements.period", "#toDegrees(#obj.keplerianElements.argumentOfPeriapsis)", "#toDegrees(#obj.keplerianElements.inclination)", "#toDegrees(#obj.keplerianElements.ascendingNode)", "#toDegrees(#obj.keplerianElements.trueAnomaly)", "#toDegrees(#obj.keplerianElements.eccentricAnomaly)", "#toDegrees(#obj.keplerianElements.hyperbolicAnomaly)", "#getAltitude(#obj.keplerianElements, 0)", "#getAltitude(#obj.keplerianElements, T(Math).PI)"};
+        AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);
+        attributesPanelList.add(result);
+        return result;
+    }
+
+    protected JPanel createApsisPanel() {
+        String[] labels = {"Name", "Type", "Position X", "Position Y", "Position Z", "Timestamp"};
+        String[] fields = {"#obj.name", "#obj.type.toString()", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)"};
         AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);
         attributesPanelList.add(result);
         return result;
