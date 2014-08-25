@@ -79,6 +79,24 @@ public final class KeplerianUtils {
         return theta;
     }
 
+    public Timestamp timeToApsis(Spacecraft spacecraft, ApsisType apsisType) {
+        return timeToAngle(spacecraft.getKeplerianElements(), spacecraft.getTimestamp(), apsisType.getAngle());
+    }
+
+    public Timestamp timeToAngle(KeplerianElements keplerianElements, Timestamp timestamp, double targetTheta) {
+        double e = keplerianElements.getEccentricity();
+        double targetCosE = (e + Math.cos(targetTheta)) / ( 1 + e * Math.cos(targetTheta));
+        double targetE = Math.acos(targetCosE);
+
+        double initM = keplerianElements.getEccentricAnomaly() - e * Math.sin(keplerianElements.getEccentricAnomaly());
+        double targetM = targetE - e * Math.sin(targetE);
+
+        double n = 2 * Math.PI /  keplerianElements.getPeriod().doubleValue();
+        double timeInterval = (targetM - initM) / n;
+        Timestamp result = timestamp.add(timeInterval);
+        return result;
+    }
+
     protected double solveTheta2(double E, double eccentricity) {
         double param = Math.sqrt((1 + eccentricity) / (1 - eccentricity));
         double theta = 2 * Math.atan(param * Math.tan(E / 2));

@@ -3,6 +3,9 @@ package com.momega.spacesimulator.renderer;
 import com.momega.spacesimulator.model.Apsis;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SatelliteTrajectory;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.utils.KeplerianUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -52,6 +55,7 @@ public class ApsidesRenderer extends AbstractTextRenderer {
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(apsis);
         if (viewCoordinates.isVisible()) {
             drawText(apsis.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+            drawText(TimeUtils.timeAsString(apsis.getTimestamp()), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 32);
         }
     }
 }

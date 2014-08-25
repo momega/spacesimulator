@@ -6,6 +6,8 @@ package com.momega.spacesimulator.model;
 public class Apsis extends NamedObject implements PositionProvider {
 
     private Vector3d position;
+    private ApsisType type;
+    private Timestamp timestamp;
 
     public Vector3d getPosition() {
         return position;
@@ -15,8 +17,6 @@ public class Apsis extends NamedObject implements PositionProvider {
         this.position = position;
     }
 
-    private ApsisType type;
-
     public ApsisType getType() {
         return type;
     }
@@ -25,4 +25,11 @@ public class Apsis extends NamedObject implements PositionProvider {
         this.type = type;
     }
 
+    public Timestamp getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
 }
