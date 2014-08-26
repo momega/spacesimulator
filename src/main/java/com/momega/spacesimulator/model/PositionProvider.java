@@ -16,4 +16,11 @@ public interface PositionProvider {
      * @return
      */
     String getName();
+
+    /**
+     * Gets the timestamp of the position
+     * @return
+     */
+    Timestamp getTimestamp();
+
 }

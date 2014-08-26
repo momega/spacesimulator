@@ -5,6 +5,7 @@ import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
+import com.momega.spacesimulator.utils.KeplerianPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,16 +133,14 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     }
 
     protected JPanel createKeplerianPanel() {
-        String[] labels = {"Central Object", "Semimajor Axis", "Eccentricity", "Time Of Periapsis", "Period", "Argument Of Periapsis", "Inclination", "Ascending Node", "True Anomaly", "Eccentric Anomaly", "Hyperbolic Anomaly", "Periapsis Altitude", "Apoapsis Altitude"};
-        String[] fields = {"#obj.keplerianElements.centralObject.name", "#obj.keplerianElements.semimajorAxis", "#obj.keplerianElements.eccentricity", "#timeAsString(#obj.keplerianElements.timeOfPeriapsis)", "#obj.keplerianElements.period", "#toDegrees(#obj.keplerianElements.argumentOfPeriapsis)", "#toDegrees(#obj.keplerianElements.inclination)", "#toDegrees(#obj.keplerianElements.ascendingNode)", "#toDegrees(#obj.keplerianElements.trueAnomaly)", "#toDegrees(#obj.keplerianElements.eccentricAnomaly)", "#toDegrees(#obj.keplerianElements.hyperbolicAnomaly)", "#getAltitude(#obj.keplerianElements, 0)", "#getAltitude(#obj.keplerianElements, T(Math).PI)"};
-        AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);
+        KeplerianPanel result =  new KeplerianPanel(namedObject);
         attributesPanelList.add(result);
         return result;
     }
 
     protected JPanel createApsisPanel() {
-        String[] labels = {"Name", "Type", "Position X", "Position Y", "Position Z", "Timestamp"};
-        String[] fields = {"#obj.name", "#obj.type.toString()", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)"};
+        String[] labels = {"Name", "Type", "Position X", "Position Y", "Position Z", "Timestamp", "Altitude"};
+        String[] fields = {"#obj.name", "#obj.type.toString()", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)", "#getAltitude(#obj.keplerianElements, #obj.type.angle)"};
         AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);
         attributesPanelList.add(result);
         return result;

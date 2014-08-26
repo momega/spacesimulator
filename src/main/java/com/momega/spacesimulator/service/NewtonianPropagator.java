@@ -57,6 +57,7 @@ public class NewtonianPropagator implements Propagator {
                 periapsis = new Apsis();
                 periapsis.setName("Pe of " + spacecraft.getName());
                 periapsis.setType(ApsisType.PERIAPSIS);
+                periapsis.setKeplerianElements(keplerianElements);
                 satelliteTrajectory.setPeriapsis(periapsis);
             }
             periapsis.setPosition(KeplerianUtils.getInstance().getCartesianPosition(keplerianElements, 0d));
@@ -71,6 +72,7 @@ public class NewtonianPropagator implements Propagator {
                 apoapsis = new Apsis();
                 apoapsis.setName("Ap of " + spacecraft.getName());
                 apoapsis.setType(ApsisType.APOAPSIS);
+                apoapsis.setKeplerianElements(keplerianElements);
                 satelliteTrajectory.setApoapsis(apoapsis);
             }
             apoapsis.setPosition(KeplerianUtils.getInstance().getCartesianPosition(keplerianElements, Math.PI));

@@ -1,9 +1,6 @@
 package com.momega.spacesimulator.swing;
 
-import com.momega.spacesimulator.model.KeplerianElements;
-import com.momega.spacesimulator.model.NamedObject;
-import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
@@ -85,6 +82,7 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
             evaluationContext.registerFunction("toDegrees", Math.class.getDeclaredMethod("toDegrees", double.class));
             evaluationContext.registerFunction("timeAsString", TimeUtils.class.getDeclaredMethod("timeAsString", Timestamp.class));
             evaluationContext.registerFunction("getAltitude", KeplerianUtils.class.getDeclaredMethod("getAltitude", KeplerianElements.class, double.class));
+            evaluationContext.registerFunction("getAltitude2", KeplerianUtils.class.getDeclaredMethod("getAltitude", MovingObject.class));
             return evaluationContext;
         } catch (NoSuchMethodException nsme) {
             throw new IllegalArgumentException(nsme);
