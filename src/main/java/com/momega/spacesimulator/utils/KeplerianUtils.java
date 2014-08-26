@@ -79,8 +79,8 @@ public final class KeplerianUtils {
         return theta;
     }
 
-    public Timestamp timeToApsis(Spacecraft spacecraft, ApsisType apsisType) {
-        return timeToAngle(spacecraft.getKeplerianElements(), spacecraft.getTimestamp(), apsisType.getAngle());
+    public Timestamp timeToApsis(MovingObject movingObject, ApsisType apsisType) {
+        return timeToAngle(movingObject.getKeplerianElements(), movingObject.getTimestamp(), apsisType.getAngle());
     }
 
     public Timestamp timeToAngle(KeplerianElements keplerianElements, Timestamp timestamp, double targetTheta) {
