@@ -28,8 +28,8 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         createTrajectory(moon, new double[] {0.5,0.5,0.5}, TrajectoryType.KEPLERIAN);
         moon.setTextureFileName("moon.jpg");
 
-        addDynamicalPoint(earth);
-        addDynamicalPoint(moon);
+        addMovingObject(earth);
+        addMovingObject(moon);
 
         SphereOfInfluence earthSoi = addPlanetToSoiTree(earth, null);
         addPlanetToSoiTree(moon, earthSoi);
@@ -39,34 +39,34 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
 
     @Override
     public void initSpacecrafts() {
-        CelestialBody earth = (CelestialBody) findDynamicalPoint("Earth");
-        CelestialBody moon = (CelestialBody) findDynamicalPoint("Moon");
+        CelestialBody earth = (CelestialBody) findMovingObject("Earth");
+        CelestialBody moon = (CelestialBody) findMovingObject("Moon");
 
         Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);
         Orientation o = MathUtils.createOrientation(new Vector3d(0, 1d, 0), new Vector3d(0, 0, 1d));
         o.lookUp(Math.toRadians(-23.75d));
         Vector3d velocity = o.getN().scale(9000d);
         Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity);
-        addDynamicalPoint(spacecraft);
+        addMovingObject(spacecraft);
 
 //        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);
 //        Vector3d velocity = new Vector3d(0, 10000d, 0);
 //        Spacecraft spacecraft = createSatellite(earth, "Spacecraft 1", position, velocity);
-//        addDynamicalPoint(spacecraft);
+//        addMovingObject(spacecraft);
 
 //        position = VectorUtils.fromSphericalCoordinates(50 * 1E3 + moon.getRadius(), Math.PI/2, 0);
 //        velocity = new Vector3d(0, 2350d, 0);
 //        spacecraft = createSatellite(moon, "Spacecraft 3", position, velocity);
-//        addDynamicalPoint(spacecraft);
+//        addMovingObject(spacecraft);
 
 //        Vector3d position = VectorUtils.fromSphericalCoordinates(2000 * 1E3 + moon.getRadius(), Math.PI/2, -Math.PI / 4);
 //        Vector3d velocity = new Vector3d(0, 1950d, 0);
 //        Spacecraft spacecraft = createSatellite(moon, "Spacecraft 4", position, velocity);
-//        addDynamicalPoint(spacecraft);
+//        addMovingObject(spacecraft);
 
 //        sv = moon.getPosition().normalize().scale(1700d).add(moon.getVelocity());
 //        spacecraft = createSatellite(moon, "Spacecraft 5", 80, sv);
-//        addDynamicalPoint(spacecraft);
+//        addMovingObject(spacecraft);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
 
     protected void initCamera() {
         Camera s = new Camera();
-        s.setTargetObject(findDynamicalPoint("Earth"));
+        s.setTargetObject(findMovingObject("Earth"));
         s.setDistance(100 * 1E6);
         s.setOppositeOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
         model.setCamera(s);

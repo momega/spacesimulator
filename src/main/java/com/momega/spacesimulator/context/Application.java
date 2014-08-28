@@ -6,8 +6,6 @@ import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.service.CameraService;
 import com.momega.spacesimulator.service.MotionService;
 import com.momega.spacesimulator.utils.TimeUtils;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -19,8 +17,6 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 public class Application {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
-
-    private DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
 
     private MotionService motionService;
     private CameraService cameraService;
@@ -34,7 +30,7 @@ public class Application {
 
     public Model init(ModelBuilder modelBuilder) {
         modelBuilder.build();
-        logger.info("time = {}", formatter.print(TimeUtils.getDateTime(ModelHolder.getModel().getTime())));
+        logger.info("time = {}", TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
         next();
         logger.info("model data built");
         return ModelHolder.getModel();
@@ -53,7 +49,7 @@ public class Application {
 
     public void dispose() {
         Model model = ModelHolder.getModel();
-        logger.info("dispose time = {}",  formatter.print(TimeUtils.getDateTime(model.getTime())));
+        logger.info("dispose time = {}",  TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
     }
 
 }

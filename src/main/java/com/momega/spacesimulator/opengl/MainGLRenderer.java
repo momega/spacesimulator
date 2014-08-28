@@ -93,7 +93,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
 //        Vector3d viewVector = ModelHolder.getModel().getCamera().getOrientation().getN();
 //        double znear = UNIVERSE_RADIUS * 2;
 //
-//        for(PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
+//        for(PhysicalBody dp : ModelHolder.getModel().getMovingObjects()) {
 //
 //            // only valid for object with radius
 //            if (dp.getRadius() <= 0) {
@@ -140,13 +140,15 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     protected void computeViewCoordinates(GLAutoDrawable drawable) {
         Camera camera = ModelHolder.getModel().getCamera();
-        for(PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
+        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
             addViewCoordinates(drawable, dp, camera);
+            KeplerianTrajectory keplerianTrajectory = dp.getTrajectory();
+            if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
+                addViewCoordinates(drawable, keplerianTrajectory.getApoapsis(), camera);
+                addViewCoordinates(drawable, keplerianTrajectory.getPeriapsis(), camera);
+            }
             if (dp instanceof Spacecraft) {
                 Spacecraft spacecraft = (Spacecraft) dp;
-                SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) dp.getTrajectory();
-                addViewCoordinates(drawable, satelliteTrajectory.getApoapsis(), camera);
-                addViewCoordinates(drawable, satelliteTrajectory.getPeriapsis(), camera);
                 for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
                     addViewCoordinates(drawable, hp, camera);
                 }

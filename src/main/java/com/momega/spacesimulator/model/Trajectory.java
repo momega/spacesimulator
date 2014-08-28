@@ -4,7 +4,7 @@ package com.momega.spacesimulator.model;
  * The trajectory definition
  * Created by martin on 10.5.2014.
  */
-public class Trajectory {
+public abstract class Trajectory {
 
     private double[] color;
     private TrajectoryType type;

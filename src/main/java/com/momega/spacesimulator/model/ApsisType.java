@@ -5,16 +5,22 @@ package com.momega.spacesimulator.model;
  */
 public enum ApsisType {
 
-    PERIAPSIS(0d),
-    APOAPSIS(Math.PI);
+    PERIAPSIS(0d, "Pe"),
+    APOAPSIS(Math.PI, "Ap");
 
     private double angle;
+    private String shortcut;
 
-    ApsisType(double angle) {
+    ApsisType(double angle, String shortcut) {
         this.angle = angle;
+        this.shortcut = shortcut;
     }
 
     public double getAngle() {
         return angle;
+    }
+
+    public String getShortcut() {
+        return shortcut;
     }
 }

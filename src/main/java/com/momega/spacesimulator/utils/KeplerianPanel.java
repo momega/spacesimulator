@@ -2,7 +2,7 @@ package com.momega.spacesimulator.utils;
 
 import com.momega.spacesimulator.model.Apsis;
 import com.momega.spacesimulator.model.NamedObject;
-import com.momega.spacesimulator.model.SatelliteTrajectory;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.swing.AttributesPanel;
 import com.momega.spacesimulator.swing.DetailDialog;
@@ -35,7 +35,7 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
 
         if (namedObject instanceof Spacecraft) {
             Spacecraft spacecraft = (Spacecraft) namedObject;
-            final SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) spacecraft.getTrajectory();
+            final KeplerianTrajectory keplerianTrajectory = (KeplerianTrajectory) spacecraft.getTrajectory();
 
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
@@ -45,7 +45,7 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
             peButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Apsis apsis = satelliteTrajectory.getPeriapsis();
+                    Apsis apsis = keplerianTrajectory.getPeriapsis();
 
                     DetailDialog dialog = new DetailDialog(null, apsis);
                     dialog.setVisible(true);
@@ -58,7 +58,7 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
             apButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Apsis apsis = satelliteTrajectory.getApoapsis();
+                    Apsis apsis = keplerianTrajectory.getApoapsis();
 
                     DetailDialog dialog = new DetailDialog(null, apsis);
                     dialog.setVisible(true);
@@ -74,9 +74,9 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
         attrPanel.updateValues();
         if (namedObject instanceof Spacecraft) {
             Spacecraft spacecraft = (Spacecraft) namedObject;
-            final SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) spacecraft.getTrajectory();
-            peButton.setEnabled(satelliteTrajectory.getPeriapsis() != null);
-            apButton.setEnabled(satelliteTrajectory.getApoapsis() != null);
+            final KeplerianTrajectory keplerianTrajectory = (KeplerianTrajectory) spacecraft.getTrajectory();
+            peButton.setEnabled(keplerianTrajectory.getPeriapsis() != null);
+            apButton.setEnabled(keplerianTrajectory.getApoapsis() != null);
         }
     }
 }

@@ -41,12 +41,13 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         initPlanets();
         initSpacecrafts();
         initCamera();
+        initApsis();
         logger.info("model initialized");
         return model;
     }
 
     protected void initTime() {
-        model.setTime(TimeUtils.createTime(new DateTime(2014, 8, 12, 20, 0, DateTimeZone.UTC)));
+        model.setTime(TimeUtils.createTime(new DateTime(2014, 8, 29, 20, 0, DateTimeZone.UTC)));
         model.setWarpFactor(BigDecimal.ONE);
     }
 
@@ -56,6 +57,15 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         s.setDistance(100 * 1E6);
         s.setOppositeOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
         model.setCamera(s);
+    }
+
+    public void initApsis() {
+        for(MovingObject body : model.getMovingObjects()) {
+            if ((body instanceof CelestialBody) || (body instanceof BaryCentre)) {
+                KeplerianUtils.getInstance().updatePeriapsis(body);
+                KeplerianUtils.getInstance().updateApoapsis(body);
+            }
+        }
     }
 
     protected void setCentralPoint(PhysicalBody physicalBody) {
@@ -77,12 +87,12 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     protected abstract MovingObject getCentralObject();
 
     /**
-     * Register the dynamical point to the universe
+     * Register the moving object to the universe
      * @param dp the instance of the dynamical point
      */
-    public void addDynamicalPoint(PhysicalBody dp) {
+    public void addMovingObject(MovingObject dp) {
         dp.setTimestamp(model.getTime());
-        model.getPhysicalBodies().add(dp);
+        model.getMovingObjects().add(dp);
     }
 
     /**
@@ -98,7 +108,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param ascendingNode the ascending node in degrees
      * @return new instance of the keplerian trajectory
      */
-    public KeplerianElements createKeplerianElements(PhysicalBody physicalBody, PhysicalBody centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
+    public KeplerianElements createKeplerianElements(MovingObject physicalBody, MovingObject centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setCentralObject(centralObject);
         keplerianElements.setSemimajorAxis(semimajorAxis);
@@ -125,7 +135,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     }
 
     public Trajectory createTrajectory(MovingObject movingObjects, double[] trajectoryColor, TrajectoryType trajectoryType) {
-        Trajectory trajectory = new Trajectory();
+        KeplerianTrajectory trajectory = new KeplerianTrajectory();
         trajectory.setType(trajectoryType);
         trajectory.setColor(trajectoryColor);
         movingObjects.setTrajectory(trajectory);
@@ -155,10 +165,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
         spacecraft.setCartesianState(cartesianState);
         spacecraft.setOrientation(MathUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
-        SatelliteTrajectory satelliteTrajectory = new SatelliteTrajectory();
-        satelliteTrajectory.setColor(new double[]{1, 1, 0});
-        satelliteTrajectory.setType(TrajectoryType.NEWTONIAN);
-        spacecraft.setTrajectory(satelliteTrajectory);
+        KeplerianTrajectory keplerianTrajectory = new KeplerianTrajectory();
+        keplerianTrajectory.setColor(new double[]{1, 1, 0});
+        keplerianTrajectory.setType(TrajectoryType.NEWTONIAN);
+        spacecraft.setTrajectory(keplerianTrajectory);
         spacecraft.setMass(0d);
 
         HistoryTrajectory historyTrajectory = new HistoryTrajectory();
@@ -188,13 +198,16 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         spacecraft.setMass(spacecraft.getMass() + subsystem.getMass());
     }
 
-    private void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, String wiki) {
+    private void updateDynamicalPoint(MovingObject dp, String name, double mass, double rotationPeriod, double radius, String wiki) {
         dp.setName(name);
-        dp.setMass(mass * 1E24);
         if (dp.getCartesianState() == null) {
             dp.setCartesianState(new CartesianState());
         }
-        dp.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        if (dp instanceof PhysicalBody) {
+            PhysicalBody body = (PhysicalBody) dp;
+            body.setMass(mass * 1E24);
+            body.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        }
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
             ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
@@ -216,10 +229,11 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param axialTilt axial tilt
      * @param wiki the wiki page
      */
-    protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double axialTilt, String wiki) {
+    protected void updateDynamicalPoint(MovingObject dp, String name, double mass, double rotationPeriod, double radius, double axialTilt, String wiki) {
         updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki);
         if (dp instanceof RotatingObject) {
-            dp.getOrientation().twist(Math.toRadians(axialTilt));
+            RotatingObject ro = (RotatingObject) dp;
+            ro.getOrientation().twist(Math.toRadians(axialTilt));
         }
     }
 
@@ -338,8 +352,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param name the name of the dynamical point
      * @return the instance of dynamical point or null
      */
-    public PhysicalBody findDynamicalPoint(String name) {
-        for(PhysicalBody dp : model.getPhysicalBodies()) {
+    public MovingObject findMovingObject(String name) {
+        for(MovingObject dp : model.getMovingObjects()) {
             if (name.equals(dp.getName())) {
                 return dp;
             }

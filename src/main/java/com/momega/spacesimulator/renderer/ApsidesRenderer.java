@@ -1,8 +1,8 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.Apsis;
-import com.momega.spacesimulator.model.SatelliteTrajectory;
-import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.MovingObject;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -13,24 +13,24 @@ import java.awt.*;
  */
 public class ApsidesRenderer extends AbstractTextRenderer {
 
-    private final Spacecraft spacecraft;
+    private final MovingObject movingObject;
 
-    public ApsidesRenderer(Spacecraft spacecraft) {
-        this.spacecraft = spacecraft;
+    public ApsidesRenderer(MovingObject movingObject) {
+        this.movingObject = movingObject;
     }
 
     @Override
     public void draw(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glPointSize(8);
-        gl.glColor3dv(this.spacecraft.getTrajectory().getColor(), 0);
-        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) spacecraft.getTrajectory();
+        gl.glColor3dv(this.movingObject.getTrajectory().getColor(), 0);
+        KeplerianTrajectory keplerianTrajectory = movingObject.getTrajectory();
         gl.glBegin(GL2.GL_POINTS);
-        if (satelliteTrajectory.getApoapsis() != null) {
-            gl.glVertex3dv(satelliteTrajectory.getApoapsis().getPosition().asArray(), 0);
+        if (keplerianTrajectory.getApoapsis() != null) {
+            gl.glVertex3dv(keplerianTrajectory.getApoapsis().getPosition().asArray(), 0);
         }
-        if (satelliteTrajectory.getPeriapsis() != null) {
-            gl.glVertex3dv(satelliteTrajectory.getPeriapsis().getPosition().asArray(), 0);
+        if (keplerianTrajectory.getPeriapsis() != null) {
+            gl.glVertex3dv(keplerianTrajectory.getPeriapsis().getPosition().asArray(), 0);
         }
         gl.glEnd();
 
@@ -39,9 +39,9 @@ public class ApsidesRenderer extends AbstractTextRenderer {
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) spacecraft.getTrajectory();
-        renderApsis(satelliteTrajectory.getApoapsis());
-        renderApsis(satelliteTrajectory.getPeriapsis());
+        KeplerianTrajectory keplerianTrajectory = movingObject.getTrajectory();
+        renderApsis(keplerianTrajectory.getApoapsis());
+        renderApsis(keplerianTrajectory.getPeriapsis());
     }
 
     protected void renderApsis(Apsis apsis) {
@@ -50,7 +50,7 @@ public class ApsidesRenderer extends AbstractTextRenderer {
         }
         Point size = getTextSize(apsis.getName());
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(apsis);
-        if (viewCoordinates.isVisible()) {
+        if (viewCoordinates!=null && viewCoordinates.isVisible()) {
             drawText(apsis.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
         }
     }

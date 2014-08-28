@@ -6,11 +6,11 @@ package com.momega.spacesimulator.model;
  * The state of the object is defined for the given {@link #getTimestamp()}.
  * Created by martin on 10.5.2014.
  */
-public class MovingObject extends NamedObject implements PositionProvider {
+public abstract class MovingObject extends NamedObject implements PositionProvider {
 
     private CartesianState cartesianState;
     private KeplerianElements keplerianElements;
-    private Trajectory trajectory;
+    private KeplerianTrajectory trajectory;
     private Timestamp timestamp;
 
     public CartesianState getCartesianState() {
@@ -21,11 +21,11 @@ public class MovingObject extends NamedObject implements PositionProvider {
         this.cartesianState = cartesianState;
     }
 
-    public Trajectory getTrajectory() {
+    public KeplerianTrajectory getTrajectory() {
         return trajectory;
     }
 
-    public void setTrajectory(Trajectory trajectory) {
+    public void setTrajectory(KeplerianTrajectory trajectory) {
         this.trajectory = trajectory;
     }
 

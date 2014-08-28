@@ -21,7 +21,7 @@ public class GravityModel implements ForceModel {
     public Vector3d getAcceleration(Spacecraft spacecraft, double dt) {
         Vector3d position = spacecraft.getPosition();
         Vector3d a = Vector3d.ZERO;
-        for(PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
+        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
             if (dp instanceof CelestialBody) {
                 CelestialBody celestialBody = (CelestialBody) dp;
                 Vector3d r = celestialBody.getCartesianState().getPosition().subtract(position);

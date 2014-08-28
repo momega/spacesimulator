@@ -3,6 +3,7 @@ package com.momega.spacesimulator.utils;
 import com.momega.spacesimulator.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 /**
  * The class contains set of the methods for computing position and velocity from keplerian elements. The class
@@ -91,8 +92,13 @@ public final class KeplerianUtils {
         double initM = keplerianElements.getEccentricAnomaly() - e * Math.sin(keplerianElements.getEccentricAnomaly());
         double targetM = targetE - e * Math.sin(targetE);
 
+        double diffM = (targetM - initM);
+        if (diffM < 0) {
+            diffM = targetM + 2 * Math.PI - initM;
+        }
+
         double n = 2 * Math.PI /  keplerianElements.getPeriod().doubleValue();
-        double timeInterval = (targetM - initM) / n;
+        double timeInterval = diffM / n;
         Timestamp result = timestamp.add(timeInterval);
         return result;
     }
@@ -133,6 +139,57 @@ public final class KeplerianUtils {
         }
 
         return E;
+    }
+
+    public void updatePeriapsis(MovingObject movingObject) {
+        Apsis periapsis = movingObject.getTrajectory().getPeriapsis();
+        if (periapsis == null) {
+            periapsis = createApsis(movingObject, ApsisType.PERIAPSIS);
+        }
+        updateApsis(movingObject, periapsis);
+    }
+
+    public void updateApoapsis(MovingObject movingObject) {
+        Apsis apoapsis = movingObject.getTrajectory().getApoapsis();
+        if (apoapsis == null) {
+            apoapsis = createApsis(movingObject, ApsisType.APOAPSIS);
+        }
+        updateApsis(movingObject, apoapsis);
+    }
+
+    /**
+     * Creates the apsis object
+     * @param movingObject the moving object
+     * @param apsisType the type of the {@link com.momega.spacesimulator.model.Apsis}
+     * @return new instance of the apsis
+     */
+    protected Apsis createApsis(MovingObject movingObject, ApsisType apsisType) {
+        Assert.notNull(apsisType);
+        Assert.notNull(movingObject);
+        KeplerianTrajectory trajectory = movingObject.getTrajectory();
+        Apsis apsis = new Apsis();
+        apsis.setType(apsisType);
+        apsis.setName(apsisType.getShortcut() + " of " + movingObject.getName());
+        apsis.setKeplerianElements(movingObject.getKeplerianElements());
+        if (apsisType.equals(ApsisType.PERIAPSIS)) {
+            trajectory.setPeriapsis(apsis);
+        } else if (apsisType.equals(ApsisType.APOAPSIS)) {
+            trajectory.setApoapsis(apsis);
+        }
+        return apsis;
+    }
+
+    /**
+     * Updates the {@link com.momega.spacesimulator.model.Apsis} timespamp and position
+     * @param movingObject the moving object
+     * @param apsis the apsis
+     */
+    protected void updateApsis(MovingObject movingObject, Apsis apsis) {
+        Vector3d position = getCartesianPosition(movingObject.getKeplerianElements(), apsis.getType().getAngle());
+        Timestamp timestamp = timeToApsis(movingObject, apsis.getType());
+
+        apsis.setPosition(position);
+        apsis.setTimestamp(timestamp);
     }
 
     public static double getAltitude(MovingObject movingObject) {

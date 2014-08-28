@@ -3,7 +3,6 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,36 +48,18 @@ public class NewtonianPropagator implements Propagator {
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
 
         Double HA = keplerianElements.getHyperbolicAnomaly();
+        KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();
 
-        SatelliteTrajectory satelliteTrajectory = (SatelliteTrajectory) spacecraft.getTrajectory();
         if (keplerianElements.getEccentricity()<1 || (keplerianElements.getEccentricity()>1 && HA!=null)) {
-            Apsis periapsis = satelliteTrajectory.getPeriapsis();
-            if (periapsis == null) {
-                periapsis = new Apsis();
-                periapsis.setName("Pe of " + spacecraft.getName());
-                periapsis.setType(ApsisType.PERIAPSIS);
-                periapsis.setKeplerianElements(keplerianElements);
-                satelliteTrajectory.setPeriapsis(periapsis);
-            }
-            periapsis.setPosition(KeplerianUtils.getInstance().getCartesianPosition(keplerianElements, 0d));
-            periapsis.setTimestamp(KeplerianUtils.getInstance().timeToApsis(spacecraft, ApsisType.PERIAPSIS));
+            KeplerianUtils.getInstance().updatePeriapsis(spacecraft);
         } else {
-            satelliteTrajectory.setPeriapsis(null);
+            keplerianTrajectory.setPeriapsis(null);
         }
 
         if (keplerianElements.getEccentricity()<1) {
-            Apsis apoapsis = satelliteTrajectory.getApoapsis();
-            if (apoapsis == null) {
-                apoapsis = new Apsis();
-                apoapsis.setName("Ap of " + spacecraft.getName());
-                apoapsis.setType(ApsisType.APOAPSIS);
-                apoapsis.setKeplerianElements(keplerianElements);
-                satelliteTrajectory.setApoapsis(apoapsis);
-            }
-            apoapsis.setPosition(KeplerianUtils.getInstance().getCartesianPosition(keplerianElements, Math.PI));
-            apoapsis.setTimestamp(KeplerianUtils.getInstance().timeToApsis(spacecraft, ApsisType.APOAPSIS));
+            KeplerianUtils.getInstance().updateApoapsis(spacecraft);
         } else {
-            satelliteTrajectory.setApoapsis(null);
+            keplerianTrajectory.setApoapsis(null);
         }
     }
 

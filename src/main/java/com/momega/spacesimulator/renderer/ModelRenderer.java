@@ -15,9 +15,16 @@ public class ModelRenderer extends CompositeRenderer {
 
     public ModelRenderer() {
         logger.info("initializing renderers");
-        for(PhysicalBody dp : ModelHolder.getModel().getPhysicalBodies()) {
+        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
             if (!TrajectoryType.STATIC.equals(dp.getTrajectory().getType())) {
                 addRenderer(new KeplerianTrajectoryRenderer(dp));
+            }
+            if (dp instanceof PhysicalBody) {
+                addRenderer(new PhysicalBodyRenderer((PhysicalBody) dp));
+                addRenderer(new ApsidesRenderer(dp));
+            }
+            if (dp instanceof BaryCentre) {
+                addRenderer(new ApsidesRenderer(dp));
             }
             if (dp instanceof CelestialBody) {
                 addRenderer(new CelestialBodyRenderer((CelestialBody) dp));
@@ -30,16 +37,13 @@ public class ModelRenderer extends CompositeRenderer {
             } else if (dp instanceof Spacecraft) {
                 addRenderer(new SpacecraftRenderer((Spacecraft) dp));
                 addRenderer(new HistoryRenderer((Spacecraft) dp));
-                addRenderer(new ApsidesRenderer((Spacecraft) dp));
+                addRenderer(new ApsidesRenderer(dp));
                 addRenderer(new NamedHistoryRenderer((Spacecraft) dp));
             }
-            addRenderer(new PhysicalBodyRenderer(dp));
         }
 
         addRenderer(new CameraPositionRenderer());
-        //addRenderer(new BackgroundRenderer());
         addRenderer(new TimeRenderer());
-        //addRenderer(new SelectedTargetRenderer());
     }
 
 }

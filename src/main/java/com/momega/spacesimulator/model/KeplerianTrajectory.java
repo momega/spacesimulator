@@ -3,7 +3,7 @@ package com.momega.spacesimulator.model;
 /**
  * Created by martin on 6/29/14.
  */
-public class SatelliteTrajectory extends Trajectory {
+public class KeplerianTrajectory extends Trajectory {
 
     private Apsis periapsis;
     private Apsis apoapsis;
