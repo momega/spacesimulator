@@ -59,7 +59,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         model.setCamera(s);
     }
 
-    public void initApsis() {
+    /**
+     * Creates the apsis for celestial bodies and bary centres
+     */
+    protected void initApsis() {
         for(MovingObject body : model.getMovingObjects()) {
             if ((body instanceof CelestialBody) || (body instanceof BaryCentre)) {
                 KeplerianUtils.getInstance().updatePeriapsis(body);
@@ -69,15 +72,18 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     }
 
     protected void setCentralPoint(PhysicalBody physicalBody) {
-        physicalBody.getCartesianState().setPosition(new Vector3d(0, 0, 0));
-        physicalBody.getCartesianState().setVelocity(new Vector3d(0, 0, 0));
+        physicalBody.getCartesianState().setPosition(Vector3d.ZERO);
+        physicalBody.getCartesianState().setVelocity(Vector3d.ZERO);
     }
 
     /**
-     * Creates all dynamical points
+     * Creates all planets and bary centres
      */
     protected abstract void initPlanets();
 
+    /**
+     * Initializes the spacecraft instances
+     */
     protected abstract void initSpacecrafts();
 
     /**

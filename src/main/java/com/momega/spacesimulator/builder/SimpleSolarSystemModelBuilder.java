@@ -27,7 +27,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         createTrajectory(sun, new double[] {1, 0.7, 0}, TrajectoryType.KEPLERIAN);
         sun.setTextureFileName("sun.jpg");
 
-        MovingObject earthMoonBarycenter = new BaryCentre();
+        BaryCentre earthMoonBarycenter = new BaryCentre();
         createKeplerianElements(earthMoonBarycenter, centerSolarSystem, 149598.261d * 1E6, 0.0166739, 287.5824, 365.256814, 2456661.138788696378, 0.0018601064, 175.395d);
         updateDynamicalPoint(earthMoonBarycenter, "Earth-Moon Barycenter", 0, 0, 1, 0, null);
         createTrajectory(earthMoonBarycenter, new double[]{0, 0.5, 1}, TrajectoryType.KEPLERIAN);
@@ -80,7 +80,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         habitableModule.setName("Habitat");
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
-        //addManeuver(spacecraft, "M1", 1d, 1000d, 1d, 0, Math.toRadians(45));
+        addManeuver(spacecraft, "M1", 1d, 6000d, 1d, 0, Math.toRadians(0));
 
         addMovingObject(spacecraft);
     }

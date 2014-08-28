@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
+ * Apsis Type (periapsis or apoapsis)
  * Created by martin on 6/30/14.
  */
 public enum ApsisType {
