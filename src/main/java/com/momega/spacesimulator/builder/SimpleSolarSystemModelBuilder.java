@@ -80,7 +80,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         habitableModule.setName("Habitat");
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
-        addManeuver(spacecraft, "M1", 1d, 6000d, 1d, 0, Math.toRadians(0));
+        //addManeuver(spacecraft, "M1", 1d, 6000d, 1d, 0, Math.toRadians(0));
 
         addMovingObject(spacecraft);
     }

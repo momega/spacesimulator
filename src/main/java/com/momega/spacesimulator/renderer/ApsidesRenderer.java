@@ -21,18 +21,21 @@ public class ApsidesRenderer extends AbstractTextRenderer {
 
     @Override
     public void draw(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2();
-        gl.glPointSize(8);
-        gl.glColor3dv(this.movingObject.getTrajectory().getColor(), 0);
-        KeplerianTrajectory keplerianTrajectory = movingObject.getTrajectory();
-        gl.glBegin(GL2.GL_POINTS);
-        if (keplerianTrajectory.getApoapsis() != null) {
-            gl.glVertex3dv(keplerianTrajectory.getApoapsis().getPosition().asArray(), 0);
+        ViewCoordinates bodyCoordinates = RendererModel.getInstance().findViewCoordinates(movingObject);
+        if (bodyCoordinates != null && bodyCoordinates.isVisible()) {
+            GL2 gl = drawable.getGL().getGL2();
+            gl.glPointSize(8);
+            gl.glColor3dv(movingObject.getTrajectory().getColor(), 0);
+            KeplerianTrajectory keplerianTrajectory = movingObject.getTrajectory();
+            gl.glBegin(GL2.GL_POINTS);
+            if (keplerianTrajectory.getApoapsis() != null) {
+                gl.glVertex3dv(keplerianTrajectory.getApoapsis().getPosition().asArray(), 0);
+            }
+            if (keplerianTrajectory.getPeriapsis() != null) {
+                gl.glVertex3dv(keplerianTrajectory.getPeriapsis().getPosition().asArray(), 0);
+            }
+            gl.glEnd();
         }
-        if (keplerianTrajectory.getPeriapsis() != null) {
-            gl.glVertex3dv(keplerianTrajectory.getPeriapsis().getPosition().asArray(), 0);
-        }
-        gl.glEnd();
 
         super.draw(drawable);
     }
@@ -50,8 +53,11 @@ public class ApsidesRenderer extends AbstractTextRenderer {
         }
         Point size = getTextSize(apsis.getName());
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(apsis);
+        ViewCoordinates bodyCoordinates = RendererModel.getInstance().findViewCoordinates(movingObject);
         if (viewCoordinates!=null && viewCoordinates.isVisible()) {
-            drawText(apsis.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+            if (bodyCoordinates != null && bodyCoordinates.isVisible()) {
+                drawText(apsis.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+            }
         }
     }
 }

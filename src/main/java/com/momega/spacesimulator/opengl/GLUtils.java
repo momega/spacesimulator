@@ -4,7 +4,9 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.apache.commons.io.IOUtils;
 
 import javax.media.opengl.GL2;
@@ -211,6 +213,15 @@ public class GLUtils {
 
     public static void translate(GL2 gl, Vector3d position) {
         gl.glTranslated(position.x, position.y, position.z);
+    }
+
+    public static void drawPoint(GL2 gl, PositionProvider positionProvider, int size, double[] color) {
+        gl.glPointSize(size);
+        gl.glColor3dv(color, 0);
+        gl.glBegin(GL2.GL_POINTS);
+        gl.glVertex3dv(positionProvider.getPosition().asArray(), 0);
+        gl.glEnd();
+
     }
 
 }
