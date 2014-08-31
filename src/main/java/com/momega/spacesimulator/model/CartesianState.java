@@ -38,4 +38,12 @@ public class CartesianState {
         return result;
     }
 
+    /**
+     * Computes angular momentum
+     * @return the angular momentum
+     */
+    public Vector3d getAngularMomentum() {
+        return position.cross(velocity);
+    }
+
 }

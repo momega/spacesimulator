@@ -215,7 +215,7 @@ public class GLUtils {
         gl.glTranslated(position.x, position.y, position.z);
     }
 
-    public static void drawPoint(GL2 gl, PositionProvider positionProvider, int size, double[] color) {
+    public static void drawPoint(GL2 gl, int size, double[] color, PositionProvider positionProvider) {
         gl.glPointSize(size);
         gl.glColor3dv(color, 0);
         gl.glBegin(GL2.GL_POINTS);

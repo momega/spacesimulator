@@ -1,35 +1,27 @@
 package com.momega.spacesimulator.model;
 
 /**
- * Apsis of the trajectory for any {@link com.momega.spacesimulator.model.KeplerianTrajectory}
- * Created by martin on 6/29/14.
+ * Created by martin on 8/31/14.
  */
-public class Apsis extends NamedObject implements PositionProvider {
+public class OrbitIntersection extends NamedObject implements PositionProvider  {
 
     private Vector3d position;
-    private ApsisType type;
     private Timestamp timestamp;
     private KeplerianElements keplerianElements;
-    private boolean visible;
+    private MovingObject targetObject;
 
+    @Override
     public Vector3d getPosition() {
         return position;
     }
 
-    public void setPosition(Vector3d position) {
-        this.position = position;
-    }
-
-    public ApsisType getType() {
-        return type;
-    }
-
-    public void setType(ApsisType type) {
-        this.type = type;
-    }
-
+    @Override
     public Timestamp getTimestamp() {
         return timestamp;
+    }
+
+    public void setPosition(Vector3d position) {
+        this.position = position;
     }
 
     public void setTimestamp(Timestamp timestamp) {
@@ -44,11 +36,11 @@ public class Apsis extends NamedObject implements PositionProvider {
         this.keplerianElements = keplerianElements;
     }
 
-    public boolean isVisible() {
-        return visible;
+    public MovingObject getTargetObject() {
+        return targetObject;
     }
 
-    public void setVisible(boolean visible) {
-        this.visible = visible;
+    public void setTargetObject(MovingObject targetObject) {
+        this.targetObject = targetObject;
     }
 }

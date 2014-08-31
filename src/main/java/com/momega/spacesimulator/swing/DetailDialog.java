@@ -5,7 +5,6 @@ import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
-import com.momega.spacesimulator.utils.KeplerianPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,9 +138,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     }
 
     protected JPanel createApsisPanel() {
-        String[] labels = {"Name", "Type", "Position X", "Position Y", "Position Z", "Timestamp", "Altitude"};
-        String[] fields = {"#obj.name", "#obj.type.toString()", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)", "#getAltitude(#obj.keplerianElements, #obj.type.angle)"};
-        AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);
+        ApsisPanel result =  new ApsisPanel((Apsis) namedObject);
         attributesPanelList.add(result);
         return result;
     }

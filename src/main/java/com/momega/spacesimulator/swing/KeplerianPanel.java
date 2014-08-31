@@ -1,9 +1,6 @@
-package com.momega.spacesimulator.utils;
+package com.momega.spacesimulator.swing;
 
-import com.momega.spacesimulator.model.Apsis;
-import com.momega.spacesimulator.model.NamedObject;
-import com.momega.spacesimulator.model.KeplerianTrajectory;
-import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.swing.AttributesPanel;
 import com.momega.spacesimulator.swing.DetailDialog;
 import com.momega.spacesimulator.swing.UpdatablePanel;
@@ -33,9 +30,9 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
         attrPanel = new AttributesPanel(LABELS, namedObject, FIELDS);
         add(attrPanel, BorderLayout.CENTER);
 
-        if (namedObject instanceof Spacecraft) {
-            Spacecraft spacecraft = (Spacecraft) namedObject;
-            final KeplerianTrajectory keplerianTrajectory = (KeplerianTrajectory) spacecraft.getTrajectory();
+        if (namedObject instanceof MovingObject) {
+            MovingObject movingObject = (MovingObject) namedObject;
+            final KeplerianTrajectory keplerianTrajectory = movingObject.getTrajectory();
 
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));

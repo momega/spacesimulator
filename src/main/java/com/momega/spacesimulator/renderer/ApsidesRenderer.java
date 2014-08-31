@@ -3,6 +3,7 @@ package com.momega.spacesimulator.renderer;
 import com.momega.spacesimulator.model.Apsis;
 import com.momega.spacesimulator.model.KeplerianTrajectory;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.opengl.GLUtils;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -24,17 +25,7 @@ public class ApsidesRenderer extends AbstractTextRenderer {
         ViewCoordinates bodyCoordinates = RendererModel.getInstance().findViewCoordinates(movingObject);
         if (bodyCoordinates != null && bodyCoordinates.isVisible()) {
             GL2 gl = drawable.getGL().getGL2();
-            gl.glPointSize(8);
-            gl.glColor3dv(movingObject.getTrajectory().getColor(), 0);
-            KeplerianTrajectory keplerianTrajectory = movingObject.getTrajectory();
-            gl.glBegin(GL2.GL_POINTS);
-            if (keplerianTrajectory.getApoapsis() != null) {
-                gl.glVertex3dv(keplerianTrajectory.getApoapsis().getPosition().asArray(), 0);
-            }
-            if (keplerianTrajectory.getPeriapsis() != null) {
-                gl.glVertex3dv(keplerianTrajectory.getPeriapsis().getPosition().asArray(), 0);
-            }
-            gl.glEnd();
+            drawBothApsis(gl, movingObject.getTrajectory());
         }
 
         super.draw(drawable);
@@ -45,6 +36,20 @@ public class ApsidesRenderer extends AbstractTextRenderer {
         KeplerianTrajectory keplerianTrajectory = movingObject.getTrajectory();
         renderApsis(keplerianTrajectory.getApoapsis());
         renderApsis(keplerianTrajectory.getPeriapsis());
+    }
+
+    protected void drawBothApsis(GL2 gl, KeplerianTrajectory keplerianTrajectory) {
+        Apsis apoapsis = keplerianTrajectory.getApoapsis();
+        drawApsis(gl, apoapsis, keplerianTrajectory.getColor());
+
+        Apsis periapsis = keplerianTrajectory.getPeriapsis();
+        drawApsis(gl, periapsis, keplerianTrajectory.getColor());
+    }
+
+    protected void drawApsis(GL2 gl, Apsis apsis, double color[]) {
+        if (apsis != null && RendererModel.getInstance().isVisibleOnScreen(apsis)) {
+            GLUtils.drawPoint(gl, 8, color, apsis);
+        }
     }
 
     protected void renderApsis(Apsis apsis) {

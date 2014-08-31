@@ -66,6 +66,7 @@ public final class KeplerianUtils {
         CartesianState cartesianState = new CartesianState();
         cartesianState.setPosition(r);
         cartesianState.setVelocity(v);
+
         return cartesianState;
     }
 
@@ -171,6 +172,7 @@ public final class KeplerianUtils {
         apsis.setType(apsisType);
         apsis.setName(apsisType.getShortcut() + " of " + movingObject.getName());
         apsis.setKeplerianElements(movingObject.getKeplerianElements());
+        apsis.setVisible(movingObject instanceof Spacecraft);
         if (apsisType.equals(ApsisType.PERIAPSIS)) {
             trajectory.setPeriapsis(apsis);
         } else if (apsisType.equals(ApsisType.APOAPSIS)) {

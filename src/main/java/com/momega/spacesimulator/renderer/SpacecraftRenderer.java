@@ -1,13 +1,10 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.KeplerianTrajectory;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.opengl.GLUtils;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
 
 /**
  * Created by martin on 5/6/14.
@@ -88,7 +85,7 @@ public class SpacecraftRenderer extends AbstractRenderer {
 //                gl.glPopMatrix();
 //            }
 //            else {
-                GLUtils.drawPoint(gl, spacecraft, 8, spacecraft.getTrajectory().getColor());
+                GLUtils.drawPoint(gl, 8, spacecraft.getTrajectory().getColor(), spacecraft);
 //            }
         }
 

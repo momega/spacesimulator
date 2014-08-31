@@ -176,6 +176,12 @@ public class MainGLRenderer extends AbstractGLRenderer {
         } else {
             viewCoordinates.setRadius(5);
         }
+
+        if (namedObject instanceof Apsis) {
+            Apsis apsis = (Apsis) namedObject;
+            viewCoordinates.setVisible(viewCoordinates.isVisible() && apsis.isVisible());
+        }
+
         viewCoordinates.setObject(namedObject);
         RendererModel.getInstance().addViewCoordinates(viewCoordinates);
     }

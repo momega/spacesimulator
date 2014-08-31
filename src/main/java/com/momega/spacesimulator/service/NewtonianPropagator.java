@@ -1,6 +1,8 @@
 package com.momega.spacesimulator.service;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
 import org.slf4j.Logger;
@@ -42,9 +44,52 @@ public class NewtonianPropagator implements Propagator {
 
         computePrediction(spacecraft, newTimestamp);
         computeApsides(spacecraft);
+        computeIntersections(spacecraft);
     }
 
-    private void computeApsides(Spacecraft spacecraft) {
+    protected void computeIntersections(Spacecraft spacecraft) {
+        CelestialBody moon = null;
+        for(MovingObject movingObject : ModelHolder.getModel().getMovingObjects()) {
+            if ("Moon".equals(movingObject.getName())) {
+                moon = (CelestialBody) movingObject;
+                break;
+            }
+        }
+
+        Assert.notNull(moon);
+
+        Vector3d h = spacecraft.getCartesianState().getAngularMomentum();
+        double d1 = -h.dot(spacecraft.getKeplerianElements().getCentralObject().getPosition());
+        double a1 = h.x;
+        double b1 = h.y;
+        double c1 = h.z;
+
+        Vector3d hMoon = moon.getCartesianState().getAngularMomentum();
+        double d2 = -hMoon.dot(moon.getKeplerianElements().getCentralObject().getPosition());
+        double a2 = hMoon.x;
+        double b2 = hMoon.y;
+        double c2 = hMoon.z;
+
+        Vector3d p = hMoon.cross(h);
+
+        double x = spacecraft.getKeplerianElements().getCentralObject().getPosition().x;
+        double z = ((b2/b1)*(a1 * x+d1) -a2*x -d2)/(c2 - c1*b2/b1);
+        double y = (-c1*z -a1*x -d1) / b1;
+
+        z -= spacecraft.getKeplerianElements().getCentralObject().getPosition().z;
+        y -= spacecraft.getKeplerianElements().getCentralObject().getPosition().y;
+
+
+
+
+
+    }
+
+    /**
+     * Computes apsides for the spacecraft trajectory
+     * @param spacecraft
+     */
+    protected void computeApsides(Spacecraft spacecraft) {
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
 
         Double HA = keplerianElements.getHyperbolicAnomaly();
@@ -75,7 +120,7 @@ public class NewtonianPropagator implements Propagator {
         Vector3d position = cartesianState.getPosition();
         Vector3d velocity = cartesianState.getVelocity();
 
-        Vector3d hVector = position.cross(velocity);
+        Vector3d hVector = cartesianState.getAngularMomentum();
         double A = position.dot(velocity);
         logger.debug("Apoapsis = {}", A);
 
@@ -228,6 +273,31 @@ public class NewtonianPropagator implements Propagator {
         result.setPosition(position);
         return result;
     }
+
+//    /**
+//     * Solves the velocity and position by RK4 method (Runge-Kutta method, 4th order)
+//     * @param position the current position
+//     * @param velocity the current velocity
+//     * @param dt time interval
+//     * @return new position
+//     */
+//    protected Vector3d[] rk4Solver(Vector3d position, Vector3d velocity, double dt) {
+//        // k[i]v are velocities
+//        // k[i]x are position
+//
+//        Vector3d k1v = getAcceleration(position).scale(dt);
+//        Vector3d k1x = velocity.scale(dt);
+//        Vector3d k2v = getAcceleration(position.scaleAdd(dt/2, k1x)).scale(dt);
+//        Vector3d k2x = velocity.scaleAdd(1.0/2, k1v).scale(dt);
+//        Vector3d k3v = getAcceleration(position.scaleAdd(dt/2, k2x)).scale(dt);
+//        Vector3d k3x = velocity.scaleAdd(1.0/2, k2v).scale(dt);
+//        Vector3d k4v = getAcceleration(position.scaleAdd(dt, k3x)).scale(dt);
+//        Vector3d k4x = velocity.scaleAdd(1.0, k3v).scale(dt);
+//
+//        velocity = velocity.add(rk4(k1v, k2v, k3v, k4v));
+//        position = position.add(rk4(k1x, k2x, k3x, k4x));
+//        return new Vector3d[] {velocity, position};
+//    }
 
     protected Vector3d rk4(Vector3d u1, Vector3d u2, Vector3d u3, Vector3d u4) {
         return u1.scaleAdd(2, u2).scaleAdd(2, u3).add(u4).scale(1.0 / 6);

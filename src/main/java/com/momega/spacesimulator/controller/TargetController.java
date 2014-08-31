@@ -39,10 +39,7 @@ public class TargetController extends AbstractController {
                 detailItem.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), (com.momega.spacesimulator.model.NamedObject) viewCoordinates.getObject());
-                        dialog.setLocation(position);
-                        dialog.setVisible(true);
-
+                        showDetail(canvas, position, viewCoordinates);
                     }
                 });
                 JMenuItem selectItem = new JMenuItem("Select");
@@ -73,7 +70,7 @@ public class TargetController extends AbstractController {
                             null);
                     ViewCoordinates vc = RendererModel.getInstance().findByName(selectedName);
                     if (vc !=null) {
-                        select(vc);
+                        showDetail(canvas, position, vc);
                     }
                 }
             });
@@ -83,6 +80,12 @@ public class TargetController extends AbstractController {
             select(viewCoordinates);
         }
         super.mouseClicked(e);
+    }
+
+    protected void showDetail(final GLCanvas canvas, final Point position, ViewCoordinates viewCoordinates) {
+        DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), (com.momega.spacesimulator.model.NamedObject) viewCoordinates.getObject());
+        dialog.setLocation(position);
+        dialog.setVisible(true);
     }
 
     protected Point getPosition(GLDrawable drawable, MouseEvent e) {
