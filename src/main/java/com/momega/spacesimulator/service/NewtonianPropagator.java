@@ -2,9 +2,9 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.VectorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +44,10 @@ public class NewtonianPropagator implements Propagator {
 
         computePrediction(spacecraft, newTimestamp);
         computeApsides(spacecraft);
-        computeIntersections(spacecraft);
+        computeIntersections(spacecraft, newTimestamp);
     }
 
-    protected void computeIntersections(Spacecraft spacecraft) {
+    protected void computeIntersections(Spacecraft spacecraft, Timestamp newTimestamp) {
         CelestialBody moon = null;
         for(MovingObject movingObject : ModelHolder.getModel().getMovingObjects()) {
             if ("Moon".equals(movingObject.getName())) {
@@ -58,30 +58,37 @@ public class NewtonianPropagator implements Propagator {
 
         Assert.notNull(moon);
 
-        Vector3d h = spacecraft.getCartesianState().getAngularMomentum();
+        CartesianState hCs = VectorUtils.relativeCartesianState(spacecraft);
+        Vector3d h = hCs.getAngularMomentum().normalize();
         double d1 = -h.dot(spacecraft.getKeplerianElements().getCentralObject().getPosition());
         double a1 = h.x;
         double b1 = h.y;
         double c1 = h.z;
 
-        Vector3d hMoon = moon.getCartesianState().getAngularMomentum();
+        Vector3d hMoon = VectorUtils.relativeCartesianState(moon).getAngularMomentum().normalize();
         double d2 = -hMoon.dot(moon.getKeplerianElements().getCentralObject().getPosition());
         double a2 = hMoon.x;
         double b2 = hMoon.y;
         double c2 = hMoon.z;
 
-        Vector3d p = hMoon.cross(h);
+        Vector3d p = hMoon.cross(h).normalize();
 
         double x = spacecraft.getKeplerianElements().getCentralObject().getPosition().x;
         double z = ((b2/b1)*(a1 * x+d1) -a2*x -d2)/(c2 - c1*b2/b1);
         double y = (-c1*z -a1*x -d1) / b1;
 
-        z -= spacecraft.getKeplerianElements().getCentralObject().getPosition().z;
-        y -= spacecraft.getKeplerianElements().getCentralObject().getPosition().y;
+        OrbitIntersection intersection = new OrbitIntersection();
+        intersection.setPosition(new Vector3d(x, y, z));
+        intersection.setTimestamp(newTimestamp);
+        intersection.setKeplerianElements(spacecraft.getKeplerianElements());
+        intersection.setName("Spacecraft/Moon Intersection");
+        intersection.setTargetObject(moon);
+        intersection.setDirection(p);
 
+        spacecraft.setOrbitIntersection(intersection);
 
-
-
+//        z -= spacecraft.getKeplerianElements().getCentralObject().getPosition().z;
+//        y -= spacecraft.getKeplerianElements().getCentralObject().getPosition().y;
 
     }
 
@@ -124,7 +131,7 @@ public class NewtonianPropagator implements Propagator {
         double A = position.dot(velocity);
         logger.debug("Apoapsis = {}", A);
 
-        Orientation orientation = MathUtils.createOrientation(velocity, hVector);
+        Orientation orientation = VectorUtils.createOrientation(velocity, hVector);
         spacecraft.setOrientation(orientation);
 
         double h = hVector.length();

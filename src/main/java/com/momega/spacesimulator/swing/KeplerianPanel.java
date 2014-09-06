@@ -1,9 +1,9 @@
 package com.momega.spacesimulator.swing;
 
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.swing.AttributesPanel;
-import com.momega.spacesimulator.swing.DetailDialog;
-import com.momega.spacesimulator.swing.UpdatablePanel;
+import com.momega.spacesimulator.model.Apsis;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Spacecraft;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,20 +18,20 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
     private static final String[] LABELS = {"Central Object", "Altitude", "Semimajor Axis", "Eccentricity", "Time Of Periapsis", "Period", "Argument Of Periapsis", "Inclination", "Ascending Node", "True Anomaly", "Eccentric Anomaly", "Hyperbolic Anomaly"};
     private static final String[] FIELDS = {"#obj.keplerianElements.centralObject.name", "#getAltitude2(#obj)", "#obj.keplerianElements.semimajorAxis", "#obj.keplerianElements.eccentricity", "#timeAsString(#obj.keplerianElements.timeOfPeriapsis)", "#obj.keplerianElements.period", "#toDegrees(#obj.keplerianElements.argumentOfPeriapsis)", "#toDegrees(#obj.keplerianElements.inclination)", "#toDegrees(#obj.keplerianElements.ascendingNode)", "#toDegrees(#obj.keplerianElements.trueAnomaly)", "#toDegrees(#obj.keplerianElements.eccentricAnomaly)", "#toDegrees(#obj.keplerianElements.hyperbolicAnomaly)"};
 
-    private final NamedObject namedObject;
+    private final Object object;
     private JButton peButton;
     private JButton apButton;
     private final AttributesPanel attrPanel;
 
-    public KeplerianPanel(NamedObject namedObject) {
+    public KeplerianPanel(Object object) {
         super(new BorderLayout(5, 5));
-        this.namedObject = namedObject;
+        this.object = object;
 
-        attrPanel = new AttributesPanel(LABELS, namedObject, FIELDS);
+        attrPanel = new AttributesPanel(LABELS, object, FIELDS);
         add(attrPanel, BorderLayout.CENTER);
 
-        if (namedObject instanceof MovingObject) {
-            MovingObject movingObject = (MovingObject) namedObject;
+        if (object instanceof MovingObject) {
+            MovingObject movingObject = (MovingObject) object;
             final KeplerianTrajectory keplerianTrajectory = movingObject.getTrajectory();
 
             JPanel buttonPanel = new JPanel();
@@ -69,9 +69,9 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
     @Override
     public void updateValues() {
         attrPanel.updateValues();
-        if (namedObject instanceof Spacecraft) {
-            Spacecraft spacecraft = (Spacecraft) namedObject;
-            final KeplerianTrajectory keplerianTrajectory = (KeplerianTrajectory) spacecraft.getTrajectory();
+        if (object instanceof Spacecraft) {
+            Spacecraft spacecraft = (Spacecraft) object;
+            final KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();
             peButton.setEnabled(keplerianTrajectory.getPeriapsis() != null);
             apButton.setEnabled(keplerianTrajectory.getApoapsis() != null);
         }

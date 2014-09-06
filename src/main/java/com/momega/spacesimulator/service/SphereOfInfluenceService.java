@@ -1,10 +1,7 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.SphereOfInfluence;
+import com.momega.spacesimulator.model.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,20 +11,20 @@ import org.springframework.stereotype.Component;
 @Component
 public class SphereOfInfluenceService {
 
-    public SphereOfInfluence findCurrentSoi(Spacecraft spacecraft) {
-        SphereOfInfluence soi = checkSoiOfPlanet(spacecraft, ModelHolder.getModel().getRootSoi());
+    public SphereOfInfluence findCurrentSoi(PositionProvider positionProvider) {
+        SphereOfInfluence soi = checkSoiOfPlanet(positionProvider, ModelHolder.getModel().getRootSoi());
         return soi;
     }
 
-    protected SphereOfInfluence checkSoiOfPlanet(MovingObject satellite, SphereOfInfluence parentSoi) {
+    protected SphereOfInfluence checkSoiOfPlanet(PositionProvider positionProvider, SphereOfInfluence parentSoi) {
         for(SphereOfInfluence soi : parentSoi.getChildren()) {
-            SphereOfInfluence childSoi = checkSoiOfPlanet(satellite, soi);
+            SphereOfInfluence childSoi = checkSoiOfPlanet(positionProvider, soi);
             if (childSoi != null) {
                 return childSoi;
             }
         }
         CelestialBody celestialBody = parentSoi.getBody();
-        double distance = satellite.getCartesianState().getPosition().subtract(celestialBody.getCartesianState().getPosition()).length();
+        double distance = positionProvider.getPosition().subtract(celestialBody.getCartesianState().getPosition()).length();
         if (distance > parentSoi.getRadius()) {
             return null;
         }

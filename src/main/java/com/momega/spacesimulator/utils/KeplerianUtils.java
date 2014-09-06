@@ -211,7 +211,8 @@ public final class KeplerianUtils {
     }
 
     /**
-     * Gets the position in cartesian state based on the keplerian elements with given angle theta.
+     * Gets the position in cartesian state based on the keplerian elements with given angle theta. So it means the position
+     * is defined by the keplerian elements except the angle theta
      * @param keplerianElements the keplerian elements
      * @param theta the angle theta is used instead of true anomaly in keplerian elements
      * @return the 3d vector

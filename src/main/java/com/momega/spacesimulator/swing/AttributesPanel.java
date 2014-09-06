@@ -1,6 +1,9 @@
 package com.momega.spacesimulator.swing;
 
-import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
@@ -26,12 +29,12 @@ import java.util.Map;
  */
 public class AttributesPanel extends JPanel implements UpdatablePanel {
 
-    private final NamedObject namedObject;
+    private final Object object;
     protected Map<JComponent, Expression> jFields = new HashMap<>();
     protected List<JLabel> jLabels = new ArrayList<>();
 
-    public AttributesPanel(String[] labels, NamedObject namedObject, String[] fields) {
-        this.namedObject = namedObject;
+    public AttributesPanel(String[] labels, Object object, String[] fields) {
+        this.object = object;
         int numPairs = labels.length;
         GridLayout layout = new GridLayout(numPairs, 2, 5, 5);
         setLayout(layout);
@@ -77,7 +80,7 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
     protected EvaluationContext createContext() {
         try {
             StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
-            evaluationContext.setVariable("obj", namedObject);
+            evaluationContext.setVariable("obj", object);
             evaluationContext.registerFunction("toSphericalCoordinates", VectorUtils.class.getDeclaredMethod("toSphericalCoordinates", Vector3d.class));
             evaluationContext.registerFunction("toDegrees", Math.class.getDeclaredMethod("toDegrees", double.class));
             evaluationContext.registerFunction("timeAsString", TimeUtils.class.getDeclaredMethod("timeAsString", Timestamp.class));

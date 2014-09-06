@@ -4,6 +4,7 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
+import com.momega.spacesimulator.utils.VectorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +55,12 @@ public class ThrustModel implements ForceModel {
 
         logger.debug("Engine is running, thrust = {}", thrust);
 
-        Orientation o = MathUtils.rotateByAngles(spacecraft.getOrientation().clone(), maneuver.getThrottleAlpha(), maneuver.getThrottleDelta(), false);
+        Orientation o = VectorUtils.rotateByAngles(spacecraft.getOrientation().clone(), maneuver.getThrottleAlpha(), maneuver.getThrottleDelta(), false);
         Vector3d n = o.getN();
         Vector3d acceleration = n.scale(a);
 
         // decrease the mass of the spacecraft
+        //TODO: place this to different method, because of runge-kutta method
         spacecraft.setMass( spacecraft.getMass() - dm);
         propulsion.setFuel( propulsion.getFuel() - dm);
 

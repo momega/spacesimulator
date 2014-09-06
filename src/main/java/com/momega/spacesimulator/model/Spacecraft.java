@@ -13,6 +13,9 @@ public class Spacecraft extends PhysicalBody {
     private List<Maneuver> maneuvers = new ArrayList<>();
     private Maneuver currentManeuver;
 
+    //TODO: find better
+    private OrbitIntersection orbitIntersection;
+
     public HistoryTrajectory getHistoryTrajectory() {
         return historyTrajectory;
     }
@@ -43,5 +46,13 @@ public class Spacecraft extends PhysicalBody {
 
     public void setCurrentManeuver(Maneuver currentManeuver) {
         this.currentManeuver = currentManeuver;
+    }
+
+    public void setOrbitIntersection(OrbitIntersection orbitIntersection) {
+        this.orbitIntersection = orbitIntersection;
+    }
+
+    public OrbitIntersection getOrbitIntersection() {
+        return orbitIntersection;
     }
 }

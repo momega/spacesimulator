@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
@@ -43,7 +42,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         CelestialBody moon = (CelestialBody) findMovingObject("Moon");
 
         Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);
-        Orientation o = MathUtils.createOrientation(new Vector3d(0, 1d, 0), new Vector3d(0, 0, 1d));
+        Orientation o = VectorUtils.createOrientation(new Vector3d(0, 1d, 0), new Vector3d(0, 0, 1d));
         o.lookUp(Math.toRadians(-23.75d));
         Vector3d velocity = o.getN().scale(9000d);
         Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity);
@@ -78,7 +77,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         Camera s = new Camera();
         s.setTargetObject(findMovingObject("Earth"));
         s.setDistance(100 * 1E6);
-        s.setOppositeOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        s.setOppositeOrientation(VectorUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
         model.setCamera(s);
     }
 }

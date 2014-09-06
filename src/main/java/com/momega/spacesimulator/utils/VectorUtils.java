@@ -2,6 +2,7 @@ package com.momega.spacesimulator.utils;
 
 import com.momega.spacesimulator.model.CartesianState;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +15,6 @@ public class VectorUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(VectorUtils.class);
 
-    private final static double EPSILON = 0.0001;
     public final static double SMALL_EPSILON = 0.0001;
 
     /**
@@ -44,6 +44,15 @@ public class VectorUtils {
         return result;
     }
 
+    /**
+     * Gets the relative cartesian state to the current center of the orbit
+     * @param movingObject the moving object (typically spacecraft)
+     * @return the new instance of the cartesian state
+     */
+    public static CartesianState relativeCartesianState(MovingObject movingObject) {
+        return movingObject.getCartesianState().subtract(movingObject.getKeplerianElements().getCentralObject().getCartesianState());
+    }
+
     public static boolean equals(Vector3d v1, Vector3d v2, double precision) {
         return v1.subtract(v2).length()<precision;
     }
@@ -58,7 +67,7 @@ public class VectorUtils {
     public static Vector3d rotateAboutAxis(final Vector3d v, final double angle, final Vector3d axis) {
         Assert.notNull(v);
         Assert.notNull(axis);
-        Assert.isTrue(Math.abs(axis.length() - 1) < EPSILON);
+        Assert.isTrue(Math.abs(axis.length() - 1) < SMALL_EPSILON);
 
         // Main algorithm
         double cosAngle = Math.cos(angle);
@@ -80,4 +89,31 @@ public class VectorUtils {
         return Math.acos(cosAlpha);
     }
 
+    public static Orientation rotateByAngles(Orientation o, double alpha, double delta, boolean toEcliptic) {
+        o.lookUp(Math.PI / 2 - delta);
+        o.lookLeft(alpha);
+        if (toEcliptic) {
+            o.rotate(new Vector3d(1, 0, 0), -MathUtils.ECLIPTIC);
+        }
+        return o;
+    }
+
+    /**
+     * Creates the rotation transformation
+     * @param alpha right ascension
+     * @param delta declination of the north-pole
+     * @return the transformation matrix
+     */
+    public static Orientation rotateByAngles(double alpha, double delta, boolean toEcliptic) {
+        Orientation o = createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
+        return rotateByAngles(o, alpha, delta, toEcliptic);
+    }
+
+    public static Orientation createOrientation(Vector3d nVector, Vector3d vVector) {
+        Orientation o = new Orientation();
+        o.setN(nVector.normalize());
+        o.setV(vVector.normalize());
+        o.setU(o.getV().cross(o.getN()));
+        return o;
+    }
 }

@@ -4,6 +4,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
@@ -82,6 +83,14 @@ public class GLUtils {
             y = s * t + c * y;
         }
         gl.glEnd();
+    }
+
+    public static void drawBeansAndCircles(GL2 gl, double cx, double cy, double r, int num_beams, int num_circles) {
+        double circleDistance = r / num_circles;
+        for (int i = 1; i <= num_circles; i++) {
+            GLUtils.drawCircle(gl, 0, 0, circleDistance * i, 360);
+        }
+        GLUtils.drawBeams(gl, 0, 0, r, num_beams);
     }
 
     /**
@@ -213,6 +222,12 @@ public class GLUtils {
 
     public static void translate(GL2 gl, Vector3d position) {
         gl.glTranslated(position.x, position.y, position.z);
+    }
+
+    public static void rotate(GL2 gl, KeplerianElements keplerianElements) {
+        gl.glRotated(Math.toDegrees(keplerianElements.getAscendingNode()), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(keplerianElements.getInclination()), 1, 0, 0);
+        gl.glRotated(Math.toDegrees(keplerianElements.getArgumentOfPeriapsis()), 0, 0, 1);
     }
 
     public static void drawPoint(GL2 gl, int size, double[] color, PositionProvider positionProvider) {

@@ -6,7 +6,7 @@ import javax.media.opengl.GL2;
 import java.awt.*;
 
 /**
- * Renderer displays the point at the dynamical point position.
+ * Renderer displays the point at the physica body position.
  * Created by martin on 4/28/14.
  */
 public class PhysicalBodyRenderer extends AbstractTextRenderer {

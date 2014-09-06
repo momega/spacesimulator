@@ -2,7 +2,6 @@ package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -25,7 +24,7 @@ public class RotationTest {
         double[] angles2 = VectorUtils.toSphericalCoordinates(v);
         logger.info("directly dec = {}, ra = {}", 90-Math.toDegrees(angles2[1]), Math.toDegrees(angles2[2]));
 
-        Orientation orientation = MathUtils.rotateByAngles(alpha, delta,false);
+        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, false);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
@@ -37,12 +36,12 @@ public class RotationTest {
     public void marsTest2() {
         double alpha = Math.toRadians(317.68143);
         double delta = Math.toRadians(52.88650);
-        Orientation orientation = MathUtils.rotateByAngles(alpha, delta,false);
+        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, false);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
 
-        Orientation o = MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
+        Orientation o = VectorUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
         o.lookLeft(alpha);
         o.lookUp(Math.PI/2 - delta);
 
@@ -61,7 +60,7 @@ public class RotationTest {
         double[] angles2 = VectorUtils.toSphericalCoordinates(v);
         logger.info("directly dec = {}, ra = {}", 90-Math.toDegrees(angles2[1]), Math.toDegrees(angles2[2]));
 
-        Orientation orientation = MathUtils.rotateByAngles(alpha, delta, false);
+        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, false);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
@@ -80,7 +79,7 @@ public class RotationTest {
 
         alpha = Math.toRadians(0);
         delta = Math.toRadians(90);
-        Orientation orientation = MathUtils.rotateByAngles(alpha, delta, true);
+        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, true);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
@@ -99,7 +98,7 @@ public class RotationTest {
 
         alpha = Math.toRadians(317.68143);
         delta = Math.toRadians(52.8865);
-        Orientation orientation = MathUtils.rotateByAngles(alpha, delta, true);
+        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, true);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
@@ -111,12 +110,12 @@ public class RotationTest {
     public void marsEclipticTest2() {
         double alpha = Math.toRadians(317.68143);
         double delta = Math.toRadians(52.8865);
-        Orientation orientation = MathUtils.rotateByAngles(alpha, delta,true);
+        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, true);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
 
-        Orientation o = MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
+        Orientation o = VectorUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
         o.lookUp(Math.PI / 2 - delta);
         o.lookLeft(alpha);
         o.rotate(new Vector3d(1, 0, 0), -Math.toRadians(23.439291));

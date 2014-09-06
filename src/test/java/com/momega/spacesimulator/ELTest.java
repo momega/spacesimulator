@@ -3,7 +3,6 @@ package com.momega.spacesimulator;
 import com.momega.spacesimulator.model.CartesianState;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 import junit.framework.Assert;
 import org.junit.Test;
@@ -22,7 +21,7 @@ public class ELTest {
         Planet namedObject = new Planet();
         namedObject.setCartesianState(new CartesianState());
         namedObject.getCartesianState().setPosition(new Vector3d(1,2,3));
-        namedObject.setOrientation(MathUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(1, 0, 0)));
+        namedObject.setOrientation(VectorUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(1, 0, 0)));
 
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();

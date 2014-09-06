@@ -83,14 +83,9 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
     @Override
     protected void additionalDraw(GL2 gl) {
-        super.additionalDraw(gl);
-
         gl.glColor3dv(celestialBody.getTrajectory().getColor(), 0);
         if (ModelHolder.getModel().getSelectedObject() == celestialBody) {
-            for (int i = 1; i <= 5; i++) {
-                GLUtils.drawCircle(gl, 0, 0, celestialBody.getRadius() * i, 360);
-            }
-            GLUtils.drawBeams(gl, 0, 0, celestialBody.getRadius() * 5, 18);
+            GLUtils.drawBeansAndCircles(gl, 0, 0, celestialBody.getRadius() * 5, 18, 5);
         }
 
         gl.glPointSize(6);

@@ -4,7 +4,6 @@ import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Trajectory;
 import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.utils.MathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,10 +28,9 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
             GL2 gl = drawable.getGL().getGL2();
             gl.glPushMatrix();
 
+            // the order is important
             GLUtils.translate(gl, getKeplerianElements().getCentralObject().getCartesianState().getPosition());
-            gl.glRotated(Math.toDegrees(getKeplerianElements().getAscendingNode()), 0, 0, 1);
-            gl.glRotated(Math.toDegrees(getKeplerianElements().getInclination()), 1, 0, 0);
-            gl.glRotated(Math.toDegrees(getKeplerianElements().getArgumentOfPeriapsis()), 0, 0, 1);
+            GLUtils.rotate(gl, getKeplerianElements());
 
             double a = getKeplerianElements().getSemimajorAxis();
             double e = a * getKeplerianElements().getEccentricity();
@@ -46,6 +44,7 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
             logger.debug("semi-major = {}", a);
 
             gl.glColor3dv(getTrajectory().getColor(), 0);
+
             gl.glLineWidth(1.5f);
             gl.glTranslated(-e, 0, 0);
             if (getKeplerianElements().getEccentricity() < 1) {
@@ -54,6 +53,21 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
                 double HA = getKeplerianElements().getHyperbolicAnomaly();
                 GLUtils.drawHyperbolaPartial(gl, a, b, -2 * Math.PI, -HA, 7200); // -HA because of a<0
             }
+
+            gl.glPopMatrix();
+        }
+
+        // TODO: temporary here
+        if ("Moon".equals(movingObject.getName())) {
+            GL2 gl = drawable.getGL().getGL2();
+            gl.glPushMatrix();
+
+            gl.glColor3dv(getTrajectory().getColor(), 0);
+            // the order is important
+            GLUtils.translate(gl, getKeplerianElements().getCentralObject().getCartesianState().getPosition());
+            GLUtils.rotate(gl, getKeplerianElements());
+
+            GLUtils.drawBeansAndCircles(gl, 0, 0,  20 * 1E6, 18, 10);
 
             gl.glPopMatrix();
         }

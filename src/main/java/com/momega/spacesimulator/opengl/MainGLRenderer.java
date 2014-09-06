@@ -152,6 +152,10 @@ public class MainGLRenderer extends AbstractGLRenderer {
                 for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
                     addViewCoordinates(drawable, hp, camera);
                 }
+                OrbitIntersection intersection = spacecraft.getOrbitIntersection();
+                if (intersection != null) {
+                    addViewCoordinates(drawable, intersection, camera);
+                }
             }
         }
         RendererModel.getInstance().modelChanged();

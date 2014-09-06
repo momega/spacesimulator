@@ -20,7 +20,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /**
- * The detail dialog. The dialog is modal less dialog showing data about single object.
+ * The detail dialog. The dialog is modal less dialog showing data about single namedObject.
  * The dialog also display data actualization because it implements {@link com.momega.spacesimulator.renderer.ModelChangeListener}.
  * Created by martin on 8/11/14.
  */
@@ -56,6 +56,8 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
         if (namedObject instanceof Apsis) {
             tabbedPane.addTab("Apsis", createImageIcon("/images/application.png"), createApsisPanel(), "Apsis Information");
+        } else if (namedObject instanceof PositionProvider) {
+            tabbedPane.addTab("Position", createImageIcon("/images/application.png"), createPositionProviderPanel(), "Point Information");
         }
 
         JPanel buttonsPanel = new JPanel(new FlowLayout());
@@ -139,6 +141,12 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
     protected JPanel createApsisPanel() {
         ApsisPanel result =  new ApsisPanel((Apsis) namedObject);
+        attributesPanelList.add(result);
+        return result;
+    }
+
+    protected JPanel createPositionProviderPanel() {
+        PositionProviderPanel result =  new PositionProviderPanel((PositionProvider) namedObject);
         attributesPanelList.add(result);
         return result;
     }
