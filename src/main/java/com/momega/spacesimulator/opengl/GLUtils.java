@@ -7,7 +7,6 @@ import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.apache.commons.io.IOUtils;
 
 import javax.media.opengl.GL2;

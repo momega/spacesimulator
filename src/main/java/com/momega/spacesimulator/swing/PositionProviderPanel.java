@@ -10,15 +10,14 @@ import java.awt.*;
  */
 public class PositionProviderPanel extends JPanel implements UpdatablePanel {
 
-    private static final String[] LABELS = {"Name", "Position X", "Position Y", "Position Z", "Timestamp"};
+	private static final long serialVersionUID = -4827683656350690357L;
+	private static final String[] LABELS = {"Name", "Position X", "Position Y", "Position Z", "Timestamp"};
     private static final String[] FIELDS = {"#obj.name", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)"};
 
-    private final PositionProvider positionProvider;
     private final AttributesPanel attrPanel;
 
     public PositionProviderPanel(PositionProvider positionProvider) {
         super(new BorderLayout(5, 5));
-        this.positionProvider = positionProvider;
 
         attrPanel = new AttributesPanel(LABELS, positionProvider, FIELDS);
         add(attrPanel, BorderLayout.CENTER);

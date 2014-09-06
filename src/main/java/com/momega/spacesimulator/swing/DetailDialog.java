@@ -26,7 +26,8 @@ import java.util.ArrayList;
  */
 public class DetailDialog extends JDialog implements ModelChangeListener {
 
-    private static final Logger logger = LoggerFactory.getLogger(DetailDialog.class);
+	private static final long serialVersionUID = 4044217723361028807L;
+	private static final Logger logger = LoggerFactory.getLogger(DetailDialog.class);
     private final NamedObject namedObject;
     private java.util.List<UpdatablePanel> attributesPanelList = new ArrayList<>();
 

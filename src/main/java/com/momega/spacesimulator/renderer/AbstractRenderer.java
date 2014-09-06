@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
 
 /**
  * Created by martin on 6/27/14.

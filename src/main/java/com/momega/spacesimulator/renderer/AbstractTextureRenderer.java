@@ -1,12 +1,10 @@
 package com.momega.spacesimulator.renderer;
 
-import com.jogamp.opengl.util.texture.Texture;
-import com.momega.spacesimulator.opengl.GLUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+
+import com.jogamp.opengl.util.texture.Texture;
+import com.momega.spacesimulator.opengl.GLUtils;
 
 /**
  * Abstract renderer with prepares and uses the texture
@@ -14,7 +12,6 @@ import javax.media.opengl.GLAutoDrawable;
  */
 public abstract class AbstractTextureRenderer extends AbstractRenderer {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractTextureRenderer.class);
     protected Texture texture;
     protected int listIndex;
 
