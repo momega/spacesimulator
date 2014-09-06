@@ -1,11 +1,12 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.opengl.GLUtils;
-
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+
+import com.momega.spacesimulator.model.OrbitIntersection;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.Vector3d;
 
 /**
  * Created by martin on 9/6/14.

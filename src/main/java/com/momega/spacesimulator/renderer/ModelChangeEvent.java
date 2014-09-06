@@ -10,7 +10,8 @@ import java.util.EventObject;
  */
 public class ModelChangeEvent extends EventObject {
 
-    private Timestamp timestamp;
+	private static final long serialVersionUID = 4492249704642213755L;
+	private Timestamp timestamp;
 
     /**
      * Constructs a prototypical Event.

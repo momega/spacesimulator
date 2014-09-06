@@ -48,7 +48,6 @@ public class Application {
     }
 
     public void dispose() {
-        Model model = ModelHolder.getModel();
         logger.info("dispose time = {}",  TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
     }
 

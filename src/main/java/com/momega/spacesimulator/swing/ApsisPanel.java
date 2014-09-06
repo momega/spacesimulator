@@ -15,7 +15,6 @@ public class ApsisPanel extends JPanel implements UpdatablePanel {
     private static final String[] LABELS = {"Name", "Type", "Position X", "Position Y", "Position Z", "Timestamp", "Altitude"};
     private static final String[] FIELDS = {"#obj.name", "#obj.type.toString()", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)", "#getAltitude(#obj.keplerianElements, #obj.type.angle)"};
 
-
     private Apsis apsis;
     private final AttributesPanel attrPanel;
 

@@ -2,7 +2,6 @@ package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.NamedObject;
-import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.slf4j.Logger;

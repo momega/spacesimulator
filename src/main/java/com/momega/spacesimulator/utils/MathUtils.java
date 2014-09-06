@@ -1,8 +1,5 @@
 package com.momega.spacesimulator.utils;
 
-import com.momega.spacesimulator.model.Orientation;
-import com.momega.spacesimulator.model.Vector3d;
-
 /**
  * Set of mathematical helper functions
  *

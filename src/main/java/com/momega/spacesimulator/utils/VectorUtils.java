@@ -1,19 +1,16 @@
 package com.momega.spacesimulator.utils;
 
+import org.springframework.util.Assert;
+
 import com.momega.spacesimulator.model.CartesianState;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Vector3d;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 /**
  * Created by martin on 6/22/14.
  */
 public class VectorUtils {
-
-    private static final Logger logger = LoggerFactory.getLogger(VectorUtils.class);
 
     public final static double SMALL_EPSILON = 0.0001;
 

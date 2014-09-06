@@ -29,7 +29,8 @@ import java.util.Map;
  */
 public class AttributesPanel extends JPanel implements UpdatablePanel {
 
-    private final Object object;
+	private static final long serialVersionUID = -9096883134657153199L;
+	private final Object object;
     protected Map<JComponent, Expression> jFields = new HashMap<>();
     protected List<JLabel> jLabels = new ArrayList<>();
 
