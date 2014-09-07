@@ -65,8 +65,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     protected void initApsised() {
         for(MovingObject body : model.getMovingObjects()) {
             if ((body instanceof CelestialBody) || (body instanceof BaryCentre)) {
-                KeplerianUtils.getInstance().updatePeriapsis(body);
-                KeplerianUtils.getInstance().updateApoapsis(body);
+            	if (!TrajectoryType.STATIC.equals(body.getTrajectory().getType())) {
+	                KeplerianUtils.getInstance().updatePeriapsis(body);
+	                KeplerianUtils.getInstance().updateApoapsis(body);
+            	}
             }
         }
     }

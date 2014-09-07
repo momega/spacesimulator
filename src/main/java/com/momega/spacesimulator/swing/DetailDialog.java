@@ -44,6 +44,12 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             tabbedPane.addTab("Basic", createImageIcon("/images/application.png"), createPhysicalPanel(), "Basic Information");
             tabbedPane.addTab("Cartesian", createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
             tabbedPane.addTab("Keplerian", createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
+        } else {
+        	if (namedObject instanceof Apsis) {
+                tabbedPane.addTab("Apsis", createImageIcon("/images/application.png"), createApsisPanel(), "Apsis Information");
+            } else if (namedObject instanceof PositionProvider) {
+                tabbedPane.addTab("Position", createImageIcon("/images/application.png"), createPositionProviderPanel(), "Point Information");
+            }
         }
 
         if (namedObject instanceof Spacecraft) {
@@ -53,12 +59,6 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             SpacecraftPanel spacecraftPanel = new SpacecraftPanel(spacecraft);
             attributesPanelList.add(spacecraftPanel);
             tabbedPane.addTab("Subsystems", createImageIcon("/images/cog.png"), spacecraftPanel, "Spacecraft Subsystems");
-        }
-
-        if (namedObject instanceof Apsis) {
-            tabbedPane.addTab("Apsis", createImageIcon("/images/application.png"), createApsisPanel(), "Apsis Information");
-        } else if (namedObject instanceof PositionProvider) {
-            tabbedPane.addTab("Position", createImageIcon("/images/application.png"), createPositionProviderPanel(), "Point Information");
         }
 
         JPanel buttonsPanel = new JPanel(new FlowLayout());
