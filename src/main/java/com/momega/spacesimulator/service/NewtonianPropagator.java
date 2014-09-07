@@ -77,19 +77,18 @@ public class NewtonianPropagator implements Propagator {
         double z = ((b2/b1)*(a1 * x+d1) -a2*x -d2)/(c2 - c1*b2/b1);
         double y = (-c1*z -a1*x -d1) / b1;
 
-        OrbitIntersection intersection = new OrbitIntersection();
+        
+        OrbitIntersection intersection = spacecraft.getOrbitIntersection();
+        if (spacecraft.getOrbitIntersection()==null) {
+        	intersection = new OrbitIntersection();
+        	spacecraft.setOrbitIntersection(intersection);
+        }
         intersection.setPosition(new Vector3d(x, y, z));
         intersection.setTimestamp(newTimestamp);
         intersection.setKeplerianElements(spacecraft.getKeplerianElements());
         intersection.setName("Spacecraft/Moon Intersection");
         intersection.setTargetObject(moon);
         intersection.setDirection(p);
-
-        spacecraft.setOrbitIntersection(intersection);
-
-//        z -= spacecraft.getKeplerianElements().getCentralObject().getPosition().z;
-//        y -= spacecraft.getKeplerianElements().getCentralObject().getPosition().y;
-
     }
 
     /**

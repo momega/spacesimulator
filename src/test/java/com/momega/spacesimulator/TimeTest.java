@@ -1,12 +1,7 @@
 package com.momega.spacesimulator;
 
 import org.joda.time.DateTimeUtils;
-import org.joda.time.chrono.JulianChronology;
 import org.junit.Test;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 /**
  * Created by martin on 4/29/14.

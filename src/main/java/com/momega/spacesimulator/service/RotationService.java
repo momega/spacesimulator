@@ -26,7 +26,7 @@ public class RotationService {
         double dt = newTime.subtract(TimeUtils.JD2000).doubleValue();
         double phi = dt / rotatingObject.getRotationPeriod();
         phi = MathUtils.normalizeAngle(phi * 2 * Math.PI);
-        phi += Math.PI/2; //TODO : why?
+        phi += Math.PI/2; //TODO : why? because of texture?
 
         logger.debug("phi = {}", phi);
 

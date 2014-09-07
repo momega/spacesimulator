@@ -11,12 +11,12 @@ import com.momega.spacesimulator.utils.MathUtils;
  */
 public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
 
-    protected PhysicalBody centerSolarSystem;
+    protected BaryCentre centerSolarSystem;
     protected SphereOfInfluence sunSoi;
 
     @Override
     public void initPlanets() {
-        centerSolarSystem = new PhysicalBody();
+        centerSolarSystem = new BaryCentre();
         createTrajectory(centerSolarSystem, new double[] {1, 0.7, 0}, TrajectoryType.STATIC);
         updateDynamicalPoint(centerSolarSystem, "Solar System Barycenter", 0, 0, 1, 0, null);
         setCentralPoint(centerSolarSystem);

@@ -1,6 +1,8 @@
 package com.momega.spacesimulator.model;
 
 /**
+ * The spacecraft can be separated into several subsystems. This class represents such abstract superclass
+ * for all subsystems.  
  * Created by martin on 8/14/14.
  */
 public abstract class SpacecraftSubsystem extends NamedObject {

@@ -22,7 +22,7 @@ public class PhysicalBody extends MovingObject {
     }
 
     /**
-     * Gets the mass of the dynamical point in kilograms
+     * Gets the mass of the physical body in kilograms
      * @return the mass in kilograms
      */
     public double getMass() {

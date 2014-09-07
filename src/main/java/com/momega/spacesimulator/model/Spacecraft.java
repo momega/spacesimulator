@@ -13,7 +13,7 @@ public class Spacecraft extends PhysicalBody {
     private List<Maneuver> maneuvers = new ArrayList<>();
     private Maneuver currentManeuver;
 
-    //TODO: find better
+    //TODO: find better place
     private OrbitIntersection orbitIntersection;
 
     public HistoryTrajectory getHistoryTrajectory() {

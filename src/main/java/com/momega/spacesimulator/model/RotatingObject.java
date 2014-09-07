@@ -33,7 +33,8 @@ public class RotatingObject extends PhysicalBody {
     }
 
     /**
-     * The angle of the prime meridian at epoch JD2000
+     * The angle of the prime meridian at epoch JD2000. It is referenced value for computing
+     * {@link #primeMeridian}
      * @return the angle in radians of the prime meridian at epoch JD2000.
      */
     public double getPrimeMeridianJd2000() {
@@ -44,6 +45,10 @@ public class RotatingObject extends PhysicalBody {
         this.primeMeridianJd2000 = primeMeridianJd2000;
     }
 
+    /**
+     * The angle of the prime meridian at the current timestamp
+     * @return
+     */
     public double getPrimeMeridian() {
         return primeMeridian;
     }

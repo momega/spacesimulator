@@ -1,10 +1,9 @@
 package com.momega.spacesimulator;
 
+import org.junit.Test;
+
 import com.momega.spacesimulator.builder.SolarSystemModelBuilder;
 import com.momega.spacesimulator.context.Application;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
-import org.junit.Test;
 
 /**
  * Created by martin on 6/19/14.
