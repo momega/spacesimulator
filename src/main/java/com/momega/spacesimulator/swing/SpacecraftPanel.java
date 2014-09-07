@@ -18,7 +18,8 @@ import java.util.List;
  */
 public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 
-    private final Spacecraft spacecraft;
+	private static final long serialVersionUID = 5112832471890949249L;
+	private final Spacecraft spacecraft;
     private final JPanel cards;
 
     public SpacecraftPanel(final Spacecraft spacecraft) {

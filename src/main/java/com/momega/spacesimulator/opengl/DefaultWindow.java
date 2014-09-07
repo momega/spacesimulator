@@ -26,8 +26,6 @@ public class DefaultWindow {
     private static final int FPS = 20; // animator's target frames per second
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultWindow.class);
-    private AbstractGLRenderer renderer;
-    private Controller controller;
     private GLCanvas canvas;
     private AnimatorBase animator;
     private String title;
@@ -37,71 +35,69 @@ public class DefaultWindow {
     }
 
     public void openWindow(final AbstractGLRenderer renderer, final Controller controller) {
-        this.renderer = renderer;
-        this.controller = controller;
         // Run the GUI codes in the event-dispatching thread for thread safety
-            try {
-                EventQueue.invokeAndWait(new Runnable() {
-                    @Override
-                    public void run() {
-                        // Get the default OpenGL profile, reflecting the best for your running platform
-                        GLProfile glp = GLProfile.getDefault();
-                        // Specifies a set of OpenGL capabilities, based on your profile.
-                        GLCapabilities caps = new GLCapabilities(glp);
-                        caps.setAlphaBits(8);
-                        caps.setStencilBits(8);
-                        // Create the OpenGL rendering canvas
+        try {
+            EventQueue.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+                    // Get the default OpenGL profile, reflecting the best for your running platform
+                    GLProfile glp = GLProfile.getDefault();
+                    // Specifies a set of OpenGL capabilities, based on your profile.
+                    GLCapabilities caps = new GLCapabilities(glp);
+                    caps.setAlphaBits(8);
+                    caps.setStencilBits(8);
+                    // Create the OpenGL rendering canvas
 
-                        logger.info("GL {}", caps.toString());
+                    logger.info("GL {}", caps.toString());
 
-                        canvas = new GLCanvas(caps);
-                        canvas.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+                    canvas = new GLCanvas(caps);
+                    canvas.setPreferredSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
 
-                        logger.info("Window created");
+                    logger.info("Window created");
 
-                        // Create a animator that drives canvas' display() at the specified FPS.
-                        animator = new FPSAnimator(canvas, FPS, true);
+                    // Create a animator that drives canvas' display() at the specified FPS.
+                    animator = new FPSAnimator(canvas, FPS, true);
 
-                        final Frame frame = new Frame(title);
-                        frame.setLayout(new java.awt.BorderLayout());
-                        frame.add(canvas);
+                    final Frame frame = new Frame(title);
+                    frame.setLayout(new java.awt.BorderLayout());
+                    frame.add(canvas);
 
-                        canvas.addGLEventListener(renderer);
+                    canvas.addGLEventListener(renderer);
 
-                        logger.info("Render set to window");
+                    logger.info("Render set to window");
 
-                        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-                        frame.setVisible(true);
-                        animator.start();
+                    frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
+                    frame.setVisible(true);
+                    animator.start();
 
-                        logger.info("Animator started");
-                        canvas.requestFocus();
+                    logger.info("Animator started");
+                    canvas.requestFocus();
 
-                        frame.addWindowListener(new WindowAdapter() {
-                            @Override
-                            public void windowClosing(WindowEvent e) {
-                                logger.info("Closing window");
-                                frame.dispose();
-                                stopAnimator();
-                            }
-                        });
+                    frame.addWindowListener(new WindowAdapter() {
+                        @Override
+                        public void windowClosing(WindowEvent e) {
+                            logger.info("Closing window");
+                            frame.dispose();
+                            stopAnimator();
+                        }
+                    });
 
-                        canvas.addMouseListener(controller);
-                        canvas.addKeyListener(controller);
-                        canvas.addMouseMotionListener(controller);
-                        canvas.addMouseWheelListener(controller);
-                        canvas.addComponentListener(controller);
+                    canvas.addMouseListener(controller);
+                    canvas.addKeyListener(controller);
+                    canvas.addMouseMotionListener(controller);
+                    canvas.addMouseWheelListener(controller);
+                    canvas.addComponentListener(controller);
 
-                        JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-                    }
-                });
+                    JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+                }
+            });
 
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
 
-            sleep(500);
-            logger.info("main method finished");
+        sleep(500);
+        logger.info("main method finished");
     }
 
 

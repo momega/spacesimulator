@@ -24,7 +24,8 @@ import java.util.List;
  */
 public class ManeuverPanel extends JPanel {
 
-    private final Spacecraft spacecraft;
+	private static final long serialVersionUID = 6451374273245722605L;
+	private final Spacecraft spacecraft;
 
     public ManeuverPanel(final Spacecraft spacecraft) {
         super(new BorderLayout());
@@ -88,7 +89,8 @@ public class ManeuverPanel extends JPanel {
 
     class ManeuverTableModel extends AbstractTableModel {
 
-        private final List<Maneuver> maneuvers;
+		private static final long serialVersionUID = -295663268290081776L;
+		private final List<Maneuver> maneuvers;
         private String[] columnNames = {"Name", "Start Time", "Start Time (mins)", "End Time", "Duration", "Throttle", "Throttle Alpha", "Throttle Dec"};
 
         ManeuverTableModel(List<Maneuver> maneuvers) {
@@ -110,7 +112,7 @@ public class ManeuverPanel extends JPanel {
             return columnNames[column];
         }
 
-        public Class getColumnClass(int c) {
+        public Class<?> getColumnClass(int c) {
             return getValueAt(0, c).getClass();
         }
 
@@ -201,7 +203,10 @@ public class ManeuverPanel extends JPanel {
     }
 
     class TimestampRenderer extends DefaultTableCellRenderer {
-        public TimestampRenderer() {
+
+		private static final long serialVersionUID = 3279731371208075652L;
+
+		public TimestampRenderer() {
             super();
         }
 

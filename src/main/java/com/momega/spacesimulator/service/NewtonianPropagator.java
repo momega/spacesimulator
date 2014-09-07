@@ -130,6 +130,7 @@ public class NewtonianPropagator implements Propagator {
         double A = position.dot(velocity);
         logger.debug("Apoapsis = {}", A);
 
+        // TODO: remove automatic changing the orientation 
         Orientation orientation = VectorUtils.createOrientation(velocity, hVector);
         spacecraft.setOrientation(orientation);
 

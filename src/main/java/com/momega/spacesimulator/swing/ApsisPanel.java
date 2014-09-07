@@ -12,15 +12,14 @@ import java.awt.event.ItemListener;
  */
 public class ApsisPanel extends JPanel implements UpdatablePanel {
 
-    private static final String[] LABELS = {"Name", "Type", "Position X", "Position Y", "Position Z", "Timestamp", "Altitude"};
+	private static final long serialVersionUID = 548843069264668277L;
+	private static final String[] LABELS = {"Name", "Type", "Position X", "Position Y", "Position Z", "Timestamp", "Altitude"};
     private static final String[] FIELDS = {"#obj.name", "#obj.type.toString()", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)", "#getAltitude(#obj.keplerianElements, #obj.type.angle)"};
 
-    private Apsis apsis;
     private final AttributesPanel attrPanel;
 
     public ApsisPanel(final Apsis apsis) {
         super(new BorderLayout(5, 5));
-        this.apsis = apsis;
 
         attrPanel = new AttributesPanel(LABELS, apsis, FIELDS);
 

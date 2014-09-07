@@ -117,9 +117,6 @@ public class TextureLoaderTest implements GLEventListener {
     public void dispose(GLAutoDrawable drawable) {
 
     }
-    private int angleX = 0;
-    private int angleY = 0;
-
     public void display(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT); // clear color and depth buffers
@@ -212,8 +209,6 @@ public class TextureLoaderTest implements GLEventListener {
 //        gl.glDisable(GL_TEXTURE_2D);
 
 //    }
-    private int width, height;
-
 
     /*
      * Whenever the window is reshaped, redefine the coordinate system and

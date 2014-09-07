@@ -15,7 +15,8 @@ import java.awt.event.ActionListener;
  */
 public class KeplerianPanel extends JPanel implements UpdatablePanel {
 
-    private static final String[] LABELS = {"Central Object", "Altitude", "Semimajor Axis", "Eccentricity", "Time Of Periapsis", "Period", "Argument Of Periapsis", "Inclination", "Ascending Node", "True Anomaly", "Eccentric Anomaly", "Hyperbolic Anomaly"};
+	private static final long serialVersionUID = 6770671151447685882L;
+	private static final String[] LABELS = {"Central Object", "Altitude", "Semimajor Axis", "Eccentricity", "Time Of Periapsis", "Period", "Argument Of Periapsis", "Inclination", "Ascending Node", "True Anomaly", "Eccentric Anomaly", "Hyperbolic Anomaly"};
     private static final String[] FIELDS = {"#obj.keplerianElements.centralObject.name", "#getAltitude2(#obj)", "#obj.keplerianElements.semimajorAxis", "#obj.keplerianElements.eccentricity", "#timeAsString(#obj.keplerianElements.timeOfPeriapsis)", "#obj.keplerianElements.period", "#toDegrees(#obj.keplerianElements.argumentOfPeriapsis)", "#toDegrees(#obj.keplerianElements.inclination)", "#toDegrees(#obj.keplerianElements.ascendingNode)", "#toDegrees(#obj.keplerianElements.trueAnomaly)", "#toDegrees(#obj.keplerianElements.eccentricAnomaly)", "#toDegrees(#obj.keplerianElements.hyperbolicAnomaly)"};
 
     private final Object object;
