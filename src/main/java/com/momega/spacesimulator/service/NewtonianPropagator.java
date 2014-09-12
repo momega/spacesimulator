@@ -5,6 +5,9 @@ import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
+
+import org.apache.commons.math3.geometry.euclidean.threed.Line;
+import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,35 +63,38 @@ public class NewtonianPropagator implements Propagator {
 
         CartesianState hCs = VectorUtils.relativeCartesianState(spacecraft);
         Vector3d h = hCs.getAngularMomentum().normalize();
-        double d1 = -h.dot(spacecraft.getKeplerianElements().getCentralObject().getPosition());
-        double a1 = h.x;
-        double b1 = h.y;
-        double c1 = h.z;
-
         Vector3d hMoon = VectorUtils.relativeCartesianState(moon).getAngularMomentum().normalize();
-        double d2 = -hMoon.dot(moon.getKeplerianElements().getCentralObject().getPosition());
-        double a2 = hMoon.x;
-        double b2 = hMoon.y;
-        double c2 = hMoon.z;
+        
+        Plane spacecraftPlane = new Plane(spacecraft.getPosition().asVector3D(), h.asVector3D(), VectorUtils.SMALL_EPSILON);
+        Plane moonPlane = new Plane(moon.getPosition().asVector3D(), hMoon.asVector3D(), VectorUtils.SMALL_EPSILON);
 
-        Vector3d p = hMoon.cross(h).normalize();
-
-        double x = spacecraft.getKeplerianElements().getCentralObject().getPosition().x;
-        double z = ((b2/b1)*(a1 * x+d1) -a2*x -d2)/(c2 - c1*b2/b1);
-        double y = (-c1*z -a1*x -d1) / b1;
-
+        Line intersectionLine = spacecraftPlane.intersection(moonPlane);
+        Vector3d intersectionLinePoint = Vector3d.fromVector3D(intersectionLine.getOrigin());
+        Vector3d intersectionLineVector = Vector3d.fromVector3D(intersectionLine.getDirection());
         
         OrbitIntersection intersection = spacecraft.getOrbitIntersection();
         if (spacecraft.getOrbitIntersection()==null) {
         	intersection = new OrbitIntersection();
         	spacecraft.setOrbitIntersection(intersection);
         }
-        intersection.setPosition(new Vector3d(x, y, z));
+        intersection.setPosition(intersectionLinePoint);
         intersection.setTimestamp(newTimestamp);
         intersection.setKeplerianElements(spacecraft.getKeplerianElements());
         intersection.setName("Spacecraft/Moon Intersection");
         intersection.setTargetObject(moon);
-        intersection.setDirection(p);
+        intersection.setDirection(intersectionLineVector);
+
+        // now transform to 2D to compute intersections
+
+        double a = spacecraft.getKeplerianElements().getSemimajorAxis();
+        double e = a * spacecraft.getKeplerianElements().getEccentricity();
+        double b = a * Math.sqrt(1 - spacecraft.getKeplerianElements().getEccentricity() * spacecraft.getKeplerianElements().getEccentricity());
+        
+        intersectionLinePoint = intersectionLinePoint.subtract(spacecraft.getKeplerianElements().getCentralObject().getPosition());
+        intersectionLinePoint = VectorUtils.transform(spacecraft.getKeplerianElements(), intersectionLinePoint);
+        intersectionLineVector = VectorUtils.transform(spacecraft.getKeplerianElements(), intersectionLineVector).normalize();
+        
+        //logger.info("line = {}, point = {}", intersectionLineVector, intersectionLinePoint);
     }
 
     /**

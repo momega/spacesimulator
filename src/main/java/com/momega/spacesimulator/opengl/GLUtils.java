@@ -93,7 +93,7 @@ public class GLUtils {
     }
 
     /**
-     * Draw the ellipse
+     * Draw the ellipse. The center of the ellipse is at coordinates [0,0]
      * @param gl the OpenGL context
      * @param a the semi-major axis
      * @param b the semi-minor axis
@@ -224,6 +224,7 @@ public class GLUtils {
     }
 
     public static void rotate(GL2 gl, KeplerianElements keplerianElements) {
+    	// the order is important
         gl.glRotated(Math.toDegrees(keplerianElements.getAscendingNode()), 0, 0, 1);
         gl.glRotated(Math.toDegrees(keplerianElements.getInclination()), 1, 0, 0);
         gl.glRotated(Math.toDegrees(keplerianElements.getArgumentOfPeriapsis()), 0, 0, 1);
