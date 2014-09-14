@@ -193,7 +193,7 @@ public class GLUtils {
 
             double[] my2DPoint = new double[4];
             GLU glu = new GLU();
-            glu.gluProject(position.x, position.y, position.z,
+            glu.gluProject(position.getX(), position.getY(), position.getZ(),
                     modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
 
             return new Point((int)my2DPoint[0], (int)my2DPoint[1]);
@@ -220,7 +220,7 @@ public class GLUtils {
     }
 
     public static void translate(GL2 gl, Vector3d position) {
-        gl.glTranslated(position.x, position.y, position.z);
+        gl.glTranslated(position.getX(), position.getY(), position.getZ());
     }
 
     public static void rotate(GL2 gl, KeplerianElements keplerianElements) {
@@ -231,12 +231,15 @@ public class GLUtils {
     }
 
     public static void drawPoint(GL2 gl, int size, double[] color, PositionProvider positionProvider) {
+        drawPoint(gl, size, color, positionProvider.getPosition());
+    }
+    
+    public static void drawPoint(GL2 gl, int size, double[] color, Vector3d position) {
         gl.glPointSize(size);
         gl.glColor3dv(color, 0);
         gl.glBegin(GL2.GL_POINTS);
-        gl.glVertex3dv(positionProvider.getPosition().asArray(), 0);
+        gl.glVertex3dv(position.asArray(), 0);
         gl.glEnd();
-
     }
 
 }

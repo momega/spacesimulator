@@ -116,4 +116,8 @@ public class RendererModel {
         logger.info("selected dynamical point changed to {}", viewCoordinates.getObject().getName());
     }
 
+	public void clearViewCoordinates() {
+		viewData.clear();
+	}
+
 }

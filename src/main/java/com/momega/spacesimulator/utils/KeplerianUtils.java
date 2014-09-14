@@ -36,7 +36,7 @@ public final class KeplerianUtils {
         double E = solveEccentricAnomaly(keplerianElements, time);
         keplerianElements.setEccentricAnomaly(E);
 
-        double theta = solveTheta1(E, keplerianElements.getEccentricity());
+        double theta = solveTheta(E, keplerianElements.getEccentricity());
         keplerianElements.setTrueAnomaly(theta);
 
         double omega = keplerianElements.getArgumentOfPeriapsis();
@@ -70,10 +70,12 @@ public final class KeplerianUtils {
         return cartesianState;
     }
 
-    protected double solveTheta1(double E, double eccentricity) {
+    public double solveTheta(double E, double eccentricity) {
         double cosTheta = (Math.cos(E) - eccentricity) / (1.0 - eccentricity * Math.cos(E));
         double theta;
-        if (E < Math.PI) {
+        if (E < 0) {
+        	theta = 2 * Math.PI - Math.acos(cosTheta);
+        } else if (E < Math.PI) {
             theta = Math.acos(cosTheta);
         } else {
             theta = 2 * Math.PI - Math.acos(cosTheta);
@@ -104,7 +106,7 @@ public final class KeplerianUtils {
         return result;
     }
 
-    protected double solveTheta2(double E, double eccentricity) {
+    private double solveTheta2(double E, double eccentricity) {
         double param = Math.sqrt((1 + eccentricity) / (1 - eccentricity));
         double theta = 2 * Math.atan(param * Math.tan(E / 2));
         if (theta < 0) {
@@ -112,8 +114,8 @@ public final class KeplerianUtils {
         }
         return theta;
     }
-
-    protected double solveTheta3(double E, double eccentricity) {
+    
+    private double solveTheta3(double E, double eccentricity) {
         double param = Math.sqrt((1 + eccentricity) / (1 - eccentricity));
         double theta = Math.atan(param * Math.sin(E) / (Math.cos(E) - eccentricity));
         return theta;
@@ -211,8 +213,11 @@ public final class KeplerianUtils {
     }
 
     /**
-     * Gets the position in cartesian state based on the keplerian elements with given angle theta. So it means the position
-     * is defined by the keplerian elements except the angle theta
+     * Gets the position in Cartesian state based on the keplerian elements with given angle theta. So it means the position
+     * is defined by the keplerian elements except the angle theta.
+     * 
+     * Focus of the ellipse reflects the [0,0] coordinates in 2D.
+     * 
      * @param keplerianElements the keplerian elements
      * @param theta the angle theta is used instead of true anomaly in keplerian elements
      * @return the 3d vector

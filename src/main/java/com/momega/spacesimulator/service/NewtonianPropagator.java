@@ -6,8 +6,6 @@ import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Line;
-import org.apache.commons.math3.geometry.euclidean.threed.Plane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,41 +58,73 @@ public class NewtonianPropagator implements Propagator {
         }
 
         Assert.notNull(moon);
-
-        CartesianState hCs = VectorUtils.relativeCartesianState(spacecraft);
-        Vector3d h = hCs.getAngularMomentum().normalize();
-        Vector3d hMoon = VectorUtils.relativeCartesianState(moon).getAngularMomentum().normalize();
         
-        Plane spacecraftPlane = new Plane(spacecraft.getPosition().asVector3D(), h.asVector3D(), VectorUtils.SMALL_EPSILON);
-        Plane moonPlane = new Plane(moon.getPosition().asVector3D(), hMoon.asVector3D(), VectorUtils.SMALL_EPSILON);
+        Plane spacecraftPlane = createOrbitalPlane(spacecraft);
+        Plane moonPlane = createOrbitalPlane(moon);
 
-        Line intersectionLine = spacecraftPlane.intersection(moonPlane);
-        Vector3d intersectionLinePoint = Vector3d.fromVector3D(intersectionLine.getOrigin());
-        Vector3d intersectionLineVector = Vector3d.fromVector3D(intersectionLine.getDirection());
-        
-        OrbitIntersection intersection = spacecraft.getOrbitIntersection();
-        if (spacecraft.getOrbitIntersection()==null) {
-        	intersection = new OrbitIntersection();
-        	spacecraft.setOrbitIntersection(intersection);
-        }
-        intersection.setPosition(intersectionLinePoint);
-        intersection.setTimestamp(newTimestamp);
-        intersection.setKeplerianElements(spacecraft.getKeplerianElements());
-        intersection.setName("Spacecraft/Moon Intersection");
-        intersection.setTargetObject(moon);
-        intersection.setDirection(intersectionLineVector);
+        KeplerianElements orbit = spacecraft.getKeplerianElements();
+        Line intersectionLine = spacecraftPlane.intersection(moonPlane, orbit.getCentralObject().getPosition());
 
         // now transform to 2D to compute intersections
+        Vector3d intersectionLinePoint = intersectionLine.getOrigin().subtract(orbit.getCentralObject().getPosition());
+        intersectionLinePoint = VectorUtils.transform(orbit, intersectionLinePoint);
+        Vector3d intersectionLineVector = VectorUtils.transform(orbit, intersectionLine.getDirection()).normalize();
+        intersectionLine = new Line(intersectionLinePoint, intersectionLineVector);
+        intersectionLine = intersectionLine.move(new Vector3d(orbit.getSemimajorAxis() * orbit.getEccentricity(), 0, 0));
+        double[] angles = intersectionOrbitAndLine(intersectionLine, orbit);
+        
+        // create intersection, if there are not
+        List<OrbitIntersection> intersections = spacecraft.getOrbitIntersections();
+        if (intersections.isEmpty()) {
+        	for(int i=0; i<2; i++) {
+        		intersections.add(new OrbitIntersection());
+        	}
+        }
+        
+        // update the coordinates
+        for(int i=0; i<intersections.size(); i++) {
+        	double theta = angles[i];
+        	Vector3d vector = KeplerianUtils.getInstance().getCartesianPosition(orbit, theta);
+        	OrbitIntersection intersection = intersections.get(i);
+	        intersection.setPosition(vector);
+	        intersection.setTimestamp(KeplerianUtils.getInstance().timeToAngle(orbit, newTimestamp, theta));
+	        intersection.setKeplerianElements(orbit);
+	        intersection.setName("Spacecraft/Moon Intersection " + i);
+	        intersection.setTargetObject(moon);
+        }
+    }
 
-        double a = spacecraft.getKeplerianElements().getSemimajorAxis();
-        double e = a * spacecraft.getKeplerianElements().getEccentricity();
-        double b = a * Math.sqrt(1 - spacecraft.getKeplerianElements().getEccentricity() * spacecraft.getKeplerianElements().getEccentricity());
+    public Plane createOrbitalPlane(MovingObject movingObject) {
+    	CartesianState relative = VectorUtils.relativeCartesianState(movingObject);
+    	Vector3d normal = relative.getAngularMomentum();
+    	Vector3d origin = movingObject.getKeplerianElements().getCentralObject().getPosition();
+    	return new Plane(origin, normal);
+    }
+    
+    protected double[] intersectionOrbitAndLine(Line line, KeplerianElements orbit) {
+    	double p0 = line.getOrigin().getX();
+    	double p1 = line.getOrigin().getY();
+    	double d0 = line.getDirection().getX();
+    	double d1 = line.getDirection().getY();
+    	
+        double a = orbit.getSemimajorAxis();
+        double b = a * Math.sqrt(1 - orbit.getEccentricity() * orbit.getEccentricity());
+
+        double A = a*d1;
+        double B = b*d0;
+        double Z = p0*d1 - p1*d0;
         
-        intersectionLinePoint = intersectionLinePoint.subtract(spacecraft.getKeplerianElements().getCentralObject().getPosition());
-        intersectionLinePoint = VectorUtils.transform(spacecraft.getKeplerianElements(), intersectionLinePoint);
-        intersectionLineVector = VectorUtils.transform(spacecraft.getKeplerianElements(), intersectionLineVector).normalize();
+        double[] tArray = MathUtils.solveQuadraticFunction(A+Z, 2*B, Z-A);
+        double[] result = new double[tArray.length];
+        for(int i=0; i<tArray.length; i++) {
+        	double E = 2* Math.atan(tArray[i]);
+        	double theta = KeplerianUtils.getInstance().solveTheta(E, orbit.getEccentricity());
+        	result[i] = theta;
+        	logger.debug("theta = {}", theta);
+        }
         
-        //logger.info("line = {}, point = {}", intersectionLineVector, intersectionLinePoint);
+        logger.debug("result = {}", result);
+        return result;
     }
 
     /**
@@ -141,7 +171,7 @@ public class NewtonianPropagator implements Propagator {
         spacecraft.setOrientation(orientation);
 
         double h = hVector.length();
-        double i = Math.acos(hVector.z / h);
+        double i = Math.acos(hVector.getZ() / h);
 
         PhysicalBody soiBody = soi.getBody();
         double mi = soiBody.getMass() * MathUtils.G;
@@ -160,14 +190,14 @@ public class NewtonianPropagator implements Propagator {
         if (i > MINOR_ERROR) {
             Vector3d nVector = new Vector3d(0, 0, 1).cross(hVector);
             double n = nVector.length();
-            OMEGA = Math.acos(nVector.x / n);
-            if (nVector.y < 0) {
+            OMEGA = Math.acos(nVector.getX() / n);
+            if (nVector.getY() < 0) {
                 OMEGA = 2 * Math.PI - OMEGA;
             }
 
             if (e>MINOR_ERROR) {
                 omega = Math.acos(nVector.dot(eVector) / n / e);
-                if (eVector.z < 0) {
+                if (eVector.getZ() < 0) {
                     omega = 2 * Math.PI - omega;
                 }
 
@@ -178,15 +208,15 @@ public class NewtonianPropagator implements Propagator {
 
             } else {
                 theta = Math.acos(nVector.dot(position) / n / position.length());
-                if (position.z<0) {
+                if (position.getZ()<0) {
                     theta = 2* Math.PI - theta;
                 }
             }
 
         } else {
             if (e>MINOR_ERROR) {
-                omega = Math.acos(eVector.x / e);
-                if (eVector.y < 0) {
+                omega = Math.acos(eVector.getX() / e);
+                if (eVector.getY() < 0) {
                     omega = 2 * Math.PI - omega;
                 }
 
@@ -196,8 +226,8 @@ public class NewtonianPropagator implements Propagator {
                 }
 
             } else {
-                theta = Math.acos(position.x / position.length());
-                if (position.y <0) {
+                theta = Math.acos(position.getX() / position.length());
+                if (position.getY() <0) {
                     theta = 2* Math.PI - theta;
                 }
             }

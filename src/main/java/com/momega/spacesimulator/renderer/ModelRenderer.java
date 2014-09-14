@@ -20,14 +20,16 @@ public class ModelRenderer extends CompositeRenderer {
                 addRenderer(new KeplerianTrajectoryRenderer(dp));
             }
             if (dp instanceof PhysicalBody) {
-                addRenderer(new PhysicalBodyRenderer((PhysicalBody) dp));
+                addRenderer(new MovingObjectRenderer(dp));
                 addRenderer(new ApsidesRenderer(dp));
             }
             if (dp instanceof BaryCentre) {
+            	addRenderer(new MovingObjectRenderer(dp));
                 addRenderer(new ApsidesRenderer(dp));
             }
             if (dp instanceof CelestialBody) {
-                addRenderer(new CelestialBodyRenderer((CelestialBody) dp));
+            	addRenderer(new MovingObjectRenderer(dp));
+                addRenderer(new CelestialBodyRenderer((CelestialBody) dp, true, true));
                 if (dp instanceof Planet) {
                     Planet p = (Planet) dp;
                     for(Ring ring : p.getRings()) {

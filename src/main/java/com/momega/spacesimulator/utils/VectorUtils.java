@@ -44,8 +44,8 @@ public final class VectorUtils {
 
     public static double[] toSphericalCoordinates(Vector3d vector) {
         double length = vector.length();
-        double theta = Math.acos(vector.z / length);
-        double phi = Math.atan2(vector.y, vector.x);
+        double theta = Math.acos(vector.getZ() / length);
+        double phi = Math.atan2(vector.getY(), vector.getX());
         return new double[] {length, theta, phi};
     }
 
@@ -103,7 +103,7 @@ public final class VectorUtils {
         o.lookUp(Math.PI / 2 - delta);
         o.lookLeft(alpha);
         if (toEcliptic) {
-            o.rotate(new Vector3d(1, 0, 0), -MathUtils.ECLIPTIC);
+            o.rotate(new Vector3d(1, 0, 0), -VectorUtils.ECLIPTIC);
         }
         return o;
     }
@@ -126,4 +126,9 @@ public final class VectorUtils {
         o.setU(o.getV().cross(o.getN()));
         return o;
     }
+
+	/**
+	 * Get the angle of the ecliptic
+	 */
+	public static final double ECLIPTIC = Math.toRadians(23.439291);
 }

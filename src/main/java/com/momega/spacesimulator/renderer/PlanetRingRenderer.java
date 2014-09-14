@@ -27,7 +27,7 @@ public class PlanetRingRenderer extends AbstractTextureRenderer {
     }
 
     @Override
-    protected void drawObject(GL2 gl) {
+    protected void drawTextObject(GL2 gl) {
         double max = ring.getMaxDistance();
         double min = ring.getMinDistance();
         GLUtils.drawRing(gl, min, max, 360, 10);

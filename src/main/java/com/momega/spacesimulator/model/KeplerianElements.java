@@ -16,7 +16,7 @@ public class KeplerianElements {
     private double argumentOfPeriapsis; // lowercase omega
     private double inclination; // i
     private double ascendingNode; // uppercase omega
-    private double trueAnomaly; // theta;
+    private double trueAnomaly; // theta
     private Double hyperbolicAnomaly; // HA
     private Double eccentricAnomaly; //EA
 
@@ -98,7 +98,7 @@ public class KeplerianElements {
 
     /**
      * Gets the true anomaly
-     * @return the tru anomaly in radians
+     * @return the true anomaly in radians
      */
     public double getTrueAnomaly() {
         return trueAnomaly;

@@ -14,9 +14,9 @@ import com.momega.spacesimulator.utils.VectorUtils;
  */
 public class Vector3d {
 
-    public final double x;
-    public final double y;
-    public final double z;
+    private final double x;
+    private final double y;
+    private final double z;
 
     public static final Vector3d ZERO = new Vector3d(0d, 0d, 0d);
 
@@ -113,5 +113,17 @@ public class Vector3d {
         String result = String.format("(%6.2f, %6.2f, %6.2f)", x, y, z);
         return result;
     }
+    
+    public double getX() {
+		return x;
+	}
+    
+    public double getY() {
+		return y;
+	}
+    
+    public double getZ() {
+		return z;
+	}
 
 }

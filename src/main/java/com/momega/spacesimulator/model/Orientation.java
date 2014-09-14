@@ -87,7 +87,7 @@ public class Orientation {
     {
         // Note: We try and optimise things a little by observing that there's no point rotating
         // an axis about itself and that generally when we rotate about an axis, we'll be passing
-        // it in as the parameter axis, e.g. object3d.rotate(object3d.get_n(), Math.PI/2).
+        // it in as the parameter axis, e.g. object3d.rotate(object3d.getN(), Math.PI/2).
         if(axis != getN()) {
             setN(VectorUtils.rotateAboutAxis(getN(), angle, axis));
         }

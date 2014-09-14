@@ -2,8 +2,10 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,9 +22,13 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     private static final Logger logger = LoggerFactory.getLogger(CelestialBodyRenderer.class);
 
     private final CelestialBody celestialBody;
+	private final boolean drawPlanet;
+	private final boolean drawAxis;
 
-    public CelestialBodyRenderer(CelestialBody celestialBody) {
+    public CelestialBodyRenderer(CelestialBody celestialBody, boolean drawPlanet, boolean drawAxis) {
         this.celestialBody = celestialBody;
+		this.drawPlanet = drawPlanet;
+		this.drawAxis = drawAxis;
     }
 
     @Override
@@ -32,7 +38,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     }
 
     @Override
-    protected void drawObject(GL2 gl) {
+    protected void drawTextObject(GL2 gl) {
         gl.glDisable(GL2.GL_BLEND);
         gl.glEnable(GL2.GL_CULL_FACE);
         gl.glShadeModel(GL2.GL_SMOOTH);
@@ -52,21 +58,29 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
     @Override
     protected void prepareObject(GL2 gl) {
-        super.prepareObject(gl);
+    	if (drawPlanet) {
+    		super.prepareObject(gl);
+    	}
 
-        double rad = celestialBody.getRadius() * 1.2;
-
-        gl.glLineWidth(2f);
-        gl.glBegin(GL2.GL_LINES);
-        gl.glVertex3d(0, 0, rad);
-        gl.glVertex3d(0, 0, -rad);
-        gl.glEnd();
-
-        gl.glBegin(GL2.GL_LINE_STRIP);
-        gl.glVertex3d(rad, 0,  0);
-        gl.glVertex3d(0, 0, 0);
-        gl.glVertex3d(0, -rad, 0);
-        gl.glEnd();
+    	if (drawAxis) {
+	        double rad = celestialBody.getRadius() * 1.2;
+	        gl.glLineWidth(2f);
+	        gl.glBegin(GL2.GL_LINES);
+	        gl.glVertex3d(0, 0, rad);
+	        gl.glVertex3d(0, 0, -rad);
+	        gl.glEnd();
+	
+	        gl.glBegin(GL2.GL_LINE_STRIP);
+	        gl.glVertex3d(rad, 0,  0);
+	        gl.glVertex3d(0, 0, 0);
+	        gl.glVertex3d(0, -rad, 0);
+	        gl.glEnd();
+    	}
+        
+        if (!drawPlanet) {
+        	GLUtils.drawPoint(gl, 8, celestialBody.getTrajectory().getColor(), Vector3d.ZERO);
+        }
+        
     }
 
     public void setMatrix(GL2 gl ) {
@@ -87,10 +101,5 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
         if (ModelHolder.getModel().getSelectedObject() == celestialBody) {
             GLUtils.drawBeansAndCircles(gl, 0, 0, celestialBody.getRadius() * 5, 18, 5);
         }
-
-        gl.glPointSize(6);
-        gl.glBegin(GL2.GL_POINTS);
-        gl.glVertex3dv(new double[] {0d, 0d, 0d}, 0);
-        gl.glEnd();
     }
 }

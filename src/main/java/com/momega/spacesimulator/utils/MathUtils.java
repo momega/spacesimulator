@@ -22,11 +22,6 @@ public class MathUtils {
      */
     public static final double G0 = 9.80665d;
 
-    /**
-     * Get the angle of the ecliptic
-     */
-    public static final double ECLIPTIC = Math.toRadians(23.439291);
-
     public static double fmod(double numer, double denom) {
         double z = Math.floor(numer / denom);
         numer = numer - z * denom;
@@ -44,6 +39,17 @@ public class MathUtils {
 
     public static double asinh(double x) {
         return Math.log(x + Math.sqrt(x*x + 1.0));
+    }
+    
+    public static double[] solveQuadraticFunction(double a, double b, double c) {
+    	double D = b*b - 4*a*c;
+    	if (D<0) {
+    		return new double[] {};
+    	} else if (D == 0) {
+    		return new double[] { -b / 2 / a };
+    	} else {
+    		return new double[] { (-b - Math.sqrt(D)) / 2 / a, (-b + Math.sqrt(D)) / 2 / a };
+    	}
     }
 
 }

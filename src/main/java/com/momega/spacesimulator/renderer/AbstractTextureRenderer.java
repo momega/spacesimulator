@@ -42,7 +42,7 @@ public abstract class AbstractTextureRenderer extends AbstractRenderer {
         gl.glEndList();
     }
 
-    protected abstract void drawObject(GL2 gl);
+    protected abstract void drawTextObject(GL2 gl);
 
     /**
      * Prepares the texture during initialization of the renderer
@@ -51,7 +51,7 @@ public abstract class AbstractTextureRenderer extends AbstractRenderer {
     protected void prepareObject(GL2 gl) {
         texture.enable(gl);
         texture.bind(gl);
-        drawObject(gl);
+        drawTextObject(gl);
         texture.disable(gl);
     }
 
@@ -61,9 +61,9 @@ public abstract class AbstractTextureRenderer extends AbstractRenderer {
 
         setMatrix(gl);
 
-        additionalDraw(gl);
-
         gl.glCallList(this.listIndex);
+        additionalDraw(gl);
+        
         gl.glPopMatrix();
     }
 

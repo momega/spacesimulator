@@ -139,6 +139,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
 //    }
 
     protected void computeViewCoordinates(GLAutoDrawable drawable) {
+    	RendererModel.getInstance().clearViewCoordinates();
         Camera camera = ModelHolder.getModel().getCamera();
         for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
             addViewCoordinates(drawable, dp, camera);
@@ -152,8 +153,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
                 for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
                     addViewCoordinates(drawable, hp, camera);
                 }
-                OrbitIntersection intersection = spacecraft.getOrbitIntersection();
-                if (intersection != null) {
+                for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
                     addViewCoordinates(drawable, intersection, camera);
                 }
             }
@@ -198,13 +198,13 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
         Vector3d n = camera.getOppositeOrientation().getN().negate();
 
-        glu.gluLookAt(p.x, p.y, p.z,
-                p.x + n.x * 1E8,
-                p.y + n.y * 1E8,
-                p.z + n.z * 1E8,
-                camera.getOppositeOrientation().getV().x,
-                camera.getOppositeOrientation().getV().y,
-                camera.getOppositeOrientation().getV().z);
+        glu.gluLookAt(p.getX(), p.getY(), p.getZ(),
+                p.getX() + n.getX() * 1E8,
+                p.getY() + n.getY() * 1E8,
+                p.getZ() + n.getZ() * 1E8,
+                camera.getOppositeOrientation().getV().getX(),
+                camera.getOppositeOrientation().getV().getY(),
+                camera.getOppositeOrientation().getV().getZ());
     }
 
     protected void setPerspective(GL2 gl, double aspect) {

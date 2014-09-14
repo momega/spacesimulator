@@ -9,7 +9,6 @@ public class OrbitIntersection extends NamedObject implements PositionProvider  
     private Timestamp timestamp;
     private KeplerianElements keplerianElements;
     private MovingObject targetObject;
-    private Vector3d direction;
 
     @Override
     public Vector3d getPosition() {
@@ -45,11 +44,4 @@ public class OrbitIntersection extends NamedObject implements PositionProvider  
         this.targetObject = targetObject;
     }
 
-    public Vector3d getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Vector3d direction) {
-        this.direction = direction;
-    }
 }
