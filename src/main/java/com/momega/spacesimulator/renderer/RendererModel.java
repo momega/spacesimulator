@@ -2,6 +2,7 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,6 +89,23 @@ public class RendererModel {
             }
         }
         return null;
+    }
+    
+    public List<CelestialBody> findCelestialBodies() {
+    	List<CelestialBody> list = new ArrayList<>();
+        for (Map.Entry<PositionProvider, ViewCoordinates> entry : viewData.entrySet()) {
+            ViewCoordinates viewCoordinates = entry.getValue();
+            if (viewCoordinates.getObject() instanceof CelestialBody) {
+            	list.add((CelestialBody) viewCoordinates.getObject());
+            }
+        }
+        Collections.sort(list, new Comparator<CelestialBody>() {
+			@Override
+			public int compare(CelestialBody o1, CelestialBody o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+        });
+        return list;
     }
 
     public String[] findVisibleObjects() {

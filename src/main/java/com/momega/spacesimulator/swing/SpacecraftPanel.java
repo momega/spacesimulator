@@ -1,94 +1,85 @@
+/**
+ * 
+ */
 package com.momega.spacesimulator.swing;
 
-import com.momega.spacesimulator.model.HabitableModule;
-import com.momega.spacesimulator.model.Propulsion;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.SpacecraftSubsystem;
-import org.springframework.util.Assert;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.util.ArrayList;
-import java.util.List;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.renderer.RendererModel;
 
 /**
- * Created by martin on 8/24/14.
+ * @author martin
+ *
  */
 public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 
-	private static final long serialVersionUID = 5112832471890949249L;
-	private final Spacecraft spacecraft;
-    private final JPanel cards;
+	private static final long serialVersionUID = -1315250400241599867L;
+	private final AttributesPanel attrPanel;
+    private static final String[] LABELS = {"Name", "Mass"};
+    private static final String[] FIELDS = {"#obj.name", "#obj.mass"};
+    private static final Logger logger = LoggerFactory.getLogger(SpacecraftPanel.class);
+	 
+	public SpacecraftPanel(Spacecraft spacecraft) {
+		 super(new BorderLayout(5, 5));
 
-    public SpacecraftPanel(final Spacecraft spacecraft) {
-        super(new BorderLayout());
-        this.spacecraft = spacecraft;
+	     attrPanel = new AttributesPanel(LABELS, spacecraft, FIELDS);
+	     
+	     JPanel targetPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+	     
+	     JLabel targetLabel = new JLabel("Target:", JLabel.TRAILING);
+	     targetPanel.add(targetLabel);
+	     targetLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+	     
+	     JComboBox<String> targetBox = new JComboBox<String>();
+	     final CelestialBodyModel model = new CelestialBodyModel();
+	     targetBox.setModel(model);
+	     //targetBox.setRenderer(new CelestialBodyRenderer());
+	     targetPanel.add(targetBox);
+	     
+	     targetBox.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (model.getSelectedItem()!=null) {
+					String cb = (String) model.getSelectedItem();
+					logger.info("target object {}", cb);
+				}
+			}
+	     });
+	     
+	     add(attrPanel, BorderLayout.CENTER);
+	     add(targetPanel, BorderLayout.PAGE_END);
+	}
+	
+	@Override
+	public void updateValues() {
+		attrPanel.updateValues();
+	}
+	
+	class CelestialBodyModel extends DefaultComboBoxModel<String> implements ComboBoxModel<String> {
+		
+		private static final long serialVersionUID = 3948896766824569506L;
+		
+		public CelestialBodyModel() {
+			super();
+			for(CelestialBody cb : RendererModel.getInstance().findCelestialBodies()) {
+				addElement(cb.getName());
+			}
+		}
+	}
 
-        JPanel comboBoxPane = new JPanel(); //use FlowLayout
-        cards = new JPanel(new CardLayout());
-        List<String> names = addAllSubsystems(cards);
-        JComboBox<String> cb = new JComboBox<String>(names.toArray(new String[names.size()]));
-        cb.setEditable(false);
-
-        cb.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent evt) {
-                CardLayout cl = (CardLayout)(cards.getLayout());
-                cl.show(cards, (String)evt.getItem());
-            }
-        });
-
-        comboBoxPane.add(cb);
-
-        add(comboBoxPane, BorderLayout.PAGE_START);
-        add(cards, BorderLayout.CENTER);
-    }
-
-    protected List<String> addAllSubsystems(JPanel cards) {
-        List<String> result = new ArrayList<>();
-        for(SpacecraftSubsystem subsystem : spacecraft.getSubsystems()) {
-            addSubsystemPane(subsystem, cards, result);
-        }
-        return result;
-    }
-
-    protected void addSubsystemPane(SpacecraftSubsystem subsystem, JPanel cards, List<String> names) {
-        String name = subsystem.getName();
-        names.add(name);
-
-        AttributesPanel ap = null;
-        if (subsystem instanceof Propulsion) {
-            ap = createPropulsionPanel(subsystem);
-        } else if (subsystem instanceof HabitableModule) {
-            ap = createHabitatPanel(subsystem);
-        }
-        Assert.notNull(ap);
-        cards.add(ap, name);
-    }
-
-    protected AttributesPanel createPropulsionPanel(SpacecraftSubsystem subsystem) {
-        String[] labels = new String[]  {"Name", "Mass", "Specific Impulse", "Mass Flow", "Fuel"};
-        String[] fields = new String[]  {"#obj.name", "#obj.mass", "#obj.specificImpulse", "#obj.massFlow", "#obj.fuel"};
-        AttributesPanel ap = new AttributesPanel(labels, subsystem, fields);
-        return ap;
-    }
-
-    protected AttributesPanel createHabitatPanel(SpacecraftSubsystem subsystem) {
-        String[] labels = new String[]  {"Name", "Mass", "Crew Capacity"};
-        String[] fields = new String[]  {"#obj.name", "#obj.mass", "#obj.crewCapacity"};
-        AttributesPanel ap = new AttributesPanel(labels, subsystem, fields);
-        return ap;
-    }
-
-    @Override
-    public void updateValues() {
-        for (Component comp : cards.getComponents()) {
-            if (comp.isVisible() == true) {
-                AttributesPanel card = (AttributesPanel) comp;
-                card.updateValues();
-            }
-        }
-    }
 }

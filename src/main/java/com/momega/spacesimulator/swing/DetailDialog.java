@@ -5,10 +5,12 @@ import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -41,7 +43,11 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
         if (namedObject instanceof MovingObject) {
-            tabbedPane.addTab("Basic", createImageIcon("/images/application.png"), createPhysicalPanel(), "Basic Information");
+        	if (namedObject instanceof Spacecraft) {
+        		tabbedPane.addTab("Spacecraft", createImageIcon("/images/application.png"), createSpacecraftPanel(), "Spacecraft Basic Information");
+        	} else {
+        		tabbedPane.addTab("Basic", createImageIcon("/images/application.png"), createPhysicalPanel(), "Basic Information");
+        	}
             tabbedPane.addTab("Cartesian", createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
             tabbedPane.addTab("Keplerian", createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
         } else {
@@ -56,7 +62,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             Spacecraft spacecraft = (Spacecraft) namedObject;
             tabbedPane.addTab("Maneuvers", createImageIcon("/images/hourglass.png"), new ManeuverPanel(spacecraft), "Spacecraft Maneuvers");
 
-            SpacecraftPanel spacecraftPanel = new SpacecraftPanel(spacecraft);
+            SubsystemsPanel spacecraftPanel = new SubsystemsPanel(spacecraft);
             attributesPanelList.add(spacecraftPanel);
             tabbedPane.addTab("Subsystems", createImageIcon("/images/cog.png"), spacecraftPanel, "Spacecraft Subsystems");
         }
@@ -122,6 +128,12 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         String[] labels = {"Position X", "Position Y", "Position Z", "Velocity", "Velocity X", "Velocity Y", "Velocity Z", "Orientation N", "Orientation V"};
         String[] fields = {"#obj.position.x", "#obj.position.y", "#obj.position.z", "#obj.cartesianState.velocity.length()", "#obj.cartesianState.velocity.x", "#obj.cartesianState.velocity.y", "#obj.cartesianState.velocity.z", "#obj.orientation.n.toString()", "#obj.orientation.v.toString()"};
         AttributesPanel result = new AttributesPanel(labels, namedObject, fields);
+        attributesPanelList.add(result);
+        return result;
+    }
+    
+    protected JPanel createSpacecraftPanel() {
+    	SpacecraftPanel result =  new SpacecraftPanel((Spacecraft) namedObject);
         attributesPanelList.add(result);
         return result;
     }

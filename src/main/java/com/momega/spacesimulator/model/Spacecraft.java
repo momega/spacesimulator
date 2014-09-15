@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The spacecraft class is the representation of the any artificial object.
+ * The spacecraft can contain several {@link SpacecraftSubsystem}s.
+ * 
  * Created by martin on 5/5/14.
  */
 public class Spacecraft extends PhysicalBody {
@@ -13,7 +16,7 @@ public class Spacecraft extends PhysicalBody {
     private List<Maneuver> maneuvers = new ArrayList<>();
     private Maneuver currentManeuver;
 
-    //TODO: find better place
+    private CelestialBody targetBody;
     private List<OrbitIntersection> orbitIntersections = new ArrayList<>();
 
     public HistoryTrajectory getHistoryTrajectory() {
@@ -55,4 +58,12 @@ public class Spacecraft extends PhysicalBody {
     public List<OrbitIntersection> getOrbitIntersections() {
         return orbitIntersections;
     }
+    
+    public CelestialBody getTargetBody() {
+		return targetBody;
+	}
+    
+    public void setTargetBody(CelestialBody targetBody) {
+		this.targetBody = targetBody;
+	}
 }
