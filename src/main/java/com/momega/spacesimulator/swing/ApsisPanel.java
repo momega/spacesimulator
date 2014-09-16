@@ -17,36 +17,44 @@ public class ApsisPanel extends JPanel implements UpdatablePanel {
     private static final String[] FIELDS = {"#obj.name", "#obj.type.toString()", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)", "#getAltitude(#obj.keplerianElements, #obj.type.angle)"};
 
     private final AttributesPanel attrPanel;
+    private boolean visible;
+	private final Apsis apsis;
 
     public ApsisPanel(final Apsis apsis) {
         super(new BorderLayout(5, 5));
+		this.apsis = apsis;
 
         attrPanel = new AttributesPanel(LABELS, apsis, FIELDS);
+        visible = apsis.isVisible();
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
         JCheckBox visibleButton = new JCheckBox("Visible");
         buttonPanel.add(visibleButton);
-        visibleButton.setSelected(apsis.isVisible());
+        visibleButton.setSelected(visible);
         visibleButton.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.DESELECTED) {
-                    apsis.setVisible(false);
+                    visible = false;
                 } else if (e.getStateChange() == ItemEvent.SELECTED) {
-                    apsis.setVisible(true);
+                    visible = true;
                 }
             }
         });
 
         add(attrPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.LINE_END);
-
+    }
+    
+    @Override
+    public void updateModel() {
+    	apsis.setVisible(visible);
     }
 
     @Override
-    public void updateValues() {
-        attrPanel.updateValues();
+    public void updateView() {
+        attrPanel.updateView();
     }
 }

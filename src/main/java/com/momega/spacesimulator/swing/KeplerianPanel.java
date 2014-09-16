@@ -6,6 +6,7 @@ import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Spacecraft;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -66,10 +67,15 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
             add(buttonPanel, BorderLayout.LINE_END);
         }
     }
+    
+    @Override
+    public void updateModel() {
+    	// do nothing
+    }
 
     @Override
-    public void updateValues() {
-        attrPanel.updateValues();
+    public void updateView() {
+        attrPanel.updateView();
         if (object instanceof Spacecraft) {
             Spacecraft spacecraft = (Spacecraft) object;
             final KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();

@@ -3,6 +3,7 @@ package com.momega.spacesimulator.swing;
 import com.momega.spacesimulator.model.PositionProvider;
 
 import javax.swing.*;
+
 import java.awt.*;
 
 /**
@@ -22,9 +23,14 @@ public class PositionProviderPanel extends JPanel implements UpdatablePanel {
         attrPanel = new AttributesPanel(LABELS, positionProvider, FIELDS);
         add(attrPanel, BorderLayout.CENTER);
     }
+    
+    @Override
+    public void updateModel() {
+    	// do nothing
+    }
 
     @Override
-    public void updateValues() {
-        attrPanel.updateValues();
+    public void updateView() {
+        attrPanel.updateView();
     }
 }

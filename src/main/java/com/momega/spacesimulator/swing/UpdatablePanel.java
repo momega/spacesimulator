@@ -5,5 +5,7 @@ package com.momega.spacesimulator.swing;
  */
 public interface UpdatablePanel {
 
-    void updateValues();
+    void updateView();
+    
+    void updateModel();
 }

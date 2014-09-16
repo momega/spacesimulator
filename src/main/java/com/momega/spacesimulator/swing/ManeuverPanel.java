@@ -22,15 +22,16 @@ import java.util.List;
  * The panel for editing the maneuvers
  * Created by martin on 8/17/14.
  */
-public class ManeuverPanel extends JPanel {
+public class ManeuverPanel extends JPanel implements UpdatablePanel {
 
 	private static final long serialVersionUID = 6451374273245722605L;
 	private final Spacecraft spacecraft;
+	private final ManeuverTableModel tableModel;
 
     public ManeuverPanel(final Spacecraft spacecraft) {
         super(new BorderLayout());
         this.spacecraft = spacecraft;
-        final ManeuverTableModel tableModel = new ManeuverTableModel(copyManeuvers(spacecraft.getManeuvers()));
+        tableModel = new ManeuverTableModel(copyManeuvers(spacecraft.getManeuvers()));
         final JTable table = new JTable(tableModel);
         table.setDefaultRenderer(Timestamp.class, new TimestampRenderer());
 
@@ -59,18 +60,8 @@ public class ManeuverPanel extends JPanel {
             }
         });
 
-        JButton updateButton = new JButton("Update");
-        updateButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        updateButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                spacecraft.setManeuvers(copyManeuvers(tableModel.getManeuvers()));
-            }
-        });
-
         buttonPanel.add(newButton);
         buttonPanel.add(deleteButton);
-        buttonPanel.add(updateButton);
 
         add(scrollPane, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.EAST);
@@ -216,5 +207,14 @@ public class ManeuverPanel extends JPanel {
         }
     }
 
+	@Override
+	public void updateView() {
+		// do nothing
+	}
+
+	@Override
+	public void updateModel() {
+		spacecraft.setManeuvers(copyManeuvers(tableModel.getManeuvers()));
+	}
 
 }

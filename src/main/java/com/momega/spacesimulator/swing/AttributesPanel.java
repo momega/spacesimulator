@@ -7,6 +7,7 @@ import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
+
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
@@ -16,6 +17,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 
 import javax.swing.*;
 import javax.swing.text.JTextComponent;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +61,7 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
     }
 
     @Override
-    public void updateValues() {
+    public void updateView() {
         EvaluationContext evaluationContext = createContext();
         for(Map.Entry<JComponent, Expression> entry : jFields.entrySet()) {
             if (entry.getValue()!=null) {
@@ -76,6 +78,11 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
                 }
             }
         }
+    }
+    
+    @Override
+    public void updateModel() {
+    	// do nothing
     }
 
     protected EvaluationContext createContext() {

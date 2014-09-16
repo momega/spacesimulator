@@ -60,7 +60,9 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
         if (namedObject instanceof Spacecraft) {
             Spacecraft spacecraft = (Spacecraft) namedObject;
-            tabbedPane.addTab("Maneuvers", createImageIcon("/images/hourglass.png"), new ManeuverPanel(spacecraft), "Spacecraft Maneuvers");
+            ManeuverPanel maneuverPanel = new ManeuverPanel(spacecraft);
+            tabbedPane.addTab("Maneuvers", createImageIcon("/images/hourglass.png"), maneuverPanel, "Spacecraft Maneuvers");
+            attributesPanelList.add(maneuverPanel);
 
             SubsystemsPanel spacecraftPanel = new SubsystemsPanel(spacecraft);
             attributesPanelList.add(spacecraftPanel);
@@ -73,11 +75,24 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RendererModel.getInstance().removeModelChangeListener(DetailDialog.this);
+                updateModel();
                 setVisible(false);
                 dispose();
             }
         });
         buttonsPanel.add(okButton);
+        
+        JButton cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                RendererModel.getInstance().removeModelChangeListener(DetailDialog.this);
+                setVisible(false);
+                dispose();
+            }
+        });
+        buttonsPanel.add(cancelButton);
+        
         JButton selectButton = new JButton("Select");
         selectButton.addActionListener(new ActionListener() {
             @Override
@@ -87,6 +102,16 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             }
         });
         buttonsPanel.add(selectButton);
+        
+        JButton applyButton = new JButton("Apply");
+        applyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                updateModel();
+            }
+        });
+        buttonsPanel.add(applyButton);
+        
         if (namedObject instanceof CelestialBody) {
             JButton wikiButton = new JButton("Wiki");
             final CelestialBody celestialBody = (CelestialBody) namedObject;
@@ -193,7 +218,14 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     @Override
     public void modelChanged(ModelChangeEvent event) {
         for(UpdatablePanel ap : attributesPanelList) {
-            ap.updateValues();
+            ap.updateView();
         }
     }
+    
+    public void updateModel() {
+    	for(UpdatablePanel up : attributesPanelList) {
+    		up.updateModel();
+    	}
+    }
+    
 }

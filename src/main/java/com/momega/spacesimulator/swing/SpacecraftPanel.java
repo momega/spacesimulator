@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 
 /**
  * @author martin
@@ -33,9 +34,12 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
     private static final String[] LABELS = {"Name", "Mass"};
     private static final String[] FIELDS = {"#obj.name", "#obj.mass"};
     private static final Logger logger = LoggerFactory.getLogger(SpacecraftPanel.class);
+	private final CelestialBodyModel model;
+	private Spacecraft spacecraft;
 	 
 	public SpacecraftPanel(Spacecraft spacecraft) {
 		 super(new BorderLayout(5, 5));
+		this.spacecraft = spacecraft;
 
 	     attrPanel = new AttributesPanel(LABELS, spacecraft, FIELDS);
 	     
@@ -46,9 +50,9 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 	     targetLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 	     
 	     JComboBox<String> targetBox = new JComboBox<String>();
-	     final CelestialBodyModel model = new CelestialBodyModel();
+	     model = new CelestialBodyModel();
+	     model.setSelection(spacecraft.getTargetBody());
 	     targetBox.setModel(model);
-	     //targetBox.setRenderer(new CelestialBodyRenderer());
 	     targetPanel.add(targetBox);
 	     
 	     targetBox.addActionListener(new ActionListener() {
@@ -66,9 +70,21 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 	}
 	
 	@Override
-	public void updateValues() {
-		attrPanel.updateValues();
+	public void updateView() {
+		attrPanel.updateView();
 	}
+	
+	@Override
+    public void updateModel() {
+		if (model.getSelectedItem() == null) {
+			spacecraft.setTargetBody(null);
+			logger.info("unset for spacecraft{}", spacecraft.getName());
+		} else {
+			ViewCoordinates viewCoordinates = RendererModel.getInstance().findByName((String) model.getSelectedItem());
+			spacecraft.setTargetBody((CelestialBody) viewCoordinates.getObject());
+			logger.info("set target body {} for spacecraft{}", spacecraft.getTargetBody().getName(), spacecraft.getName());
+		}
+    }
 	
 	class CelestialBodyModel extends DefaultComboBoxModel<String> implements ComboBoxModel<String> {
 		
@@ -76,8 +92,17 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 		
 		public CelestialBodyModel() {
 			super();
+			addElement(null);
 			for(CelestialBody cb : RendererModel.getInstance().findCelestialBodies()) {
 				addElement(cb.getName());
+			}
+		}
+		
+		public void setSelection(CelestialBody body) {
+			if (body == null) {
+				setSelectedItem(null);
+			} else {
+				setSelectedItem(body.getName());
 			}
 		}
 	}
