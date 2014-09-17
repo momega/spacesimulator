@@ -7,12 +7,11 @@ import javax.media.opengl.GLAutoDrawable;
 
 import com.momega.spacesimulator.model.OrbitIntersection;
 import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.opengl.GLUtils;
 
 /**
  * Created by martin on 9/6/14.
  */
-public class OrbitIntersectionRenderer  extends AbstractTextRenderer {
+public class OrbitIntersectionRenderer extends AbstractPositionProviderRenderer {
 
     private final Spacecraft spacecraft;
 
@@ -22,29 +21,19 @@ public class OrbitIntersectionRenderer  extends AbstractTextRenderer {
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-        // do nothing
+        for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
+        	renderPositionProvider(intersection);
+        }
     }
 
     @Override
-    public void draw(GLAutoDrawable drawable) {
+    protected void drawObjects(GLAutoDrawable drawable) {
         List<OrbitIntersection> intersections = spacecraft.getOrbitIntersections();
         if (!intersections.isEmpty()) {
-
             GL2 gl = drawable.getGL().getGL2();
-            gl.glLineWidth(1.5f);
-            gl.glColor3dv(new double[]{1, 0, 0}, 0);
-
             for(OrbitIntersection intersection : intersections) {
-            	drawIntersection(gl, intersection, new double[] {1.0, 0.0, 0.0});
+            	drawPositionProvider(gl, intersection, new double[] {1.0, 0.0, 0.0});
             }
-        }
-
-        super.draw(drawable);
-    }
-    
-    protected void drawIntersection(GL2 gl, OrbitIntersection intersection, double color[]) {
-        if (intersection != null && RendererModel.getInstance().isVisibleOnScreen(intersection)) {
-            GLUtils.drawPoint(gl, 8, color, intersection);
         }
     }
 }

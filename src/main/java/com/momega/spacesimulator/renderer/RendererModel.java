@@ -55,12 +55,15 @@ public class RendererModel {
         viewData.put(viewCoordinates.getObject(), viewCoordinates);
     }
 
-    public ViewCoordinates findViewCoordinates(NamedObject namedObject) {
-        return viewData.get(namedObject);
+    public ViewCoordinates findViewCoordinates(PositionProvider positionProvider) {
+        return viewData.get(positionProvider);
     }
 
-    public boolean isVisibleOnScreen(NamedObject namedObject) {
-        ViewCoordinates viewCoordinates = findViewCoordinates(namedObject);
+    public boolean isVisibleOnScreen(PositionProvider positionProvider) {
+    	if (positionProvider == null) {
+    		return false;
+    	}
+        ViewCoordinates viewCoordinates = findViewCoordinates(positionProvider);
         return (viewCoordinates != null && viewCoordinates.isVisible());
     }
 
@@ -91,12 +94,20 @@ public class RendererModel {
         return null;
     }
     
-    public List<CelestialBody> findCelestialBodies() {
+    /**
+     * Returns the celestial objects
+     * @param onlyMoving if true only moving objects are returned
+     * @return the list of celesial bodies
+     */
+    public List<CelestialBody> findCelestialBodies(boolean onlyMoving) {
     	List<CelestialBody> list = new ArrayList<>();
         for (Map.Entry<PositionProvider, ViewCoordinates> entry : viewData.entrySet()) {
             ViewCoordinates viewCoordinates = entry.getValue();
             if (viewCoordinates.getObject() instanceof CelestialBody) {
-            	list.add((CelestialBody) viewCoordinates.getObject());
+            	CelestialBody cb = (CelestialBody) viewCoordinates.getObject();
+            	if (!onlyMoving || !cb.getTrajectory().getType().equals(TrajectoryType.STATIC)) {
+            		list.add(cb);
+            	}
             }
         }
         Collections.sort(list, new Comparator<CelestialBody>() {

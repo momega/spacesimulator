@@ -23,7 +23,7 @@ public class MovingObjectRenderer extends AbstractTextRenderer {
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(movingObject);
         if (viewCoordinates.isVisible()) {
             Point size = getTextSize(movingObject.getName());
-            drawText(movingObject.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+            drawString(movingObject.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
         }
     }
 

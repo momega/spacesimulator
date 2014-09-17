@@ -83,7 +83,7 @@ public class TargetController extends AbstractController {
     }
 
     protected void showDetail(final GLCanvas canvas, final Point position, ViewCoordinates viewCoordinates) {
-        DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), (com.momega.spacesimulator.model.NamedObject) viewCoordinates.getObject());
+        DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), viewCoordinates.getObject());
         dialog.setLocation(position);
         dialog.setVisible(true);
     }

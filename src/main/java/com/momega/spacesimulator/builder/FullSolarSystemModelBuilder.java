@@ -14,7 +14,7 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         super.initPlanets();
 
         Planet saturn = new Planet();
-        createKeplerianElements(saturn, centerSolarSystem, 1433449.370d * 1E6, 0.055723219, 336.013862, 10759.22, 2452827.261731969193, 2.485240, 113.642811);
+        createKeplerianElements(saturn, sun, 1433449.370d * 1E6, 0.055723219, 336.013862, 10759.22, 2452827.261731969193, 2.485240, 113.642811);
         updateDynamicalPoint(saturn, "Saturn", 568.46, 10.57d / 24, 58.232, 40.589, 83.537, "Saturn_(planet)");
         createTrajectory(saturn, new double[]{1,0.1,0.7}, TrajectoryType.KEPLERIAN);
         saturn.setTextureFileName("saturn.jpg");
@@ -86,14 +86,14 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         addMovingObject(phoebe);
 
         Planet ceres = new Planet();
-        createKeplerianElements(ceres, centerSolarSystem, 2.7668 * MathUtils.AU, 0.075797, 7.240455940332073E+01, 1680.99, 2456551.647886344232, 10.59386305801516, 8.032841384703973E+01);
+        createKeplerianElements(ceres, sun, 2.7668 * MathUtils.AU, 0.075797, 7.240455940332073E+01, 1680.99, 2456551.647886344232, 10.59386305801516, 8.032841384703973E+01);
         updateDynamicalPoint(ceres, "Ceres", 9.43E-04, 0.3781d, 0.4762, 291, 59, 170.90, "Ceres_(dwarf_planet)");
         createTrajectory(ceres, new double[]{139d / 255d, 119d / 255d, 101d / 255d}, TrajectoryType.KEPLERIAN);
         ceres.setTextureFileName("vesta.jpg");
         addMovingObject(ceres);
 
         Planet vesta = new Planet();
-        createKeplerianElements(vesta, centerSolarSystem, 2.362 * MathUtils.AU, 0.08862, 149.84, 1325.653, 2456923.721471834928, 7.134, 103.91);
+        createKeplerianElements(vesta, sun, 2.362 * MathUtils.AU, 0.08862, 149.84, 1325.653, 2456923.721471834928, 7.134, 103.91);
         updateDynamicalPoint(vesta, "Vesta", 2.59076E-04, 0.2226d, 0.5254, 305.8, 41.4, 292, "4_Vesta");
         createTrajectory(vesta, new double[] {211d/255d, 211d/255d, 211d/255d}, TrajectoryType.KEPLERIAN);
         vesta.setTextureFileName("vesta.jpg");

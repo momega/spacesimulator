@@ -15,7 +15,7 @@ public class TimeRenderer extends AbstractTextRenderer {
     @Override
     public void renderTexts(GL2 gl, int width, int height) {
         Model model = ModelHolder.getModel();
-        drawText("Time:" + TimeUtils.timeAsString(model.getTime()), width - 200, height - 20);
-        drawText("Warp:" + String.format("%3.5f", model.getWarpFactor()), width - 200, height - 35);
+        drawString("Time:" + TimeUtils.timeAsString(model.getTime()), width - 200, height - 20);
+        drawString("Warp:" + String.format("%3.5f", model.getWarpFactor()), width - 200, height - 35);
     }
 }

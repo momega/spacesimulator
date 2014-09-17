@@ -30,20 +30,20 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
 	private static final long serialVersionUID = 4044217723361028807L;
 	private static final Logger logger = LoggerFactory.getLogger(DetailDialog.class);
-    private final NamedObject namedObject;
+    private final PositionProvider positionProvider;
     private java.util.List<UpdatablePanel> attributesPanelList = new ArrayList<>();
 
-    public DetailDialog(Frame parent, final NamedObject namedObject) {
-        super(parent, namedObject.getName(), true);
-        this.namedObject = namedObject;
+    public DetailDialog(Frame parent, final PositionProvider positionProvider) {
+        super(parent, positionProvider.getName(), true);
+        this.positionProvider = positionProvider;
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
 
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-        if (namedObject instanceof MovingObject) {
-        	if (namedObject instanceof Spacecraft) {
+        if (positionProvider instanceof MovingObject) {
+        	if (positionProvider instanceof Spacecraft) {
         		tabbedPane.addTab("Spacecraft", createImageIcon("/images/application.png"), createSpacecraftPanel(), "Spacecraft Basic Information");
         	} else {
         		tabbedPane.addTab("Basic", createImageIcon("/images/application.png"), createPhysicalPanel(), "Basic Information");
@@ -51,15 +51,15 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             tabbedPane.addTab("Cartesian", createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
             tabbedPane.addTab("Keplerian", createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
         } else {
-        	if (namedObject instanceof Apsis) {
+        	if (positionProvider instanceof Apsis) {
                 tabbedPane.addTab("Apsis", createImageIcon("/images/application.png"), createApsisPanel(), "Apsis Information");
-            } else if (namedObject instanceof PositionProvider) {
+            } else if (positionProvider instanceof PositionProvider) {
                 tabbedPane.addTab("Position", createImageIcon("/images/application.png"), createPositionProviderPanel(), "Point Information");
             }
         }
 
-        if (namedObject instanceof Spacecraft) {
-            Spacecraft spacecraft = (Spacecraft) namedObject;
+        if (positionProvider instanceof Spacecraft) {
+            Spacecraft spacecraft = (Spacecraft) positionProvider;
             ManeuverPanel maneuverPanel = new ManeuverPanel(spacecraft);
             tabbedPane.addTab("Maneuvers", createImageIcon("/images/hourglass.png"), maneuverPanel, "Spacecraft Maneuvers");
             attributesPanelList.add(maneuverPanel);
@@ -97,7 +97,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(namedObject);
+                ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(positionProvider);
                 RendererModel.getInstance().selectDynamicalPoint(viewCoordinates);
             }
         });
@@ -112,9 +112,9 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         });
         buttonsPanel.add(applyButton);
         
-        if (namedObject instanceof CelestialBody) {
+        if (positionProvider instanceof CelestialBody) {
             JButton wikiButton = new JButton("Wiki");
-            final CelestialBody celestialBody = (CelestialBody) namedObject;
+            final CelestialBody celestialBody = (CelestialBody) positionProvider;
             if (celestialBody.getWiki() != null) {
                 try {
                     final URI wikiUri = new URI("http://en.wikipedia.org/wiki/" + celestialBody.getWiki());
@@ -140,7 +140,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
-                logger.info("closing detail dialog for {}", namedObject.getName());
+                logger.info("closing detail dialog for {}", positionProvider.getName());
             }
         });
         setPreferredSize(new Dimension(600, 400));
@@ -152,13 +152,13 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     protected JPanel createCartesianPanel() {
         String[] labels = {"Position X", "Position Y", "Position Z", "Velocity", "Velocity X", "Velocity Y", "Velocity Z", "Orientation N", "Orientation V"};
         String[] fields = {"#obj.position.x", "#obj.position.y", "#obj.position.z", "#obj.cartesianState.velocity.length()", "#obj.cartesianState.velocity.x", "#obj.cartesianState.velocity.y", "#obj.cartesianState.velocity.z", "#obj.orientation.n.toString()", "#obj.orientation.v.toString()"};
-        AttributesPanel result = new AttributesPanel(labels, namedObject, fields);
+        AttributesPanel result = new AttributesPanel(labels, positionProvider, fields);
         attributesPanelList.add(result);
         return result;
     }
     
     protected JPanel createSpacecraftPanel() {
-    	SpacecraftPanel result =  new SpacecraftPanel((Spacecraft) namedObject);
+    	SpacecraftPanel result =  new SpacecraftPanel((Spacecraft) positionProvider);
         attributesPanelList.add(result);
         return result;
     }
@@ -166,25 +166,25 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     protected JPanel createPhysicalPanel() {
         String[] labels = {"Name", "Mass", "Radius", "Rotation Period", "North Pole RA", "North Pole DEC", "Prime Meridian", "Prime Meridian JD2000"};
         String[] fields = {"#obj.name", "#obj.mass", "#obj.radius", "#obj.rotationPeriod", "#toDegrees(#toSphericalCoordinates(#obj.orientation.v)[2])", "#toDegrees(#toSphericalCoordinates(#obj.orientation.v)[1])", "#toDegrees(#obj.primeMeridian)", "#toDegrees(#obj.primeMeridianJd2000)"};
-        AttributesPanel result =  new AttributesPanel(labels, namedObject, fields);
+        AttributesPanel result =  new AttributesPanel(labels, positionProvider, fields);
         attributesPanelList.add(result);
         return result;
     }
 
     protected JPanel createKeplerianPanel() {
-        KeplerianPanel result =  new KeplerianPanel(namedObject);
+        KeplerianPanel result =  new KeplerianPanel(positionProvider);
         attributesPanelList.add(result);
         return result;
     }
 
     protected JPanel createApsisPanel() {
-        ApsisPanel result =  new ApsisPanel((Apsis) namedObject);
+        ApsisPanel result =  new ApsisPanel((Apsis) positionProvider);
         attributesPanelList.add(result);
         return result;
     }
 
     protected JPanel createPositionProviderPanel() {
-        PositionProviderPanel result =  new PositionProviderPanel((PositionProvider) namedObject);
+        PositionProviderPanel result =  new PositionProviderPanel((PositionProvider) positionProvider);
         attributesPanelList.add(result);
         return result;
     }

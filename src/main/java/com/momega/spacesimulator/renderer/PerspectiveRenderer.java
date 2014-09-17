@@ -17,6 +17,6 @@ public class PerspectiveRenderer extends AbstractTextRenderer {
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-        drawText("ZNear:" + mainRenderer.getZnear(), 10, height - 20);
+        drawString("ZNear:" + mainRenderer.getZnear(), 10, height - 20);
     }
 }

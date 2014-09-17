@@ -19,20 +19,29 @@ public abstract class AbstractTextRenderer extends AbstractRenderer {
     public void init(GL2 gl) {
         textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 10));
     }
-
-    @Override
-    public void draw(GLAutoDrawable drawable) {
-        textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
+    
+    protected void drawObjects(GLAutoDrawable drawable) {
+    	// do nothing
+    }
+    
+    protected final void drawTexts(GLAutoDrawable drawable) {
+    	textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
         GL2 gl = drawable.getGL().getGL2();
         renderTexts(gl, drawable.getWidth(), drawable.getHeight());
         textRenderer.endRendering();
     }
 
-    protected void drawText(CharSequence str, int x, int y) {
+    @Override
+    public final void draw(GLAutoDrawable drawable) {
+    	drawObjects(drawable);
+    	drawTexts(drawable);
+    }
+
+    protected void drawString(CharSequence str, int x, int y) {
         textRenderer.draw(str, x, y);
     }
 
-    protected void drawText(CharSequence str, double x, double y) {
+    protected void drawString(CharSequence str, double x, double y) {
         textRenderer.draw(str, (int)x, (int)y);
     }
 

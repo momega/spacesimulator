@@ -1,17 +1,18 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.NamedObject;
-import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.renderer.ViewCoordinates;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.awt.*;
+import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 
 /**
  * Created by martin on 5/8/14.
@@ -51,8 +52,8 @@ public class CameraController extends AbstractController {
     }
 
     public void changeDistance(double factor) {
-        if (camera.getTargetObject() instanceof NamedObject) {
-            ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates((NamedObject) camera.getTargetObject());
+        if (camera.getTargetObject() instanceof PositionProvider) {
+            ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(camera.getTargetObject());
             logger.info("view radius = {}", viewCoordinates.getRadius());
             if (viewCoordinates.getRadius() * 2 > this.height && factor<1) {
                 return;
