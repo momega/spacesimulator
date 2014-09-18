@@ -52,21 +52,6 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
 
             gl.glPopMatrix();
         }
-
-        // TODO: temporary here
-        if ("Moon".equals(movingObject.getName())) {
-            GL2 gl = drawable.getGL().getGL2();
-            gl.glPushMatrix();
-
-            gl.glColor3dv(getTrajectory().getColor(), 0);
-            // the order is important
-            GLUtils.translate(gl, getKeplerianElements().getCentralObject().getCartesianState().getPosition());
-            GLUtils.rotate(gl, getKeplerianElements());
-
-            GLUtils.drawBeansAndCircles(gl, 0, 0,  20 * 1E6, 18, 10);
-
-            gl.glPopMatrix();
-        }
     }
 
 

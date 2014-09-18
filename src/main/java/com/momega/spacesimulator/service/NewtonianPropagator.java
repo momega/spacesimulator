@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
@@ -49,21 +48,26 @@ public class NewtonianPropagator implements Propagator {
     }
 
     protected void computeIntersections(Spacecraft spacecraft, Timestamp newTimestamp) {
-        CelestialBody moon = null;
-        for(MovingObject movingObject : ModelHolder.getModel().getMovingObjects()) {
-            if ("Moon".equals(movingObject.getName())) {
-                moon = (CelestialBody) movingObject;
-                break;
-            }
-        }
-
-        Assert.notNull(moon);
+    	// if there is no target
+    	if (spacecraft.getTargetBody() == null) {
+    		spacecraft.getOrbitIntersections().clear(); 
+    		return;
+    	}
+    	
+    	// if central of my trajectory is equal target
+    	if (spacecraft.getKeplerianElements().getCentralObject() == spacecraft.getTargetBody()) {
+    		spacecraft.getOrbitIntersections().clear();
+    		return;
+    	}
+    	
+        CelestialBody targetBody = spacecraft.getTargetBody();
+        Assert.notNull(targetBody);
         
         Plane spacecraftPlane = createOrbitalPlane(spacecraft);
-        Plane moonPlane = createOrbitalPlane(moon);
+        Plane targetBodyPlane = createOrbitalPlane(targetBody);
 
         KeplerianElements orbit = spacecraft.getKeplerianElements();
-        Line intersectionLine = spacecraftPlane.intersection(moonPlane, orbit.getCentralObject().getPosition());
+        Line intersectionLine = spacecraftPlane.intersection(targetBodyPlane, orbit.getCentralObject().getPosition());
 
         // now transform to 2D to compute intersections
         Vector3d intersectionLinePoint = intersectionLine.getOrigin().subtract(orbit.getCentralObject().getPosition());
@@ -81,7 +85,7 @@ public class NewtonianPropagator implements Propagator {
         	}
         }
         
-        // update the coordinates
+        // create orbital intersection
         for(int i=0; i<intersections.size(); i++) {
         	double theta = angles[i];
         	Vector3d vector = KeplerianUtils.getInstance().getCartesianPosition(orbit, theta);
@@ -89,8 +93,8 @@ public class NewtonianPropagator implements Propagator {
 	        intersection.setPosition(vector);
 	        intersection.setTimestamp(KeplerianUtils.getInstance().timeToAngle(orbit, newTimestamp, theta));
 	        intersection.setKeplerianElements(orbit);
-	        intersection.setName("Spacecraft/Moon Intersection " + i);
-	        intersection.setTargetObject(moon);
+	        intersection.setName(spacecraft.getName() +"/" + targetBody.getName() + " Intersection " + i);
+	        intersection.setTargetObject(targetBody);
         }
     }
 
@@ -157,8 +161,8 @@ public class NewtonianPropagator implements Propagator {
      */
     public void computePrediction(Spacecraft spacecraft, Timestamp newTimestamp) {
         SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(spacecraft);
-        CelestialBody soiCelestialBody = soi.getBody();
-        CartesianState cartesianState = spacecraft.getCartesianState().subtract(soiCelestialBody.getCartesianState());
+        CelestialBody soiBody = soi.getBody();
+        CartesianState cartesianState = spacecraft.getCartesianState().subtract(soiBody.getCartesianState());
         Vector3d position = cartesianState.getPosition();
         Vector3d velocity = cartesianState.getVelocity();
 
@@ -173,7 +177,6 @@ public class NewtonianPropagator implements Propagator {
         double h = hVector.length();
         double i = Math.acos(hVector.getZ() / h);
 
-        PhysicalBody soiBody = soi.getBody();
         double mi = soiBody.getMass() * MathUtils.G;
 
         Vector3d eVector = velocity.cross(hVector).scale(1/mi).subtract(position.normalize());

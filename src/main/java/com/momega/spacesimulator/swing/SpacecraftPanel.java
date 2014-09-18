@@ -33,8 +33,7 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 	private final AttributesPanel attrPanel;
 	private static final String[] LABELS = { "Name", "Mass" };
 	private static final String[] FIELDS = { "#obj.name", "#obj.mass" };
-	private static final Logger logger = LoggerFactory
-			.getLogger(SpacecraftPanel.class);
+	private static final Logger logger = LoggerFactory.getLogger(SpacecraftPanel.class);
 	private final CelestialBodyModel model;
 	private Spacecraft spacecraft;
 	private CelestialBody celestialBody;
@@ -84,12 +83,16 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 
 	@Override
 	public void updateModel() {
-		if (model.getSelectedItem() == null) {
-			spacecraft.setTargetBody(null);
-			logger.info("unset for spacecraft{}", spacecraft.getName());
+		if (spacecraft.getTargetBody() != model.getSelectedItem()) {
+			if (model.getSelectedItem() == null) {
+				spacecraft.setTargetBody(null);
+				logger.info("unset for {}", spacecraft.getName());
+			} else {
+				spacecraft.setTargetBody(this.celestialBody);
+				logger.info("set target body {} for {}", spacecraft.getTargetBody().getName(), spacecraft.getName());
+			}
 		} else {
-			spacecraft.setTargetBody(this.celestialBody);
-			logger.info("set target body {} for spacecraft{}", spacecraft.getTargetBody().getName(), spacecraft.getName());
+			logger.debug("no change in target");
 		}
 	}
 
@@ -100,8 +103,7 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 		public CelestialBodyModel() {
 			super();
 			addElement(null);
-			for (CelestialBody cb : RendererModel.getInstance()
-					.findCelestialBodies(true)) {
+			for (CelestialBody cb : RendererModel.getInstance().findCelestialBodies(true)) {
 				addElement(cb.getName());
 			}
 		}
