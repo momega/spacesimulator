@@ -181,8 +181,8 @@ public class MainGLRenderer extends AbstractGLRenderer {
             viewCoordinates.setRadius(5);
         }
 
-        if (namedObject instanceof Apsis) {
-            Apsis apsis = (Apsis) namedObject;
+        if (namedObject instanceof AbstractKeplerianPoint) {
+        	AbstractKeplerianPoint apsis = (AbstractKeplerianPoint) namedObject;
             viewCoordinates.setVisible(viewCoordinates.isVisible() && apsis.isVisible());
         }
 

@@ -87,6 +87,7 @@ public class NewtonianPropagator implements Propagator {
         		intersection.setKeplerianElements(orbit);
     	        intersection.setName(spacecraft.getName() +"/" + targetBody.getName() + " Intersection " + i);
     	        intersection.setTargetObject(targetBody);
+    	        intersection.setVisible(true);
         	}
         }
         

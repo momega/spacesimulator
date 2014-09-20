@@ -37,8 +37,9 @@ public class MainWindow extends DefaultWindow {
         //AbstractModelBuilder builder = new FullSolarSystemModelBuilder();
 
         Application application = new Application();
-        Model model = application.init(builder, 5910 * 60);
-
+        //Model model = application.init(builder, 5910 * 60);
+        Model model = application.init(builder, 0);
+        
         MainGLRenderer mr = new MainGLRenderer(application);
         controller.addController(new QuitController(window));
         controller.addController(new TargetController());
