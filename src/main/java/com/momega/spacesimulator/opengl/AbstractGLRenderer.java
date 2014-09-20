@@ -17,12 +17,14 @@ import static javax.media.opengl.fixedfunc.GLMatrixFunc.GL_PROJECTION;
 public abstract class AbstractGLRenderer implements GLEventListener {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractGLRenderer.class);
+    
+    private boolean reshape = false;
 
     /**
      * The default implementation of initializing of the renderer. It creates GLU and GLUT objects
      * @param drawable the OPENGL canvas
      */
-    public void init(GLAutoDrawable drawable) {
+    public final void init(GLAutoDrawable drawable) {
         logger.info("renderer initializing");
         GL2 gl = drawable.getGL().getGL2();
 
@@ -47,57 +49,96 @@ public abstract class AbstractGLRenderer implements GLEventListener {
         logger.info("renderer initialized");
     }
 
-    /*
+    /**
      * The default display method
      * @param drawable the OPENGL canvas
      */
-    public void display(GLAutoDrawable drawable) {
+    public final void display(GLAutoDrawable drawable) {
         reshapeRequired(drawable);
 
         GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear color and depth buffers
 
-        computeScene(drawable);
+        computeScene();
 
         gl.glLoadIdentity();
         setCamera();
+        computeView(drawable);
         draw(drawable);
     }
-
-    protected abstract void reshapeRequired(GLAutoDrawable drawable);
+    
+    /**
+     * Prepares projection data.
+     * @param drawable The canvas
+     */
+    protected void computeView(GLAutoDrawable drawable) {
+    	// do nothing
+    }
 
     /**
-     * Computes scene with all objects and cameras
+     * Called whenever the reshape method has to be me called 
+     * @param drawable
      */
-    protected abstract void computeScene(GLAutoDrawable drawable);
+    protected final void reshapeRequired(GLAutoDrawable drawable) {
+        if (reshape) {
+            logger.info("reshape required manually");
+            reshape(drawable, 0, 0, drawable.getWidth(), drawable.getHeight());
+            reshape = false;
+        }
+    }
 
+    /**
+     * Computes scene. The method computes the positions all the objects in the scene. 
+     */
+    protected abstract void computeScene();
+
+    /**
+     * Renders the objects computed in {@link #computeScene()}.
+     * @param drawable
+     */
     protected abstract void draw(GLAutoDrawable drawable);
 
+    /**
+     * Prepares the perspective
+     * @param gl the OpenGL context
+     * @param aspect the aspect
+     */
     protected abstract void setPerspective(GL2 gl, double aspect);
 
-    public abstract void setCamera();
+    /**
+     * Setup the camera
+     */
+    protected abstract void setCamera();
 
+    /**
+     * Initializes the GL context
+     * @param gl
+     */
     protected abstract void init(GL2 gl);
 
     /**
      * The default implementation of the dispose method
      * @param drawable the OPENGL canvas
      */
-    public void dispose(GLAutoDrawable drawable) {
+    public final void dispose(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         dispose(gl);
         logger.info("renderer disposed");
     }
 
+    /**
+     * Disposes the GL context
+     * @param gl the OpenGL context
+     */
     protected void dispose(GL2 gl) {
         // do nothing, ready for override
     }
 
-    /*
+    /**
      * Whenever the window is reshaped, redefine the coordinate system and
      * redraw the stencil area.
      */
-    public void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
+    public final void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
         logger.info("reshape called {}x{}", width, height);
         GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
 
@@ -114,6 +155,10 @@ public abstract class AbstractGLRenderer implements GLEventListener {
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
         logger.info("reshape called done");
+    }
+    
+    public void setReshape() {
+    	reshape = true;
     }
 
 }

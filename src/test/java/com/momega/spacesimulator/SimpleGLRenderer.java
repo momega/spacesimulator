@@ -17,12 +17,7 @@ public class SimpleGLRenderer extends AbstractGLRenderer {
     private Texture texture;
 
     @Override
-    protected void reshapeRequired(GLAutoDrawable drawable) {
-        // do nothing
-    }
-
-    @Override
-    protected void computeScene(GLAutoDrawable drawable) {
+    protected void computeScene() {
 
     }
 

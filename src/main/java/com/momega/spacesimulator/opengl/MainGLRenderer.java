@@ -1,19 +1,19 @@
 package com.momega.spacesimulator.opengl;
 
-import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.renderer.ModelRenderer;
-import com.momega.spacesimulator.renderer.PerspectiveRenderer;
-import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.renderer.ViewCoordinates;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
-import java.awt.*;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.renderer.ModelRenderer;
+import com.momega.spacesimulator.renderer.PerspectiveRenderer;
+import com.momega.spacesimulator.renderer.RendererModel;
 
 /**
  * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
@@ -23,7 +23,6 @@ import java.awt.*;
 public class MainGLRenderer extends AbstractGLRenderer {
 
     public final static double UNIVERSE_RADIUS = 1E19;
-    public static final double FOVY = 45.0;
     private static final Logger logger = LoggerFactory.getLogger(MainGLRenderer.class);
 
     private final ModelRenderer renderer;
@@ -31,7 +30,6 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     private GLU glu;
     public double znear = 100;
-    protected boolean reshape = false;
 
     public MainGLRenderer(Application application) {
         this.application = application;
@@ -46,17 +44,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
     }
 
     @Override
-    protected void reshapeRequired(GLAutoDrawable drawable) {
-        if (reshape) {
-            logger.info("reshape required manually");
-            reshape(drawable, 0, 0, drawable.getWidth(), drawable.getHeight());
-            reshape = false;
-        }
-    }
-
-    @Override
     protected void draw(GLAutoDrawable drawable) {
-        computeViewCoordinates(drawable);
         renderer.draw(drawable);
     }
 
@@ -66,7 +54,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
     }
 
     @Override
-    protected void computeScene(GLAutoDrawable drawable) {
+    protected void computeScene() {
         application.next();
 
 
@@ -78,12 +66,12 @@ public class MainGLRenderer extends AbstractGLRenderer {
         z = z / 10.0d;
         if (z < znear) {
             znear = z;
-            reshape = true;
+            setReshape();
             logger.info("new z-near = {}", znear);
         }
         if (z > znear) {
             znear = z;
-            reshape =true;
+            setReshape();
             logger.info("new z-near = {}", znear);
         }
     }
@@ -138,56 +126,10 @@ public class MainGLRenderer extends AbstractGLRenderer {
 //        return znear;
 //    }
 
-    protected void computeViewCoordinates(GLAutoDrawable drawable) {
+    protected void computeView(GLAutoDrawable drawable) {
     	RendererModel.getInstance().clearViewCoordinates();
-        Camera camera = ModelHolder.getModel().getCamera();
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
-            addViewCoordinates(drawable, dp, camera);
-            KeplerianTrajectory keplerianTrajectory = dp.getTrajectory();
-            if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
-                addViewCoordinates(drawable, keplerianTrajectory.getApoapsis(), camera);
-                addViewCoordinates(drawable, keplerianTrajectory.getPeriapsis(), camera);
-            }
-            if (dp instanceof Spacecraft) {
-                Spacecraft spacecraft = (Spacecraft) dp;
-                for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
-                    addViewCoordinates(drawable, hp, camera);
-                }
-                for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
-                    addViewCoordinates(drawable, intersection, camera);
-                }
-            }
-        }
+        RendererModel.getInstance().updateViewData(drawable);
         RendererModel.getInstance().modelChanged();
-    }
-
-    protected void addViewCoordinates(GLAutoDrawable drawable, PositionProvider namedObject, Camera camera) {
-        if (namedObject == null) {
-            return;
-        }
-
-        ViewCoordinates viewCoordinates = new ViewCoordinates();
-        Point point = GLUtils.getProjectionCoordinates(drawable, namedObject.getPosition(), camera);
-        viewCoordinates.setVisible(point != null);
-        viewCoordinates.setPoint(point);
-        double radiusAngle;
-        if (namedObject instanceof RotatingObject) {
-            RotatingObject ro = (RotatingObject) namedObject;
-            Vector3d distance = namedObject.getPosition().subtract(camera.getPosition());
-            radiusAngle = Math.toDegrees(Math.atan2(ro.getRadius(), distance.length()));
-            double radius = (int)((radiusAngle/ FOVY) * drawable.getHeight());
-            viewCoordinates.setRadius(radius);
-        } else {
-            viewCoordinates.setRadius(5);
-        }
-
-        if (namedObject instanceof AbstractKeplerianPoint) {
-        	AbstractKeplerianPoint apsis = (AbstractKeplerianPoint) namedObject;
-            viewCoordinates.setVisible(viewCoordinates.isVisible() && apsis.isVisible());
-        }
-
-        viewCoordinates.setObject(namedObject);
-        RendererModel.getInstance().addViewCoordinates(viewCoordinates);
     }
 
     @Override
@@ -208,7 +150,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
     }
 
     protected void setPerspective(GL2 gl, double aspect) {
-        glu.gluPerspective(FOVY, aspect, znear, UNIVERSE_RADIUS);
+        glu.gluPerspective(RendererModel.FOVY, aspect, znear, UNIVERSE_RADIUS);
     }
 
     public double getZnear() {
@@ -217,7 +159,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     public void changeZnear(double factor) {
         znear *= factor;
-        reshape = true;
+        setReshape();
     }
 
 }

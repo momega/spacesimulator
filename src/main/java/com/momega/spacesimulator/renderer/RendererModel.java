@@ -2,11 +2,15 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.opengl.GLUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.Point;
 import java.util.*;
+
+import javax.media.opengl.GLAutoDrawable;
 
 /**
  * Created by martin on 6/20/14.
@@ -16,6 +20,8 @@ public class RendererModel {
     private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
 
     private final static int MIN_TARGET_SIZE = 5;
+    
+    public static final double FOVY = 45.0;    
 
     private static RendererModel instance = new RendererModel();
 
@@ -38,6 +44,56 @@ public class RendererModel {
     public void removeModelChangeListener(ModelChangeListener listener) {
         modelChangeListeners.remove(listener);
     }
+    
+    public void updateViewData(GLAutoDrawable drawable) {
+    	Camera camera = ModelHolder.getModel().getCamera();
+        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+            addViewCoordinates(drawable, dp, camera);
+            KeplerianTrajectory keplerianTrajectory = dp.getTrajectory();
+            if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
+                addViewCoordinates(drawable, keplerianTrajectory.getApoapsis(), camera);
+                addViewCoordinates(drawable, keplerianTrajectory.getPeriapsis(), camera);
+            }
+            if (dp instanceof Spacecraft) {
+                Spacecraft spacecraft = (Spacecraft) dp;
+                for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
+                    addViewCoordinates(drawable, hp, camera);
+                }
+                for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
+                    addViewCoordinates(drawable, intersection, camera);
+                }
+            }
+        }
+    }
+    
+    protected void addViewCoordinates(GLAutoDrawable drawable, PositionProvider positionProvider, Camera camera) {
+        if (positionProvider == null) {
+            return;
+        }
+
+        ViewCoordinates viewCoordinates = new ViewCoordinates();
+        Point point = GLUtils.getProjectionCoordinates(drawable, positionProvider.getPosition(), camera);
+        viewCoordinates.setVisible(point != null);
+        viewCoordinates.setPoint(point);
+        double radiusAngle;
+        if (positionProvider instanceof RotatingObject) {
+            RotatingObject ro = (RotatingObject) positionProvider;
+            Vector3d distance = positionProvider.getPosition().subtract(camera.getPosition());
+            radiusAngle = Math.toDegrees(Math.atan2(ro.getRadius(), distance.length()));
+            double radius = (int)((radiusAngle/ FOVY) * drawable.getHeight());
+            viewCoordinates.setRadius(radius);
+        } else {
+            viewCoordinates.setRadius(MIN_TARGET_SIZE);
+        }
+
+        if (positionProvider instanceof AbstractKeplerianPoint) {
+        	AbstractKeplerianPoint apsis = (AbstractKeplerianPoint) positionProvider;
+            viewCoordinates.setVisible(viewCoordinates.isVisible() && apsis.isVisible());
+        }
+
+        viewCoordinates.setObject(positionProvider);
+        RendererModel.getInstance().addViewCoordinates(viewCoordinates);
+    }    
 
     public void modelChanged() {
         Model model = ModelHolder.getModel();
