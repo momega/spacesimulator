@@ -13,9 +13,6 @@ public class Maneuver extends NamedObject implements TimeInterval {
     private Timestamp startTime;
     private Timestamp endTime;
 
-    private HistoryPoint startPoint;
-    private HistoryPoint endPoint;
-
     public Timestamp getStartTime() {
         return startTime;
     }
@@ -56,19 +53,4 @@ public class Maneuver extends NamedObject implements TimeInterval {
         this.throttleDelta = throttleDelta;
     }
 
-    public HistoryPoint getEndPoint() {
-        return endPoint;
-    }
-
-    public void setEndPoint(HistoryPoint endPoint) {
-        this.endPoint = endPoint;
-    }
-
-    public HistoryPoint getStartPoint() {
-        return startPoint;
-    }
-
-    public void setStartPoint(HistoryPoint startPoint) {
-        this.startPoint = startPoint;
-    }
 }

@@ -3,9 +3,15 @@
  */
 package com.momega.spacesimulator;
 
-import com.momega.spacesimulator.builder.*;
+import com.momega.spacesimulator.builder.AbstractModelBuilder;
+import com.momega.spacesimulator.builder.SimpleSolarSystemModelBuilder;
 import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.controller.*;
+import com.momega.spacesimulator.controller.CameraController;
+import com.momega.spacesimulator.controller.EventBusController;
+import com.momega.spacesimulator.controller.PerspectiveController;
+import com.momega.spacesimulator.controller.QuitController;
+import com.momega.spacesimulator.controller.TargetController;
+import com.momega.spacesimulator.controller.TimeController;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.MainGLRenderer;
@@ -31,7 +37,7 @@ public class MainWindow extends DefaultWindow {
         //AbstractModelBuilder builder = new FullSolarSystemModelBuilder();
 
         Application application = new Application();
-        Model model = application.init(builder);
+        Model model = application.init(builder, 5910 * 60);
 
         MainGLRenderer mr = new MainGLRenderer(application);
         controller.addController(new QuitController(window));

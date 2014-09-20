@@ -6,7 +6,7 @@ import java.math.BigDecimal;
  * The wrapper object which holds the current time and warp factor
  * Created by martin on 4/29/14.
  */
-public class Timestamp {
+public class Timestamp implements Comparable<Timestamp> {
 
     private BigDecimal value;
 
@@ -35,5 +35,10 @@ public class Timestamp {
         t.setValue(value);
         return t;
     }
+
+	@Override
+	public int compareTo(Timestamp o) {
+		return value.compareTo(o.getValue());
+	}
 
 }

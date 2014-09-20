@@ -5,12 +5,16 @@ import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Maneuver;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
+import com.momega.spacesimulator.renderer.NewManeuverEvent;
 import com.momega.spacesimulator.utils.TimeUtils;
+
 import org.springframework.beans.BeanUtils;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -56,6 +60,9 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int row = table.getSelectedRow();
+                if (table.isEditing()) {
+                    table.getCellEditor().stopCellEditing();
+                }
                 tableModel.deleteManeuver(row);
             }
         });
@@ -162,6 +169,11 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
                 return true;
             }
         }
+        
+        public void addManeuver(Maneuver m) {
+        	maneuvers.add(m);
+            fireTableRowsInserted(maneuvers.size()-1, maneuvers.size()-1);
+        }
 
         public void newManeuver() {
             Maneuver m = new Maneuver();
@@ -174,8 +186,7 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
             m.setName("Noname Maneuver");
             m.setThrottleDelta(Math.toRadians(90));
 
-            maneuvers.add(m);
-            fireTableRowsInserted(maneuvers.size()-1, maneuvers.size()-1);
+            addManeuver(m);
         }
 
         public void deleteManeuver(int row) {
@@ -208,8 +219,11 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
     }
 
 	@Override
-	public void updateView() {
-		// do nothing
+	public void updateView(ModelChangeEvent event) {
+		if (event instanceof NewManeuverEvent) {
+			NewManeuverEvent nme = (NewManeuverEvent) event;
+			tableModel.addManeuver(nme.getManeuver());
+		}
 	}
 
 	@Override

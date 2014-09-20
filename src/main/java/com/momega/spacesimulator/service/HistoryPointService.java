@@ -4,6 +4,10 @@ import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Maneuver;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.utils.TimeUtils;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,8 +17,10 @@ import java.util.List;
  */
 @Component
 public class HistoryPointService {
+	
+	 private static final Logger logger = LoggerFactory.getLogger(HistoryPointService.class);
 
-    private int maxHistory = 100000;
+    private int maxHistory = 10000;
 
     public void updateHistory(Spacecraft spacecraft) {
         List<HistoryPoint> historyPoints = spacecraft.getHistoryTrajectory().getHistoryPoints();
@@ -35,16 +41,16 @@ public class HistoryPointService {
 
     public void endManeuver(Spacecraft spacecraft, Maneuver maneuver) {
         HistoryPoint hp = getLastHistoryPoint(spacecraft);
-        maneuver.setEndPoint(hp);
         hp.setName("End of " + maneuver.getName());
         spacecraft.getHistoryTrajectory().getNamedHistoryPoints().add(hp);
+        logger.info("end = {} " + TimeUtils.timeAsString(hp.getTimestamp()));
     }
 
     public void startManeuver(Spacecraft spacecraft, Maneuver maneuver) {
         HistoryPoint hp = getLastHistoryPoint(spacecraft);
-        maneuver.setStartPoint(hp);
         hp.setName("Start of " + maneuver.getName());
         spacecraft.getHistoryTrajectory().getNamedHistoryPoints().add(hp);
+        logger.info("start = {} " + TimeUtils.timeAsString(hp.getTimestamp()));
     }
 
     public HistoryPoint getLastHistoryPoint(Spacecraft spacecraft) {

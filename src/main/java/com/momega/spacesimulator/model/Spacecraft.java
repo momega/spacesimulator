@@ -17,6 +17,7 @@ public class Spacecraft extends PhysicalBody {
     private Maneuver currentManeuver;
 
     private CelestialBody targetBody;
+    private Vector3d thrust;
     private List<OrbitIntersection> orbitIntersections = new ArrayList<>();
 
     public HistoryTrajectory getHistoryTrajectory() {
@@ -65,5 +66,13 @@ public class Spacecraft extends PhysicalBody {
     
     public void setTargetBody(CelestialBody targetBody) {
 		this.targetBody = targetBody;
+	}
+    
+    public void setThrust(Vector3d thrust) {
+		this.thrust = thrust;
+	}
+    
+    public Vector3d getThrust() {
+		return thrust;
 	}
 }

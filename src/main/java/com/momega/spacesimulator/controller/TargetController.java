@@ -4,12 +4,14 @@ import javax.media.opengl.awt.GLCanvas;
 
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.swing.DetailDialog;
+import com.momega.spacesimulator.swing.DetailDialogHolder;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GLDrawable;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,7 +41,7 @@ public class TargetController extends AbstractController {
                 detailItem.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        showDetail(canvas, position, viewCoordinates);
+                        DetailDialogHolder.getInstance().showDialog(position, viewCoordinates.getObject());
                     }
                 });
                 JMenuItem selectItem = new JMenuItem("Select");
@@ -70,7 +72,7 @@ public class TargetController extends AbstractController {
                             null);
                     ViewCoordinates vc = RendererModel.getInstance().findByName(selectedName);
                     if (vc !=null) {
-                        showDetail(canvas, position, vc);
+                    	DetailDialogHolder.getInstance().showDialog(position, vc.getObject());
                     }
                 }
             });
@@ -80,12 +82,6 @@ public class TargetController extends AbstractController {
             select(viewCoordinates);
         }
         super.mouseClicked(e);
-    }
-
-    protected void showDetail(final GLCanvas canvas, final Point position, ViewCoordinates viewCoordinates) {
-        DetailDialog dialog = new DetailDialog((java.awt.Frame) canvas.getParent(), viewCoordinates.getObject());
-        dialog.setLocation(position);
-        dialog.setVisible(true);
     }
 
     protected Point getPosition(GLDrawable drawable, MouseEvent e) {

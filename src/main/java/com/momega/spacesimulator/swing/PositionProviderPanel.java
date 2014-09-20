@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.swing;
 
 import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
 
 import javax.swing.*;
 
@@ -30,7 +31,7 @@ public class PositionProviderPanel extends JPanel implements UpdatablePanel {
     }
 
     @Override
-    public void updateView() {
-        attrPanel.updateView();
+    public void updateView(ModelChangeEvent event) {
+        attrPanel.updateView(event);
     }
 }

@@ -62,15 +62,16 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
     @Override
     public void initSpacecrafts() {
         CelestialBody earth = (CelestialBody) findMovingObject("Earth");
+        CelestialBody moon = (CelestialBody) findMovingObject("Moon");
 
         Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
-        Vector3d velocity = position.normalize().cross(top).scale(9000d).negate();
+        Vector3d velocity = position.normalize().cross(top).scale(8200d).negate();
         Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity);
 
         Propulsion propulsion = new Propulsion();
-        propulsion.setMass(19000);
-        propulsion.setFuel(18000);
+        propulsion.setMass(29000);
+        propulsion.setFuel(28000);
         propulsion.setMassFlow(5);
         propulsion.setSpecificImpulse(311);
         propulsion.setName("Main Engine");
@@ -82,7 +83,12 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         habitableModule.setName("Habitat");
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
-        //addManeuver(spacecraft, "M1", 1d, 6000d, 1d, 0, Math.toRadians(0));
+        addManeuver(spacecraft, "M1", 20 * 60d, 2600d, 1d, 0, Math.toRadians(0));
+        addManeuver(spacecraft, "M2", 130 * 60d, 950d, 1d, 0, Math.toRadians(0));
+        addManeuver(spacecraft, "M3", 200 * 60d, 1500d, 1d, 0, Math.toRadians(90));
+        addManeuver(spacecraft, "M4", 5915 * 60d, 210d, 1d, Math.toRadians(180), Math.toRadians(90));
+        
+        spacecraft.setTargetBody(moon);
 
         addMovingObject(spacecraft);
     }

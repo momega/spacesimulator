@@ -33,8 +33,8 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     private final PositionProvider positionProvider;
     private java.util.List<UpdatablePanel> attributesPanelList = new ArrayList<>();
 
-    public DetailDialog(Frame parent, final PositionProvider positionProvider) {
-        super(parent, positionProvider.getName(), true);
+    protected DetailDialog(final PositionProvider positionProvider) {
+        super((Frame)null, positionProvider.getName(), true);
         this.positionProvider = positionProvider;
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BorderLayout());
@@ -51,7 +51,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             tabbedPane.addTab("Cartesian", createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
             tabbedPane.addTab("Keplerian", createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
         } else {
-        	if (positionProvider instanceof Apsis) {
+        	if (positionProvider instanceof AbstractKeplerianPoint) {
                 tabbedPane.addTab("Apsis", createImageIcon("/images/application.png"), createApsisPanel(), "Apsis Information");
             } else if (positionProvider instanceof PositionProvider) {
                 tabbedPane.addTab("Position", createImageIcon("/images/application.png"), createPositionProviderPanel(), "Point Information");
@@ -74,10 +74,9 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RendererModel.getInstance().removeModelChangeListener(DetailDialog.this);
                 updateModel();
-                setVisible(false);
-                dispose();
+                RendererModel.getInstance().removeModelChangeListener(DetailDialog.this);
+                DetailDialogHolder.getInstance().hideDialog(positionProvider);
             }
         });
         buttonsPanel.add(okButton);
@@ -87,8 +86,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 RendererModel.getInstance().removeModelChangeListener(DetailDialog.this);
-                setVisible(false);
-                dispose();
+                DetailDialogHolder.getInstance().hideDialog(positionProvider);
             }
         });
         buttonsPanel.add(cancelButton);
@@ -141,6 +139,8 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             @Override
             public void windowClosed(WindowEvent e) {
                 logger.info("closing detail dialog for {}", positionProvider.getName());
+                RendererModel.getInstance().removeModelChangeListener(DetailDialog.this);
+                DetailDialogHolder.getInstance().hideDialog(positionProvider);
             }
         });
         setPreferredSize(new Dimension(600, 400));
@@ -178,7 +178,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     }
 
     protected JPanel createApsisPanel() {
-        ApsisPanel result =  new ApsisPanel((Apsis) positionProvider);
+        KeplerianPointPanel result =  new KeplerianPointPanel((AbstractKeplerianPoint) positionProvider);
         attributesPanelList.add(result);
         return result;
     }
@@ -218,7 +218,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     @Override
     public void modelChanged(ModelChangeEvent event) {
         for(UpdatablePanel ap : attributesPanelList) {
-            ap.updateView();
+            ap.updateView(event);
         }
     }
     

@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.utils;
 
 import com.momega.spacesimulator.model.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -84,26 +85,54 @@ public final class KeplerianUtils {
     }
 
     public Timestamp timeToApsis(MovingObject movingObject, ApsisType apsisType) {
-        return timeToAngle(movingObject.getKeplerianElements(), movingObject.getTimestamp(), apsisType.getAngle());
+        return timeToAngle(movingObject.getKeplerianElements(), movingObject.getTimestamp(), apsisType.getTrueAnomaly(), true);
     }
 
-    public Timestamp timeToAngle(KeplerianElements keplerianElements, Timestamp timestamp, double targetTheta) {
+    public Timestamp timeToAngle(KeplerianElements keplerianElements, Timestamp timestamp, double targetTheta, boolean future) {
         double e = keplerianElements.getEccentricity();
-        double targetCosE = (e + Math.cos(targetTheta)) / ( 1 + e * Math.cos(targetTheta));
-        double targetE = Math.acos(targetCosE);
-
-        double initM = keplerianElements.getEccentricAnomaly() - e * Math.sin(keplerianElements.getEccentricAnomaly());
-        double targetM = targetE - e * Math.sin(targetE);
-
-        double diffM = (targetM - initM);
-        if (diffM < 0) {
-            diffM = targetM + 2 * Math.PI - initM;
+        double targetM, initM;
+        if (e<1) {
+            double targetE = solveEA(e, targetTheta);
+            targetM = targetE - e * Math.sin(targetE);
+            initM = keplerianElements.getEccentricAnomaly() - e * Math.sin(keplerianElements.getEccentricAnomaly());
+        } else {
+        	double targetE = solveHA(e, targetTheta);
+        	targetM = e * Math.sinh(targetE) - targetE;
+        	initM = e* Math.sinh(keplerianElements.getHyperbolicAnomaly()) - keplerianElements.getHyperbolicAnomaly();
         }
 
+        double diffM = (targetM - initM);
         double n = 2 * Math.PI /  keplerianElements.getPeriod().doubleValue();
+        if (diffM < 0 && future) {
+            diffM = targetM + 2 * Math.PI - initM;
+        }
+        
         double timeInterval = diffM / n;
         Timestamp result = timestamp.add(timeInterval);
         return result;
+    }
+    
+    public double solveEA(KeplerianElements keplerianElements) {
+    	return solveEA(keplerianElements.getEccentricity(), keplerianElements.getTrueAnomaly());
+    }
+    
+    public double solveEA(double eccentricity, double theta) {
+        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
+        double EA = 2 * Math.atan(Math.tan(theta/2) / param);
+        logger.debug("EA = {}", EA);
+        return EA;
+    }  
+    
+    public double solveHA(KeplerianElements keplerianElements) {
+    	return solveHA(keplerianElements.getEccentricity(), keplerianElements.getTrueAnomaly());
+    }
+    
+    protected double solveHA(double eccentricity, double theta) {
+        double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
+        double HA = MathUtils.asinh(sinH);
+        double HA2 = MathUtils.acosh((eccentricity + Math.cos(theta))/ ( 1 + eccentricity * Math.cos(theta)));
+        logger.debug("HA = {}, HA2 = {}", HA, HA2);
+        return HA;
     }
 
     private double solveTheta2(double E, double eccentricity) {
@@ -175,6 +204,7 @@ public final class KeplerianUtils {
         apsis.setName(apsisType.getShortcut() + " of " + movingObject.getName());
         apsis.setKeplerianElements(movingObject.getKeplerianElements());
         apsis.setVisible(movingObject instanceof Spacecraft);
+        apsis.setMovingObject(movingObject);
         if (apsisType.equals(ApsisType.PERIAPSIS)) {
             trajectory.setPeriapsis(apsis);
         } else if (apsisType.equals(ApsisType.APOAPSIS)) {
@@ -189,7 +219,7 @@ public final class KeplerianUtils {
      * @param apsis the apsis
      */
     protected void updateApsis(MovingObject movingObject, Apsis apsis) {
-        Vector3d position = getCartesianPosition(movingObject.getKeplerianElements(), apsis.getType().getAngle());
+        Vector3d position = getCartesianPosition(movingObject.getKeplerianElements(), apsis.getType().getTrueAnomaly());
         Timestamp timestamp = timeToApsis(movingObject, apsis.getType());
 
         apsis.setPosition(position);

@@ -24,7 +24,7 @@ public class RotationTest {
         double[] angles2 = VectorUtils.toSphericalCoordinates(v);
         logger.info("directly dec = {}, ra = {}", 90-Math.toDegrees(angles2[1]), Math.toDegrees(angles2[2]));
 
-        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, false);
+        Orientation orientation = VectorUtils.createOrientation(alpha, delta, false);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
@@ -36,7 +36,7 @@ public class RotationTest {
     public void marsTest2() {
         double alpha = Math.toRadians(317.68143);
         double delta = Math.toRadians(52.88650);
-        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, false);
+        Orientation orientation = VectorUtils.createOrientation(alpha, delta, false);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
@@ -60,7 +60,7 @@ public class RotationTest {
         double[] angles2 = VectorUtils.toSphericalCoordinates(v);
         logger.info("directly dec = {}, ra = {}", 90-Math.toDegrees(angles2[1]), Math.toDegrees(angles2[2]));
 
-        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, false);
+        Orientation orientation = VectorUtils.createOrientation(alpha, delta, false);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
@@ -79,7 +79,7 @@ public class RotationTest {
 
         alpha = Math.toRadians(0);
         delta = Math.toRadians(90);
-        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, true);
+        Orientation orientation = VectorUtils.createOrientation(alpha, delta, true);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
@@ -98,7 +98,7 @@ public class RotationTest {
 
         alpha = Math.toRadians(317.68143);
         delta = Math.toRadians(52.8865);
-        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, true);
+        Orientation orientation = VectorUtils.createOrientation(alpha, delta, true);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));
@@ -110,7 +110,7 @@ public class RotationTest {
     public void marsEclipticTest2() {
         double alpha = Math.toRadians(317.68143);
         double delta = Math.toRadians(52.8865);
-        Orientation orientation = VectorUtils.rotateByAngles(alpha, delta, true);
+        Orientation orientation = VectorUtils.createOrientation(alpha, delta, true);
 
         double[] angles = VectorUtils.toSphericalCoordinates(orientation.getV());
         logger.info("trans dec = {}, ra = {}", 90-Math.toDegrees(angles[1]), Math.toDegrees(angles[2]));

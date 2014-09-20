@@ -1,15 +1,18 @@
 package com.momega.spacesimulator.context;
 
+import java.math.BigDecimal;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
 import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.service.CameraService;
 import com.momega.spacesimulator.service.MotionService;
 import com.momega.spacesimulator.utils.TimeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * Created by martin on 6/18/14.
@@ -28,10 +31,15 @@ public class Application {
         this.cameraService = applicationContext.getBean(CameraService.class);
     }
 
-    public Model init(ModelBuilder modelBuilder) {
+    public Model init(ModelBuilder modelBuilder, long seconds) {
         modelBuilder.build();
         logger.info("time = {}", TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
-        next();
+        Timestamp showTime = ModelHolder.getModel().getTime().add(BigDecimal.valueOf(seconds));
+        logger.info("show time = {}", TimeUtils.timeAsString(showTime));
+        while(ModelHolder.getModel().getTime().compareTo(showTime)<=0) {
+        	next();
+        }
+        
         logger.info("model data built");
         return ModelHolder.getModel();
     }

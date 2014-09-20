@@ -4,6 +4,7 @@ import com.momega.spacesimulator.model.HabitableModule;
 import com.momega.spacesimulator.model.Propulsion;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SpacecraftSubsystem;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
 
 import org.springframework.util.Assert;
 
@@ -90,11 +91,11 @@ public class SubsystemsPanel extends JPanel implements UpdatablePanel {
     }
 
     @Override
-    public void updateView() {
+    public void updateView(ModelChangeEvent event) {
         for (Component comp : cards.getComponents()) {
             if (comp.isVisible() == true) {
                 AttributesPanel card = (AttributesPanel) comp;
-                card.updateView();
+                card.updateView(event);
             }
         }
     }

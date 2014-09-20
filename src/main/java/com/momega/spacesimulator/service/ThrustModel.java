@@ -58,9 +58,10 @@ public class ThrustModel implements ForceModel {
         Orientation o = VectorUtils.rotateByAngles(spacecraft.getOrientation().clone(), maneuver.getThrottleAlpha(), maneuver.getThrottleDelta(), false);
         Vector3d n = o.getN();
         Vector3d acceleration = n.scale(a);
+        spacecraft.setThrust(acceleration);
 
         // decrease the mass of the spacecraft
-        //TODO: place this to different method, because of runge-kutta method
+        //TODO: place this to different method, because of Runge-Kutta method
         spacecraft.setMass( spacecraft.getMass() - dm);
         propulsion.setFuel( propulsion.getFuel() - dm);
 
@@ -71,6 +72,7 @@ public class ThrustModel implements ForceModel {
 
     protected void endOfManeuver(Spacecraft spacecraft, Maneuver maneuver) {
         if (maneuver != null) {
+        	spacecraft.setThrust(null);
             spacecraft.setCurrentManeuver(null);
             historyPointService.endManeuver(spacecraft, maneuver);
         }

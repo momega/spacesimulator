@@ -6,7 +6,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Computes the position of the {@link com.momega.spacesimulator.model.MovingObject} along the keplerian trajectory.
- * The propagator computes complete cartesian state and new {@link com.momega.spacesimulator.model.Apsis}
+ * The propagator computes complete cartesian state, {@link com.momega.spacesimulator.model.Apsis}
+ * and new {@link OrbitIntersection}
  * of the trajectory
  * Created by martin on 5/21/14.
  */

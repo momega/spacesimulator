@@ -2,9 +2,11 @@ package com.momega.spacesimulator.utils;
 
 import com.momega.spacesimulator.model.TimeInterval;
 import com.momega.spacesimulator.model.Timestamp;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
+import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.springframework.util.Assert;
@@ -22,7 +24,7 @@ public class TimeUtils {
      */
     public static final Timestamp JD2000 = createTime(2000.0);
 
-    private static DateTimeFormatter formatter = ISODateTimeFormat.dateTime();
+    private static DateTimeFormatter formatter = ISODateTimeFormat.dateTime().withZone(DateTimeZone.UTC);
 
     /**
      * Creates the time from julian day
@@ -33,6 +35,12 @@ public class TimeUtils {
         Timestamp time = new Timestamp();
         time.setValue(julianDayAsTimestamp(julianDay));
         return time;
+    }
+    
+    public static Timestamp fromSeconds(long seconds) {
+    	Timestamp time = new Timestamp();
+    	time.setValue(BigDecimal.valueOf(seconds));
+    	return time;
     }
 
     /**

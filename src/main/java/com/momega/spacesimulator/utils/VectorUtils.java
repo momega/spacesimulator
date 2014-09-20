@@ -100,8 +100,8 @@ public final class VectorUtils {
     }
 
     public static Orientation rotateByAngles(Orientation o, double alpha, double delta, boolean toEcliptic) {
+    	o.lookAroundV(alpha);
         o.lookUp(Math.PI / 2 - delta);
-        o.lookLeft(alpha);
         if (toEcliptic) {
             o.rotate(new Vector3d(1, 0, 0), -VectorUtils.ECLIPTIC);
         }
@@ -114,9 +114,10 @@ public final class VectorUtils {
      * @param delta declination of the north-pole
      * @return the transformation matrix
      */
-    public static Orientation rotateByAngles(double alpha, double delta, boolean toEcliptic) {
+    public static Orientation createOrientation(double alpha, double delta, boolean toEcliptic) {
         Orientation o = createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
-        return rotateByAngles(o, alpha, delta, toEcliptic);
+        rotateByAngles(o, alpha, delta, toEcliptic);
+        return o;
     }
 
     public static Orientation createOrientation(Vector3d nVector, Vector3d vVector) {

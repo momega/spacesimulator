@@ -41,6 +41,10 @@ public class MathUtils {
         return Math.log(x + Math.sqrt(x*x + 1.0));
     }
     
+    public static double acosh(double x) { 
+    	return Math.log(x + Math.sqrt(x*x - 1.0)); 
+    }
+    
     public static double[] solveQuadraticFunction(double a, double b, double c) {
     	double D = b*b - 4*a*c;
     	if (D<0) {

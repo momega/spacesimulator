@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 
@@ -77,8 +78,8 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 	}
 
 	@Override
-	public void updateView() {
-		attrPanel.updateView();
+	public void updateView(ModelChangeEvent event) {
+		attrPanel.updateView(event);
 	}
 
 	@Override

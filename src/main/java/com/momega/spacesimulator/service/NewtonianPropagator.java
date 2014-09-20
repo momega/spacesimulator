@@ -81,7 +81,12 @@ public class NewtonianPropagator implements Propagator {
         List<OrbitIntersection> intersections = spacecraft.getOrbitIntersections();
         if (intersections.isEmpty()) {
         	for(int i=0; i<2; i++) {
-        		intersections.add(new OrbitIntersection());
+        		OrbitIntersection intersection = new OrbitIntersection();
+        		intersection.setMovingObject(spacecraft);
+        		intersections.add(intersection);
+        		intersection.setKeplerianElements(orbit);
+    	        intersection.setName(spacecraft.getName() +"/" + targetBody.getName() + " Intersection " + i);
+    	        intersection.setTargetObject(targetBody);
         	}
         }
         
@@ -91,10 +96,8 @@ public class NewtonianPropagator implements Propagator {
         	Vector3d vector = KeplerianUtils.getInstance().getCartesianPosition(orbit, theta);
         	OrbitIntersection intersection = intersections.get(i);
 	        intersection.setPosition(vector);
-	        intersection.setTimestamp(KeplerianUtils.getInstance().timeToAngle(orbit, newTimestamp, theta));
-	        intersection.setKeplerianElements(orbit);
-	        intersection.setName(spacecraft.getName() +"/" + targetBody.getName() + " Intersection " + i);
-	        intersection.setTargetObject(targetBody);
+	        intersection.setTimestamp(KeplerianUtils.getInstance().timeToAngle(orbit, newTimestamp, theta, true));
+	        intersection.setTrueAnomaly(theta);
         }
     }
 
@@ -165,10 +168,7 @@ public class NewtonianPropagator implements Propagator {
         CartesianState cartesianState = spacecraft.getCartesianState().subtract(soiBody.getCartesianState());
         Vector3d position = cartesianState.getPosition();
         Vector3d velocity = cartesianState.getVelocity();
-
         Vector3d hVector = cartesianState.getAngularMomentum();
-        double A = position.dot(velocity);
-        logger.debug("Apoapsis = {}", A);
 
         // TODO: remove automatic changing the orientation 
         Orientation orientation = VectorUtils.createOrientation(velocity, hVector);
@@ -257,16 +257,17 @@ public class NewtonianPropagator implements Propagator {
         double period = 0;
         if (e < 1) {  // TODO: add here MINOR_ERROR for e
             keplerianElements.setHyperbolicAnomaly(null);
-            double EA = getEA(keplerianElements);
+            double EA = KeplerianUtils.getInstance().solveEA(keplerianElements);
             keplerianElements.setEccentricAnomaly(EA);
 
             double nn = Math.sqrt(mi / (a*a*a));
             period = 2* Math.PI / nn;
-            double T = newTimestamp.getValue().doubleValue() - (EA - e * Math.sin(EA)) / nn;
-            keplerianElements.setTimeOfPeriapsis(Timestamp.newTime(BigDecimal.valueOf(T)));
+            //double T = newTimestamp.getValue().doubleValue() - (EA - e * Math.sin(EA)) / nn;
+            //keplerianElements.setTimeOfPeriapsis(Timestamp.newTime(BigDecimal.valueOf(T)));
 
         } else {
-            keplerianElements.setHyperbolicAnomaly(getHA(keplerianElements));
+        	double HA = KeplerianUtils.getInstance().solveHA(keplerianElements);
+            keplerianElements.setHyperbolicAnomaly(HA);
             keplerianElements.setEccentricAnomaly(null);
 
             double nn = Math.sqrt(-mi / (a*a*a)); // a < 0
@@ -274,24 +275,8 @@ public class NewtonianPropagator implements Propagator {
         }
 
         keplerianElements.setPeriod(BigDecimal.valueOf(period));
-    }
-
-    protected double getEA(KeplerianElements keplerianElements) {
-        double eccentricity = keplerianElements.getEccentricity();
-        double theta = keplerianElements.getTrueAnomaly();
-        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
-        double EA = 2 * Math.atan(Math.tan(theta/2) / param);
-        logger.debug("EA = {}", EA);
-        return EA;
-    }
-
-    protected double getHA(KeplerianElements keplerianElements) {
-        double theta = keplerianElements.getTrueAnomaly();
-        double eccentricity = keplerianElements.getEccentricity();
-        double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
-        double HA = MathUtils.asinh(sinH);
-        logger.debug("HA = {}", HA);
-        return HA;
+        Timestamp TT = KeplerianUtils.getInstance().timeToAngle(keplerianElements, newTimestamp, 0.0, false);
+        keplerianElements.setTimeOfPeriapsis(TT);
     }
 
     /**

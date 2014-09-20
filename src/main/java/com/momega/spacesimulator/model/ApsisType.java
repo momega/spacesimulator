@@ -17,7 +17,7 @@ public enum ApsisType {
         this.shortcut = shortcut;
     }
 
-    public double getAngle() {
+    public double getTrueAnomaly() {
         return angle;
     }
 

@@ -4,6 +4,7 @@ import com.momega.spacesimulator.model.Apsis;
 import com.momega.spacesimulator.model.KeplerianTrajectory;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
 
 import javax.swing.*;
 
@@ -45,9 +46,7 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     Apsis apsis = keplerianTrajectory.getPeriapsis();
-
-                    DetailDialog dialog = new DetailDialog(null, apsis);
-                    dialog.setVisible(true);
+                    DetailDialogHolder.getInstance().showDialog(apsis);
                 }
             });
 
@@ -58,9 +57,7 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     Apsis apsis = keplerianTrajectory.getApoapsis();
-
-                    DetailDialog dialog = new DetailDialog(null, apsis);
-                    dialog.setVisible(true);
+                    DetailDialogHolder.getInstance().showDialog(apsis);
                 }
             });
 
@@ -74,8 +71,8 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
     }
 
     @Override
-    public void updateView() {
-        attrPanel.updateView();
+    public void updateView(ModelChangeEvent event) {
+        attrPanel.updateView(event);
         if (object instanceof Spacecraft) {
             Spacecraft spacecraft = (Spacecraft) object;
             final KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();

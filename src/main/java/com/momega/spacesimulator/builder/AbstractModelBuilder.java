@@ -47,7 +47,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     }
 
     protected void initTime() {
-        model.setTime(TimeUtils.createTime(new DateTime(2014, 9, 11, 12, 0, DateTimeZone.UTC)));
+        model.setTime(TimeUtils.createTime(new DateTime(2014, 9, 23, 12, 0, DateTimeZone.UTC)));
         model.setWarpFactor(BigDecimal.ONE);
     }
 
@@ -259,7 +259,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, String wiki) {
         updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki);
         if (dp instanceof RotatingObject) {
-            Orientation orientation = VectorUtils.rotateByAngles(Math.toRadians(ra), Math.toRadians(dec), true);
+            Orientation orientation = VectorUtils.createOrientation(Math.toRadians(ra), Math.toRadians(dec), true);
             dp.setOrientation(orientation);
         }
     }

@@ -4,6 +4,7 @@ import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
@@ -61,7 +62,7 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
     }
 
     @Override
-    public void updateView() {
+    public void updateView(ModelChangeEvent event) {
         EvaluationContext evaluationContext = createContext();
         for(Map.Entry<JComponent, Expression> entry : jFields.entrySet()) {
             if (entry.getValue()!=null) {
