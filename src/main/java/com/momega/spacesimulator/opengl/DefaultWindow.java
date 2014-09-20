@@ -3,6 +3,7 @@ package com.momega.spacesimulator.opengl;
 import com.jogamp.opengl.util.AnimatorBase;
 import com.jogamp.opengl.util.FPSAnimator;
 import com.momega.spacesimulator.controller.Controller;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +11,7 @@ import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -29,6 +31,7 @@ public class DefaultWindow {
     private GLCanvas canvas;
     private AnimatorBase animator;
     private String title;
+    private JFrame frame;
 
     public DefaultWindow(String title) {
         this.title = title;
@@ -58,9 +61,10 @@ public class DefaultWindow {
                     // Create a animator that drives canvas' display() at the specified FPS.
                     animator = new FPSAnimator(canvas, FPS, true);
 
-                    final Frame frame = new Frame(title);
+                    frame = new JFrame(title);
                     frame.setLayout(new java.awt.BorderLayout());
                     frame.add(canvas);
+                    frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
                     canvas.addGLEventListener(renderer);
 
@@ -77,7 +81,6 @@ public class DefaultWindow {
                         @Override
                         public void windowClosing(WindowEvent e) {
                             logger.info("Closing window");
-                            frame.dispose();
                             stopAnimator();
                         }
                     });
@@ -93,20 +96,29 @@ public class DefaultWindow {
             });
 
         } catch (Exception e1) {
-            e1.printStackTrace();
+            throw new IllegalStateException(e1);
         }
 
         sleep(500);
         logger.info("main method finished");
     }
 
-
     public void stopAnimator() {
+    	int n = JOptionPane.showConfirmDialog(
+    		    frame,
+    		    "Exit Application?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+    	
+    	if (n != JOptionPane.YES_OPTION) {
+    		return;
+    	}
+    	
+    	logger.info("Stopping animator thread");
         // Use a dedicate thread to run the stop() to ensure that the
         // animator stops before program exits.
         new Thread() {
             @Override
             public void run() {
+            	frame.dispose();
                 if (animator.isStarted()) {
                     animator.stop();
                 }
@@ -115,8 +127,6 @@ public class DefaultWindow {
                 System.exit(0);
             }
         }.start();
-
-        logger.info("Stopping animator thread");
     }
 
     public void sleep(int timeout) {

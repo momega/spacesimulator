@@ -12,7 +12,7 @@ import java.awt.event.KeyEvent;
  */
 public class QuitController extends AbstractController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AbstractController.class);
+    private static final Logger logger = LoggerFactory.getLogger(QuitController.class);
     private DefaultWindow window;
 
     public QuitController(DefaultWindow window) {
