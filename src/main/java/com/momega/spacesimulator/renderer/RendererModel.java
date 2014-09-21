@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.AbstractKeplerianPoint;
+import com.momega.spacesimulator.model.AbstractOribitalPoint;
 import com.momega.spacesimulator.model.BaryCentre;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.CelestialBody;
@@ -102,8 +102,8 @@ public class RendererModel {
             viewCoordinates.setRadius(MIN_TARGET_SIZE);
         }
 
-        if (positionProvider instanceof AbstractKeplerianPoint) {
-        	AbstractKeplerianPoint apsis = (AbstractKeplerianPoint) positionProvider;
+        if (positionProvider instanceof AbstractOribitalPoint) {
+        	AbstractOribitalPoint apsis = (AbstractOribitalPoint) positionProvider;
             viewCoordinates.setVisible(viewCoordinates.isVisible() && apsis.isVisible());
         }
 

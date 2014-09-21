@@ -17,6 +17,7 @@ import com.momega.spacesimulator.builder.AbstractModelBuilder;
 import com.momega.spacesimulator.builder.SimpleSolarSystemModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.controller.CameraController;
+import com.momega.spacesimulator.controller.Controller;
 import com.momega.spacesimulator.controller.EventBusController;
 import com.momega.spacesimulator.controller.PerspectiveController;
 import com.momega.spacesimulator.controller.QuitController;
@@ -66,7 +67,7 @@ public class MainWindow extends DefaultWindow {
     }
     
     @Override
-    protected JMenuBar createMenuBar() {
+    protected JMenuBar createMenuBar(Controller controller) {
     	JMenuBar menuBar = new JMenuBar();
     	JMenu fileMenu = new JMenu("File");
     	fileMenu.setMnemonic(KeyEvent.VK_F);
@@ -77,8 +78,12 @@ public class MainWindow extends DefaultWindow {
     	saveItem.setMnemonic(KeyEvent.VK_S);
     	JMenuItem saveAsItem = new JMenuItem("Save As...");
     	JMenuItem preferencesItem = new JMenuItem("Preferences...");
+    	
     	JMenuItem exitItem = new JMenuItem("Exit...");
+    	exitItem.setActionCommand(QuitController.COMMAND);
     	exitItem.setMnemonic(KeyEvent.VK_X);
+    	exitItem.addActionListener(controller);
+    	
     	fileMenu.add(openItem);
     	fileMenu.add(saveItem);
     	fileMenu.add(saveAsItem);
@@ -119,18 +124,24 @@ public class MainWindow extends DefaultWindow {
     }
     
     @Override
-    protected JToolBar createToolBar() {
+    protected JToolBar createToolBar(Controller controller) {
     	JToolBar toolBar = new JToolBar();
     	toolBar.setRollover(true);
     	
     	JButton warpDownButton = new JButton();
     	warpDownButton.setIcon(SwingUtils.createImageIcon("/images/control_rewind.png"));
+    	warpDownButton.setActionCommand(TimeController.WARP_SLOWER);
+    	warpDownButton.addActionListener(controller);
 
     	JButton startStopButton = new JButton();
     	startStopButton.setIcon(SwingUtils.createImageIcon("/images/control_pause.png"));
+    	startStopButton.setActionCommand(TimeController.WARP_STOP_OR_START);
+    	startStopButton.addActionListener(controller);
 
     	JButton warpUp = new JButton();
     	warpUp.setIcon(SwingUtils.createImageIcon("/images/control_fastforward.png"));
+    	warpUp.setActionCommand(TimeController.WARP_FASTER);
+    	warpUp.addActionListener(controller);
     	
     	JComboBox<MovingObject> movingObjectsBox = new JComboBox<MovingObject>();
     	movingObjectsBox.setModel(WindowModel.getInstance().getMovingObjectsModel());

@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.controller;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -115,6 +116,13 @@ public class EventBusController extends AbstractController {
         for(Controller controller : controllers) {
             controller.componentHidden(e);
         }
+    }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    	for(Controller controller : controllers) {
+    		controller.actionPerformed(e);
+    	}
     }
 
     public void addController(Controller controller) {

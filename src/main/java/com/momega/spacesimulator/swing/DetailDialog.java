@@ -51,7 +51,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             tabbedPane.addTab("Cartesian", SwingUtils.createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
             tabbedPane.addTab("Keplerian", SwingUtils.createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
         } else {
-        	if (positionProvider instanceof AbstractKeplerianPoint) {
+        	if (positionProvider instanceof AbstractOribitalPoint) {
                 tabbedPane.addTab("Apsis", SwingUtils.createImageIcon("/images/application.png"), createApsisPanel(), "Apsis Information");
             } else if (positionProvider instanceof PositionProvider) {
                 tabbedPane.addTab("Position", SwingUtils.createImageIcon("/images/application.png"), createPositionProviderPanel(), "Point Information");
@@ -178,7 +178,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     }
 
     protected JPanel createApsisPanel() {
-        KeplerianPointPanel result =  new KeplerianPointPanel((AbstractKeplerianPoint) positionProvider);
+        KeplerianPointPanel result =  new KeplerianPointPanel((AbstractOribitalPoint) positionProvider);
         attributesPanelList.add(result);
         return result;
     }

@@ -63,11 +63,11 @@ public abstract class DefaultWindow {
                     animator = new FPSAnimator(canvas, FPS, true);
 
                     frame = new JFrame(title);
-                    JMenuBar menuBar = createMenuBar();
+                    JMenuBar menuBar = createMenuBar(controller);
                     if (menuBar != null) {
                     	frame.setJMenuBar(menuBar);
                     }
-                    JToolBar toolBar = createToolBar();
+                    JToolBar toolBar = createToolBar(controller);
                     frame.setLayout(new java.awt.BorderLayout());
                     if (toolBar != null) {
                     	frame.add(toolBar, BorderLayout.PAGE_START);
@@ -113,9 +113,9 @@ public abstract class DefaultWindow {
         logger.info("main method finished");
     }
     
-    protected abstract JMenuBar createMenuBar();
+    protected abstract JMenuBar createMenuBar(Controller controller);
     
-    protected abstract JToolBar createToolBar();
+    protected abstract JToolBar createToolBar(Controller controller);
 
     public void stopAnimator() {
     	int n = JOptionPane.showConfirmDialog(

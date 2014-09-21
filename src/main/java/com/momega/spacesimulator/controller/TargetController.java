@@ -93,7 +93,7 @@ public class TargetController extends AbstractController {
         return new Point(x, y);
     }
 
-    protected void  select(ViewCoordinates viewCoordinates) {
+    protected void select(ViewCoordinates viewCoordinates) {
         RendererModel.getInstance().selectDynamicalPoint(viewCoordinates);
     }
 

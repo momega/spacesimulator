@@ -82,5 +82,10 @@ public abstract class AbstractController implements Controller {
     public void componentHidden(ComponentEvent e) {
         // do nothing
     }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    	// do nothing
+    }
 
 }

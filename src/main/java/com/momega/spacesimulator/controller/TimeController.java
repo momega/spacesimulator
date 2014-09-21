@@ -3,6 +3,7 @@ package com.momega.spacesimulator.controller;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 
@@ -11,6 +12,10 @@ import java.math.BigDecimal;
  * Created by martin on 5/5/14.
  */
 public class TimeController extends AbstractController {
+	
+	public static final String WARP_SLOWER = "warp_slower";
+	public static final String WARP_FASTER = "warp_faster";
+	public static final String WARP_STOP_OR_START = "warp_stop_or_start";
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -30,6 +35,21 @@ public class TimeController extends AbstractController {
                 break;
         }
     }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    	switch (e.getActionCommand()) {
+    	case WARP_SLOWER:
+    		changeWarpFactor(0.5);
+    		break;
+    	case WARP_FASTER:
+    		changeWarpFactor(2.0);
+    		break;
+    	case WARP_STOP_OR_START:
+    		pauseOrStart();
+    		break;
+    	}
+    }
 
     private void pauseOrStart() {
         Model model = ModelHolder.getModel();
@@ -48,6 +68,5 @@ public class TimeController extends AbstractController {
         warpFactor = warpFactor.multiply(BigDecimal.valueOf(ratio));
         model.setWarpFactor(warpFactor);
     }
-
 
 }
