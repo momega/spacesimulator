@@ -104,7 +104,7 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 		public CelestialBodyModel() {
 			super();
 			addElement(null);
-			for (CelestialBody cb : RendererModel.getInstance().findCelestialBodies(true)) {
+			for (CelestialBody cb : WindowModel.getInstance().findCelestialBodies(true)) {
 				addElement(cb.getName());
 			}
 		}

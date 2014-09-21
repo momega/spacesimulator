@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class DetailDialog extends JDialog implements ModelChangeListener {
 
 	private static final long serialVersionUID = 4044217723361028807L;
-	private static final Logger logger = LoggerFactory.getLogger(DetailDialog.class);
+	static final Logger logger = LoggerFactory.getLogger(DetailDialog.class);
     private final PositionProvider positionProvider;
     private java.util.List<UpdatablePanel> attributesPanelList = new ArrayList<>();
 
@@ -44,29 +44,29 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
         if (positionProvider instanceof MovingObject) {
         	if (positionProvider instanceof Spacecraft) {
-        		tabbedPane.addTab("Spacecraft", createImageIcon("/images/application.png"), createSpacecraftPanel(), "Spacecraft Basic Information");
+        		tabbedPane.addTab("Spacecraft", SwingUtils.createImageIcon("/images/application.png"), createSpacecraftPanel(), "Spacecraft Basic Information");
         	} else {
-        		tabbedPane.addTab("Basic", createImageIcon("/images/application.png"), createPhysicalPanel(), "Basic Information");
+        		tabbedPane.addTab("Basic", SwingUtils.createImageIcon("/images/application.png"), createPhysicalPanel(), "Basic Information");
         	}
-            tabbedPane.addTab("Cartesian", createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
-            tabbedPane.addTab("Keplerian", createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
+            tabbedPane.addTab("Cartesian", SwingUtils.createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
+            tabbedPane.addTab("Keplerian", SwingUtils.createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
         } else {
         	if (positionProvider instanceof AbstractKeplerianPoint) {
-                tabbedPane.addTab("Apsis", createImageIcon("/images/application.png"), createApsisPanel(), "Apsis Information");
+                tabbedPane.addTab("Apsis", SwingUtils.createImageIcon("/images/application.png"), createApsisPanel(), "Apsis Information");
             } else if (positionProvider instanceof PositionProvider) {
-                tabbedPane.addTab("Position", createImageIcon("/images/application.png"), createPositionProviderPanel(), "Point Information");
+                tabbedPane.addTab("Position", SwingUtils.createImageIcon("/images/application.png"), createPositionProviderPanel(), "Point Information");
             }
         }
 
         if (positionProvider instanceof Spacecraft) {
             Spacecraft spacecraft = (Spacecraft) positionProvider;
             ManeuverPanel maneuverPanel = new ManeuverPanel(spacecraft);
-            tabbedPane.addTab("Maneuvers", createImageIcon("/images/hourglass.png"), maneuverPanel, "Spacecraft Maneuvers");
+            tabbedPane.addTab("Maneuvers", SwingUtils.createImageIcon("/images/hourglass.png"), maneuverPanel, "Spacecraft Maneuvers");
             attributesPanelList.add(maneuverPanel);
 
             SubsystemsPanel spacecraftPanel = new SubsystemsPanel(spacecraft);
             attributesPanelList.add(spacecraftPanel);
-            tabbedPane.addTab("Subsystems", createImageIcon("/images/cog.png"), spacecraftPanel, "Spacecraft Subsystems");
+            tabbedPane.addTab("Subsystems", SwingUtils.createImageIcon("/images/cog.png"), spacecraftPanel, "Spacecraft Subsystems");
         }
 
         JPanel buttonsPanel = new JPanel(new FlowLayout());
@@ -187,16 +187,6 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         PositionProviderPanel result =  new PositionProviderPanel((PositionProvider) positionProvider);
         attributesPanelList.add(result);
         return result;
-    }
-
-    protected ImageIcon createImageIcon(String path) {
-        java.net.URL imgURL = getClass().getResource(path);
-        if (imgURL != null) {
-            return new ImageIcon(imgURL);
-        } else {
-            logger.warn("Couldn't find file: {}", path);
-            return null;
-        }
     }
 
     private static void open(URI uri) {

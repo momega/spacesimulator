@@ -1,16 +1,32 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.opengl.GLUtils;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.media.opengl.GLAutoDrawable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Point;
-import java.util.*;
-
-import javax.media.opengl.GLAutoDrawable;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.AbstractKeplerianPoint;
+import com.momega.spacesimulator.model.BaryCentre;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.OrbitIntersection;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.opengl.GLUtils;
 
 /**
  * Created by martin on 6/20/14.
@@ -149,32 +165,7 @@ public class RendererModel {
         }
         return null;
     }
-    
-    /**
-     * Returns the celestial objects
-     * @param onlyMoving if true only moving objects are returned
-     * @return the list of celesial bodies
-     */
-    public List<CelestialBody> findCelestialBodies(boolean onlyMoving) {
-    	List<CelestialBody> list = new ArrayList<>();
-        for (Map.Entry<PositionProvider, ViewCoordinates> entry : viewData.entrySet()) {
-            ViewCoordinates viewCoordinates = entry.getValue();
-            if (viewCoordinates.getObject() instanceof CelestialBody) {
-            	CelestialBody cb = (CelestialBody) viewCoordinates.getObject();
-            	if (!onlyMoving || !cb.getTrajectory().getType().equals(TrajectoryType.STATIC)) {
-            		list.add(cb);
-            	}
-            }
-        }
-        Collections.sort(list, new Comparator<CelestialBody>() {
-			@Override
-			public int compare(CelestialBody o1, CelestialBody o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-        });
-        return list;
-    }
-
+ 
     public String[] findVisibleObjects() {
         List<String> list = new ArrayList<>();
         for (Map.Entry<PositionProvider, ViewCoordinates> entry : viewData.entrySet()) {

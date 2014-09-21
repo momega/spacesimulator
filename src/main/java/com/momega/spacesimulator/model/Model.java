@@ -55,8 +55,8 @@ public class Model {
     }
 
     /**
-     * Gets the list of the dynamical points. It includes all celestial bodies and satellites.
-     * @return the list of the dynamical points
+     * Gets the list of the moving objects. It includes all celestial bodies and satellites.
+     * @return the list of all moving objects
      */
     public List<MovingObject> getMovingObjects() {
         return movingObjects;

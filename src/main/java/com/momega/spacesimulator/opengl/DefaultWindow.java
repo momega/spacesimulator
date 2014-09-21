@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.JMenuBar;
 import javax.swing.*;
 
 import java.awt.*;
@@ -21,7 +22,7 @@ import java.awt.event.WindowEvent;
  * and {@link com.momega.spacesimulator.controller.Controller}
  * Created by martin on 4/19/14.
  */
-public class DefaultWindow {
+public abstract class DefaultWindow {
 
     private static final int WINDOW_WIDTH = 1280;  // width of the drawable
     private static final int WINDOW_HEIGHT = 640; // height of the drawable
@@ -62,8 +63,16 @@ public class DefaultWindow {
                     animator = new FPSAnimator(canvas, FPS, true);
 
                     frame = new JFrame(title);
+                    JMenuBar menuBar = createMenuBar();
+                    if (menuBar != null) {
+                    	frame.setJMenuBar(menuBar);
+                    }
+                    JToolBar toolBar = createToolBar();
                     frame.setLayout(new java.awt.BorderLayout());
-                    frame.add(canvas);
+                    if (toolBar != null) {
+                    	frame.add(toolBar, BorderLayout.PAGE_START);
+                    }
+                    frame.add(canvas, BorderLayout.CENTER);
                     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 
                     canvas.addGLEventListener(renderer);
@@ -93,6 +102,7 @@ public class DefaultWindow {
 
                     JPopupMenu.setDefaultLightWeightPopupEnabled(false);
                 }
+				
             });
 
         } catch (Exception e1) {
@@ -102,6 +112,10 @@ public class DefaultWindow {
         sleep(500);
         logger.info("main method finished");
     }
+    
+    protected abstract JMenuBar createMenuBar();
+    
+    protected abstract JToolBar createToolBar();
 
     public void stopAnimator() {
     	int n = JOptionPane.showConfirmDialog(

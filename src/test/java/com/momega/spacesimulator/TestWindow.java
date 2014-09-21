@@ -1,5 +1,8 @@
 package com.momega.spacesimulator;
 
+import javax.swing.JMenuBar;
+import javax.swing.JToolBar;
+
 import com.momega.spacesimulator.controller.EventBusController;
 import com.momega.spacesimulator.controller.QuitController;
 import com.momega.spacesimulator.opengl.DefaultWindow;
@@ -21,4 +24,14 @@ public class TestWindow extends DefaultWindow {
         SimpleGLRenderer r = new SimpleGLRenderer();
         window.openWindow(r, controller);
     }
+
+	@Override
+	protected JMenuBar createMenuBar() {
+		return null;
+	}
+	
+	@Override
+	protected JToolBar createToolBar() {
+		return null;
+	}
 }
