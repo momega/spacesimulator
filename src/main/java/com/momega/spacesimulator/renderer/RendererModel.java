@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.AbstractOribitalPoint;
+import com.momega.spacesimulator.model.AbstractOrbitalPoint;
 import com.momega.spacesimulator.model.BaryCentre;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.CelestialBody;
@@ -61,24 +61,32 @@ public class RendererModel {
         modelChangeListeners.remove(listener);
     }
     
-    public void updateViewData(GLAutoDrawable drawable) {
-    	Camera camera = ModelHolder.getModel().getCamera();
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
-            addViewCoordinates(drawable, dp, camera);
+    public List<PositionProvider> findAllPositionProviders() {
+    	List<PositionProvider> result = new ArrayList<>();
+    	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+            result.add(dp);
             KeplerianTrajectory keplerianTrajectory = dp.getTrajectory();
             if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
-                addViewCoordinates(drawable, keplerianTrajectory.getApoapsis(), camera);
-                addViewCoordinates(drawable, keplerianTrajectory.getPeriapsis(), camera);
+                result.add(keplerianTrajectory.getApoapsis());
+                result.add(keplerianTrajectory.getPeriapsis());
             }
             if (dp instanceof Spacecraft) {
                 Spacecraft spacecraft = (Spacecraft) dp;
                 for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
-                    addViewCoordinates(drawable, hp, camera);
+                    result.add(hp);
                 }
                 for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
-                    addViewCoordinates(drawable, intersection, camera);
+                	result.add(intersection);
                 }
             }
+        }
+    	return result;
+    }
+    
+    public void updateViewData(GLAutoDrawable drawable) {
+    	Camera camera = ModelHolder.getModel().getCamera();
+        for(PositionProvider positionProvider : findAllPositionProviders()) {
+            addViewCoordinates(drawable, positionProvider, camera);
         }
     }
     
@@ -102,8 +110,8 @@ public class RendererModel {
             viewCoordinates.setRadius(MIN_TARGET_SIZE);
         }
 
-        if (positionProvider instanceof AbstractOribitalPoint) {
-        	AbstractOribitalPoint apsis = (AbstractOribitalPoint) positionProvider;
+        if (positionProvider instanceof AbstractOrbitalPoint) {
+        	AbstractOrbitalPoint apsis = (AbstractOrbitalPoint) positionProvider;
             viewCoordinates.setVisible(viewCoordinates.isVisible() && apsis.isVisible());
         }
 
@@ -120,7 +128,7 @@ public class RendererModel {
     }
 
     /**
-     * Adds the view coordinates the renderer model for the given dynamical point
+     * Adds the view coordinates the renderer model for the given dynamic point
      * @param viewCoordinates the view coordinates
      */
     public void addViewCoordinates(ViewCoordinates viewCoordinates) {
@@ -129,6 +137,11 @@ public class RendererModel {
 
     public ViewCoordinates findViewCoordinates(PositionProvider positionProvider) {
         return viewData.get(positionProvider);
+    }
+    
+    public List<PositionProvider> getAll() {
+    	List<PositionProvider> result = new ArrayList<>(viewData.keySet());
+    	return result;
     }
 
     public boolean isVisibleOnScreen(PositionProvider positionProvider) {
@@ -178,7 +191,7 @@ public class RendererModel {
         return list.toArray(new String[list.size()]);
     }
 
-    public void selectDynamicalPoint(ViewCoordinates viewCoordinates) {
+    public void selectViewCoordinates(ViewCoordinates viewCoordinates) {
         Model model = ModelHolder.getModel();
         Camera camera = model.getCamera();
         camera.setTargetObject(viewCoordinates.getObject());

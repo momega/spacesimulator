@@ -7,7 +7,7 @@ package com.momega.spacesimulator.model;
  * @author martin
  *
  */
-public abstract class AbstractOribitalPoint extends NamedObject implements OrbitPositionProvider {
+public abstract class AbstractOrbitalPoint extends NamedObject implements OrbitPositionProvider {
 
     private Vector3d position;
     private Timestamp timestamp;

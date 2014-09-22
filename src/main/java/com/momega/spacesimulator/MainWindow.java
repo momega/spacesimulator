@@ -7,6 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ import com.momega.spacesimulator.controller.QuitController;
 import com.momega.spacesimulator.controller.TargetController;
 import com.momega.spacesimulator.controller.TimeController;
 import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.MainGLRenderer;
 import com.momega.spacesimulator.swing.MovingObjectListRenderer;
@@ -143,15 +144,38 @@ public class MainWindow extends DefaultWindow {
     	warpUp.setActionCommand(TimeController.WARP_FASTER);
     	warpUp.addActionListener(controller);
     	
-    	JComboBox<MovingObject> movingObjectsBox = new JComboBox<MovingObject>();
+    	JComboBox<PositionProvider> movingObjectsBox = new JComboBox<PositionProvider>();
     	movingObjectsBox.setModel(WindowModel.getInstance().getMovingObjectsModel());
     	movingObjectsBox.setRenderer(new MovingObjectListRenderer());
-    	movingObjectsBox.setMaximumSize(new Dimension(200, 100));
+    	movingObjectsBox.setMaximumSize(new Dimension(300, 100));
+    	movingObjectsBox.setActionCommand(TargetController.SELECT_POSITION_PROVIDER);
+    	movingObjectsBox.addActionListener(controller);
+    	
+    	JToggleButton spacecraftButton = new JToggleButton();
+    	spacecraftButton.setSelected(true);
+    	spacecraftButton.setIcon(SwingUtils.createImageIcon("/images/satellite_16_hot.png"));
+    	spacecraftButton.setToolTipText("Activate the spacecrafts");
+    	spacecraftButton.setModel(WindowModel.getInstance().getSpacecraftVisible());
+
+    	JToggleButton celesialButton = new JToggleButton();
+    	celesialButton.setSelected(true);
+    	celesialButton.setIcon(SwingUtils.createImageIcon("/images/100.png"));
+    	celesialButton.setToolTipText("Activate the celestial bodies");
+    	celesialButton.setModel(WindowModel.getInstance().getCelestialVisible());
+    	
+    	JToggleButton pointButton = new JToggleButton();
+    	pointButton.setSelected(true);
+    	pointButton.setIcon(SwingUtils.createImageIcon("/images/bullet_blue.png"));
+    	pointButton.setToolTipText("Activate the points");
+    	pointButton.setModel(WindowModel.getInstance().getPointsVisible());
     	
     	toolBar.add(warpDownButton);
     	toolBar.add(startStopButton);
     	toolBar.add(warpUp);
     	toolBar.addSeparator();
+    	toolBar.add(spacecraftButton);
+    	toolBar.add(celesialButton);
+    	toolBar.add(pointButton);
     	toolBar.add(movingObjectsBox);
     	
     	logger.info("toolbar created");

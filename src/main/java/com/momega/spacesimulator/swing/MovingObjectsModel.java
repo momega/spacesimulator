@@ -7,23 +7,26 @@ import java.util.List;
 
 import javax.swing.DefaultComboBoxModel;
 
-import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.PositionProvider;
 
 /**
  * @author martin
  *
  */
-public class MovingObjectsModel extends DefaultComboBoxModel<MovingObject> {
+public class MovingObjectsModel extends DefaultComboBoxModel<PositionProvider> {
 
 	private static final long serialVersionUID = -613911908814211900L;
 	
-	public MovingObjectsModel(List<MovingObject> list) {
+	public MovingObjectsModel(List<PositionProvider> list) {
 		super();
-		addElement(null);
-		for(MovingObject obj : list) {
+		addElements(list);
+	}
+	
+	public void addElements(List<PositionProvider> list) {
+		setSelectedItem(null);
+		for(PositionProvider obj : list) {
 			addElement(obj);
 		}
-		setSelectedItem(null);
 	}
 
 }

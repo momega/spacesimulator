@@ -12,7 +12,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.AbstractOribitalPoint;
+import com.momega.spacesimulator.model.AbstractOrbitalPoint;
 import com.momega.spacesimulator.model.Maneuver;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
@@ -29,9 +29,9 @@ public class KeplerianPointPanel extends JPanel implements UpdatablePanel {
 
     private final AttributesPanel attrPanel;
     private boolean visible;
-	private final AbstractOribitalPoint apsis;
+	private final AbstractOrbitalPoint apsis;
 
-    public KeplerianPointPanel(final AbstractOribitalPoint point) {
+    public KeplerianPointPanel(final AbstractOrbitalPoint point) {
         super(new BorderLayout(5, 5));
 		this.apsis = point;
 

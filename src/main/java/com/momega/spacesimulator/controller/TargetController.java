@@ -2,9 +2,11 @@ package com.momega.spacesimulator.controller;
 
 import javax.media.opengl.awt.GLCanvas;
 
+import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.swing.DetailDialogHolder;
+import com.momega.spacesimulator.swing.WindowModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,8 @@ import java.awt.event.MouseEvent;
 public class TargetController extends AbstractController {
 
     private static final Logger logger = LoggerFactory.getLogger(TargetController.class);
+    
+    public static final String SELECT_POSITION_PROVIDER = "select_position_provider";
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -92,9 +96,20 @@ public class TargetController extends AbstractController {
         }
         return new Point(x, y);
     }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+    	if (SELECT_POSITION_PROVIDER.equals(e.getActionCommand())) {
+    		PositionProvider positionProvider = (PositionProvider) WindowModel.getInstance().getMovingObjectsModel().getSelectedItem();
+    		if (positionProvider != null) {
+	    		ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(positionProvider);
+	    		select(viewCoordinates);
+    		}
+    	}
+    }
 
     protected void select(ViewCoordinates viewCoordinates) {
-        RendererModel.getInstance().selectDynamicalPoint(viewCoordinates);
+        RendererModel.getInstance().selectViewCoordinates(viewCoordinates);
     }
 
 }
