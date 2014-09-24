@@ -174,6 +174,8 @@ public final class KeplerianUtils {
     }
 
     public void updatePeriapsis(MovingObject movingObject) {
+    	Assert.notNull(movingObject);
+    	Assert.notNull(movingObject.getTrajectory());
         Apsis periapsis = movingObject.getTrajectory().getPeriapsis();
         if (periapsis == null) {
             periapsis = createApsis(movingObject, ApsisType.PERIAPSIS);
@@ -182,6 +184,8 @@ public final class KeplerianUtils {
     }
 
     public void updateApoapsis(MovingObject movingObject) {
+    	Assert.notNull(movingObject);
+    	Assert.notNull(movingObject.getTrajectory());
         Apsis apoapsis = movingObject.getTrajectory().getApoapsis();
         if (apoapsis == null) {
             apoapsis = createApsis(movingObject, ApsisType.APOAPSIS);

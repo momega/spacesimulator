@@ -46,7 +46,6 @@ public class DetailDialogHolder {
 		} else {
 			logger.warn("nothing to remove");
 		}
-		logger.info("size = {}", dialogs.size());
 	}
 	
 	public void dispatchEvent(PositionProvider positionProvider, ModelChangeEvent event) {

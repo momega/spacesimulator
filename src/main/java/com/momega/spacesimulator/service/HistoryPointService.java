@@ -40,6 +40,17 @@ public class HistoryPointService {
         return hp;
     }
     
+    public HistoryPoint start(Spacecraft spacecraft, Timestamp timestamp) {
+    	HistoryPoint hp = new HistoryPoint();
+        hp.setName("Start of " + spacecraft.getName());
+        hp.setPosition(spacecraft.getCartesianState().getPosition());
+        hp.setTimestamp(timestamp);
+
+        spacecraft.getHistoryTrajectory().getHistoryPoints().add(hp);
+        spacecraft.getHistoryTrajectory().getNamedHistoryPoints().add(hp);
+        return hp;
+    }
+    
     public void changeSoi(Spacecraft spacecraft, MovingObject oldSoi, MovingObject newSoi) {
     	if (oldSoi == null) {
     		return; // this happens when the soi is initializer

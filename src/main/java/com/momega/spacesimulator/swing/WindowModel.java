@@ -3,15 +3,10 @@
  */
 package com.momega.spacesimulator.swing;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import javax.swing.ButtonModel;
-import javax.swing.JToggleButton;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.AbstractOrbitalPoint;
@@ -26,17 +21,14 @@ import com.momega.spacesimulator.renderer.RendererModel;
  * @author martin
  *
  */
-public class WindowModel implements ActionListener {
+public class WindowModel {
 	
-	public static final String SPACECRAFT_TOGGLE_COMMAND = "toggle_spacecraft";
-	public static final String CELESTIAL_TOGGLE_COMMAND = "toggle_celestial";
-	public static final String POINT_TOGGLE_COMMAND = "toggle_point";
 
     private MovingObjectsModel movingObjectsModel;
     
-    private final ButtonModel spacecraftVisible; 
-    private final ButtonModel celestialVisible;
-    private final ButtonModel pointsVisible;
+    private boolean spacecraftVisible; 
+    private boolean celestialVisible;
+    private boolean pointsVisible;
     
     private static WindowModel instance = new WindowModel(); 
     
@@ -45,20 +37,9 @@ public class WindowModel implements ActionListener {
 	}
 
 	private WindowModel() {
-		spacecraftVisible = new JToggleButton.ToggleButtonModel();
-		spacecraftVisible.setSelected(true);
-		spacecraftVisible.setActionCommand(SPACECRAFT_TOGGLE_COMMAND);
-		spacecraftVisible.addActionListener(this);
-		
-		celestialVisible = new JToggleButton.ToggleButtonModel();
-		celestialVisible.setSelected(true);
-		celestialVisible.setActionCommand(CELESTIAL_TOGGLE_COMMAND);
-		celestialVisible.addActionListener(this);
-		
-		pointsVisible = new JToggleButton.ToggleButtonModel();
-		pointsVisible.setSelected(true);
-		pointsVisible.setActionCommand(POINT_TOGGLE_COMMAND);
-		pointsVisible.addActionListener(this);
+		spacecraftVisible = true;
+		celestialVisible = true;
+		pointsVisible = true;
 		
 		movingObjectsModel = new MovingObjectsModel(selectMovingObjects());
 		movingObjectsModel.setSelectedItem(ModelHolder.getModel().getSelectedObject());
@@ -91,16 +72,16 @@ public class WindowModel implements ActionListener {
     	List<PositionProvider> list = RendererModel.getInstance().findAllPositionProviders();
     	List<PositionProvider> result = new ArrayList<>();
     	for(PositionProvider positionProvider : list) {
-    		if (pointsVisible.isSelected() && positionProvider instanceof AbstractOrbitalPoint) {
+    		if (pointsVisible && positionProvider instanceof AbstractOrbitalPoint) {
     			AbstractOrbitalPoint orbitalPoint = (AbstractOrbitalPoint) positionProvider;
     			if (orbitalPoint.isVisible()) {
     				result.add(positionProvider);
     			}
     		}
-    		if (spacecraftVisible.isSelected() && positionProvider instanceof Spacecraft) {
+    		if (spacecraftVisible && positionProvider instanceof Spacecraft) {
     			result.add(positionProvider);
     		}
-    		if (celestialVisible.isSelected() && positionProvider instanceof CelestialBody) {
+    		if (celestialVisible && positionProvider instanceof CelestialBody) {
     			result.add(positionProvider);
     		}
     	}
@@ -117,28 +98,33 @@ public class WindowModel implements ActionListener {
         });
         return list;
     }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-    	List<PositionProvider> newItems = selectMovingObjects();
-    	movingObjectsModel.removeAllElements();
-    	movingObjectsModel.addElements(newItems);
-    }
     
     public void setSelectedItem(PositionProvider positionProvider) {
     	movingObjectsModel.setSelectedItem(positionProvider);
     }
     
-    public ButtonModel getCelestialVisible() {
+    public boolean isCelestialVisible() {
 		return celestialVisible;
 	}
     
-    public ButtonModel getPointsVisible() {
+    public boolean isPointsVisible() {
 		return pointsVisible;
 	}
     
-    public ButtonModel getSpacecraftVisible() {
+    public boolean isSpacecraftVisible() {
 		return spacecraftVisible;
+	}
+    
+    public void setPointsVisible(boolean pointsVisible) {
+		this.pointsVisible = pointsVisible;
+	}
+    
+    public void setSpacecraftVisible(boolean spacecraftVisible) {
+		this.spacecraftVisible = spacecraftVisible;
+	}
+    
+    public void setCelestialVisible(boolean celestialVisible) {
+		this.celestialVisible = celestialVisible;
 	}
 
 }

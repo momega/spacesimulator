@@ -30,6 +30,8 @@ public class TargetController extends AbstractController {
     public static final String SELECT_POSITION_PROVIDER = "select_position_provider";
     
     public static final String DELAIL_POSITION_PROVIDER = "detail_position_provider";
+    
+    public static final String DELAIL_POPUP_POSITION_PROVIDER = "detail_position_provider";
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -40,28 +42,24 @@ public class TargetController extends AbstractController {
         final ViewCoordinates  viewCoordinates = RendererModel.getInstance().findViewCoordinates(position);
         if (e.getButton() >= MouseEvent.BUTTON2) {
             final JPopupMenu popup = new JPopupMenu();
-
             if (viewCoordinates!=null) {
                 JMenuItem detailItem = new JMenuItem("Detail...");
-                popup.add(detailItem);
+                detailItem.setActionCommand(DELAIL_POPUP_POSITION_PROVIDER);
                 detailItem.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        showDialog(viewCoordinates.getObject());
-                    }
-                });
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						showDialog(viewCoordinates.getObject());
+					}
+				});
+                popup.add(detailItem);
+
                 JMenuItem selectItem = new JMenuItem("Select");
+                selectItem.setActionCommand(DELAIL_POSITION_PROVIDER);
                 popup.add(selectItem);
-                selectItem.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        select(viewCoordinates);
-                    }
-                });
+                selectItem.addActionListener(this);
 
                 popup.addSeparator();
             }
-
             JMenuItem onScreenItem = new JMenuItem("On Screen...");
             popup.add(onScreenItem);
             onScreenItem.addActionListener(new ActionListener() {

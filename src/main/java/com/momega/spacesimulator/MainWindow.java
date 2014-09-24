@@ -14,8 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.jogamp.newt.event.KeyEvent;
-import com.momega.spacesimulator.builder.AbstractModelBuilder;
-import com.momega.spacesimulator.builder.MediumSolarSystemModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.controller.CameraController;
 import com.momega.spacesimulator.controller.Controller;
@@ -24,6 +22,7 @@ import com.momega.spacesimulator.controller.PerspectiveController;
 import com.momega.spacesimulator.controller.QuitController;
 import com.momega.spacesimulator.controller.TargetController;
 import com.momega.spacesimulator.controller.TimeController;
+import com.momega.spacesimulator.controller.ToolbarController;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.DefaultWindow;
@@ -49,18 +48,12 @@ public class MainWindow extends DefaultWindow {
         MainWindow window = new MainWindow("Space Simulator");
         EventBusController controller = new EventBusController();
 
-        //AbstractModelBuilder builder = new EarthSystemModelBuilder();
-        //AbstractModelBuilder builder = new SimpleSolarSystemModelBuilder();
-        AbstractModelBuilder builder = new MediumSolarSystemModelBuilder();
-        //AbstractModelBuilder builder = new SolarSystemModelBuilder();
-        //AbstractModelBuilder builder = new FullSolarSystemModelBuilder();
-
         Application application = new Application();
         
         //Model model = application.init(builder, 293037 - 600);
         //Model model = application.init(builder, 5910 * 60);
         //Model model = application.init(builder, 190 * 60);
-        Model model = application.init(builder, 0);
+        Model model = application.init(0);
         
         MainGLRenderer mr = new MainGLRenderer(application);
         controller.addController(new QuitController(window));
@@ -68,6 +61,7 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new CameraController(model.getCamera()));
         controller.addController(new TimeController());
         controller.addController(new PerspectiveController(mr));
+        controller.addController(new ToolbarController());
         window.openWindow(mr, controller);
     }
     
@@ -79,13 +73,16 @@ public class MainWindow extends DefaultWindow {
     	
     	JMenuItem openItem = new JMenuItem("Open...");
     	openItem.setMnemonic(KeyEvent.VK_O);
+    	openItem.setIcon(SwingUtils.createImageIcon("/images/page_go.png"));
     	JMenuItem saveItem = new JMenuItem("Save");
     	saveItem.setMnemonic(KeyEvent.VK_S);
+    	saveItem.setIcon(SwingUtils.createImageIcon("/images/page_save.png"));
     	JMenuItem saveAsItem = new JMenuItem("Save As...");
     	JMenuItem preferencesItem = new JMenuItem("Preferences...");
     	
     	JMenuItem exitItem = new JMenuItem("Exit...");
     	exitItem.setActionCommand(QuitController.COMMAND);
+    	exitItem.setIcon(SwingUtils.createImageIcon("/images/door_out.png"));
     	exitItem.setMnemonic(KeyEvent.VK_X);
     	exitItem.addActionListener(controller);
     	
@@ -99,6 +96,7 @@ public class MainWindow extends DefaultWindow {
     	
     	JMenu projectMenu = new JMenu("Project");
     	JMenuItem timeItem = new JMenuItem("Time...");
+    	timeItem.setIcon(SwingUtils.createImageIcon("/images/time.png"));
     	JMenuItem findItem = new JMenuItem("Find...");
     	JMenuItem newSpacecraftItem = new JMenuItem("New Spacecraft...");
     	JMenuItem newPointItem = new JMenuItem("New Point...");
@@ -138,8 +136,9 @@ public class MainWindow extends DefaultWindow {
     	warpDownButton.setActionCommand(TimeController.WARP_SLOWER);
     	warpDownButton.addActionListener(controller);
 
-    	JButton startStopButton = new JButton();
+    	JToggleButton startStopButton = new JToggleButton();
     	startStopButton.setIcon(SwingUtils.createImageIcon("/images/control_pause.png"));
+    	startStopButton.setSelectedIcon(SwingUtils.createImageIcon("/images/control_play.png"));
     	startStopButton.setActionCommand(TimeController.WARP_STOP_OR_START);
     	startStopButton.addActionListener(controller);
 
@@ -159,19 +158,22 @@ public class MainWindow extends DefaultWindow {
     	spacecraftButton.setSelected(true);
     	spacecraftButton.setIcon(SwingUtils.createImageIcon("/images/satellite_16_hot.png"));
     	spacecraftButton.setToolTipText("Activate the spacecrafts");
-    	spacecraftButton.setModel(WindowModel.getInstance().getSpacecraftVisible());
+    	spacecraftButton.setActionCommand(ToolbarController.SPACECRAFT_TOGGLE_COMMAND);
+    	spacecraftButton.addActionListener(controller);
 
     	JToggleButton celesialButton = new JToggleButton();
     	celesialButton.setSelected(true);
     	celesialButton.setIcon(SwingUtils.createImageIcon("/images/100.png"));
     	celesialButton.setToolTipText("Activate the celestial bodies");
-    	celesialButton.setModel(WindowModel.getInstance().getCelestialVisible());
+    	celesialButton.setActionCommand(ToolbarController.CELESTIAL_TOGGLE_COMMAND);
+    	celesialButton.addActionListener(controller);
     	
     	JToggleButton pointButton = new JToggleButton();
     	pointButton.setSelected(true);
     	pointButton.setIcon(SwingUtils.createImageIcon("/images/bullet_blue.png"));
     	pointButton.setToolTipText("Activate the points");
-    	pointButton.setModel(WindowModel.getInstance().getPointsVisible());
+    	pointButton.setActionCommand(ToolbarController.POINT_TOGGLE_COMMAND);
+    	pointButton.addActionListener(controller);
     	
     	toolBar.add(warpDownButton);
     	toolBar.add(startStopButton);
@@ -181,6 +183,13 @@ public class MainWindow extends DefaultWindow {
     	toolBar.add(celesialButton);
     	toolBar.add(pointButton);
     	toolBar.add(movingObjectsBox);
+    	
+    	JButton detailButton = new JButton();
+    	detailButton.setIcon(SwingUtils.createImageIcon("/images/magnifier.png"));
+    	detailButton.setActionCommand(TargetController.DELAIL_POSITION_PROVIDER);
+    	detailButton.addActionListener(controller);
+    	
+    	toolBar.add(detailButton);
     	
     	logger.info("toolbar created");
     	

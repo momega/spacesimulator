@@ -31,7 +31,8 @@ public class Application {
         this.cameraService = applicationContext.getBean(CameraService.class);
     }
 
-    public Model init(ModelBuilder modelBuilder, long seconds) {
+    public Model init(long seconds) {
+        ModelBuilder modelBuilder = applicationContext.getBean(ModelBuilder.class);
         modelBuilder.build();
         logger.info("time = {}", TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
         Timestamp showTime = ModelHolder.getModel().getTime().add(BigDecimal.valueOf(seconds));

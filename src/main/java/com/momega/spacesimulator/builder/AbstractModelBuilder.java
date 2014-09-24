@@ -1,19 +1,42 @@
 package com.momega.spacesimulator.builder;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.utils.KeplerianUtils;
-import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
-import com.momega.spacesimulator.utils.VectorUtils;
+import java.math.BigDecimal;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import java.math.BigDecimal;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.HistoryTrajectory;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.Maneuver;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Orientation;
+import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.Ring;
+import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.SpacecraftSubsystem;
+import com.momega.spacesimulator.model.SphereOfInfluence;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.model.Trajectory;
+import com.momega.spacesimulator.model.TrajectoryType;
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.service.HistoryPointService;
+import com.momega.spacesimulator.service.KeplerianPropagator;
+import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
+import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
  * Super class for all model builders
@@ -24,6 +47,14 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     private static final Logger logger = LoggerFactory.getLogger(AbstractModelBuilder.class);
 
     protected Model model = ModelHolder.getModel();
+
+    private static final double UNIVERSE_SIZE = MathUtils.AU * 100; 
+    
+    @Autowired
+    private HistoryPointService historyPointService;
+    
+    @Autowired
+    private KeplerianPropagator keplerianPropagator;
 
     /**
      * Returns newly created instance
@@ -41,7 +72,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         initPlanets();
         initSpacecrafts();
         initCamera();
-        initApsised();
         logger.info("model initialized");
         return model;
     }
@@ -59,23 +89,12 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         model.setCamera(s);
     }
 
-    /**
-     * Creates the apsis for celestial bodies and bary centres
-     */
-    protected void initApsised() {
-        for(MovingObject body : model.getMovingObjects()) {
-            if ((body instanceof CelestialBody) || (body instanceof BaryCentre)) {
-            	if (!TrajectoryType.STATIC.equals(body.getTrajectory().getType())) {
-	                KeplerianUtils.getInstance().updatePeriapsis(body);
-	                KeplerianUtils.getInstance().updateApoapsis(body);
-            	}
-            }
-        }
-    }
-
     protected void setCentralPoint(MovingObject movingObject) {
         movingObject.getCartesianState().setPosition(Vector3d.ZERO);
         movingObject.getCartesianState().setVelocity(Vector3d.ZERO);
+        KeplerianTrajectory trajectory = new KeplerianTrajectory();
+        trajectory.setType(TrajectoryType.STATIC);
+        movingObject.setTrajectory(trajectory);
     }
 
     /**
@@ -105,7 +124,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     /**
      * Creates the keplerian trajectory
-     * @param physicalBody the dynamical point
+     * @param movingObject the moving point. Typically it is the planet, but could be also barycentre
      * @param centralObject the central object
      * @param semimajorAxis the semimajor axis
      * @param eccentricity the eccentricity
@@ -116,7 +135,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param ascendingNode the ascending node in degrees
      * @return new instance of the keplerian trajectory
      */
-    public KeplerianElements createKeplerianElements(MovingObject physicalBody, MovingObject centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
+    public KeplerianElements createKeplerianElements(MovingObject movingObject, MovingObject centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setCentralObject(centralObject);
         keplerianElements.setSemimajorAxis(semimajorAxis);
@@ -126,11 +145,18 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         keplerianElements.setTimeOfPeriapsis(TimeUtils.createTime(timeOfPeriapsis));
         keplerianElements.setInclination(Math.toRadians(inclination));
         keplerianElements.setAscendingNode(Math.toRadians(ascendingNode));
-        physicalBody.setKeplerianElements(keplerianElements);
-
+        movingObject.setKeplerianElements(keplerianElements);
+        
+        KeplerianTrajectory trajectory = movingObject.getTrajectory();
+        if (trajectory == null) {
+	        trajectory = new KeplerianTrajectory();
+	        trajectory.setType(TrajectoryType.KEPLERIAN);
+        }
+        movingObject.setTrajectory(trajectory);
+        movingObject.setTimestamp(model.getTime());
+        
         // initialize position
-        CartesianState cartesianState = KeplerianUtils.getInstance().computePosition(keplerianElements, model.getTime());
-        physicalBody.setCartesianState(cartesianState);
+        keplerianPropagator.computePosition(movingObject, model.getTime());
 
         return keplerianElements;
     }
@@ -139,14 +165,15 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         double r = (double) Integer.parseInt(trajectoryColor.substring(1, 3), 16);
         double g = (double) Integer.parseInt(trajectoryColor.substring(3, 5), 16);
         double b = (double) Integer.parseInt(trajectoryColor.substring(5, 7), 16);
-        return createTrajectory(movingObjects, new double[] {r / 255,g / 255,b / 255}, trajectoryType);
+        return createTrajectory(movingObjects, new double[] {r / 255,g / 255,b / 255});
     }
 
-    public Trajectory createTrajectory(MovingObject movingObjects, double[] trajectoryColor, TrajectoryType trajectoryType) {
-        KeplerianTrajectory trajectory = new KeplerianTrajectory();
-        trajectory.setType(trajectoryType);
+    public Trajectory createTrajectory(MovingObject movingObjects, double[] trajectoryColor) {
+        KeplerianTrajectory trajectory = movingObjects.getTrajectory();
+        if (trajectory == null) {
+        	trajectory = new KeplerianTrajectory(); 
+        }
         trajectory.setColor(trajectoryColor);
-        movingObjects.setTrajectory(trajectory);
         return trajectory;
     }
 
@@ -184,13 +211,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         historyTrajectory.setColor(new double[]{1, 1, 1});
         spacecraft.setHistoryTrajectory(historyTrajectory);
 
-        HistoryPoint hp = new HistoryPoint();
-        hp.setName("Start of " + name);
-        hp.setPosition(cartesianState.getPosition());
-        hp.setTimestamp(getModel().getTime());
-
-        spacecraft.getHistoryTrajectory().getHistoryPoints().add(hp);
-        spacecraft.getHistoryTrajectory().getNamedHistoryPoints().add(hp);
+        historyPointService.start(spacecraft, model.getTime());
 
         return spacecraft;
     }
@@ -328,7 +349,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         if (parentSoi == null) {
             SphereOfInfluence soi = new SphereOfInfluence();
             soi.setBody(celestialBody);
-            soi.setRadius(MathUtils.AU * 100);
+            soi.setRadius(UNIVERSE_SIZE);
             model.setRootSoi(soi);
             return soi;
         } else {

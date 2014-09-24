@@ -14,7 +14,7 @@ public class ApplicationTest {
     public void runTest() {
         Application application = new Application();
         SolarSystemModelBuilder builder = new SolarSystemModelBuilder();
-        application.init(builder, 0);
+        application.init(0);
         for(int i=0; i<10* 86400; i++) {
             application.next();
         }
