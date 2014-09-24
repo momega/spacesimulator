@@ -1,23 +1,23 @@
 package com.momega.spacesimulator.controller;
 
-import javax.media.opengl.awt.GLCanvas;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.renderer.ViewCoordinates;
-import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.swing.DetailDialogHolder;
-import com.momega.spacesimulator.swing.WindowModel;
+import javax.media.opengl.GLDrawable;
+import javax.media.opengl.awt.GLCanvas;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.media.opengl.GLDrawable;
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
+import com.momega.spacesimulator.swing.DetailDialogHolder;
 
 /**
  * Controller which enables functionality after clicking to the screen
@@ -100,13 +100,13 @@ public class TargetController extends AbstractController {
     @Override
     public void actionPerformed(ActionEvent e) {
     	if (SELECT_POSITION_PROVIDER.equals(e.getActionCommand())) {
-    		PositionProvider positionProvider = (PositionProvider) WindowModel.getInstance().getMovingObjectsModel().getSelectedItem();
+    		PositionProvider positionProvider = (PositionProvider) RendererModel.getInstance().getMovingObjectsModel().getSelectedItem();
     		if (positionProvider != null) {
 	    		ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(positionProvider);
 	    		select(viewCoordinates);
     		}
     	} else if (DELAIL_POSITION_PROVIDER.equals(e.getActionCommand())) {
-    		PositionProvider positionProvider = (PositionProvider) WindowModel.getInstance().getMovingObjectsModel().getSelectedItem();
+    		PositionProvider positionProvider = (PositionProvider) RendererModel.getInstance().getMovingObjectsModel().getSelectedItem();
     		showDialog(positionProvider);
     	}
     }
@@ -116,8 +116,7 @@ public class TargetController extends AbstractController {
     }
 
     protected void select(ViewCoordinates viewCoordinates) {
-        RendererModel.getInstance().selectViewCoordinates(viewCoordinates);
-        WindowModel.getInstance().setSelectedItem(viewCoordinates.getObject());
+        RendererModel.getInstance().selectItem(viewCoordinates);
     }
 
 }

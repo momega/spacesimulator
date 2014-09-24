@@ -27,9 +27,9 @@ import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.MainGLRenderer;
+import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.swing.MovingObjectListRenderer;
 import com.momega.spacesimulator.swing.SwingUtils;
-import com.momega.spacesimulator.swing.WindowModel;
 
 
 /**
@@ -148,7 +148,7 @@ public class MainWindow extends DefaultWindow {
     	warpUp.addActionListener(controller);
     	
     	JComboBox<PositionProvider> movingObjectsBox = new JComboBox<PositionProvider>();
-    	movingObjectsBox.setModel(WindowModel.getInstance().getMovingObjectsModel());
+    	movingObjectsBox.setModel(RendererModel.getInstance().getMovingObjectsModel());
     	movingObjectsBox.setRenderer(new MovingObjectListRenderer());
     	movingObjectsBox.setMaximumSize(new Dimension(300, 100));
     	movingObjectsBox.setActionCommand(TargetController.SELECT_POSITION_PROVIDER);

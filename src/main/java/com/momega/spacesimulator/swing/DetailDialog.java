@@ -96,7 +96,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(positionProvider);
-                RendererModel.getInstance().selectViewCoordinates(viewCoordinates);
+                RendererModel.getInstance().selectItem(viewCoordinates);
             }
         });
         buttonsPanel.add(selectButton);

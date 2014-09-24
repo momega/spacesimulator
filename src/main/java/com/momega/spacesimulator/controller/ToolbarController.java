@@ -9,8 +9,8 @@ import java.util.List;
 import javax.swing.JToggleButton;
 
 import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.swing.MovingObjectsModel;
-import com.momega.spacesimulator.swing.WindowModel;
 
 /**
  * @author martin
@@ -29,7 +29,7 @@ public class ToolbarController extends AbstractController {
 			{
 				JToggleButton button = (JToggleButton) e.getSource();
 				boolean visible = button.getModel().isSelected();
-				WindowModel.getInstance().setSpacecraftVisible(visible);
+				RendererModel.getInstance().setSpacecraftVisible(visible);
 				updateSelectableMovingObjects();
 			}
 			break;
@@ -37,7 +37,7 @@ public class ToolbarController extends AbstractController {
 			{
 				JToggleButton button = (JToggleButton) e.getSource();
 				boolean visible = button.getModel().isSelected();
-				WindowModel.getInstance().setCelestialVisible(visible);
+				RendererModel.getInstance().setCelestialVisible(visible);
 				updateSelectableMovingObjects();
 			}
 			break;
@@ -45,7 +45,7 @@ public class ToolbarController extends AbstractController {
 			{
 				JToggleButton button = (JToggleButton) e.getSource();
 				boolean visible = button.getModel().isSelected();
-				WindowModel.getInstance().setPointsVisible(visible);
+				RendererModel.getInstance().setPointsVisible(visible);
 				updateSelectableMovingObjects();
 			}
 			break;
@@ -55,8 +55,8 @@ public class ToolbarController extends AbstractController {
 	}
 
 	protected void updateSelectableMovingObjects() {
-		List<PositionProvider> newItems = WindowModel.getInstance().selectMovingObjects();
-		MovingObjectsModel movingObjectsModel = WindowModel.getInstance().getMovingObjectsModel();
+		List<PositionProvider> newItems = RendererModel.getInstance().selectMovingObjects();
+		MovingObjectsModel movingObjectsModel = RendererModel.getInstance().getMovingObjectsModel();
     	movingObjectsModel.removeAllElements();
     	movingObjectsModel.addElements(newItems);	
 	}
