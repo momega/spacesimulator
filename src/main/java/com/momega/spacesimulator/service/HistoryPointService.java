@@ -1,16 +1,17 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.model.HistoryPoint;
-import com.momega.spacesimulator.model.Maneuver;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.utils.TimeUtils;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.Maneuver;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
  * Created by martin on 8/24/14.
@@ -38,6 +39,20 @@ public class HistoryPointService {
         hp.setTimestamp(timestamp);
         return hp;
     }
+    
+    public void changeSoi(Spacecraft spacecraft, MovingObject oldSoi, MovingObject newSoi) {
+    	if (oldSoi == null) {
+    		return; // this happens when the soi is initializer
+    	}
+    	
+    	HistoryPoint hp = getLastHistoryPoint(spacecraft);
+    	hp.setName("Change SOI "+ oldSoi.getName() + "->" + newSoi.getName());
+    	spacecraft.getHistoryTrajectory().getNamedHistoryPoints().add(hp);
+    	
+    	HistoryPoint startPoint = getStartPoint(spacecraft);
+    	logger.info("time = {}", hp.getTimestamp().subtract(startPoint.getTimestamp()));
+    	
+    }
 
     public void endManeuver(Spacecraft spacecraft, Maneuver maneuver) {
         HistoryPoint hp = getLastHistoryPoint(spacecraft);
@@ -51,6 +66,11 @@ public class HistoryPointService {
         hp.setName("Start of " + maneuver.getName());
         spacecraft.getHistoryTrajectory().getNamedHistoryPoints().add(hp);
         logger.info("start = {} " + TimeUtils.timeAsString(hp.getTimestamp()));
+    }
+    
+    public HistoryPoint getStartPoint(Spacecraft spacecraft) {
+    	List<HistoryPoint> list = spacecraft.getHistoryTrajectory().getNamedHistoryPoints();
+    	return list.get(0);
     }
 
     public HistoryPoint getLastHistoryPoint(Spacecraft spacecraft) {

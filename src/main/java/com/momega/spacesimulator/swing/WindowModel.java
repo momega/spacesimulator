@@ -120,13 +120,13 @@ public class WindowModel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-    	PositionProvider selected = (PositionProvider) movingObjectsModel.getSelectedItem();
     	List<PositionProvider> newItems = selectMovingObjects();
     	movingObjectsModel.removeAllElements();
     	movingObjectsModel.addElements(newItems);
-    	if (newItems.contains(selected)) {
-    		movingObjectsModel.setSelectedItem(selected);
-    	}
+    }
+    
+    public void setSelectedItem(PositionProvider positionProvider) {
+    	movingObjectsModel.setSelectedItem(positionProvider);
     }
     
     public ButtonModel getCelestialVisible() {

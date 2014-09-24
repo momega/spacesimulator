@@ -31,6 +31,9 @@ public class NewtonianPropagator implements Propagator {
 
     @Autowired
     private List<ForceModel> forceModels;
+    
+    @Autowired
+    private HistoryPointService historyPointService;
 
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
@@ -245,6 +248,7 @@ public class NewtonianPropagator implements Propagator {
             spacecraft.setKeplerianElements(keplerianElements);
         }
         if (keplerianElements.getCentralObject() != soiBody) {
+        	historyPointService.changeSoi(spacecraft, keplerianElements.getCentralObject(), soiBody);
             logger.info("changing soi to {} for spacecraft {}", soiBody.getName(), spacecraft.getName());
         }
         keplerianElements.setCentralObject(soiBody);

@@ -3,17 +3,24 @@
  */
 package com.momega.spacesimulator.swing;
 
-import java.awt.Point;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.SwingUtilities;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
 
 /**
  * @author martin
  *
  */
 public class DetailDialogHolder {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DetailDialogHolder.class);
 
 	private static DetailDialogHolder instance = new DetailDialogHolder();
 	
@@ -28,32 +35,44 @@ public class DetailDialogHolder {
 	}
 	
 	public void hideDialog(PositionProvider positionProvider) {
-		DetailDialog dialog = dialogs.remove(positionProvider);
+		final DetailDialog dialog = dialogs.get(positionProvider);
 		if (dialog != null) {
-			dialog.setVisible(false);
-			dialog.dispose();
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					dialog.setVisible(false);
+				}
+			});
+		} else {
+			logger.warn("nothing to remove");
 		}
+		logger.info("size = {}", dialogs.size());
 	}
 	
-	public DetailDialog showDialog(PositionProvider positionProvider) {
-		return showDialog(null, positionProvider);
-	}
-	
-	public DetailDialog showDialog(final Point position, PositionProvider positionProvider) {
+	public void dispatchEvent(PositionProvider positionProvider, ModelChangeEvent event) {
 		DetailDialog dialog = dialogs.get(positionProvider);
-		if (dialog == null) {
-			dialog = createdDetail(positionProvider);
-			dialog.setVisible(true);
+		if (dialog != null) {
+			dialog.modelChanged(event);
 		}
-		if (position != null) {
-			dialog.setLocation(position);
-		}
-        return dialog;
 	}
 	
-    private DetailDialog createdDetail(PositionProvider positionProvider) {
-        DetailDialog dialog = new DetailDialog(positionProvider);
-        dialogs.put(positionProvider, dialog);
+	public void showDialog(PositionProvider positionProvider) {
+		final DetailDialog dialog = getDialog(positionProvider);
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				dialog.setVisible(true);
+			}
+		});
+	}
+	
+    private DetailDialog getDialog(PositionProvider positionProvider) {
+    	DetailDialog dialog = dialogs.get(positionProvider);
+    	if (dialog == null) {
+	        dialog = new DetailDialog(positionProvider);
+	        dialogs.put(positionProvider, dialog);
+	        logger.warn("create dialog for {}", positionProvider.getName());
+    	}
         return dialog;
     }
 

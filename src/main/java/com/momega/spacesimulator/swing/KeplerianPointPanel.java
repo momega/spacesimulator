@@ -70,8 +70,8 @@ public class KeplerianPointPanel extends JPanel implements UpdatablePanel {
 					
 					NewManeuverEvent event = new NewManeuverEvent(ModelHolder.getModel(), maneuver, spacecraft);
 					
-					DetailDialog detailDialog = DetailDialogHolder.getInstance().showDialog(spacecraft);
-					detailDialog.modelChanged(event);
+					DetailDialogHolder.getInstance().showDialog(spacecraft);
+					DetailDialogHolder.getInstance().dispatchEvent(spacecraft, event);
 				}
 			});
 	        

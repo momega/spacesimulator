@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.jogamp.newt.event.KeyEvent;
 import com.momega.spacesimulator.builder.AbstractModelBuilder;
-import com.momega.spacesimulator.builder.SimpleSolarSystemModelBuilder;
+import com.momega.spacesimulator.builder.MediumSolarSystemModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.controller.CameraController;
 import com.momega.spacesimulator.controller.Controller;
@@ -50,12 +50,16 @@ public class MainWindow extends DefaultWindow {
         EventBusController controller = new EventBusController();
 
         //AbstractModelBuilder builder = new EarthSystemModelBuilder();
-        AbstractModelBuilder builder = new SimpleSolarSystemModelBuilder();
+        //AbstractModelBuilder builder = new SimpleSolarSystemModelBuilder();
+        AbstractModelBuilder builder = new MediumSolarSystemModelBuilder();
         //AbstractModelBuilder builder = new SolarSystemModelBuilder();
         //AbstractModelBuilder builder = new FullSolarSystemModelBuilder();
 
         Application application = new Application();
+        
+        //Model model = application.init(builder, 293037 - 600);
         //Model model = application.init(builder, 5910 * 60);
+        //Model model = application.init(builder, 190 * 60);
         Model model = application.init(builder, 0);
         
         MainGLRenderer mr = new MainGLRenderer(application);

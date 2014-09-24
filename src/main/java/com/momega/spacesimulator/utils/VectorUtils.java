@@ -99,13 +99,11 @@ public final class VectorUtils {
         return Math.acos(cosAlpha);
     }
 
-    public static Orientation rotateByAngles(Orientation o, double alpha, double delta, boolean toEcliptic) {
-    	o.lookAroundV(alpha);
-        o.lookUp(Math.PI / 2 - delta);
-        if (toEcliptic) {
-            o.rotate(new Vector3d(1, 0, 0), -VectorUtils.ECLIPTIC);
-        }
-        return o;
+    public static Orientation rotateByAngles(Orientation o, double alpha, double delta) {
+    	Orientation result = o.clone();
+    	result.lookAroundV(alpha);
+    	result.lookUp(delta);
+    	return result;
     }
 
     /**
@@ -116,7 +114,11 @@ public final class VectorUtils {
      */
     public static Orientation createOrientation(double alpha, double delta, boolean toEcliptic) {
         Orientation o = createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1));
-        rotateByAngles(o, alpha, delta, toEcliptic);
+        o.lookAroundV(alpha);
+        o.lookUp(Math.PI / 2 - delta);
+        if (toEcliptic) {
+            o.rotate(new Vector3d(1, 0, 0), -VectorUtils.ECLIPTIC);
+        }
         return o;
     }
 

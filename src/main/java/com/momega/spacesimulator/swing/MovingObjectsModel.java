@@ -28,5 +28,10 @@ public class MovingObjectsModel extends DefaultComboBoxModel<PositionProvider> {
 			addElement(obj);
 		}
 	}
+	
+	@Override
+	public void setSelectedItem(Object anObject) {
+		super.setSelectedItem(anObject);
+	}
 
 }

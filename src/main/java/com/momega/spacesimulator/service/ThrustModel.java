@@ -55,7 +55,7 @@ public class ThrustModel implements ForceModel {
 
         logger.debug("Engine is running, thrust = {}", thrust);
 
-        Orientation o = VectorUtils.rotateByAngles(spacecraft.getOrientation().clone(), maneuver.getThrottleAlpha(), maneuver.getThrottleDelta(), false);
+        Orientation o = VectorUtils.rotateByAngles(spacecraft.getOrientation(), maneuver.getThrottleAlpha(), maneuver.getThrottleDelta());
         Vector3d n = o.getN();
         Vector3d acceleration = n.scale(a);
         spacecraft.setThrust(acceleration);

@@ -134,13 +134,12 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
         setContentPane(mainPanel);
         setModalityType(ModalityType.MODELESS);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(HIDE_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
                 logger.info("closing detail dialog for {}", positionProvider.getName());
                 RendererModel.getInstance().removeModelChangeListener(DetailDialog.this);
-                DetailDialogHolder.getInstance().hideDialog(positionProvider);
             }
         });
         setPreferredSize(new Dimension(600, 400));
@@ -207,9 +206,11 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
     @Override
     public void modelChanged(ModelChangeEvent event) {
-        for(UpdatablePanel ap : attributesPanelList) {
-            ap.updateView(event);
-        }
+    	if (isShowing()) {
+	        for(UpdatablePanel ap : attributesPanelList) {
+	            ap.updateView(event);
+	        }
+    	}
     }
     
     public void updateModel() {

@@ -28,6 +28,8 @@ public class TargetController extends AbstractController {
     private static final Logger logger = LoggerFactory.getLogger(TargetController.class);
     
     public static final String SELECT_POSITION_PROVIDER = "select_position_provider";
+    
+    public static final String DELAIL_POSITION_PROVIDER = "detail_position_provider";
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -45,7 +47,7 @@ public class TargetController extends AbstractController {
                 detailItem.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        DetailDialogHolder.getInstance().showDialog(position, viewCoordinates.getObject());
+                        showDialog(viewCoordinates.getObject());
                     }
                 });
                 JMenuItem selectItem = new JMenuItem("Select");
@@ -69,14 +71,14 @@ public class TargetController extends AbstractController {
                     String selectedName = (String)JOptionPane.showInputDialog(
                             null,
                             "Please select the visible object:",
-                            "On the screen",
+                            "Visible objects",
                             JOptionPane.PLAIN_MESSAGE,
                             null,
                             possibilities,
                             null);
                     ViewCoordinates vc = RendererModel.getInstance().findByName(selectedName);
                     if (vc !=null) {
-                    	DetailDialogHolder.getInstance().showDialog(position, vc.getObject());
+                    	showDialog(vc.getObject());
                     }
                 }
             });
@@ -105,11 +107,19 @@ public class TargetController extends AbstractController {
 	    		ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(positionProvider);
 	    		select(viewCoordinates);
     		}
+    	} else if (DELAIL_POSITION_PROVIDER.equals(e.getActionCommand())) {
+    		PositionProvider positionProvider = (PositionProvider) WindowModel.getInstance().getMovingObjectsModel().getSelectedItem();
+    		showDialog(positionProvider);
     	}
+    }
+    
+    protected void showDialog(PositionProvider positionProvider) {
+    	 DetailDialogHolder.getInstance().showDialog(positionProvider);
     }
 
     protected void select(ViewCoordinates viewCoordinates) {
         RendererModel.getInstance().selectViewCoordinates(viewCoordinates);
+        WindowModel.getInstance().setSelectedItem(viewCoordinates.getObject());
     }
 
 }
