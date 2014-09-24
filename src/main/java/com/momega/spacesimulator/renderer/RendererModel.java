@@ -38,7 +38,7 @@ public class RendererModel {
 
     private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
 
-    private final static int MIN_TARGET_SIZE = 5;
+    public final static int MIN_TARGET_SIZE = 5;
     
     public static final double FOVY = 45.0;    
 

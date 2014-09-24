@@ -101,5 +101,11 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
         if (ModelHolder.getModel().getSelectedObject() == celestialBody) {
             GLUtils.drawBeansAndCircles(gl, 0, 0, celestialBody.getRadius() * 5, 18, 5);
         }
+        
+        ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(celestialBody);
+        if (viewCoordinates.isVisible() && viewCoordinates.getRadius() < 2) {
+        	GLUtils.drawPoint(gl, 8, celestialBody.getTrajectory().getColor(), Vector3d.ZERO);
+        }
+        
     }
 }
