@@ -311,6 +311,5 @@ public class RendererModel {
         });
         return list;
     }    
-	
 
 }

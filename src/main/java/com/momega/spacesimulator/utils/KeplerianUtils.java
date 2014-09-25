@@ -155,7 +155,7 @@ public final class KeplerianUtils {
      * @param orbitalPoint the {@link AbstractOrbitalPoint}
      * @return the ETA in seconds
      */
-    public static double getETA(AbstractOrbitalPoint orbitalPoint) {
+    public static double getETA(OrbitalPositionProvider orbitalPoint) {
     	MovingObject movingObject = orbitalPoint.getMovingObject();
     	Timestamp current = movingObject.getTimestamp();
     	Timestamp future = orbitalPoint.getTimestamp();

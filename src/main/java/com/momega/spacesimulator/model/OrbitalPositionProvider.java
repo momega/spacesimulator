@@ -7,7 +7,7 @@ package com.momega.spacesimulator.model;
  * @author martin
  *
  */
-public interface OrbitPositionProvider extends PositionProvider {
+public interface OrbitalPositionProvider extends PositionProvider {
 
 	/**
 	 * Gets the true anomaly of the point. It may differ from the true anomaly stored

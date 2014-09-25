@@ -11,7 +11,7 @@ import com.momega.spacesimulator.model.Spacecraft;
 /**
  * Created by martin on 9/6/14.
  */
-public class OrbitIntersectionRenderer extends AbstractPositionProviderRenderer {
+public class OrbitIntersectionRenderer extends AbstractOrbitalPositionProviderRenderer {
 
     private final Spacecraft spacecraft;
 

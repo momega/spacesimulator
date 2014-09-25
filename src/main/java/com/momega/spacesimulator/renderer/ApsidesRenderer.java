@@ -10,7 +10,7 @@ import com.momega.spacesimulator.model.MovingObject;
 /**
  * Created by martin on 6/15/14.
  */
-public class ApsidesRenderer extends AbstractPositionProviderRenderer {
+public class ApsidesRenderer extends AbstractOrbitalPositionProviderRenderer {
 
     private final MovingObject movingObject;
 
