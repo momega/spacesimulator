@@ -21,17 +21,17 @@ import com.momega.spacesimulator.renderer.NewManeuverEvent;
 /**
  * Created by martin on 8/31/14.
  */
-public class KeplerianPointPanel extends JPanel implements UpdatablePanel {
+public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 
 	private static final long serialVersionUID = 548843069264668277L;
-	private static final String[] LABELS = {"Name", "True Anomaly", "Position X", "Position Y", "Position Z", "Timestamp", "Altitude"};
-    private static final String[] FIELDS = {"#obj.name", "#toDegrees(#obj.trueAnomaly)", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)", "#getAltitude(#obj.keplerianElements, #obj.trueAnomaly)"};
+	private static final String[] LABELS = {"Name", "True Anomaly", "Position X", "Position Y", "Position Z", "Timestamp", "ETA", "Altitude"};
+    private static final String[] FIELDS = {"#obj.name", "#toDegrees(#obj.trueAnomaly)", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)", "#periodAsString(#getETA(#obj))", "#getAltitude(#obj.keplerianElements, #obj.trueAnomaly)"};
 
     private final AttributesPanel attrPanel;
     private boolean visible;
 	private final AbstractOrbitalPoint apsis;
 
-    public KeplerianPointPanel(final AbstractOrbitalPoint point) {
+    public OrbitalPointPanel(final AbstractOrbitalPoint point) {
         super(new BorderLayout(5, 5));
 		this.apsis = point;
 

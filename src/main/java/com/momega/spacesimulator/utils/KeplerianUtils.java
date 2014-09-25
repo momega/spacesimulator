@@ -149,6 +149,18 @@ public final class KeplerianUtils {
         double theta = Math.atan(param * Math.sin(E) / (Math.cos(E) - eccentricity));
         return theta;
     }
+    
+    /**
+     * Returns ETA time in seconds between current time and planned time of the orbital point
+     * @param orbitalPoint the {@link AbstractOrbitalPoint}
+     * @return the ETA in seconds
+     */
+    public static double getETA(AbstractOrbitalPoint orbitalPoint) {
+    	MovingObject movingObject = orbitalPoint.getMovingObject();
+    	Timestamp current = movingObject.getTimestamp();
+    	Timestamp future = orbitalPoint.getTimestamp();
+    	return future.subtract(current).doubleValue();
+    }
 
     protected double solveEccentricAnomaly(KeplerianElements keplerianElements, Timestamp time) {
         logger.debug("time = {}", time);

@@ -136,6 +136,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @return new instance of the keplerian trajectory
      */
     public KeplerianElements createKeplerianElements(MovingObject movingObject, MovingObject centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
+    	Assert.notNull(movingObject);
+    	Assert.notNull(centralObject);
+    	
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setCentralObject(centralObject);
         keplerianElements.setSemimajorAxis(semimajorAxis);
@@ -154,6 +157,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         }
         movingObject.setTrajectory(trajectory);
         movingObject.setTimestamp(model.getTime());
+        
+        Assert.notNull(movingObject.getName());
         
         // initialize position
         keplerianPropagator.computePosition(movingObject, model.getTime());

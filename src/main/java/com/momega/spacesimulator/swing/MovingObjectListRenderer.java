@@ -14,7 +14,6 @@ import com.momega.spacesimulator.model.Apsis;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.OrbitIntersection;
-import com.momega.spacesimulator.model.OrbitPositionProvider;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Spacecraft;
 

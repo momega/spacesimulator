@@ -33,4 +33,10 @@ public interface OrbitPositionProvider extends PositionProvider {
 	 * @param visible
 	 */
 	void setVisible(boolean visible);
+
+	/**
+	 * Returns associated object
+	 * @return the object to which the position provider belongs
+	 */
+	MovingObject getMovingObject();
 }

@@ -7,8 +7,11 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
 import org.joda.time.DateTimeZone;
+import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
@@ -25,6 +28,20 @@ public class TimeUtils {
     public static final Timestamp JD2000 = createTime(2000.0);
 
     private static DateTimeFormatter formatter = ISODateTimeFormat.dateTime().withZone(DateTimeZone.UTC);
+    
+    private static PeriodFormatter periodFormatter = new PeriodFormatterBuilder()
+		    .appendDays()
+		    .appendSuffix(" d")
+		    .appendSeparator(" ")
+		    .appendHours()
+		    .appendSuffix(" h")
+		    .appendSeparator(" ")
+		    .appendMinutes()
+		    .appendSuffix(" m")
+		    .appendSeparator(" ")
+		    .appendSeconds()
+		    .appendSuffix(" s")
+		    .toFormatter();
 
     /**
      * Creates the time from julian day
@@ -95,6 +112,12 @@ public class TimeUtils {
 
     public static String timeAsString(Timestamp timestamp) {
         return formatter.print(TimeUtils.getDateTime(timestamp));
+    }
+    
+    public static String periodAsString(double period) {
+    	long duration = Double.valueOf(period * DateTimeConstants.MILLIS_PER_SECOND).longValue();
+    	Period p = new Period(duration);
+    	return periodFormatter.print(p.normalizedStandard());
     }
 
 }

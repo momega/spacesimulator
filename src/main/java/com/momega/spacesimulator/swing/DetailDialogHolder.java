@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
+import com.momega.spacesimulator.renderer.RendererModel;
 
 /**
  * @author martin
@@ -40,6 +41,7 @@ public class DetailDialogHolder {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
+					RendererModel.getInstance().removeModelChangeListener(dialog);
 					dialog.setVisible(false);
 				}
 			});
@@ -61,6 +63,7 @@ public class DetailDialogHolder {
 			@Override
 			public void run() {
 				dialog.setVisible(true);
+				RendererModel.getInstance().addModelChangeListener(dialog);
 			}
 		});
 	}
