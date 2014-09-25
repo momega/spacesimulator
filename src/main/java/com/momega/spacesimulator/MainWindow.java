@@ -41,7 +41,7 @@ public class MainWindow extends DefaultWindow {
 	private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
 	
     public MainWindow(String title) {
-        super(title);
+        super(title, true);
     }
 
     public static void main(String[] args) {

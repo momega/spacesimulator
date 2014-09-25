@@ -32,10 +32,12 @@ public abstract class DefaultWindow {
     private GLCanvas canvas;
     private AnimatorBase animator;
     private String title;
+    private final boolean exitQuestion;
     private JFrame frame;
 
-    public DefaultWindow(String title) {
+    protected DefaultWindow(String title, boolean exitQuestion) {
         this.title = title;
+        this.exitQuestion = exitQuestion;
     }
 
     public void openWindow(final AbstractGLRenderer renderer, final Controller controller) {
@@ -118,12 +120,14 @@ public abstract class DefaultWindow {
     protected abstract JToolBar createToolBar(Controller controller);
 
     public void stopAnimator() {
-    	int n = JOptionPane.showConfirmDialog(
-    		    frame,
-    		    "Exit Application?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
-    	
-    	if (n != JOptionPane.YES_OPTION) {
-    		return;
+    	if (exitQuestion) {
+	    	int n = JOptionPane.showConfirmDialog(
+	    		    frame,
+	    		    "Exit Application?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+	    	
+	    	if (n != JOptionPane.YES_OPTION) {
+	    		return;
+	    	}
     	}
     	
     	logger.info("Stopping animator thread");

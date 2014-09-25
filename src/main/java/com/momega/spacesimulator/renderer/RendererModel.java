@@ -288,6 +288,9 @@ public class RendererModel {
     				result.add(positionProvider);
     			}
     		}
+    		if (pointsVisible && positionProvider instanceof HistoryPoint) {
+    			result.add(positionProvider);
+    		}
     		if (spacecraftVisible && positionProvider instanceof Spacecraft) {
     			result.add(positionProvider);
     		}

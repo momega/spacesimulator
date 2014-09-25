@@ -14,7 +14,7 @@ import com.momega.spacesimulator.opengl.DefaultWindow;
 public class TestWindow extends DefaultWindow {
 
     public TestWindow(String title) {
-        super(title);
+        super(title, false);
     }
 
     public static void main(String[] args) {
