@@ -7,15 +7,17 @@ import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Vector3d;
+
 import org.apache.commons.io.IOUtils;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
-import java.awt.*;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import static javax.media.opengl.GL.*;
 
@@ -52,6 +54,36 @@ public class GLUtils {
             y = s * t + c * y;
         }
         gl.glEnd();
+    }
+    
+    /**
+     * Draw set of the points
+     * @param gl the GL context
+     * @param points the collection of the points
+     */
+    public static <T extends PositionProvider> void drawPoints(GL2 gl, int size, double[] color, List<T> points) {
+    	gl.glPointSize(size);
+        gl.glColor3dv(color, 0);
+    	gl.glBegin(GL_POINTS);
+    	for(T point : points) {
+    		 gl.glVertex3dv(point.getPosition().asArray(), 0);
+    	}
+    	gl.glEnd();
+    }
+    
+    /**
+     * Draw the strip line
+     * @param gl the GL context
+     * @param points the collection of the points
+     */
+    public static <T extends PositionProvider> void drawMultiLine(GL2 gl, int width, double[] color, List<T> points) {
+    	gl.glLineWidth(width);
+        gl.glColor3dv(color, 0);
+    	gl.glBegin(GL_LINE_STRIP);
+    	for(T point : points) {
+    		 gl.glVertex3dv(point.getPosition().asArray(), 0);
+    	}
+    	gl.glEnd();
     }
 
     /**
@@ -178,7 +210,7 @@ public class GLUtils {
      * @return array of the coordinates, 0th coordinate is x, 1st coordinate is y, Result can be null if the point is behind
      * the camera
      */
-    public static Point getProjectionCoordinates(GLAutoDrawable drawable, Vector3d position, Camera camera) {
+    public static java.awt.Point getProjectionCoordinates(GLAutoDrawable drawable, Vector3d position, Camera camera) {
         Vector3d viewVector = camera.getOppositeOrientation().getN();
         Vector3d diffVector = position.subtract(camera.getPosition());
 
@@ -196,7 +228,7 @@ public class GLUtils {
             glu.gluProject(position.getX(), position.getY(), position.getZ(),
                     modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
 
-            return new Point((int)my2DPoint[0], (int)my2DPoint[1]);
+            return new java.awt.Point((int)my2DPoint[0], (int)my2DPoint[1]);
         }
 
         return null;

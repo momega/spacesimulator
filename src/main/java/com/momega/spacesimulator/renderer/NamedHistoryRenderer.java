@@ -5,6 +5,7 @@ import javax.media.opengl.GLAutoDrawable;
 
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.opengl.GLUtils;
 
 /**
  * Created by martin on 8/24/14.
@@ -20,14 +21,8 @@ public class NamedHistoryRenderer extends AbstractPositionProviderRenderer {
     @Override
     protected void drawObjects(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        gl.glPointSize(8);
-        gl.glColor3dv(this.spacecraft.getHistoryTrajectory().getColor(), 0);
-
-        gl.glBegin(GL2.GL_POINTS);
-        for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
-            gl.glVertex3dv(hp.getPosition().asArray(), 0);
-        }
-        gl.glEnd();
+        GLUtils.drawPoints(gl, 8, this.spacecraft.getHistoryTrajectory().getColor(),
+        		spacecraft.getHistoryTrajectory().getNamedHistoryPoints());
     }
 
     @Override
