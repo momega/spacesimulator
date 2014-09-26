@@ -29,7 +29,7 @@ public class TestingWindow extends DefaultWindow {
         
         Camera camera = new Camera();
         camera.setPosition(Vector3d.ZERO);
-        camera.setDistance(100);
+        camera.setDistance(10);
         camera.setOppositeOrientation(VectorUtils.createOrientation(new Vector3d(0, 0, 1), new Vector3d(0, 1, 0)));
         
         CompositeRenderer renderer = new CompositeRenderer();

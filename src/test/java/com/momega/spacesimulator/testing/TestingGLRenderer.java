@@ -130,6 +130,8 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 
 		gl.glDisableClientState(GL2.GL_COLOR_ARRAY);
 		gl.glDisableClientState(GL2.GL_VERTEX_ARRAY);
+		
+		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
       
       renderer.draw(drawable);
       
