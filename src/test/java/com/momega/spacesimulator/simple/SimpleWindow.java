@@ -1,4 +1,4 @@
-package com.momega.spacesimulator;
+package com.momega.spacesimulator.simple;
 
 import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
@@ -11,14 +11,14 @@ import com.momega.spacesimulator.opengl.DefaultWindow;
 /**
  * Created by martin on 7/1/14.
  */
-public class TestWindow extends DefaultWindow {
+public class SimpleWindow extends DefaultWindow {
 
-    public TestWindow(String title) {
+    public SimpleWindow(String title) {
         super(title, false);
     }
 
     public static void main(String[] args) {
-        TestWindow window = new TestWindow("Test Window");
+        SimpleWindow window = new SimpleWindow("Test Window");
         EventBusController controller = new EventBusController();
 
         controller.addController(new QuitController(window));

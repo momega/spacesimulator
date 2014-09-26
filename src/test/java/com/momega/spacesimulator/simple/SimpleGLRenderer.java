@@ -1,4 +1,4 @@
-package com.momega.spacesimulator;
+package com.momega.spacesimulator.simple;
 
 import com.jogamp.opengl.util.texture.Texture;
 import com.momega.spacesimulator.model.Vector3d;
