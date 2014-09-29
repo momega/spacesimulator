@@ -3,7 +3,7 @@
  */
 package com.momega.spacesimulator.testing;
 
-import java.nio.FloatBuffer;
+import java.nio.DoubleBuffer;
 
 import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
@@ -34,11 +34,7 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 
 	private int vbo_vertex_handle;
 
-	private int vbo_color_handle;
-
 	private int vertex_size;
-
-	private int color_size;
 
 	private int vertices;
 
@@ -56,45 +52,39 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 		 
 		boolean extensionOK = gl.isExtensionAvailable
 					("GL_ARB_vertex_buffer_object");
-		System.out.println( "VBO extension: "+extensionOK ); 
+		logger.info( "VBO extension:{} ",extensionOK ); 
 				      
 	    boolean functionsOK = 
 	    			gl.isFunctionAvailable("glGenBuffersARB") &&
 	    			gl.isFunctionAvailable("glBindBufferARB") &&
 	    			gl.isFunctionAvailable("glBufferDataARB") &&
 	    			gl.isFunctionAvailable("glDeleteBuffersARB");      
-	    System.out.println( "Functions: "+ functionsOK); 
+	    logger.info( "Functions: {}", functionsOK); 
 	    
 	    vertices = 3;
-
 	    vertex_size = 3;
-	    color_size = 3;
 
-	    FloatBuffer vertex_data = Buffers.newDirectFloatBuffer(vertices * vertex_size);
-	    vertex_data.put(new float[] { -1f, -1f, 0f, });
-	    vertex_data.put(new float[] { 1f, -1f, 0f, });
-	    vertex_data.put(new float[] { 1f, 1f, 0f, });
+	    DoubleBuffer b = DoubleBuffer.allocate(vertex_size * vertices * 2);
+	    b.put(new double[] { -1f, -1f, 0f, });
+	    b.put(new double[] { 1f, 0f, 0f, }); // color
+	    
+	    b.put(new double[] { 1f, -1f, 0f, });
+	    b.put(new double[] { 0f, 1f, 0f, }); // color
+	    
+	    b.put(new double[] { 0f, 1f, 0f, });
+	    b.put(new double[] { 0f, 0f, 1f, }); // color
+	    
+	    DoubleBuffer vertex_data = Buffers.newDirectDoubleBuffer(b.array());
 	    vertex_data.flip();
 
-	    FloatBuffer color_data = Buffers.newDirectFloatBuffer(vertices * color_size);
-	    color_data.put(new float[] { 1f, 0f, 0f, });
-	    color_data.put(new float[] { 0f, 1f, 0f, });
-	    color_data.put(new float[] { 0f, 0f, 1f, });
-	    color_data.flip();
-	    
-	    handles = new int[2];
-	    gl.glGenBuffers(2, handles, 0);
+	    handles = new int[1];
+	    gl.glGenBuffers(1, handles, 0);
 	    vbo_vertex_handle = handles[0];
 	    
 	    gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo_vertex_handle);
-	    gl.glBufferData(GL.GL_ARRAY_BUFFER, Buffers.SIZEOF_FLOAT * vertices * vertex_size, vertex_data, GL.GL_STATIC_DRAW);
+	    gl.glBufferData(GL.GL_ARRAY_BUFFER, Buffers.SIZEOF_DOUBLE * vertex_data.capacity(), vertex_data, GL.GL_STATIC_DRAW);
 	    gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
 
-	    vbo_color_handle = handles[1];
-	    gl.glBindBuffer(GL.GL_ARRAY_BUFFER, vbo_color_handle);
-	    gl.glBufferData(GL.GL_ARRAY_BUFFER, Buffers.SIZEOF_FLOAT * vertices * color_size, color_data, GL.GL_STATIC_DRAW);
-	    gl.glBindBuffer(GL.GL_ARRAY_BUFFER, 0);
-		 
 		renderer.init(gl);
 	}
 	
@@ -109,7 +99,7 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 		GL2 gl = drawable.getGL().getGL2(); 
 
 //      gl.glBegin(GL2.GL_TRIANGLE_STRIP); // draw using triangles
-//      gl.glColor3f( 1,0,0);
+//      gl.glColor3f	( 1,0,0);
 //      gl.glVertex3f(0.0f, 10.0f, 0.0f);
 //      gl.glColor3f( 0,1,0);
 //      gl.glVertex3f(-10.0f, -10.0f, 0.0f);
@@ -118,13 +108,12 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 //      gl.glEnd();
 		
 		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo_vertex_handle);
-		gl.glVertexPointer(vertex_size, GL2.GL_FLOAT, 0, 0l);
-
-		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo_color_handle);
-		gl.glColorPointer(color_size, GL2.GL_FLOAT, 0, 0l);
 
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);
 		gl.glEnableClientState(GL2.GL_COLOR_ARRAY);
+		
+		gl.glVertexPointer(vertex_size, GL2.GL_DOUBLE, 6 * Buffers.SIZEOF_DOUBLE, 0l);
+		gl.glColorPointer(vertex_size, GL2.GL_DOUBLE, 6 * Buffers.SIZEOF_DOUBLE, 3 * Buffers.SIZEOF_DOUBLE);
 
 		gl.glDrawArrays(GL2.GL_TRIANGLES, 0, vertices);
 
@@ -161,7 +150,7 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 	@Override
 	protected void dispose(GL2 gl) {
 		
-		gl.glDeleteBuffers(2, handles, 0);
+		gl.glDeleteBuffers(1, handles, 0);
 		
 		renderer.dispose(gl);
 		super.dispose(gl);
