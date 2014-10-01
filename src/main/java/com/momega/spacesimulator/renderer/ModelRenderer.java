@@ -46,6 +46,7 @@ public class ModelRenderer extends CompositeRenderer {
         }
 
         addRenderer(new ModelCameraPositionRenderer());
+        addRenderer(new BackgroundRenderer());
         addRenderer(new TimeRenderer());
     }
 

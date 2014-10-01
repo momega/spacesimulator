@@ -123,6 +123,20 @@ public class GLUtils {
         }
         GLUtils.drawBeams(gl, 0, 0, r, num_beams);
     }
+    
+    public static void drawAxis(GL2 gl, double lineWidth, double radius) {
+    	gl.glLineWidth((float) lineWidth);
+    	gl.glBegin(GL2.GL_LINES);
+        gl.glVertex3d(0, 0, radius);
+        gl.glVertex3d(0, 0, -radius);
+        
+        gl.glVertex3d(radius, 0,  0);
+        gl.glVertex3d(0, 0, 0);
+        
+        gl.glVertex3d(0, 0, 0);
+        gl.glVertex3d(0, -radius, 0);
+        gl.glEnd();
+    }
 
     /**
      * Draw the ellipse. The center of the ellipse is at coordinates [0,0]

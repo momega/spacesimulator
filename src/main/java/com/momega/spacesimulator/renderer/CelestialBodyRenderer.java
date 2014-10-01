@@ -63,18 +63,8 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     	}
 
     	if (drawAxis) {
-	        double rad = celestialBody.getRadius() * 1.2;
-	        gl.glLineWidth(2f);
-	        gl.glBegin(GL2.GL_LINES);
-	        gl.glVertex3d(0, 0, rad);
-	        gl.glVertex3d(0, 0, -rad);
-	        gl.glEnd();
-	
-	        gl.glBegin(GL2.GL_LINE_STRIP);
-	        gl.glVertex3d(rad, 0,  0);
-	        gl.glVertex3d(0, 0, 0);
-	        gl.glVertex3d(0, -rad, 0);
-	        gl.glEnd();
+	       double rad = celestialBody.getRadius() * 1.2;
+	       GLUtils.drawAxis(gl, 1.0d, rad);
     	}
         
         if (!drawPlanet) {
