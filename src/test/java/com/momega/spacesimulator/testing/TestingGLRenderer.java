@@ -107,6 +107,8 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 //      gl.glVertex3f(10.0f, -10.0f, 0.0f);
 //      gl.glEnd();
 		
+		gl.glTranslated(2.0, 2.0, 0.0);
+		
 		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo_vertex_handle);
 
 		gl.glEnableClientState(GL2.GL_VERTEX_ARRAY);

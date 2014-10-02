@@ -83,7 +83,7 @@ public class NewtonianPropagator implements Propagator {
         // create intersection, if there are not
         List<OrbitIntersection> intersections = spacecraft.getOrbitIntersections();
         if (intersections.isEmpty()) {
-        	for(int i=0; i<2; i++) {
+        	for(int i=0; i<angles.length; i++) {
         		OrbitIntersection intersection = new OrbitIntersection();
         		intersection.setMovingObject(spacecraft);
         		intersections.add(intersection);

@@ -36,7 +36,7 @@ public class SpacecraftRenderer extends AbstractRenderer {
     	        Vector3d z = spacecraft.getPosition().scaleAdd(axisSize, spacecraft.getOrientation().getV());
     	        Vector3d u = spacecraft.getPosition().scaleAdd(axisSize, spacecraft.getOrientation().getU());
     	        gl.glColor3dv(spacecraft.getTrajectory().getColor(), 0);
-    	        gl.glLineWidth(2f);
+    	        gl.glLineWidth(1f);
     	        gl.glBegin(GL2.GL_LINES);
     	        gl.glVertex3dv(n.asArray(), 0);
     	        gl.glVertex3dv(spacecraft.getPosition().asArray(), 0);
@@ -52,12 +52,7 @@ public class SpacecraftRenderer extends AbstractRenderer {
         	
         	if (spacecraft.getThrust() != null) {
     	        Vector3d t = spacecraft.getPosition().scaleAdd(axisSize, spacecraft.getThrust());
-    	        gl.glColor3dv(new double[] {1,0,0}, 0);
-    	        gl.glLineWidth(3f);
-    	        gl.glBegin(GL2.GL_LINES);
-    	        gl.glVertex3dv(spacecraft.getPosition().asArray(), 0);
-    	        gl.glVertex3dv(t.asArray(), 0);
-    	        gl.glEnd();
+    	        GLUtils.drawMultiLine(gl, 2.5d, new double[] {1,0,0}, new Vector3d[] {spacecraft.getPosition(), t});
 	        }
             
             gl.glPopMatrix();

@@ -87,9 +87,11 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 		if (spacecraft.getTargetBody() != model.getSelectedItem()) {
 			if (model.getSelectedItem() == null) {
 				spacecraft.setTargetBody(null);
+				spacecraft.getOrbitIntersections().clear();
 				logger.info("unset for {}", spacecraft.getName());
 			} else {
 				spacecraft.setTargetBody(this.celestialBody);
+				spacecraft.getOrbitIntersections().clear();
 				logger.info("set target body {} for {}", spacecraft.getTargetBody().getName(), spacecraft.getName());
 			}
 		} else {

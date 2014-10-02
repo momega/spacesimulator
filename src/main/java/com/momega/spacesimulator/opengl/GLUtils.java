@@ -85,6 +85,21 @@ public class GLUtils {
     	}
     	gl.glEnd();
     }
+    
+    /**
+     * Draw the strip line
+     * @param gl the GL context
+     * @param points the collection of the points
+     */
+    public static void drawMultiLine(GL2 gl, double width, double[] color, Vector3d[] points) {
+    	gl.glLineWidth((float) width);
+        gl.glColor3dv(color, 0);
+    	gl.glBegin(GL_LINE_STRIP);
+    	for(Vector3d point : points) {
+    		 gl.glVertex3dv(point.asArray(), 0);
+    	}
+    	gl.glEnd();
+    }
 
     /**
      * Draws the beams
@@ -116,7 +131,8 @@ public class GLUtils {
         gl.glEnd();
     }
 
-    public static void drawBeansAndCircles(GL2 gl, double cx, double cy, double r, int num_beams, int num_circles) {
+    public static void drawBeansAndCircles(GL2 gl, double cx, double cy, double r, int num_beams, int num_circles, double[] color) {
+    	gl.glColor3dv(color, 0);
         double circleDistance = r / num_circles;
         for (int i = 1; i <= num_circles; i++) {
             GLUtils.drawCircle(gl, 0, 0, circleDistance * i, 360);
@@ -145,7 +161,8 @@ public class GLUtils {
      * @param b the semi-minor axis
      * @param num_segments the number of the segments
      */
-    public static void drawEllipse(GL2 gl, double a, double b, int num_segments) {
+    public static void drawEllipse(GL2 gl, double a, double b, int num_segments, double[] color) {
+    	gl.glColor3dv(color, 0);
         gl.glBegin(GL_LINE_LOOP);
         double DEG2RAD = 2.0 * Math.PI / num_segments;
 
@@ -157,7 +174,8 @@ public class GLUtils {
         gl.glEnd();
     }
 
-    public static void drawHyperbolaPartial(GL2 gl, double a, double b, double startAngle, double stopAngle, int num_segments) {
+    public static void drawHyperbolaPartial(GL2 gl, double a, double b, double startAngle, double stopAngle, int num_segments, double[] color) {
+    	gl.glColor3dv(color, 0);
         gl.glBegin(GL_LINE_STRIP);
         double DEG2RAD = 2 * Math.PI / num_segments;
         int startIndex = (int) (startAngle / DEG2RAD);
@@ -211,9 +229,9 @@ public class GLUtils {
         gl.glEnd();
     }
 
-    public static void drawEllipse(GL2 gl, double cx, double cy, double a, double b, int num_segments) {
+    public static void drawEllipse(GL2 gl, double cx, double cy, double a, double b, int num_segments, double[] color) {
         gl.glTranslated(cx, cy, 0);
-        drawEllipse(gl, a, b, num_segments);
+        drawEllipse(gl, a, b, num_segments, color);
     }
 
     /**

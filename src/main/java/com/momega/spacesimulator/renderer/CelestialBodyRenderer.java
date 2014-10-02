@@ -45,7 +45,6 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
         GLU glu = new GLU();
         GLUquadric quadric = glu.gluNewQuadric();
-        gl.glColor3d(1, 1, 1);
         glu.gluQuadricTexture(quadric, true);
         glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
         glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
@@ -87,9 +86,8 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
     @Override
     protected void additionalDraw(GL2 gl) {
-        gl.glColor3dv(celestialBody.getTrajectory().getColor(), 0);
         if (ModelHolder.getModel().getSelectedObject() == celestialBody) {
-            GLUtils.drawBeansAndCircles(gl, 0, 0, celestialBody.getRadius() * 5, 18, 5);
+            GLUtils.drawBeansAndCircles(gl, 0, 0, celestialBody.getRadius() * 5, 18, 5, celestialBody.getTrajectory().getColor());
         }
         
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(celestialBody);
