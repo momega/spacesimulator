@@ -119,6 +119,14 @@ public abstract class DefaultWindow {
     
     protected abstract JToolBar createToolBar(Controller controller);
 
+    public void pauseAnimator() {
+        animator.pause();
+    }
+
+    public void resumeAnimator() {
+        animator.resume();
+    }
+
     public void stopAnimator() {
     	if (exitQuestion) {
 	    	int n = JOptionPane.showConfirmDialog(

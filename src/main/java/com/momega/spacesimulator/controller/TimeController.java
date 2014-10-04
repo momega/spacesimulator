@@ -2,7 +2,10 @@ package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.opengl.DefaultWindow;
+import com.momega.spacesimulator.swing.TimeDialog;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
@@ -16,6 +19,13 @@ public class TimeController extends AbstractController {
 	public static final String WARP_SLOWER = "warp_slower";
 	public static final String WARP_FASTER = "warp_faster";
 	public static final String WARP_STOP_OR_START = "warp_stop_or_start";
+
+    public static final String TIME_DIALOG = "time_dialog";
+    private final DefaultWindow window;
+
+    public TimeController(DefaultWindow window) {
+        this.window = window;
+    }
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -48,7 +58,19 @@ public class TimeController extends AbstractController {
     	case WARP_STOP_OR_START:
     		pauseOrStart();
     		break;
+        case TIME_DIALOG:
+            timeDialog();
     	}
+    }
+
+    private void timeDialog() {
+        final TimeDialog timeDialog = new TimeDialog(window);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                timeDialog.setVisible(true);
+            }
+        });
     }
 
     private void pauseOrStart() {

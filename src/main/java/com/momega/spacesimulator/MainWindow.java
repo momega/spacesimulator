@@ -59,7 +59,7 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new QuitController(window));
         controller.addController(new TargetController());
         controller.addController(new CameraController(model.getCamera()));
-        controller.addController(new TimeController());
+        controller.addController(new TimeController(window));
         controller.addController(new PerspectiveController(mr));
         controller.addController(new ToolbarController());
         window.openWindow(mr, controller);
@@ -97,6 +97,9 @@ public class MainWindow extends DefaultWindow {
     	JMenu projectMenu = new JMenu("Project");
     	JMenuItem timeItem = new JMenuItem("Time...");
     	timeItem.setIcon(SwingUtils.createImageIcon("/images/time.png"));
+        timeItem.addActionListener(controller);
+        timeItem.setActionCommand(TimeController.TIME_DIALOG);
+
     	JMenuItem findItem = new JMenuItem("Find...");
     	JMenuItem newSpacecraftItem = new JMenuItem("New Spacecraft...");
     	JMenuItem newPointItem = new JMenuItem("New Point...");
@@ -161,12 +164,12 @@ public class MainWindow extends DefaultWindow {
     	spacecraftButton.setActionCommand(ToolbarController.SPACECRAFT_TOGGLE_COMMAND);
     	spacecraftButton.addActionListener(controller);
 
-    	JToggleButton celesialButton = new JToggleButton();
-    	celesialButton.setSelected(true);
-    	celesialButton.setIcon(SwingUtils.createImageIcon("/images/100.png"));
-    	celesialButton.setToolTipText("Activate the celestial bodies");
-    	celesialButton.setActionCommand(ToolbarController.CELESTIAL_TOGGLE_COMMAND);
-    	celesialButton.addActionListener(controller);
+    	JToggleButton celestialButton = new JToggleButton();
+    	celestialButton.setSelected(true);
+    	celestialButton.setIcon(SwingUtils.createImageIcon("/images/100.png"));
+    	celestialButton.setToolTipText("Activate the celestial bodies");
+    	celestialButton.setActionCommand(ToolbarController.CELESTIAL_TOGGLE_COMMAND);
+    	celestialButton.addActionListener(controller);
     	
     	JToggleButton pointButton = new JToggleButton();
     	pointButton.setSelected(true);
@@ -180,7 +183,7 @@ public class MainWindow extends DefaultWindow {
     	toolBar.add(warpUp);
     	toolBar.addSeparator();
     	toolBar.add(spacecraftButton);
-    	toolBar.add(celesialButton);
+    	toolBar.add(celestialButton);
     	toolBar.add(pointButton);
     	toolBar.add(movingObjectsBox);
     	

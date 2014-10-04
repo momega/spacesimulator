@@ -15,6 +15,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 
 /**
  * Set of the function working with time
@@ -82,6 +83,13 @@ public class TimeUtils {
      */
     public static DateTime getDateTime(Timestamp timestamp) {
         return new DateTime(timestamp.getValue().multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue());
+    }
+
+    public static Calendar getCalendar(Timestamp timestamp) {
+        long t =timestamp.getValue().multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(t);
+        return calendar;
     }
 
     public static boolean isTimestampInInterval(Timestamp timestamp, TimeInterval interval) {
