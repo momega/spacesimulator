@@ -55,7 +55,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     @Override
     protected void computeScene() {
-        application.next();
+        ModelHolder.getModelWorker().next();
 
 
 //        // TODO: place this into the method

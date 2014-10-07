@@ -57,7 +57,7 @@ public class MainWindow extends DefaultWindow {
         
         MainGLRenderer mr = new MainGLRenderer(application);
         controller.addController(new QuitController(window));
-        controller.addController(new TargetController());
+        controller.addController(new TargetController(window));
         controller.addController(new CameraController(model.getCamera()));
         controller.addController(new TimeController(window));
         controller.addController(new PerspectiveController(mr));
@@ -189,7 +189,7 @@ public class MainWindow extends DefaultWindow {
     	
     	JButton detailButton = new JButton();
     	detailButton.setIcon(SwingUtils.createImageIcon("/images/magnifier.png"));
-    	detailButton.setActionCommand(TargetController.DELAIL_POSITION_PROVIDER);
+    	detailButton.setActionCommand(TargetController.DETAIL_POSITION_PROVIDER);
     	detailButton.addActionListener(controller);
     	
     	toolBar.add(detailButton);

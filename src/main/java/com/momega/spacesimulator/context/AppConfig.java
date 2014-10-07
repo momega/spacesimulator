@@ -19,5 +19,10 @@ public class AppConfig {
 	public ModelBuilder createModelBuilder() {
 		return new MediumSolarSystemModelBuilder();
 	}
+
+    @Bean
+    public ModelWorker modelWorker() {
+        return new ModelWorker();
+    }
 	
 }

@@ -10,7 +10,17 @@ public final class ModelHolder {
 
     private static Model model = new Model();
 
+    private static ModelWorker modelWorker;
+
     public static Model getModel() {
         return model;
+    }
+
+    public static void setModelWorker(ModelWorker modelWorker) {
+        ModelHolder.modelWorker = modelWorker;
+    }
+
+    public static ModelWorker getModelWorker() {
+        return modelWorker;
     }
 }

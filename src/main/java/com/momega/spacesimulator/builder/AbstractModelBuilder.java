@@ -77,7 +77,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     }
 
     protected void initTime() {
-        model.setTime(TimeUtils.createTime(new DateTime(2014, 9, 23, 12, 0, DateTimeZone.UTC)));
+        model.setTime(TimeUtils.fromDateTime(new DateTime(2014, 9, 23, 12, 0, DateTimeZone.UTC)));
         model.setWarpFactor(BigDecimal.ONE);
     }
 
@@ -145,7 +145,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         keplerianElements.setEccentricity(eccentricity);
         keplerianElements.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
         keplerianElements.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
-        keplerianElements.setTimeOfPeriapsis(TimeUtils.createTime(timeOfPeriapsis));
+        keplerianElements.setTimeOfPeriapsis(TimeUtils.fromJulianDay(timeOfPeriapsis));
         keplerianElements.setInclination(Math.toRadians(inclination));
         keplerianElements.setAscendingNode(Math.toRadians(ascendingNode));
         movingObject.setKeplerianElements(keplerianElements);

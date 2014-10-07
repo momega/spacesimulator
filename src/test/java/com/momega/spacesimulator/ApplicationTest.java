@@ -1,5 +1,6 @@
 package com.momega.spacesimulator;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import org.junit.Test;
 
 import com.momega.spacesimulator.builder.SolarSystemModelBuilder;
@@ -16,7 +17,7 @@ public class ApplicationTest {
         SolarSystemModelBuilder builder = new SolarSystemModelBuilder();
         application.init(0);
         for(int i=0; i<10* 86400; i++) {
-            application.next();
+            ModelHolder.getModelWorker().next();
         }
         application.dispose();
     }

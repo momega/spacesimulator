@@ -7,10 +7,11 @@ import java.awt.event.MouseEvent;
 
 import javax.media.opengl.GLDrawable;
 import javax.media.opengl.awt.GLCanvas;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPopupMenu;
+import javax.swing.*;
 
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.opengl.DefaultWindow;
+import com.momega.spacesimulator.swing.TimeDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,13 +26,21 @@ import com.momega.spacesimulator.swing.DetailDialogHolder;
  */
 public class TargetController extends AbstractController {
 
+    private final DefaultWindow window;
+
     private static final Logger logger = LoggerFactory.getLogger(TargetController.class);
-    
+
     public static final String SELECT_POSITION_PROVIDER = "select_position_provider";
-    
-    public static final String DELAIL_POSITION_PROVIDER = "detail_position_provider";
-    
-    public static final String DELAIL_POPUP_POSITION_PROVIDER = "detail_position_provider";
+
+    public static final String DETAIL_POSITION_PROVIDER = "detail_position_provider";
+
+    public static final String DETAIL_POPUP_POSITION_PROVIDER = "detail_position_provider";
+
+    public static final String TIME_TO = "time_to";
+
+    public TargetController(DefaultWindow window) {
+        this.window = window;
+    }
 
     @Override
     public void mouseClicked(MouseEvent e) {
@@ -44,7 +53,7 @@ public class TargetController extends AbstractController {
             final JPopupMenu popup = new JPopupMenu();
             if (viewCoordinates!=null) {
                 JMenuItem detailItem = new JMenuItem("Detail...");
-                detailItem.setActionCommand(DELAIL_POPUP_POSITION_PROVIDER);
+                detailItem.setActionCommand(DETAIL_POPUP_POSITION_PROVIDER);
                 detailItem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
@@ -54,9 +63,19 @@ public class TargetController extends AbstractController {
                 popup.add(detailItem);
 
                 JMenuItem selectItem = new JMenuItem("Select");
-                selectItem.setActionCommand(DELAIL_POSITION_PROVIDER);
+                selectItem.setActionCommand(DETAIL_POSITION_PROVIDER);
                 popup.add(selectItem);
                 selectItem.addActionListener(this);
+
+                JMenuItem timeItem = new JMenuItem("Time to...");
+                timeItem.setActionCommand(TIME_TO);
+                popup.add(timeItem);
+                timeItem.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        showTimeDialog(viewCoordinates.getObject());
+                    }
+                });
 
                 popup.addSeparator();
             }
@@ -105,10 +124,21 @@ public class TargetController extends AbstractController {
 	    		ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(positionProvider);
 	    		select(viewCoordinates);
     		}
-    	} else if (DELAIL_POSITION_PROVIDER.equals(e.getActionCommand())) {
+    	} else if (DETAIL_POSITION_PROVIDER.equals(e.getActionCommand())) {
     		PositionProvider positionProvider = (PositionProvider) RendererModel.getInstance().getMovingObjectsModel().getSelectedItem();
     		showDialog(positionProvider);
     	}
+    }
+
+    protected void showTimeDialog(PositionProvider positionProvider) {
+        // TODO: How to forward events
+        final TimeDialog timeDialog = new TimeDialog(window, positionProvider.getTimestamp());
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                timeDialog.setVisible(true);
+            }
+        });
     }
     
     protected void showDialog(PositionProvider positionProvider) {

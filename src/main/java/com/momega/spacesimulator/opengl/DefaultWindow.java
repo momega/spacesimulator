@@ -123,6 +123,10 @@ public abstract class DefaultWindow {
         animator.pause();
     }
 
+    public boolean isPaused() {
+        return animator.isPaused();
+    }
+
     public void resumeAnimator() {
         animator.resume();
     }

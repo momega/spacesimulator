@@ -64,7 +64,7 @@ public class TimeController extends AbstractController {
     }
 
     private void timeDialog() {
-        final TimeDialog timeDialog = new TimeDialog(window);
+        final TimeDialog timeDialog = new TimeDialog(window, ModelHolder.getModel().getTime());
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
