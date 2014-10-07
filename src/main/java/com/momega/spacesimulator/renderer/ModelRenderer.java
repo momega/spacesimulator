@@ -42,6 +42,7 @@ public class ModelRenderer extends CompositeRenderer {
                 addRenderer(new ApsidesRenderer(dp));
                 addRenderer(new NamedHistoryRenderer((Spacecraft) dp));
                 addRenderer(new OrbitIntersectionRenderer((Spacecraft) dp));
+                addRenderer(new ManeuverPointRenderer((Spacecraft) dp));
             }
         }
 

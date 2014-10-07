@@ -18,18 +18,38 @@ public class Application {
 
     private static final Logger logger = LoggerFactory.getLogger(Application.class);
 
-    private final ApplicationContext applicationContext;
+    private static Application instance = null;
 
-    public Application() {
+    public static Application getInstance() {
+        if (instance == null) {
+            instance = new Application();
+        }
+        return instance;
+    }
+
+    private final ApplicationContext applicationContext;
+    private final ModelWorker modelWorker;
+
+    private Application() {
         applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
+        modelWorker = applicationContext.getBean(ModelWorker.class);
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    public <T> T getService(Class<T> clazz) {
+        return getApplicationContext().getBean(clazz);
+    }
+
+    public ModelWorker getModelWorker() {
+        return modelWorker;
     }
 
     public Model init(long seconds) {
         ModelBuilder modelBuilder = applicationContext.getBean(ModelBuilder.class);
         modelBuilder.build();
-
-        ModelWorker modelWorker = applicationContext.getBean(ModelWorker.class);
-        ModelHolder.setModelWorker(modelWorker);
 
         logger.info("time = {}", TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
         Timestamp showTime = ModelHolder.getModel().getTime().add(BigDecimal.valueOf(seconds));

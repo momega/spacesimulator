@@ -10,24 +10,14 @@ import java.util.Map;
 
 import javax.media.opengl.GLAutoDrawable;
 
+import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.AbstractOrbitalPoint;
-import com.momega.spacesimulator.model.BaryCentre;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.HistoryPoint;
-import com.momega.spacesimulator.model.KeplerianTrajectory;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.OrbitIntersection;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.model.RotatingObject;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.TrajectoryType;
-import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.swing.MovingObjectsModel;
 
@@ -49,6 +39,8 @@ public class RendererModel {
     private final java.util.List<ModelChangeListener> modelChangeListeners = new ArrayList<>();
     
     private MovingObjectsModel movingObjectsModel;
+
+    private final ManeuverService maneuverService;
     
     private boolean spacecraftVisible; 
     private boolean celestialVisible;
@@ -61,9 +53,12 @@ public class RendererModel {
         spacecraftVisible = true;
 		celestialVisible = true;
 		pointsVisible = true;
-		
+        maneuverService = Application.getInstance().getService(ManeuverService.class);
+
 		movingObjectsModel = new MovingObjectsModel(selectMovingObjects());
 		movingObjectsModel.setSelectedItem(ModelHolder.getModel().getSelectedObject());
+
+
     }
 
     public static RendererModel getInstance() {
@@ -94,6 +89,9 @@ public class RendererModel {
                 }
                 for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
                 	result.add(intersection);
+                }
+                for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
+                    result.add(maneuverPoint);
                 }
             }
         }

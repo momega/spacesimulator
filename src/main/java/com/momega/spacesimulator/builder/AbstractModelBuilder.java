@@ -2,6 +2,8 @@ package com.momega.spacesimulator.builder;
 
 import java.math.BigDecimal;
 
+import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.service.ManeuverService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
@@ -11,27 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.CartesianState;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.HistoryTrajectory;
-import com.momega.spacesimulator.model.KeplerianElements;
-import com.momega.spacesimulator.model.KeplerianTrajectory;
-import com.momega.spacesimulator.model.Maneuver;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Orientation;
-import com.momega.spacesimulator.model.PhysicalBody;
-import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.model.Ring;
-import com.momega.spacesimulator.model.RotatingObject;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.SpacecraftSubsystem;
-import com.momega.spacesimulator.model.SphereOfInfluence;
-import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.model.Trajectory;
-import com.momega.spacesimulator.model.TrajectoryType;
-import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.service.HistoryPointService;
 import com.momega.spacesimulator.service.KeplerianPropagator;
 import com.momega.spacesimulator.utils.MathUtils;
@@ -55,6 +36,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     
     @Autowired
     private KeplerianPropagator keplerianPropagator;
+
+    @Autowired
+    private ManeuverService maneuverService;
 
     /**
      * Returns newly created instance
@@ -166,7 +150,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return keplerianElements;
     }
 
-    public Trajectory createTrajectory(MovingObject movingObjects, String trajectoryColor, TrajectoryType trajectoryType) {
+    public Trajectory createTrajectory(MovingObject movingObjects, String trajectoryColor) {
         double r = (double) Integer.parseInt(trajectoryColor.substring(1, 3), 16);
         double g = (double) Integer.parseInt(trajectoryColor.substring(3, 5), 16);
         double b = (double) Integer.parseInt(trajectoryColor.substring(5, 7), 16);
@@ -327,22 +311,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     }
 
     public Maneuver addManeuver(Spacecraft spacecraft, String name, Double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
-        Maneuver maneuver = new Maneuver();
-        maneuver.setName(name);
-
-        Timestamp start = getModel().getTime().add(startTime);
-        Timestamp end = getModel().getTime().add(startTime + duration);
-        maneuver.setStartTime(start);
-        maneuver.setEndTime(end);
-
-        maneuver.setThrottle(throttle);
-        maneuver.setThrottleAlpha(throttleAlpha);
-        maneuver.setThrottleDelta(throttleDelta);
-
+        Maneuver maneuver = maneuverService.createManeuver(spacecraft, name, getModel().getTime(), startTime, duration, throttle, throttleAlpha, throttleDelta);
         spacecraft.getManeuvers().add(maneuver);
         return maneuver;
     }
-
 
     /**
      * The method adds the planet to the SOI tree and calculate the radius of the planet soi. The trajectory comes directly

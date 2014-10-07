@@ -162,7 +162,7 @@ public final class KeplerianUtils {
     	return future.subtract(current).doubleValue();
     }
 
-    protected double solveEccentricAnomaly(KeplerianElements keplerianElements, Timestamp time) {
+    public double solveEccentricAnomaly(KeplerianElements keplerianElements, Timestamp time) {
         logger.debug("time = {}", time);
 
         double E = Math.PI; //  eccentric anomaly

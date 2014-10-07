@@ -10,24 +10,8 @@ public class Maneuver extends NamedObject implements TimeInterval {
     private double throttleAlpha;
     private double throttleDelta;
 
-    private Timestamp startTime;
-    private Timestamp endTime;
-
-    public Timestamp getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Timestamp startTime) {
-        this.startTime = startTime;
-    }
-
-    public Timestamp getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Timestamp endTime) {
-        this.endTime = endTime;
-    }
+    private ManeuverPoint start;
+    private ManeuverPoint end;
 
     public double getThrottle() {
         return throttle;
@@ -53,4 +37,37 @@ public class Maneuver extends NamedObject implements TimeInterval {
         this.throttleDelta = throttleDelta;
     }
 
+    public ManeuverPoint getStart() {
+        return start;
+    }
+
+    public void setStart(ManeuverPoint start) {
+        this.start = start;
+    }
+
+    public ManeuverPoint getEnd() {
+        return end;
+    }
+
+    public void setEnd(ManeuverPoint end) {
+        this.end = end;
+    }
+
+    @Override
+    public Timestamp getStartTime() {
+        if (getStart() == null) {
+            return null;
+        } else {
+            return getStart().getTimestamp();
+        }
+    }
+
+    @Override
+    public Timestamp getEndTime() {
+        if (getEnd() == null) {
+            return null;
+        } else {
+            return getEnd().getTimestamp();
+        }
+    }
 }

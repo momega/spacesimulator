@@ -48,14 +48,14 @@ public class MainWindow extends DefaultWindow {
         MainWindow window = new MainWindow("Space Simulator");
         EventBusController controller = new EventBusController();
 
-        Application application = new Application();
+        Application application = Application.getInstance();
         
         //Model model = application.init(builder, 293037 - 600);
         //Model model = application.init(builder, 5910 * 60);
         //Model model = application.init(builder, 190 * 60);
         Model model = application.init(0);
         
-        MainGLRenderer mr = new MainGLRenderer(application);
+        MainGLRenderer mr = new MainGLRenderer();
         controller.addController(new QuitController(window));
         controller.addController(new TargetController(window));
         controller.addController(new CameraController(model.getCamera()));

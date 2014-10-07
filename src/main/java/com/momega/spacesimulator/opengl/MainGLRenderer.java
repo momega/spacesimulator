@@ -26,13 +26,11 @@ public class MainGLRenderer extends AbstractGLRenderer {
     private static final Logger logger = LoggerFactory.getLogger(MainGLRenderer.class);
 
     private final ModelRenderer renderer;
-    private final Application application;
 
     private GLU glu;
     public double znear = 100;
 
-    public MainGLRenderer(Application application) {
-        this.application = application;
+    public MainGLRenderer() {
         this.renderer = new ModelRenderer();
         this.renderer.addRenderer(new PerspectiveRenderer(this));
     }
@@ -55,7 +53,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     @Override
     protected void computeScene() {
-        ModelHolder.getModelWorker().next();
+        Application.getInstance().getModelWorker().next();
 
 
 //        // TODO: place this into the method

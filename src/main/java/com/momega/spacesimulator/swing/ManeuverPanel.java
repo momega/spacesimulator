@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.swing;
 
+import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Maneuver;
@@ -7,6 +8,7 @@ import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.NewManeuverEvent;
+import com.momega.spacesimulator.service.ManeuverService;
 import com.momega.spacesimulator.utils.TimeUtils;
 
 import org.springframework.beans.BeanUtils;
@@ -31,10 +33,12 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
 	private static final long serialVersionUID = 6451374273245722605L;
 	private final Spacecraft spacecraft;
 	private final ManeuverTableModel tableModel;
+    private final ManeuverService maneuverService;
 
     public ManeuverPanel(final Spacecraft spacecraft) {
         super(new BorderLayout());
         this.spacecraft = spacecraft;
+        maneuverService = Application.getInstance().getService(ManeuverService.class);
         tableModel = new ManeuverTableModel(copyManeuvers(spacecraft.getManeuvers()));
         final JTable table = new JTable(tableModel);
         table.setDefaultRenderer(Timestamp.class, new TimestampRenderer());
@@ -135,17 +139,19 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
             switch (col) {
                 case 0:
                     m.setName((String)value);
+                    m.getStart().setName("Start of" + m.getName());
+                    m.getEnd().setName("End of" + m.getName());
                     break;
                 case 2:
                     Double min = (Double) value;
                     BigDecimal duration = m.getEndTime().subtract(m.getStartTime());
-                    m.setStartTime(getStartTime().add(min.doubleValue() * 60));
-                    m.setEndTime(m.getStartTime().add(duration));
+                    m.getStart().setTimestamp(getStartTime().add(min.doubleValue() * 60));
+                    m.getEnd().setTimestamp(m.getStartTime().add(duration));
                     fireTableRowsUpdated(row, row);
                     break;
                 case 4:
                     BigDecimal val = (BigDecimal) value;
-                    m.setEndTime(m.getStartTime().add(val));
+                    m.getEnd().setTimestamp(m.getStartTime().add(val));
                     fireTableCellUpdated(row, col-1);
                     break;
                 case 5: m.setThrottle((Double)value);
@@ -176,16 +182,7 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
         }
 
         public void newManeuver() {
-            Maneuver m = new Maneuver();
-
-            Timestamp start = ModelHolder.getModel().getTime().add(3600); // +1h
-            m.setStartTime(start);
-            Timestamp end = start.add(60);
-            m.setEndTime(end);
-            m.setThrottle(1d);
-            m.setName("Noname Maneuver");
-            m.setThrottleDelta(Math.toRadians(90));
-
+            Maneuver m = maneuverService.createManeuver(spacecraft, "No-name Maneuver", ModelHolder.getModel().getTime(), 3600, 60, 1, 0, Math.toRadians(90));
             addManeuver(m);
         }
 

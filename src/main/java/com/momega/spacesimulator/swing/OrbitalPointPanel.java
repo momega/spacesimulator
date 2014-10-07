@@ -11,12 +11,12 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.AbstractOrbitalPoint;
-import com.momega.spacesimulator.model.Maneuver;
-import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.NewManeuverEvent;
+import com.momega.spacesimulator.service.ManeuverService;
 
 /**
  * Created by martin on 8/31/14.
@@ -30,10 +30,12 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
     private final AttributesPanel attrPanel;
     private boolean visible;
 	private final AbstractOrbitalPoint apsis;
+    private final ManeuverService maneuverService;
 
     public OrbitalPointPanel(final AbstractOrbitalPoint point) {
         super(new BorderLayout(5, 5));
 		this.apsis = point;
+        this.maneuverService = Application.getInstance().getService(ManeuverService.class);
 
         attrPanel = new AttributesPanel(LABELS, point, FIELDS);
         visible = point.isVisible();
@@ -61,13 +63,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 	        maneuverButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					Maneuver maneuver = new Maneuver();
-					maneuver.setStartTime(point.getTimestamp());
-					maneuver.setEndTime(point.getTimestamp());
-					maneuver.setThrottle(1.0);
-					maneuver.setThrottleDelta(Math.PI/2);
-					maneuver.setName("Maneuver At " + point.getName());
-					
+					Maneuver maneuver = maneuverService.createManeuver(spacecraft, "Maneuver At " + point.getName(), point.getTimestamp(), 0d, 0d, 1.0, 0, Math.PI/2);
 					NewManeuverEvent event = new NewManeuverEvent(ModelHolder.getModel(), maneuver, spacecraft);
 					
 					DetailDialogHolder.getInstance().showDialog(spacecraft);
@@ -81,7 +77,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
         add(attrPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.LINE_END);
     }
-    
+
     @Override
     public void updateModel() {
     	apsis.setVisible(visible);

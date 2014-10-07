@@ -3,6 +3,7 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 
 import org.slf4j.Logger;
@@ -35,6 +36,9 @@ public class NewtonianPropagator implements Propagator {
     @Autowired
     private HistoryPointService historyPointService;
 
+    @Autowired
+    private ManeuverService maneuverService;
+
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
         Assert.isInstanceOf(Spacecraft.class, movingObject, "predication of trajectory is supported only for satellites");
@@ -48,6 +52,23 @@ public class NewtonianPropagator implements Propagator {
         computePrediction(spacecraft, newTimestamp);
         computeApsides(spacecraft);
         computeIntersections(spacecraft, newTimestamp);
+        computeManeuvers(spacecraft, newTimestamp);
+    }
+
+    private void computeManeuvers(Spacecraft spacecraft, Timestamp newTimestamp) {
+        KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
+        List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, newTimestamp);
+        for(ManeuverPoint maneuverPoint : maneuverPoints) {
+            computeManeuverPoint(keplerianElements, maneuverPoint);
+        }
+    }
+
+    protected void computeManeuverPoint(KeplerianElements keplerianElements, ManeuverPoint maneuverPoint) {
+        double E = KeplerianUtils.getInstance().solveEccentricAnomaly(keplerianElements, maneuverPoint.getTimestamp());
+        double theta = KeplerianUtils.getInstance().solveTheta(E, keplerianElements.getEccentricity());
+        Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(keplerianElements, theta);
+        maneuverPoint.setPosition(position);
+        maneuverPoint.setTrueAnomaly(theta);
     }
 
     protected void computeIntersections(Spacecraft spacecraft, Timestamp newTimestamp) {
@@ -140,7 +161,7 @@ public class NewtonianPropagator implements Propagator {
 
     /**
      * Computes apsides for the spacecraft trajectory
-     * @param spacecraft
+     * @param spacecraft the spacecraft
      */
     protected void computeApsides(Spacecraft spacecraft) {
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
@@ -267,9 +288,6 @@ public class NewtonianPropagator implements Propagator {
 
             double nn = Math.sqrt(mi / (a*a*a));
             period = 2* Math.PI / nn;
-            //double T = newTimestamp.getValue().doubleValue() - (EA - e * Math.sin(EA)) / nn;
-            //keplerianElements.setTimeOfPeriapsis(Timestamp.newTime(BigDecimal.valueOf(T)));
-
         } else {
         	double HA = KeplerianUtils.getInstance().solveHA(keplerianElements);
             keplerianElements.setHyperbolicAnomaly(HA);

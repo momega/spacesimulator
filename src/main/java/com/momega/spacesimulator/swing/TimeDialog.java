@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.swing;
 
+import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.opengl.DefaultWindow;
@@ -277,7 +278,7 @@ public class TimeDialog extends JDialog {
         @Override
         protected Void doInBackground() throws Exception {
             while(ModelHolder.getModel().getTime().compareTo(endTime)<=0) {
-                ModelHolder.getModelWorker().next();
+                Application.getInstance().getModelWorker().next();
                 publish(ModelHolder.getModel().getTime());
             }
             return null;

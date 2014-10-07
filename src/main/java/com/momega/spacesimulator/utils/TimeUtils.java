@@ -2,11 +2,9 @@ package com.momega.spacesimulator.utils;
 
 import com.momega.spacesimulator.model.TimeInterval;
 import com.momega.spacesimulator.model.Timestamp;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
-import org.joda.time.DateTimeZone;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -63,8 +61,8 @@ public class TimeUtils {
 
     /**
      * Creates the timestamp object based on the calendar instance
-     * @param calendar
-     * @return
+     * @param calendar the JDK calendar instance
+     * @return the new timestamp instance
      */
     public static Timestamp fromCalendar(Calendar calendar) {
         Assert.notNull(calendar);
@@ -93,7 +91,7 @@ public class TimeUtils {
     }
 
     public static long toLinuxTime(Timestamp timestamp) {
-        long t =timestamp.getValue().multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue();
+        long t = timestamp.getValue().multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue();
         return t;
     }
 
@@ -102,6 +100,12 @@ public class TimeUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(t);
         return calendar;
+    }
+
+    public static double getDuration(TimeInterval timeInterval) {
+        double s = timeInterval.getStartTime().getValue().doubleValue();
+        double e = timeInterval.getEndTime().getValue().doubleValue();
+        return e-s;
     }
 
     public static boolean isTimestampInInterval(Timestamp timestamp, TimeInterval interval) {

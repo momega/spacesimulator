@@ -3,7 +3,6 @@ package com.momega.spacesimulator.builder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.SphereOfInfluence;
-import com.momega.spacesimulator.model.TrajectoryType;
 
 /**
  * The builder of the solar system
@@ -18,7 +17,7 @@ public class SolarSystemModelBuilder extends MediumSolarSystemModelBuilder {
         CelestialBody venus = new Planet();
         updateDynamicalPoint(venus, "Venus", 4.8685, 243.0185, 6.0518, 272.76, 67.16, 160.20, "Venus_(planet)");
         createKeplerianElements(venus, sun, 108208d * 1E6, 0.0067, 54.6820, 224.699, 2456681.501144, 3.3945, 76.6408);
-        createTrajectory(venus, "#FF9933", TrajectoryType.KEPLERIAN);
+        createTrajectory(venus, "#FF9933");
         venus.setTextureFileName("venus.jpg");
 
         CelestialBody mercury = new Planet();
