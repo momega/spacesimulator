@@ -130,14 +130,22 @@ public final class KeplerianUtils {
     protected double solveHA(double eccentricity, double theta) {
         double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
         double HA = MathUtils.asinh(sinH);
-        double HA2 = MathUtils.acosh((eccentricity + Math.cos(theta))/ ( 1 + eccentricity * Math.cos(theta)));
-        logger.debug("HA = {}, HA2 = {}", HA, HA2);
+        logger.debug("HA = {}", HA);
         return HA;
     }
 
     private double solveTheta2(double E, double eccentricity) {
         double param = Math.sqrt((1 + eccentricity) / (1 - eccentricity));
         double theta = 2 * Math.atan(param * Math.tan(E / 2));
+        if (theta < 0) {
+            theta = Math.PI * 2 + theta;
+        }
+        return theta;
+    }
+
+    public double solveThetaFromHA(double HA, double eccentricity) {
+        double param = Math.sqrt((eccentricity + 1) / (eccentricity -1));
+        double theta = 2 * Math.atan(param * Math.tanh(HA / 2));
         if (theta < 0) {
             theta = Math.PI * 2 + theta;
         }
@@ -162,27 +170,51 @@ public final class KeplerianUtils {
     	return future.subtract(current).doubleValue();
     }
 
-    public double solveEccentricAnomaly(KeplerianElements keplerianElements, Timestamp time) {
+    public double solveMeanAnomaly(KeplerianElements keplerianElements, Timestamp time) {
         logger.debug("time = {}", time);
-
-        double E = Math.PI; //  eccentric anomaly
         double dt = time.subtract(keplerianElements.getTimeOfPeriapsis()).doubleValue();
         double n = 2 * Math.PI / keplerianElements.getPeriod().doubleValue();
         double M = n * dt;   // mean anomaly
-        M = MathUtils.normalizeAngle(M);
+        return M;
+    }
 
+    public double solveEccentricAnomaly(KeplerianElements keplerianElements, Timestamp time) {
+        double M = solveMeanAnomaly(keplerianElements, time);
+        M = MathUtils.normalizeAngle(M);
+        double E = solveEccentricAnomaly(keplerianElements, M);
+        return E;
+    }
+
+    public double solveEccentricAnomaly(KeplerianElements keplerianElements, double M) {
         logger.debug("M = {}", M);
         double eccentricity = keplerianElements.getEccentricity();
-        double F = E - eccentricity * Math.sin(M) - M;
-        for (int i = 0; i < 50; i++) {
-            E = E - F / (1.0 - eccentricity * Math.cos(E));
-            F = E - eccentricity * Math.sin(E) - M;
-            if (Math.abs(F) < MINOR_ERROR) {
-                break;
-            }
+        double E = Math.PI;
+
+        double ratio = 1;
+        while (Math.abs(ratio) > MINOR_ERROR) {
+            ratio = (E - eccentricity * Math.sin(E) - M) / (1 - eccentricity * Math.cos(E));
+            E = E - ratio;
         }
 
         return E;
+    }
+
+    public double solveHyperbolicAnomaly(KeplerianElements keplerianElements, Timestamp time) {
+        double M = solveMeanAnomaly(keplerianElements, time);
+        double HA = solveHyperbolicAnomaly(keplerianElements, M);
+        return HA;
+    }
+
+    public double solveHyperbolicAnomaly(KeplerianElements keplerianElements, double M) {
+        logger.debug("M = {}", M);
+        double eccentricity = keplerianElements.getEccentricity();
+        double H = M;
+        double ratio = 1;
+        while (Math.abs(ratio) > MINOR_ERROR) {
+            ratio = (eccentricity * Math.sinh(H) - H - M) / (eccentricity * Math.cosh(H) - 1);
+            H = H - ratio;
+        }
+        return H;
     }
 
     public void updatePeriapsis(MovingObject movingObject) {

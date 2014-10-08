@@ -64,8 +64,14 @@ public class NewtonianPropagator implements Propagator {
     }
 
     protected void computeManeuverPoint(KeplerianElements keplerianElements, ManeuverPoint maneuverPoint) {
-        double E = KeplerianUtils.getInstance().solveEccentricAnomaly(keplerianElements, maneuverPoint.getTimestamp());
-        double theta = KeplerianUtils.getInstance().solveTheta(E, keplerianElements.getEccentricity());
+        double theta = 0;
+        if (keplerianElements.getEccentricity()<1) {
+            double E = KeplerianUtils.getInstance().solveEccentricAnomaly(keplerianElements, maneuverPoint.getTimestamp());
+            theta = KeplerianUtils.getInstance().solveTheta(E, keplerianElements.getEccentricity());
+        } else {
+            double H = KeplerianUtils.getInstance().solveHyperbolicAnomaly(keplerianElements, maneuverPoint.getTimestamp());
+            theta = KeplerianUtils.getInstance().solveThetaFromHA(H, keplerianElements.getEccentricity());
+        }
         Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(keplerianElements, theta);
         maneuverPoint.setPosition(position);
         maneuverPoint.setTrueAnomaly(theta);
@@ -166,6 +172,7 @@ public class NewtonianPropagator implements Propagator {
     protected void computeApsides(Spacecraft spacecraft) {
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
 
+        // TODO: fix for eccentricity near 1
         Double HA = keplerianElements.getHyperbolicAnomaly();
         KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();
 
