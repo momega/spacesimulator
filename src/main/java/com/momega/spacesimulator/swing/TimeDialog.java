@@ -74,7 +74,7 @@ public class TimeDialog extends JDialog {
         timeModel.addChangeListener(model);
 
         JSpinner spinner = new JSpinner(timeModel);
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "hh:mm:ss");
+        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm:ss");
         DateFormatter formatter = (DateFormatter)editor.getTextField().getFormatter();
         formatter.setAllowsInvalid(false); // this makes what you want
         formatter.setOverwriteMode(true);
