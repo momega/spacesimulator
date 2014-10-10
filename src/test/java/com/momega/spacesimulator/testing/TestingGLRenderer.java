@@ -47,7 +47,8 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 	}
 
 	@Override
-	protected void init(GL2 gl) {
+	protected void setup(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
 		glu = new GLU();
 		 
 		boolean extensionOK = gl.isExtensionAvailable
@@ -98,15 +99,6 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 	protected void draw(GLAutoDrawable drawable) {
 		GL2 gl = drawable.getGL().getGL2(); 
 
-//      gl.glBegin(GL2.GL_TRIANGLE_STRIP); // draw using triangles
-//      gl.glColor3f	( 1,0,0);
-//      gl.glVertex3f(0.0f, 10.0f, 0.0f);
-//      gl.glColor3f( 0,1,0);
-//      gl.glVertex3f(-10.0f, -10.0f, 0.0f);
-//      gl.glColor3f( 0,0,1);
-//      gl.glVertex3f(10.0f, -10.0f, 0.0f);
-//      gl.glEnd();
-		
 		gl.glTranslated(2.0, 2.0, 0.0);
 		
 		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, vbo_vertex_handle);
@@ -124,9 +116,7 @@ public class TestingGLRenderer extends AbstractGLRenderer {
 		
 		gl.glBindBuffer(GL2.GL_ARRAY_BUFFER, 0);
       
-      renderer.draw(drawable);
-      
-      //logger.info("draw");
+        renderer.draw(drawable);
 	}
 
 	@Override

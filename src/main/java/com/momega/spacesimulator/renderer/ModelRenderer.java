@@ -38,6 +38,7 @@ public class ModelRenderer extends CompositeRenderer {
                 }
             } else if (dp instanceof Spacecraft) {
                 addRenderer(new SpacecraftRenderer((Spacecraft) dp, true));
+                addRenderer(new SpacecraftBitmapRenderer((Spacecraft) dp));
                 addRenderer(new HistoryRenderer((Spacecraft) dp));
                 addRenderer(new ApsidesRenderer(dp));
                 addRenderer(new NamedHistoryRenderer((Spacecraft) dp));

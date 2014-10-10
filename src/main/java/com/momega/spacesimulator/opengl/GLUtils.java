@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.opengl;
 
+import com.jogamp.common.nio.Buffers;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -9,14 +10,20 @@ import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Vector3d;
 
 import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
 
+import java.awt.*;
+import java.awt.color.ColorSpace;
+import java.awt.geom.AffineTransform;
+import java.awt.image.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.Buffer;
 import java.util.List;
 
 import static javax.media.opengl.GL.*;

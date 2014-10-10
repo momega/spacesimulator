@@ -36,7 +36,8 @@ public class MainGLRenderer extends AbstractGLRenderer {
     }
 
     @Override
-    protected void init(GL2 gl) {
+    protected void setup(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
         renderer.init(gl);
     }

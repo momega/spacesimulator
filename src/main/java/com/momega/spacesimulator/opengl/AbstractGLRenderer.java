@@ -45,7 +45,7 @@ public abstract class AbstractGLRenderer implements GLEventListener {
 
         //gl.glAlphaFunc(GL.GL_GREATER, 0.1f);
 
-        init(gl);
+        setup(drawable);
         logger.info("renderer initialized");
     }
 
@@ -114,7 +114,7 @@ public abstract class AbstractGLRenderer implements GLEventListener {
      * Initializes the GL context
      * @param gl
      */
-    protected abstract void init(GL2 gl);
+    protected abstract void setup(GLAutoDrawable gl);
 
     /**
      * The default implementation of the dispose method
