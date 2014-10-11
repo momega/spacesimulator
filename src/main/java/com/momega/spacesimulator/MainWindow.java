@@ -10,6 +10,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 
+import com.momega.spacesimulator.swing.Icons;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,10 +103,15 @@ public class MainWindow extends DefaultWindow {
 
     	JMenuItem findItem = new JMenuItem("Find...");
     	JMenuItem newSpacecraftItem = new JMenuItem("New Spacecraft...");
+        newSpacecraftItem.setIcon(Icons.ADD_SPACECRAFT);
+        JMenuItem deleteSpacecraftItem = new JMenuItem("Delete Spacecraft...");
+        deleteSpacecraftItem.setIcon(Icons.DELETE_SPACECRAFT);
     	JMenuItem newPointItem = new JMenuItem("New Point...");
     	projectMenu.add(timeItem);
     	projectMenu.add(findItem);
+        projectMenu.addSeparator();
     	projectMenu.add(newSpacecraftItem);
+        projectMenu.add(deleteSpacecraftItem);
     	projectMenu.add(newPointItem);
     	
     	JMenu helpMenu = new JMenu("Help");
@@ -159,21 +165,21 @@ public class MainWindow extends DefaultWindow {
     	
     	JToggleButton spacecraftButton = new JToggleButton();
     	spacecraftButton.setSelected(true);
-    	spacecraftButton.setIcon(SwingUtils.createImageIcon("/images/satellite_16_hot.png"));
+    	spacecraftButton.setIcon(Icons.SPACECRAFT);
     	spacecraftButton.setToolTipText("Activate the spacecrafts");
     	spacecraftButton.setActionCommand(ToolbarController.SPACECRAFT_TOGGLE_COMMAND);
     	spacecraftButton.addActionListener(controller);
 
     	JToggleButton celestialButton = new JToggleButton();
     	celestialButton.setSelected(true);
-    	celestialButton.setIcon(SwingUtils.createImageIcon("/images/100.png"));
+    	celestialButton.setIcon(Icons.CELESTIAL);
     	celestialButton.setToolTipText("Activate the celestial bodies");
     	celestialButton.setActionCommand(ToolbarController.CELESTIAL_TOGGLE_COMMAND);
     	celestialButton.addActionListener(controller);
     	
     	JToggleButton pointButton = new JToggleButton();
     	pointButton.setSelected(true);
-    	pointButton.setIcon(SwingUtils.createImageIcon("/images/bullet_blue.png"));
+    	pointButton.setIcon(Icons.APSIS_POINT);
     	pointButton.setToolTipText("Activate the points");
     	pointButton.setActionCommand(ToolbarController.POINT_TOGGLE_COMMAND);
     	pointButton.addActionListener(controller);

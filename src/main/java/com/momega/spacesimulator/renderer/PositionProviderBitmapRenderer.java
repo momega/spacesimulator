@@ -3,7 +3,6 @@ package com.momega.spacesimulator.renderer;
 import com.momega.spacesimulator.model.PositionProvider;
 
 import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
 import java.awt.*;
 
 /**

@@ -4,6 +4,7 @@ import com.jogamp.common.nio.Buffers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import java.awt.*;
@@ -11,9 +12,10 @@ import java.awt.color.ColorSpace;
 import java.awt.geom.AffineTransform;
 import java.awt.image.*;
 import java.net.URL;
-import java.nio.Buffer;
+import java.nio.ByteBuffer;
 
 /**
+ * Superclass for all bitmap renderers
  * Created by martin on 10/10/14.
  */
 public abstract class AbstractBitmapRenderer extends AbstractRenderer {
@@ -22,7 +24,7 @@ public abstract class AbstractBitmapRenderer extends AbstractRenderer {
 
     protected int imgHeight;
     protected int imgWidth;
-    protected Buffer imgRGBA;
+    protected ByteBuffer imgRGBA;
 
     public void init(GL2 gl) {
         loadBitmap(gl);
@@ -48,13 +50,10 @@ public abstract class AbstractBitmapRenderer extends AbstractRenderer {
             gl.glEnable(GL2.GL_BLEND);
             gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
 
-            //gl.glWindowPos2i(point.x, point.y);
-            //gl.glRasterPos2i(0, 0);
             setPosition(gl);
             gl.glPixelZoom(1f, 1f); // x-factor, y-factor
-            gl.glDrawPixels(imgWidth, imgHeight,
-                    gl.GL_RGBA, gl.GL_UNSIGNED_BYTE,
-                    imgRGBA);
+            gl.glBitmap (0, 0, 0, 0, -imgWidth/2, -imgHeight/2, null); // move the center of the bitmap
+            gl.glDrawPixels(imgWidth, imgHeight, GL2.GL_RGBA, GL.GL_UNSIGNED_BYTE, imgRGBA);
 
         }
         gl.glPopAttrib();
@@ -122,7 +121,4 @@ public abstract class AbstractBitmapRenderer extends AbstractRenderer {
         }
     }
 
-    public void dispose(GL2 gl) {
-        super.dispose(gl);
-    }
 }
