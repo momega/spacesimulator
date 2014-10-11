@@ -162,18 +162,19 @@ public class RendererModel {
         return (viewCoordinates != null && viewCoordinates.isVisible());
     }
 
-    public ViewCoordinates findViewCoordinates(java.awt.Point point) {
+    public List<ViewCoordinates> findViewCoordinates(java.awt.Point point) {
         double x = point.getX();
         double y = point.getY();
+        List<ViewCoordinates> result = new ArrayList<>();
         for (Map.Entry<PositionProvider, ViewCoordinates> entry : viewData.entrySet()) {
             ViewCoordinates viewCoordinates = entry.getValue();
             if (viewCoordinates.isVisible()) {
                 if ((Math.abs(x - (int) viewCoordinates.getPoint().getX()) < MIN_TARGET_SIZE) && (Math.abs(y - (int) viewCoordinates.getPoint().getY()) < MIN_TARGET_SIZE)) {
-                    return viewCoordinates;
+                    result.add(viewCoordinates);
                 }
             }
         }
-        return null;
+        return result;
     }
 
     public ViewCoordinates findByName(String name) {
@@ -283,7 +284,7 @@ public class RendererModel {
     	List<PositionProvider> list = findAllPositionProviders();
     	List<PositionProvider> result = new ArrayList<>();
     	for(PositionProvider positionProvider : list) {
-    		if (pointsVisible && positionProvider instanceof AbstractOrbitalPoint) {
+    		if (isPointsVisible() && positionProvider instanceof AbstractOrbitalPoint) {
     			AbstractOrbitalPoint orbitalPoint = (AbstractOrbitalPoint) positionProvider;
     			if (orbitalPoint.isVisible()) {
     				result.add(positionProvider);
