@@ -10,12 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-import com.momega.spacesimulator.model.Apsis;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.HistoryPoint;
-import com.momega.spacesimulator.model.OrbitIntersection;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.*;
 
 /**
  * @author martin
@@ -59,7 +54,14 @@ public class MovingObjectListRenderer extends JLabel implements ListCellRenderer
 		} else if (value instanceof Spacecraft) {
 			setIcon(Icons.SPACECRAFT);
 		} else if (value instanceof CelestialBody) {
-			setIcon(Icons.CELESTIAL);
+            setIcon(Icons.CELESTIAL);
+        } else if (value instanceof ManeuverPoint) {
+            ManeuverPoint mp = (ManeuverPoint) value;
+            if (mp.isStart()) {
+                setIcon(Icons.START_MANEUVER_POINT);
+            } else {
+                setIcon(Icons.END_MANEUVER_POINT);
+            }
 		} else {
 			setIcon(null);
 		}

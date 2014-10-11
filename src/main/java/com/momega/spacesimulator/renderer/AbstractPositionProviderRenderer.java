@@ -16,12 +16,6 @@ import com.momega.spacesimulator.opengl.GLUtils;
  */
 public abstract class AbstractPositionProviderRenderer extends AbstractTextRenderer {
 
-	protected void drawPositionProvider(GL2 gl, PositionProvider positionProvider, double color[]) {
-        if (RendererModel.getInstance().isVisibleOnScreen(positionProvider)) {
-            GLUtils.drawPoint(gl, 8, color, positionProvider);
-        }
-    }
-	
 	protected void renderPositionProvider(PositionProvider positionProvider) {
 		ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(positionProvider);
         if (viewCoordinates!=null && viewCoordinates.isVisible()) {

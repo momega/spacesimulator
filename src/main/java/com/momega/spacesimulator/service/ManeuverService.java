@@ -7,11 +7,12 @@ import com.momega.spacesimulator.model.Timestamp;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The maneuver service contains helpful method to manipulate with
+ * the {@link com.momega.spacesimulator.model.Maneuver}s
  * Created by martin on 10/7/14.
  */
 @Component
@@ -42,12 +43,21 @@ public class ManeuverService {
         return result;
     }
 
+    /**
+     * Creates start or end maneuver point
+     * @param spacecraft the spacecraft
+     * @param maneuver the maneuver to which the will belong
+     * @param timestamp the timestamp of the point
+     * @param start indicates whether it is start or end of the maneuver
+     * @return new instance of the maneuver point
+     */
     public ManeuverPoint createManeuverPoint(Spacecraft spacecraft, Maneuver maneuver, Timestamp timestamp, boolean start) {
         ManeuverPoint m = new ManeuverPoint();
         m.setMovingObject(spacecraft);
         m.setKeplerianElements(spacecraft.getKeplerianElements());
         m.setTimestamp(timestamp);
         m.setVisible(true);
+        m.setStart(start);
         m.setName((start ? "Start" : "End") + " of " + maneuver.getName());
         return m;
     }

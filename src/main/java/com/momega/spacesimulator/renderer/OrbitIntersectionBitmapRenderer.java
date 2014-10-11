@@ -4,24 +4,25 @@ import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.swing.Icons;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by martin on 10/11/14.
  */
-public class SpacecraftBitmapRenderer extends PositionProvidersBitmapRenderer {
+public class OrbitIntersectionBitmapRenderer extends PositionProvidersBitmapRenderer {
 
     private final Spacecraft spacecraft;
 
-    public SpacecraftBitmapRenderer(Spacecraft spacecraft) {
-        super(Icons.SPACECRAFT1);
+    protected OrbitIntersectionBitmapRenderer(Spacecraft spacecraft) {
+        super(Icons.INTERSECTION_POINT);
         this.spacecraft = spacecraft;
     }
 
     @Override
     protected List<PositionProvider> getPositionProviders() {
-        return Collections.singletonList((PositionProvider) spacecraft);
+        List<PositionProvider> list = new ArrayList<>();
+        list.addAll(spacecraft.getOrbitIntersections());
+        return list;
     }
-
 }

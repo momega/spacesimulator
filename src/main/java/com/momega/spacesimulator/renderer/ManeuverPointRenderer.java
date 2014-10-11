@@ -34,12 +34,4 @@ public class ManeuverPointRenderer extends AbstractOrbitalPositionProviderRender
         }
     }
 
-    @Override
-    protected void drawObjects(GLAutoDrawable drawable) {
-        GL2 gl = drawable.getGL().getGL2();
-        List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime());
-        for(ManeuverPoint maneuverPoint : maneuverPoints) {
-            drawPositionProvider(gl, maneuverPoint, new double[]{0.0, 1.0, 0.0});
-        }
-    }
 }

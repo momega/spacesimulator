@@ -26,14 +26,4 @@ public class OrbitIntersectionRenderer extends AbstractOrbitalPositionProviderRe
         }
     }
 
-    @Override
-    protected void drawObjects(GLAutoDrawable drawable) {
-        List<OrbitIntersection> intersections = spacecraft.getOrbitIntersections();
-        if (!intersections.isEmpty()) {
-            GL2 gl = drawable.getGL().getGL2();
-            for(OrbitIntersection intersection : intersections) {
-            	drawPositionProvider(gl, intersection, new double[] {1.0, 0.0, 0.0});
-            }
-        }
-    }
 }

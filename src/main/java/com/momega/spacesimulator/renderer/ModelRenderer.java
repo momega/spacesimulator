@@ -37,13 +37,23 @@ public class ModelRenderer extends CompositeRenderer {
                     }
                 }
             } else if (dp instanceof Spacecraft) {
-                addRenderer(new SpacecraftRenderer((Spacecraft) dp, true));
-                addRenderer(new SpacecraftBitmapRenderer((Spacecraft) dp));
-                addRenderer(new HistoryRenderer((Spacecraft) dp));
-                addRenderer(new ApsidesRenderer(dp));
-                addRenderer(new NamedHistoryRenderer((Spacecraft) dp));
-                addRenderer(new OrbitIntersectionRenderer((Spacecraft) dp));
-                addRenderer(new ManeuverPointRenderer((Spacecraft) dp));
+                Spacecraft spacecraft = (Spacecraft) dp;
+                addRenderer(new SpacecraftRenderer(spacecraft, true));
+                addRenderer(new SpacecraftBitmapRenderer(spacecraft));
+
+                addRenderer(new HistoryRenderer(spacecraft));
+                addRenderer(new ApsidesRenderer(spacecraft));
+                addRenderer(new ApoapsisBitmapRenderer(spacecraft));
+                addRenderer(new PeriapsisBitmapRenderer(spacecraft));
+
+                addRenderer(new NamedHistoryRenderer(spacecraft));
+                addRenderer(new HistoryPointBitmapRenderer(spacecraft));
+
+                addRenderer(new OrbitIntersectionRenderer(spacecraft));
+                addRenderer(new OrbitIntersectionBitmapRenderer(spacecraft));
+                addRenderer(new ManeuverPointRenderer(spacecraft));
+                addRenderer(new StartManeuverBitmapRenderer(spacecraft));
+                addRenderer(new EndManeuverBitmapRenderer(spacecraft));
             }
         }
 

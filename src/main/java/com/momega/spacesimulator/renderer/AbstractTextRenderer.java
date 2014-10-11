@@ -19,11 +19,7 @@ public abstract class AbstractTextRenderer extends AbstractRenderer {
     public void init(GL2 gl) {
         textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 10));
     }
-    
-    protected void drawObjects(GLAutoDrawable drawable) {
-    	// do nothing
-    }
-    
+
     protected final void drawTexts(GLAutoDrawable drawable) {
     	textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
         GL2 gl = drawable.getGL().getGL2();
@@ -33,7 +29,6 @@ public abstract class AbstractTextRenderer extends AbstractRenderer {
 
     @Override
     public final void draw(GLAutoDrawable drawable) {
-    	drawObjects(drawable);
     	drawTexts(drawable);
     }
 

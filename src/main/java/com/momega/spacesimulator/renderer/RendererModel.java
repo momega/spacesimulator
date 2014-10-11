@@ -1,25 +1,18 @@
 package com.momega.spacesimulator.renderer;
 
-import java.awt.Point;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.media.opengl.GLAutoDrawable;
-
 import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.service.ManeuverService;
-import com.momega.spacesimulator.utils.TimeUtils;
+import com.momega.spacesimulator.swing.MovingObjectsModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.swing.MovingObjectsModel;
+import javax.media.opengl.GLAutoDrawable;
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by martin on 6/20/14.
@@ -44,6 +37,7 @@ public class RendererModel {
     
     private boolean spacecraftVisible; 
     private boolean celestialVisible;
+    private boolean historyPointsVisible;
     private boolean pointsVisible;
     
 
@@ -53,6 +47,7 @@ public class RendererModel {
         spacecraftVisible = true;
 		celestialVisible = true;
 		pointsVisible = true;
+        historyPointsVisible = true;
         maneuverService = Application.getInstance().getService(ManeuverService.class);
 
 		movingObjectsModel = new MovingObjectsModel(selectMovingObjects());
@@ -236,7 +231,11 @@ public class RendererModel {
     public boolean isPointsVisible() {
 		return pointsVisible;
 	}
-    
+
+    public boolean isHistoryPointsVisible() {
+        return historyPointsVisible;
+    }
+
     public boolean isSpacecraftVisible() {
 		return spacecraftVisible;
 	}
@@ -244,7 +243,11 @@ public class RendererModel {
     public void setPointsVisible(boolean pointsVisible) {
 		this.pointsVisible = pointsVisible;
 	}
-    
+
+    public void setHistoryPointsVisible(boolean historyPointsVisible) {
+        this.historyPointsVisible = historyPointsVisible;
+    }
+
     public void setSpacecraftVisible(boolean spacecraftVisible) {
 		this.spacecraftVisible = spacecraftVisible;
 	}
@@ -286,13 +289,13 @@ public class RendererModel {
     				result.add(positionProvider);
     			}
     		}
-    		if (pointsVisible && positionProvider instanceof HistoryPoint) {
+    		if (isHistoryPointsVisible() && positionProvider instanceof HistoryPoint) {
     			result.add(positionProvider);
     		}
-    		if (spacecraftVisible && positionProvider instanceof Spacecraft) {
+    		if (isSpacecraftVisible() && positionProvider instanceof Spacecraft) {
     			result.add(positionProvider);
     		}
-    		if (celestialVisible && positionProvider instanceof CelestialBody) {
+    		if (isCelestialVisible() && positionProvider instanceof CelestialBody) {
     			result.add(positionProvider);
     		}
     	}
