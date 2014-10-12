@@ -9,7 +9,6 @@ import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.service.ManeuverService;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +32,11 @@ public abstract class AbstractManeuverBitmapRenderer extends PositionProvidersBi
 
     @Override
     protected List<PositionProvider> getPositionProviders() {
-        return Collections.<PositionProvider>singletonList(getManeuverPoint());
+        if (getManeuverPoint() != null) {
+            return Collections.<PositionProvider>singletonList(getManeuverPoint());
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     protected abstract ManeuverPoint getManeuverPoint();

@@ -17,6 +17,9 @@ public class EndManeuverBitmapRenderer extends AbstractManeuverBitmapRenderer {
     @Override
     protected ManeuverPoint getManeuverPoint() {
         Maneuver m = findManeuver();
+        if (m == null) {
+            return null;
+        }
         return m.getEnd();
     }
 }
