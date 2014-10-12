@@ -62,14 +62,7 @@ public final class KeplerianUtils {
 //        return theta;
 //    }
 //
-//    public double solveThetaFromHA(double HA, double eccentricity) {
-//        double param = Math.sqrt((eccentricity + 1) / (eccentricity -1));
-//        double theta = 2 * Math.atan(param * Math.tanh(HA / 2));
-//        if (theta < 0) {
-//            theta = Math.PI * 2 + theta;
-//        }
-//        return theta;
-//    }
+
 //
 //    private double solveTheta3(double E, double eccentricity) {
 //        double param = Math.sqrt((1 + eccentricity) / (1 - eccentricity));

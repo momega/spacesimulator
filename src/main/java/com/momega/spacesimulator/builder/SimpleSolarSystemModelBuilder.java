@@ -73,10 +73,10 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         habitableModule.setName("Habitat");
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
-//        addManeuver(spacecraft, "M1", 20 * 60d, 2600d, 1d, 0, Math.toRadians(90));
-//        addManeuver(spacecraft, "M2", 130 * 60d, 950d, 1d, 0, Math.toRadians(90));
-//        addManeuver(spacecraft, "M3", 200 * 60d, 1500d, 1d, 0, Math.toRadians(0));
-//        addManeuver(spacecraft, "M4", 5915 * 60d, 210d, 1d, Math.toRadians(180), Math.toRadians(0));
+        addManeuver(spacecraft, "M1", 20 * 60d, 2600d, 1d, 0, Math.toRadians(90));
+        addManeuver(spacecraft, "M2", 130 * 60d, 950d, 1d, 0, Math.toRadians(90));
+        addManeuver(spacecraft, "M3", 200 * 60d, 1500d, 1d, 0, Math.toRadians(0));
+        addManeuver(spacecraft, "M4", 5915 * 60d, 210d, 1d, Math.toRadians(180), Math.toRadians(0));
 //
 //        spacecraft.setTargetBody(moon);
 

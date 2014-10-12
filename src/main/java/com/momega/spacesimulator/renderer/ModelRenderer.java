@@ -52,9 +52,9 @@ public class ModelRenderer extends CompositeRenderer {
 //              TODO: uncoment after refactoring
 //                addRenderer(new OrbitIntersectionRenderer(spacecraft));
 //                addRenderer(new OrbitIntersectionBitmapRenderer(spacecraft));
-//                addRenderer(new ManeuverPointRenderer(spacecraft));
-//                addRenderer(new StartManeuverBitmapRenderer(spacecraft));
-//                addRenderer(new EndManeuverBitmapRenderer(spacecraft));
+                addRenderer(new ManeuverPointRenderer(spacecraft));
+                addRenderer(new StartManeuverBitmapRenderer(spacecraft));
+                addRenderer(new EndManeuverBitmapRenderer(spacecraft));
             }
         }
 

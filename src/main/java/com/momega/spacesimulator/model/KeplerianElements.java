@@ -44,6 +44,10 @@ public class KeplerianElements {
         return hyperbolicAnomaly;
     }
 
+    public void setHyperbolicAnomaly(Double hyperbolicAnomaly) {
+        this.hyperbolicAnomaly = hyperbolicAnomaly;
+    }
+
     /**
      * The eccentric anomaly of the keplerian trajectory. It can be null for hyperbolic trajectories
      * @return EA
@@ -75,16 +79,21 @@ public class KeplerianElements {
         double dt = timestamp.subtract(keplerianOrbit.getTimeOfPeriapsis()).doubleValue();
         double meanAnomaly = keplerianOrbit.getMeanMotion() * dt;   // mean anomaly
 
-        meanAnomaly = MathUtils.normalizeAngle(meanAnomaly);
-        double E = solveEccentricAnomaly(keplerianOrbit, meanAnomaly);
-
-        double theta = solveTheta(E, keplerianOrbit.getEccentricity());
-
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setKeplerianOrbit(keplerianOrbit);
-        keplerianElements.setTrueAnomaly(theta);
-        keplerianElements.setEccentricAnomaly(E);
 
+        double theta;
+        if (keplerianOrbit.isHyperbolic()) {
+            double HA = solveHyperbolicAnomaly(keplerianOrbit, meanAnomaly);
+            theta = solveThetaFromHA(HA, keplerianOrbit.getEccentricity());
+            keplerianElements.setHyperbolicAnomaly(HA);
+        } else {
+            meanAnomaly = MathUtils.normalizeAngle(meanAnomaly);
+            double EA = solveEccentricAnomaly(keplerianOrbit, meanAnomaly);
+            theta = solveTheta(EA, keplerianOrbit.getEccentricity());
+            keplerianElements.setEccentricAnomaly(EA);
+        }
+        keplerianElements.setTrueAnomaly(theta);
         return keplerianElements;
     }
 
@@ -120,15 +129,24 @@ public class KeplerianElements {
         return H;
     }
 
-    public static double solveTheta(double E, double eccentricity) {
-        double cosTheta = (Math.cos(E) - eccentricity) / (1.0 - eccentricity * Math.cos(E));
+    public static double solveTheta(double EA, double eccentricity) {
+        double cosTheta = (Math.cos(EA) - eccentricity) / (1.0 - eccentricity * Math.cos(EA));
         double theta;
-        if (E < 0) {
+        if (EA < 0) {
             theta = 2 * Math.PI - Math.acos(cosTheta);
-        } else if (E < Math.PI) {
+        } else if (EA < Math.PI) {
             theta = Math.acos(cosTheta);
         } else {
             theta = 2 * Math.PI - Math.acos(cosTheta);
+        }
+        return theta;
+    }
+
+    public static double solveThetaFromHA(double HA, double eccentricity) {
+        double param = Math.sqrt((eccentricity + 1) / (eccentricity -1));
+        double theta = 2 * Math.atan(param * Math.tanh(HA / 2));
+        if (theta < 0) {
+            theta = Math.PI * 2 + theta;
         }
         return theta;
     }
@@ -203,7 +221,7 @@ public class KeplerianElements {
         return EA;
     }
 
-    protected double solveHA(double eccentricity, double theta) {
+    public static double solveHA(double eccentricity, double theta) {
         double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
         double HA = MathUtils.asinh(sinH);
         logger.debug("HA = {}", HA);

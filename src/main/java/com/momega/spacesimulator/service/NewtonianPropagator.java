@@ -1,9 +1,6 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.utils.KeplerianUtils;
-import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 
 import org.slf4j.Logger;
@@ -24,8 +21,6 @@ import java.util.List;
 public class NewtonianPropagator implements Propagator {
 
     private static final Logger logger = LoggerFactory.getLogger(NewtonianPropagator.class);
-
-    private static double MINOR_ERROR = Math.pow(10, -12);
 
     @Autowired
     private SphereOfInfluenceService sphereOfInfluenceService;
@@ -55,31 +50,24 @@ public class NewtonianPropagator implements Propagator {
         computePrediction(spacecraft, newTimestamp);
         computeApsides(spacecraft);
 //        computeIntersections(spacecraft, newTimestamp);
-//        computeManeuvers(spacecraft, newTimestamp);
+        computeManeuvers(spacecraft, newTimestamp);
     }
 
-//    private void computeManeuvers(Spacecraft spacecraft, Timestamp newTimestamp) {
-//        KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
-//        List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, newTimestamp);
-//        for(ManeuverPoint maneuverPoint : maneuverPoints) {
-//            computeManeuverPoint(keplerianElements, maneuverPoint);
-//        }
-//    }
-//
-//    protected void computeManeuverPoint(KeplerianElements keplerianElements, ManeuverPoint maneuverPoint) {
-//        double theta = 0;
-//        if (keplerianElements.getEccentricity()<1) {
-//            double E = KeplerianUtils.getInstance().solveEccentricAnomaly(keplerianElements, maneuverPoint.getTimestamp());
-//            theta = KeplerianUtils.getInstance().solveTheta(E, keplerianElements.getEccentricity());
-//        } else {
-//            double H = KeplerianUtils.getInstance().solveHyperbolicAnomaly(keplerianElements, maneuverPoint.getTimestamp());
-//            theta = KeplerianUtils.getInstance().solveThetaFromHA(H, keplerianElements.getEccentricity());
-//        }
-//        Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(keplerianElements, theta);
-//        maneuverPoint.setPosition(position);
-//        maneuverPoint.setTrueAnomaly(theta);
-//    }
-//
+    private void computeManeuvers(Spacecraft spacecraft, Timestamp newTimestamp) {
+        KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
+        List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, newTimestamp);
+        for(ManeuverPoint maneuverPoint : maneuverPoints) {
+            computeManeuverPoint(keplerianElements.getKeplerianOrbit(), maneuverPoint);
+        }
+    }
+
+    protected void computeManeuverPoint(KeplerianOrbit keplerianOrbit, ManeuverPoint maneuverPoint) {
+        KeplerianElements keplerianElements = KeplerianElements.fromTimestamp(keplerianOrbit, maneuverPoint.getTimestamp());
+        Vector3d position = keplerianElements.getCartesianPosition();
+        maneuverPoint.setPosition(position);
+        maneuverPoint.setKeplerianElements(keplerianElements);
+    }
+
 //    protected void computeIntersections(Spacecraft spacecraft, Timestamp newTimestamp) {
 //    	// if there is no target
 //    	if (spacecraft.getTargetBody() == null) {

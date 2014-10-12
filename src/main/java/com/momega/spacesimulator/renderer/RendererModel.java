@@ -89,9 +89,9 @@ public class RendererModel {
 //                for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
 //                	result.add(intersection);
 //                }
-//                for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
-//                    result.add(maneuverPoint);
-//                }
+                for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
+                    result.add(maneuverPoint);
+                }
             }
         }
     	return result;
