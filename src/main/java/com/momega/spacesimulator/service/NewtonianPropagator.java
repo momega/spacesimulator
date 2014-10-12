@@ -39,6 +39,9 @@ public class NewtonianPropagator implements Propagator {
     @Autowired
     private ManeuverService maneuverService;
 
+    @Autowired
+    private ApsisService apsisService;
+
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
         Assert.isInstanceOf(Spacecraft.class, movingObject, "predication of trajectory is supported only for satellites");
@@ -50,7 +53,7 @@ public class NewtonianPropagator implements Propagator {
         movingObject.setCartesianState(cartesianState);
 
         computePrediction(spacecraft, newTimestamp);
-//        computeApsides(spacecraft);
+        computeApsides(spacecraft);
 //        computeIntersections(spacecraft, newTimestamp);
 //        computeManeuvers(spacecraft, newTimestamp);
     }
@@ -165,30 +168,30 @@ public class NewtonianPropagator implements Propagator {
 //        return result;
 //    }
 //
-//    /**
-//     * Computes apsides for the spacecraft trajectory
-//     * @param spacecraft the spacecraft
-//     */
-//    protected void computeApsides(Spacecraft spacecraft) {
-//        KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
-//
-//        // TODO: fix for eccentricity near 1
-//        Double HA = keplerianElements.getHyperbolicAnomaly();
-//        KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();
-//
-//        if (keplerianElements.getEccentricity()<1 || (keplerianElements.getEccentricity()>1 && HA!=null)) {
-//            KeplerianUtils.getInstance().updatePeriapsis(spacecraft);
-//        } else {
-//            keplerianTrajectory.setPeriapsis(null);
-//        }
-//
-//        if (keplerianElements.getEccentricity()<1) {
-//            KeplerianUtils.getInstance().updateApoapsis(spacecraft);
-//        } else {
-//            keplerianTrajectory.setApoapsis(null);
-//        }
-//    }
-//
+    /**
+     * Computes apsides for the spacecraft trajectory
+     * @param spacecraft the spacecraft
+     */
+    protected void computeApsides(Spacecraft spacecraft) {
+        KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
+
+        // TODO: fix for eccentricity near 1
+        Double HA = keplerianElements.getHyperbolicAnomaly();
+        KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();
+
+        if (keplerianElements.getKeplerianOrbit().getEccentricity()<1 || (keplerianElements.getKeplerianOrbit().getEccentricity()>1 && HA!=null)) {
+            apsisService.updatePeriapsis(spacecraft);
+        } else {
+            keplerianTrajectory.setPeriapsis(null);
+        }
+
+        if (keplerianElements.getKeplerianOrbit().getEccentricity()<1) {
+            apsisService.updateApoapsis(spacecraft);
+        } else {
+            keplerianTrajectory.setApoapsis(null);
+        }
+    }
+
     /**
      * Computes the prediction of the trajectory. Currently the supports work only for {@link com.momega.spacesimulator.model.Spacecraft}s.
      * @param spacecraft the spacecraft object which.
@@ -272,10 +275,6 @@ public class NewtonianPropagator implements Propagator {
     @Override
     public boolean supports(Trajectory trajectory) {
         return TrajectoryType.NEWTONIAN.equals(trajectory.getType());
-    }
-
-    public void setSphereOfInfluenceService(SphereOfInfluenceService sphereOfInfluenceService) {
-        this.sphereOfInfluenceService = sphereOfInfluenceService;
     }
 
 }

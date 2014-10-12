@@ -74,27 +74,25 @@ public class RendererModel {
     	List<PositionProvider> result = new ArrayList<>();
     	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
             result.add(dp);
+            KeplerianTrajectory keplerianTrajectory = dp.getTrajectory();
+            if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
+                result.add(keplerianTrajectory.getApoapsis());
+                result.add(keplerianTrajectory.getPeriapsis());
+            }
 
+            if (dp instanceof Spacecraft) {
+                Spacecraft spacecraft = (Spacecraft) dp;
+                for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
+                    result.add(hp);
+                }
 //      TODO: uncomment after model refactoring
-
-//            KeplerianTrajectory keplerianTrajectory = dp.getTrajectory();
-//            if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
-//                result.add(keplerianTrajectory.getApoapsis());
-//                result.add(keplerianTrajectory.getPeriapsis());
-//            }
-
-//            if (dp instanceof Spacecraft) {
-//                Spacecraft spacecraft = (Spacecraft) dp;
-//                for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
-//                    result.add(hp);
-//                }
 //                for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
 //                	result.add(intersection);
 //                }
 //                for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
 //                    result.add(maneuverPoint);
 //                }
-//            }
+            }
         }
     	return result;
     }
@@ -102,7 +100,6 @@ public class RendererModel {
     public void updateViewData(GLAutoDrawable drawable) {
     	Camera camera = ModelHolder.getModel().getCamera();
         for(PositionProvider positionProvider : findAllPositionProviders()) {
-            logger.info("position provider = {}", positionProvider);
             addViewCoordinates(drawable, positionProvider, camera);
         }
     }

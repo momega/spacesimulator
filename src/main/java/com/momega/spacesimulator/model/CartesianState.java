@@ -138,11 +138,11 @@ public class CartesianState {
         keplerianOrbit.setSemimajorAxis(a);
         keplerianOrbit.setAscendingNode(OMEGA);
         keplerianOrbit.setArgumentOfPeriapsis(omega);
-
         keplerianElements.setTrueAnomaly(theta);
 
         Timestamp TT = keplerianElements.timeToAngle(newTimestamp, 0.0, false);
-        keplerianElements.setTimeOfPeriapsis(TT);
+        keplerianOrbit.setTimeOfPeriapsis(TT);
+
 
         return keplerianElements;
     }

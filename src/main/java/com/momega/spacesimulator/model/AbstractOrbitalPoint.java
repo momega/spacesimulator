@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.context.ModelHolder;
+
 /**
  * @author martin
  *
@@ -52,4 +54,13 @@ public abstract class AbstractOrbitalPoint extends NamedObject implements Orbita
 		this.movingObject = movingObject;
 	}
 
+    /**
+     * Returns ETA time in seconds between current time and planned time of the orbital point
+     * @return the ETA in seconds
+     */
+    public double getETA() {
+    	Timestamp current = ModelHolder.getModel().getTime();
+    	Timestamp future = getTimestamp();
+    	return future.subtract(current).doubleValue();
+    }
 }

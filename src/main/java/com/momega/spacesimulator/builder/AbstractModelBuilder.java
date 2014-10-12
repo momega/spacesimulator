@@ -132,8 +132,8 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         orbit.setInclination(Math.toRadians(inclination));
         orbit.setAscendingNode(Math.toRadians(ascendingNode));
         orbit.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
+        orbit.setTimeOfPeriapsis(TimeUtils.fromJulianDay(timeOfPeriapsis));
 
-        keplerianElements.setTimeOfPeriapsis(TimeUtils.fromJulianDay(timeOfPeriapsis));
         keplerianElements.setKeplerianOrbit(orbit);
         movingObject.setKeplerianElements(keplerianElements);
         

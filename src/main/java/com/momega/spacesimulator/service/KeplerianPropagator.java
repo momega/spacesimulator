@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -13,20 +14,22 @@ import org.springframework.stereotype.Component;
 @Component
 public class KeplerianPropagator implements Propagator {
 
+    @Autowired
+    private ApsisService apsisService;
+
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
         KeplerianElements keplerianElements = movingObject.getKeplerianElements();
         KeplerianOrbit keplerianOrbit = keplerianElements.getKeplerianOrbit();
 
-        keplerianElements = KeplerianElements.fromTimestamp(keplerianOrbit, keplerianElements.getTimeOfPeriapsis(), newTimestamp);
+        keplerianElements = KeplerianElements.fromTimestamp(keplerianOrbit, newTimestamp);
         CartesianState cartesianState = keplerianElements.toCartesianState();
 
         movingObject.setKeplerianElements(keplerianElements);
         movingObject.setCartesianState(cartesianState);
 
-//      TODO: fix after model refactoring
-//        KeplerianUtils.getInstance().updatePeriapsis(movingObject);
-//        KeplerianUtils.getInstance().updateApoapsis(movingObject);
+        apsisService.updatePeriapsis(movingObject);
+        apsisService.updateApoapsis(movingObject);
     }
 
     @Override

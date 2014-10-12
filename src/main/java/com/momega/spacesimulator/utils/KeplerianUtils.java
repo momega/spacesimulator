@@ -41,9 +41,7 @@ public final class KeplerianUtils {
 //
 //
 //
-//    public Timestamp timeToApsis(MovingObject movingObject, ApsisType apsisType) {
-//        return timeToAngle(movingObject.getKeplerianElements(), movingObject.getTimestamp(), apsisType.getTrueAnomaly(), true);
-//    }
+
 //
 //
 //
@@ -79,17 +77,7 @@ public final class KeplerianUtils {
 //        return theta;
 //    }
 //
-//    /**
-//     * Returns ETA time in seconds between current time and planned time of the orbital point
-//     * @param orbitalPoint the {@link AbstractOrbitalPoint}
-//     * @return the ETA in seconds
-//     */
-//    public static double getETA(OrbitalPositionProvider orbitalPoint) {
-//    	MovingObject movingObject = orbitalPoint.getMovingObject();
-//    	Timestamp current = movingObject.getTimestamp();
-//    	Timestamp future = orbitalPoint.getTimestamp();
-//    	return future.subtract(current).doubleValue();
-//    }
+
 //
 //
 //
@@ -105,62 +93,9 @@ public final class KeplerianUtils {
 //
 //
 //
-//    public void updatePeriapsis(MovingObject movingObject) {
-//    	Assert.notNull(movingObject);
-//    	Assert.notNull(movingObject.getTrajectory());
-//        Apsis periapsis = movingObject.getTrajectory().getPeriapsis();
-//        if (periapsis == null) {
-//            periapsis = createApsis(movingObject, ApsisType.PERIAPSIS);
-//        }
-//        updateApsis(movingObject, periapsis);
-//    }
-//
-//    public void updateApoapsis(MovingObject movingObject) {
-//    	Assert.notNull(movingObject);
-//    	Assert.notNull(movingObject.getTrajectory());
-//        Apsis apoapsis = movingObject.getTrajectory().getApoapsis();
-//        if (apoapsis == null) {
-//            apoapsis = createApsis(movingObject, ApsisType.APOAPSIS);
-//        }
-//        updateApsis(movingObject, apoapsis);
-//    }
-//
-//    /**
-//     * Creates the apsis object
-//     * @param movingObject the moving object
-//     * @param apsisType the type of the {@link com.momega.spacesimulator.model.Apsis}
-//     * @return new instance of the apsis
-//     */
-//    protected Apsis createApsis(MovingObject movingObject, ApsisType apsisType) {
-//        Assert.notNull(apsisType);
-//        Assert.notNull(movingObject);
-//        KeplerianTrajectory trajectory = movingObject.getTrajectory();
-//        Apsis apsis = new Apsis();
-//        apsis.setType(apsisType);
-//        apsis.setName(apsisType.getShortcut() + " of " + movingObject.getName());
-//        apsis.setKeplerianElements(movingObject.getKeplerianElements());
-//        apsis.setVisible(movingObject instanceof Spacecraft);
-//        apsis.setMovingObject(movingObject);
-//        if (apsisType.equals(ApsisType.PERIAPSIS)) {
-//            trajectory.setPeriapsis(apsis);
-//        } else if (apsisType.equals(ApsisType.APOAPSIS)) {
-//            trajectory.setApoapsis(apsis);
-//        }
-//        return apsis;
-//    }
-//
-//    /**
-//     * Updates the {@link com.momega.spacesimulator.model.Apsis} timespamp and position
-//     * @param movingObject the moving object
-//     * @param apsis the apsis
-//     */
-//    protected void updateApsis(MovingObject movingObject, Apsis apsis) {
-//        Vector3d position = getCartesianPosition(movingObject.getKeplerianElements(), apsis.getType().getTrueAnomaly());
-//        Timestamp timestamp = timeToApsis(movingObject, apsis.getType());
-//
-//        apsis.setPosition(position);
-//        apsis.setTimestamp(timestamp);
-//    }
+
+
+
 //
 //    public static double getAltitude(MovingObject movingObject) {
 //        return getAltitude(movingObject.getKeplerianElements(), movingObject.getKeplerianElements().getTrueAnomaly());

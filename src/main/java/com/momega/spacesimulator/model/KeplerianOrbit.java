@@ -18,6 +18,7 @@ public class KeplerianOrbit {
     private double argumentOfPeriapsis; // lowercase omega
     private double inclination; // i
     private double ascendingNode; // uppercase omega
+    private Timestamp timeOfPeriapsis; // seconds
 
     // computed elements
     private BigDecimal period; // in seconds
@@ -93,6 +94,14 @@ public class KeplerianOrbit {
         this.inclination = inclination;
     }
 
+    public Timestamp getTimeOfPeriapsis() {
+        return timeOfPeriapsis;
+    }
+
+    public void setTimeOfPeriapsis(Timestamp timeOfPeriapsis) {
+        this.timeOfPeriapsis = timeOfPeriapsis;
+    }
+
     public boolean isHyperbolic() {
         return (getEccentricity()>1);
     }
@@ -129,4 +138,30 @@ public class KeplerianOrbit {
     public void setPeriod(BigDecimal period) {
         this.period = period;
     }
+
+    /**
+     * Gets the position in Cartesian state based on the keplerian elements with given angle theta. So it means the position
+     * is defined by the keplerian elements except the angle theta.
+     *
+     * Focus of the ellipse reflects the [0,0] coordinates in 2D.
+     * @return the 3d vector
+     */
+    public Vector3d getCartesianPosition(double trueAnomaly) {
+        double argumentOfPeriapsis = getArgumentOfPeriapsis();
+        double e = getEccentricity();
+        double r = getSemimajorAxis() * (1 - e * e) / (1 + e * Math.cos(trueAnomaly));
+        double inclination = getInclination();
+        double ascendingNode = getAscendingNode();
+        Vector3d v = getCartesianPosition(r, trueAnomaly, inclination, ascendingNode, argumentOfPeriapsis );
+        return getCentralObject().getCartesianState().getPosition().add(v);
+    }
+
+    public static Vector3d getCartesianPosition(double r, double theta, double inclination, double ascendingNode, double argumentOfPeriapsis) {
+        double u = theta + argumentOfPeriapsis;
+        double x = r * (Math.cos(u) * Math.cos(ascendingNode) - Math.sin(u) * Math.cos(inclination) * Math.sin(ascendingNode));
+        double y = r * (Math.cos(u) * Math.sin(ascendingNode) + Math.sin(u) * Math.cos(inclination) * Math.cos(ascendingNode));
+        double z = r * (Math.sin(u) * Math.sin(inclination));
+        return new Vector3d(x, y, z);
+    }
+
 }

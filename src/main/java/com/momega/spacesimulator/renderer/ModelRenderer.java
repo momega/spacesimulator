@@ -21,15 +21,11 @@ public class ModelRenderer extends CompositeRenderer {
             }
             if (dp instanceof PhysicalBody) {
                 addRenderer(new MovingObjectRenderer(dp));
-
-                // TODO: uncomment after refactoring
-                //addRenderer(new ApsidesRenderer(dp));
+                addRenderer(new ApsidesRenderer(dp));
             }
             if (dp instanceof BaryCentre) {
             	addRenderer(new MovingObjectRenderer(dp));
-
-                // TODO: uncomment after refactoring
-                // addRenderer(new ApsidesRenderer(dp));
+                addRenderer(new ApsidesRenderer(dp));
             }
             if (dp instanceof CelestialBody) {
             	addRenderer(new MovingObjectRenderer(dp));
@@ -45,15 +41,15 @@ public class ModelRenderer extends CompositeRenderer {
                 addRenderer(new SpacecraftRenderer(spacecraft, true));
                 addRenderer(new SpacecraftBitmapRenderer(spacecraft));
 
+                addRenderer(new HistoryRenderer(spacecraft));
+                addRenderer(new ApsidesRenderer(spacecraft));
+                addRenderer(new ApoapsisBitmapRenderer(spacecraft));
+                addRenderer(new PeriapsisBitmapRenderer(spacecraft));
+
+                addRenderer(new NamedHistoryRenderer(spacecraft));
+                addRenderer(new HistoryPointBitmapRenderer(spacecraft));
+
 //              TODO: uncoment after refactoring
-//                addRenderer(new HistoryRenderer(spacecraft));
-//                addRenderer(new ApsidesRenderer(spacecraft));
-//                addRenderer(new ApoapsisBitmapRenderer(spacecraft));
-//                addRenderer(new PeriapsisBitmapRenderer(spacecraft));
-//
-//                addRenderer(new NamedHistoryRenderer(spacecraft));
-//                addRenderer(new HistoryPointBitmapRenderer(spacecraft));
-//
 //                addRenderer(new OrbitIntersectionRenderer(spacecraft));
 //                addRenderer(new OrbitIntersectionBitmapRenderer(spacecraft));
 //                addRenderer(new ManeuverPointRenderer(spacecraft));

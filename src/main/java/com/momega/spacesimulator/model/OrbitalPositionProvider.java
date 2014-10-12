@@ -32,4 +32,10 @@ public interface OrbitalPositionProvider extends PositionProvider {
 	 * @return the object to which the position provider belongs
 	 */
 	MovingObject getMovingObject();
+
+    /**
+     * Returns ETA time in seconds between current time and planned time of the orbital point
+     * @return the ETA in seconds
+     */
+    public double getETA();
 }

@@ -54,7 +54,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         CelestialBody earth = (CelestialBody) findMovingObject("Earth");
         CelestialBody moon = (CelestialBody) findMovingObject("Moon");
 
-        Vector3d position = KeplerianElements.getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
+        Vector3d position = KeplerianOrbit.getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(8200d).negate();
         Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity);

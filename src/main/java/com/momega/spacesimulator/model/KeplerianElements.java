@@ -16,7 +16,6 @@ public class KeplerianElements {
     private KeplerianOrbit keplerianOrbit;
 
     private double trueAnomaly; // theta
-    private Timestamp timeOfPeriapsis; // seconds
 
     private Double hyperbolicAnomaly; // HA
     private Double eccentricAnomaly; //EA
@@ -68,21 +67,12 @@ public class KeplerianElements {
         return keplerianOrbit;
     }
 
-
-    public Timestamp getTimeOfPeriapsis() {
-        return timeOfPeriapsis;
-    }
-
-    public void setTimeOfPeriapsis(Timestamp timeOfPeriapsis) {
-        this.timeOfPeriapsis = timeOfPeriapsis;
-    }
-
     public void setKeplerianOrbit(KeplerianOrbit keplerianOrbit) {
         this.keplerianOrbit = keplerianOrbit;
     }
 
-    public static KeplerianElements fromTimestamp(KeplerianOrbit keplerianOrbit, Timestamp timeOfPeriapsis, Timestamp timestamp) {
-        double dt = timestamp.subtract(timeOfPeriapsis).doubleValue();
+    public static KeplerianElements fromTimestamp(KeplerianOrbit keplerianOrbit, Timestamp timestamp) {
+        double dt = timestamp.subtract(keplerianOrbit.getTimeOfPeriapsis()).doubleValue();
         double meanAnomaly = keplerianOrbit.getMeanMotion() * dt;   // mean anomaly
 
         meanAnomaly = MathUtils.normalizeAngle(meanAnomaly);
@@ -94,7 +84,6 @@ public class KeplerianElements {
         keplerianElements.setKeplerianOrbit(keplerianOrbit);
         keplerianElements.setTrueAnomaly(theta);
         keplerianElements.setEccentricAnomaly(E);
-        keplerianElements.setTimeOfPeriapsis(timeOfPeriapsis);
 
         return keplerianElements;
     }
@@ -187,7 +176,7 @@ public class KeplerianElements {
     public Timestamp timeToAngle(Timestamp timestamp, double targetTheta, boolean future) {
         double e = getKeplerianOrbit().getEccentricity();
         double targetM, initM;
-        if (e<1) {
+        if (!getKeplerianOrbit().isHyperbolic()) {
             double targetE = solveEA(e, targetTheta);
             targetM = targetE - e * Math.sin(targetE);
             initM = getEccentricAnomaly() - e * Math.sin(getEccentricAnomaly());
@@ -220,30 +209,13 @@ public class KeplerianElements {
         logger.debug("HA = {}", HA);
         return HA;
     }
-
     /**
      * Gets the position in Cartesian state based on the keplerian elements with given angle theta. So it means the position
      * is defined by the keplerian elements except the angle theta.
-     *
-     * Focus of the ellipse reflects the [0,0] coordinates in 2D.
      * @return the 3d vector
      */
     public Vector3d getCartesianPosition() {
-        double argumentOfPeriapsis = getKeplerianOrbit().getArgumentOfPeriapsis();
-        double e = getKeplerianOrbit().getEccentricity();
-        double r = getKeplerianOrbit().getSemimajorAxis() * (1 - e * e) / (1 + e * Math.cos(getTrueAnomaly()));
-        double inclination = getKeplerianOrbit().getInclination();
-        double ascendingNode = getKeplerianOrbit().getAscendingNode();
-        Vector3d v = getCartesianPosition(r, getTrueAnomaly(), inclination, ascendingNode, argumentOfPeriapsis );
-        return getKeplerianOrbit().getCentralObject().getCartesianState().getPosition().add(v);
-    }
-
-    public static Vector3d getCartesianPosition(double r, double theta, double inclination, double ascendingNode, double argumentOfPeriapsis) {
-        double u = theta + argumentOfPeriapsis;
-        double x = r * (Math.cos(u) * Math.cos(ascendingNode) - Math.sin(u) * Math.cos(inclination) * Math.sin(ascendingNode));
-        double y = r * (Math.cos(u) * Math.sin(ascendingNode) + Math.sin(u) * Math.cos(inclination) * Math.cos(ascendingNode));
-        double z = r * (Math.sin(u) * Math.sin(inclination));
-        return new Vector3d(x, y, z);
+           return keplerianOrbit.getCartesianPosition(getTrueAnomaly());
     }
 
     public double getAltitude() {
@@ -254,7 +226,7 @@ public class KeplerianElements {
             RotatingObject ro = (RotatingObject) getKeplerianOrbit().getCentralObject();
             radius = ro.getRadius();
         }
-        r =  r - radius;
+        r = r - radius;
         return r;
     }
 }

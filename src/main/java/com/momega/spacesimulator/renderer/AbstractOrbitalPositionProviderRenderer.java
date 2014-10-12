@@ -25,13 +25,12 @@ public abstract class AbstractOrbitalPositionProviderRenderer extends AbstractPo
     		Assert.isInstanceOf(OrbitalPositionProvider.class, positionProvider);
     		OrbitalPositionProvider orbitalPositionProvider = (OrbitalPositionProvider) positionProvider;
 
-//          TODO: fix after model refactoring
-//    		Point size = getTextSize(orbitalPositionProvider.getName());
-//            drawString(orbitalPositionProvider.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
-//            double eta = KeplerianUtils.getETA(orbitalPositionProvider);
-//            String etaTime = TimeUtils.periodAsString(eta);
-//            size = getTextSize(etaTime);
-//            drawString(etaTime, viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 26);
+    		Point size = getTextSize(orbitalPositionProvider.getName());
+            drawString(orbitalPositionProvider.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+            double eta = orbitalPositionProvider.getETA();
+            String etaTime = TimeUtils.periodAsString(eta);
+            size = getTextSize(etaTime);
+            drawString(etaTime, viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 26);
         }
     }
 }
