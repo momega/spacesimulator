@@ -1,6 +1,8 @@
 package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.utils.MathUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
@@ -11,6 +13,8 @@ import java.math.BigDecimal;
  * Created by martin on 10/12/14.
  */
 public class KeplerianOrbit {
+
+    private static final Logger logger = LoggerFactory.getLogger(KeplerianOrbit.class);
 
     private MovingObject centralObject;
     private double semimajorAxis; // (a)
@@ -162,6 +166,35 @@ public class KeplerianOrbit {
         double y = r * (Math.cos(u) * Math.sin(ascendingNode) + Math.sin(u) * Math.cos(inclination) * Math.cos(ascendingNode));
         double z = r * (Math.sin(u) * Math.sin(inclination));
         return new Vector3d(x, y, z);
+    }
+
+    /**
+     * Returns the intersections of the orbit with line located in the same plane. The method can result zero, one or
+     * two results. The results are eccentric anomalies in radians
+     * @param line the line
+     * @return the set of the angles as eccentric anomalies
+     */
+    public double[] lineIntersection(Line line) {
+        double p0 = line.getOrigin().getX();
+        double p1 = line.getOrigin().getY();
+        double d0 = line.getDirection().getX();
+        double d1 = line.getDirection().getY();
+
+        double a = getSemimajorAxis();
+        double b = a * Math.sqrt(1 - getEccentricity() * getEccentricity());
+
+        double A = a*d1;
+        double B = b*d0;
+        double Z = p0*d1 - p1*d0;
+
+        double[] tArray = MathUtils.solveQuadraticFunction(A+Z, 2*B, Z-A);
+        double[] result = new double[tArray.length];
+        for(int i=0; i<tArray.length; i++) {
+            double EA = 2 * Math.atan(tArray[i]);
+            result[i] = EA;
+        }
+        logger.debug("result = {}", result);
+        return result;
     }
 
 }

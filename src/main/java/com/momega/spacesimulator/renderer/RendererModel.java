@@ -85,10 +85,9 @@ public class RendererModel {
                 for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
                     result.add(hp);
                 }
-//      TODO: uncomment after model refactoring
-//                for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
-//                	result.add(intersection);
-//                }
+                for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
+                	result.add(intersection);
+                }
                 for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
                     result.add(maneuverPoint);
                 }

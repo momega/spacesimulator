@@ -1,15 +1,10 @@
 package com.momega.spacesimulator.utils;
 
+import com.momega.spacesimulator.model.*;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 import org.springframework.util.Assert;
-
-import com.momega.spacesimulator.model.CartesianState;
-import com.momega.spacesimulator.model.KeplerianElements;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Orientation;
-import com.momega.spacesimulator.model.Vector3d;
 
 /**
  * The class contains set of the function to manipulate with the vectors
@@ -19,8 +14,8 @@ public final class VectorUtils {
 
     public final static double SMALL_EPSILON = 0.0001;
     
-    public static Vector3d transform(KeplerianElements keplerianElements, Vector3d vector) {
-    	Rotation r = new Rotation(RotationOrder.ZXZ, keplerianElements.getKeplerianOrbit().getAscendingNode(), keplerianElements.getKeplerianOrbit().getInclination(), keplerianElements.getKeplerianOrbit().getArgumentOfPeriapsis());
+    public static Vector3d transform(KeplerianOrbit keplerianOrbit, Vector3d vector) {
+    	Rotation r = new Rotation(RotationOrder.ZXZ, keplerianOrbit.getAscendingNode(), keplerianOrbit.getInclination(), keplerianOrbit.getArgumentOfPeriapsis());
     	Vector3D v = vector.asVector3D();
     	Vector3D rv = r.applyInverseTo(v);
     	Vector3d result = Vector3d.fromVector3D(rv);
