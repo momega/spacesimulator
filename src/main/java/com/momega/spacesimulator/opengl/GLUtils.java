@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.opengl;
 
-import com.jogamp.common.nio.Buffers;
+import com.jogamp.opengl.util.GLReadBufferUtil;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
@@ -8,22 +8,17 @@ import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Vector3d;
-
 import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.ClassPathResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
-
-import java.awt.*;
-import java.awt.color.ColorSpace;
-import java.awt.geom.AffineTransform;
-import java.awt.image.*;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.Buffer;
 import java.util.List;
 
 import static javax.media.opengl.GL.*;
@@ -33,6 +28,8 @@ import static javax.media.opengl.GL.*;
  * Created by martin on 4/21/14.
  */
 public class GLUtils {
+
+    private static final Logger logger = LoggerFactory.getLogger(GLUtils.class);
 
     /**
      * Draws the circle
@@ -311,6 +308,29 @@ public class GLUtils {
         gl.glBegin(GL2.GL_POINTS);
         gl.glVertex3dv(position.asArray(), 0);
         gl.glEnd();
+    }
+
+    /**
+     * This method has to be called at the end
+     * of {@link com.momega.spacesimulator.opengl.AbstractGLRenderer#display(javax.media.opengl.GLAutoDrawable)}
+     * @param drawable
+     * @param directory
+     */
+    public static void saveFrameAsPng( GLAutoDrawable drawable, File directory )
+    {
+        File outputFile = new File( directory, String.valueOf(System.nanoTime()) + ".png" );
+        // Do not overwrite existing image file.
+        if( outputFile.exists() ) {
+            return;
+        }
+
+        logger.info("screenshot taken to {}", outputFile.getName());
+
+        GL2 gl = drawable.getGL().getGL2();
+        final GLReadBufferUtil screenshot = new GLReadBufferUtil(false, false);
+        if(screenshot.readPixels(gl, false)) {
+            screenshot.write(outputFile);
+        }
     }
 
 }

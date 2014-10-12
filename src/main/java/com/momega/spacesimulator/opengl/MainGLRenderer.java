@@ -15,6 +15,8 @@ import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
 
+import java.io.File;
+
 /**
  * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
  * for all my OPENGL implementation
@@ -45,6 +47,12 @@ public class MainGLRenderer extends AbstractGLRenderer {
     @Override
     protected void draw(GLAutoDrawable drawable) {
         renderer.draw(drawable);
+
+        if (RendererModel.getInstance().isTakeScreenshot()) {
+            File dir = new File(System.getProperty("user.home"));
+            GLUtils.saveFrameAsPng(drawable, dir);
+            RendererModel.getInstance().setTakeScreenshot(false);
+        }
     }
 
     @Override

@@ -39,6 +39,8 @@ public class RendererModel {
     private boolean celestialVisible;
     private boolean historyPointsVisible;
     private boolean pointsVisible;
+
+    private boolean takeScreenshot = false;
     
 
     private RendererModel() {
@@ -302,8 +304,16 @@ public class RendererModel {
     	}
     	result = sortNamedObjects(result);
     	return result;
-    }    
-    
+    }
+
+    public boolean isTakeScreenshot() {
+        return takeScreenshot;
+    }
+
+    public void setTakeScreenshot(boolean takeScreenshot) {
+        this.takeScreenshot = takeScreenshot;
+    }
+
     protected <T extends PositionProvider> List<T> sortNamedObjects(List<T> list) {
         Collections.sort(list, new Comparator<T>() {
 			@Override

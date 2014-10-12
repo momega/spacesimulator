@@ -1,36 +1,22 @@
 package com.momega.spacesimulator;
 
-import java.awt.Dimension;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-
-import com.momega.spacesimulator.swing.Icons;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jogamp.newt.event.KeyEvent;
 import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.controller.CameraController;
-import com.momega.spacesimulator.controller.Controller;
-import com.momega.spacesimulator.controller.EventBusController;
-import com.momega.spacesimulator.controller.PerspectiveController;
-import com.momega.spacesimulator.controller.QuitController;
-import com.momega.spacesimulator.controller.TargetController;
-import com.momega.spacesimulator.controller.TimeController;
-import com.momega.spacesimulator.controller.ToolbarController;
+import com.momega.spacesimulator.controller.*;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.MainGLRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.swing.Icons;
 import com.momega.spacesimulator.swing.MovingObjectListRenderer;
 import com.momega.spacesimulator.swing.SwingUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.InputEvent;
 
 
 /**
@@ -59,6 +45,7 @@ public class MainWindow extends DefaultWindow {
         MainGLRenderer mr = new MainGLRenderer();
         controller.addController(new QuitController(window));
         controller.addController(new TargetController(window));
+        controller.addController(new TakeScreenshotController());
         controller.addController(new CameraController(model.getCamera()));
         controller.addController(new TimeController(window));
         controller.addController(new PerspectiveController(mr));
@@ -79,6 +66,10 @@ public class MainWindow extends DefaultWindow {
     	saveItem.setMnemonic(KeyEvent.VK_S);
     	saveItem.setIcon(SwingUtils.createImageIcon("/images/page_save.png"));
     	JMenuItem saveAsItem = new JMenuItem("Save As...");
+        JMenuItem saveScreenshotItem = new JMenuItem("Save Screenshot");
+        saveScreenshotItem.setActionCommand(TakeScreenshotController.COMMAND);
+        saveScreenshotItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_DOWN_MASK));
+        saveScreenshotItem.addActionListener(controller);
     	JMenuItem preferencesItem = new JMenuItem("Preferences...");
     	
     	JMenuItem exitItem = new JMenuItem("Exit...");
@@ -90,6 +81,7 @@ public class MainWindow extends DefaultWindow {
     	fileMenu.add(openItem);
     	fileMenu.add(saveItem);
     	fileMenu.add(saveAsItem);
+        fileMenu.add(saveScreenshotItem);
     	fileMenu.addSeparator();
     	fileMenu.add(preferencesItem);
     	fileMenu.addSeparator();

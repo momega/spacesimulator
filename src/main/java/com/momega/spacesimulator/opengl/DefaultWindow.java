@@ -159,6 +159,10 @@ public abstract class DefaultWindow {
         }.start();
     }
 
+    public GLCanvas getCanvas() {
+        return canvas;
+    }
+
     public void sleep(int timeout) {
         try {
             Thread.sleep(timeout);
