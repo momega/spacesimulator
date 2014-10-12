@@ -12,7 +12,7 @@ influences the trajectory of the spacecraft.
 Features
 ========
 
-* Orbital maneuvers with fuel comsumption
+* Orbital maneuvers with fuel consumption
 * Display planes intersections of the spacecraft and target celestial body
 * Time warp
 * Display popup dialogs with detail information about all objects

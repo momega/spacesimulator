@@ -16,9 +16,4 @@ public class Apsis extends AbstractOrbitalPoint {
         this.type = type;
     }
 
-	@Override
-	public double getTrueAnomaly() {
-		return type.getTrueAnomaly();
-	}
-
 }

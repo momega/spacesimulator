@@ -5,17 +5,7 @@ package com.momega.spacesimulator.model;
  */
 public class ManeuverPoint extends AbstractOrbitalPoint {
 
-    private double trueAnomaly;
     private boolean start;
-
-    @Override
-    public double getTrueAnomaly() {
-        return trueAnomaly;
-    }
-
-    public void setTrueAnomaly(double trueAnomaly) {
-        this.trueAnomaly = trueAnomaly;
-    }
 
     public boolean isStart() {
         return start;

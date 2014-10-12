@@ -1,15 +1,6 @@
 package com.momega.spacesimulator.builder;
 
-import com.momega.spacesimulator.model.BaryCentre;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.HabitableModule;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.model.Propulsion;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.SphereOfInfluence;
-import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.utils.KeplerianUtils;
+import com.momega.spacesimulator.model.*;
 
 /**
  * The builder creates very simple model of the solar system just with the sun, moon and earth.
@@ -63,7 +54,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         CelestialBody earth = (CelestialBody) findMovingObject("Earth");
         CelestialBody moon = (CelestialBody) findMovingObject("Moon");
 
-        Vector3d position = KeplerianUtils.getInstance().getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
+        Vector3d position = KeplerianElements.getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(8200d).negate();
         Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity);
@@ -82,12 +73,12 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         habitableModule.setName("Habitat");
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
-        addManeuver(spacecraft, "M1", 20 * 60d, 2600d, 1d, 0, Math.toRadians(90));
-        addManeuver(spacecraft, "M2", 130 * 60d, 950d, 1d, 0, Math.toRadians(90));
-        addManeuver(spacecraft, "M3", 200 * 60d, 1500d, 1d, 0, Math.toRadians(0));
-        addManeuver(spacecraft, "M4", 5915 * 60d, 210d, 1d, Math.toRadians(180), Math.toRadians(0));
-        
-        spacecraft.setTargetBody(moon);
+//        addManeuver(spacecraft, "M1", 20 * 60d, 2600d, 1d, 0, Math.toRadians(90));
+//        addManeuver(spacecraft, "M2", 130 * 60d, 950d, 1d, 0, Math.toRadians(90));
+//        addManeuver(spacecraft, "M3", 200 * 60d, 1500d, 1d, 0, Math.toRadians(0));
+//        addManeuver(spacecraft, "M4", 5915 * 60d, 210d, 1d, Math.toRadians(180), Math.toRadians(0));
+//
+//        spacecraft.setTargetBody(moon);
 
         addMovingObject(spacecraft);
     }

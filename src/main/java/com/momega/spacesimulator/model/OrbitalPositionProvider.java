@@ -10,13 +10,6 @@ package com.momega.spacesimulator.model;
 public interface OrbitalPositionProvider extends PositionProvider {
 
 	/**
-	 * Gets the true anomaly of the point. It may differ from the true anomaly stored
-	 * in the {@link #getKeplerianElements()}. The example can be apsis or orbital plane intersection
-	 * @return the angle in radians
-	 */
-	double getTrueAnomaly();
-	
-	/**
 	 * Gets the {@link KeplerianElements} associated with the point.
 	 * @return
 	 */

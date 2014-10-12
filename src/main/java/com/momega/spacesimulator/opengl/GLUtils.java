@@ -293,9 +293,9 @@ public class GLUtils {
 
     public static void rotate(GL2 gl, KeplerianElements keplerianElements) {
     	// the order is important
-        gl.glRotated(Math.toDegrees(keplerianElements.getAscendingNode()), 0, 0, 1);
-        gl.glRotated(Math.toDegrees(keplerianElements.getInclination()), 1, 0, 0);
-        gl.glRotated(Math.toDegrees(keplerianElements.getArgumentOfPeriapsis()), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(keplerianElements.getKeplerianOrbit().getAscendingNode()), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(keplerianElements.getKeplerianOrbit().getInclination()), 1, 0, 0);
+        gl.glRotated(Math.toDegrees(keplerianElements.getKeplerianOrbit().getArgumentOfPeriapsis()), 0, 0, 1);
     }
 
     public static void drawPoint(GL2 gl, int size, double[] color, PositionProvider positionProvider) {

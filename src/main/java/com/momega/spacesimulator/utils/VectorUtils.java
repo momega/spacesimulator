@@ -20,7 +20,7 @@ public final class VectorUtils {
     public final static double SMALL_EPSILON = 0.0001;
     
     public static Vector3d transform(KeplerianElements keplerianElements, Vector3d vector) {
-    	Rotation r = new Rotation(RotationOrder.ZXZ, keplerianElements.getAscendingNode(), keplerianElements.getInclination(), keplerianElements.getArgumentOfPeriapsis());
+    	Rotation r = new Rotation(RotationOrder.ZXZ, keplerianElements.getKeplerianOrbit().getAscendingNode(), keplerianElements.getKeplerianOrbit().getInclination(), keplerianElements.getKeplerianOrbit().getArgumentOfPeriapsis());
     	Vector3D v = vector.asVector3D();
     	Vector3D rv = r.applyInverseTo(v);
     	Vector3d result = Vector3d.fromVector3D(rv);
@@ -60,7 +60,7 @@ public final class VectorUtils {
      * @return the new instance of the cartesian state
      */
     public static CartesianState relativeCartesianState(MovingObject movingObject) {
-        return movingObject.getCartesianState().subtract(movingObject.getKeplerianElements().getCentralObject().getCartesianState());
+        return movingObject.getCartesianState().subtract(movingObject.getKeplerianElements().getKeplerianOrbit().getCentralObject().getCartesianState());
     }
 
     public static boolean equals(Vector3d v1, Vector3d v2, double precision) {

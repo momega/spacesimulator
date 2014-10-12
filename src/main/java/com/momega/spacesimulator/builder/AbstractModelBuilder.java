@@ -124,14 +124,17 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     	Assert.notNull(centralObject);
     	
         KeplerianElements keplerianElements = new KeplerianElements();
-        keplerianElements.setCentralObject(centralObject);
-        keplerianElements.setSemimajorAxis(semimajorAxis);
-        keplerianElements.setEccentricity(eccentricity);
-        keplerianElements.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
-        keplerianElements.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
+        KeplerianOrbit orbit = new KeplerianOrbit();
+        orbit.setCentralObject(centralObject);
+        orbit.setSemimajorAxis(semimajorAxis);
+        orbit.setEccentricity(eccentricity);
+        orbit.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
+        orbit.setInclination(Math.toRadians(inclination));
+        orbit.setAscendingNode(Math.toRadians(ascendingNode));
+        orbit.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
+
         keplerianElements.setTimeOfPeriapsis(TimeUtils.fromJulianDay(timeOfPeriapsis));
-        keplerianElements.setInclination(Math.toRadians(inclination));
-        keplerianElements.setAscendingNode(Math.toRadians(ascendingNode));
+        keplerianElements.setKeplerianOrbit(orbit);
         movingObject.setKeplerianElements(keplerianElements);
         
         KeplerianTrajectory trajectory = movingObject.getTrajectory();
@@ -345,7 +348,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      */
     public SphereOfInfluence addPlanetToSoiTree(final CelestialBody celestialBody, final SphereOfInfluence parentSoi, KeplerianElements keplerianElements) {
         SphereOfInfluence soi = new SphereOfInfluence();
-        double radius = Math.pow(celestialBody.getMass() / parentSoi.getBody().getMass(), 0.4d) * keplerianElements.getSemimajorAxis();
+        double radius = Math.pow(celestialBody.getMass() / parentSoi.getBody().getMass(), 0.4d) * keplerianElements.getKeplerianOrbit().getSemimajorAxis();
         soi.setRadius(radius);
         soi.setBody(celestialBody);
         soi.setParent(parentSoi);

@@ -6,7 +6,6 @@ package com.momega.spacesimulator.model;
 public class OrbitIntersection extends AbstractOrbitalPoint  {
 
     private MovingObject targetObject;
-    private double trueAnomaly;
 
     public MovingObject getTargetObject() {
         return targetObject;
@@ -15,13 +14,5 @@ public class OrbitIntersection extends AbstractOrbitalPoint  {
     public void setTargetObject(MovingObject targetObject) {
         this.targetObject = targetObject;
     }
-    
-    public void setTrueAnomaly(double trueAnomaly) {
-		this.trueAnomaly = trueAnomaly;
-	}
-    
-    public double getTrueAnomaly() {
-		return trueAnomaly;
-	}
 
 }
