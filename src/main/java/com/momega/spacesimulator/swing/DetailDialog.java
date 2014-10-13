@@ -51,8 +51,8 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             tabbedPane.addTab("Cartesian", SwingUtils.createImageIcon("/images/world.png"), createCartesianPanel(), "Cartesian Information");
             tabbedPane.addTab("Keplerian", SwingUtils.createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
         } else {
-        	if (positionProvider instanceof OrbitalPositionProvider) {
-                tabbedPane.addTab("Basic", SwingUtils.createImageIcon("/images/application.png"), createApsisPanel(), "Basic Information");
+        	if (positionProvider instanceof AbstractOrbitalPoint) {
+                tabbedPane.addTab("Basic", SwingUtils.createImageIcon("/images/application.png"), createOrbitalPointPanel(), "Basic Information");
             } else if (positionProvider instanceof PositionProvider) {
                 tabbedPane.addTab("Basic", SwingUtils.createImageIcon("/images/application.png"), createPositionProviderPanel(), "Basic Information");
             }
@@ -174,14 +174,14 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         return result;
     }
 
-    protected JPanel createApsisPanel() {
+    protected JPanel createOrbitalPointPanel() {
         OrbitalPointPanel result =  new OrbitalPointPanel((AbstractOrbitalPoint) positionProvider);
         attributesPanelList.add(result);
         return result;
     }
 
     protected JPanel createPositionProviderPanel() {
-        PositionProviderPanel result =  new PositionProviderPanel((PositionProvider) positionProvider);
+        PositionProviderPanel result =  new PositionProviderPanel(positionProvider);
         attributesPanelList.add(result);
         return result;
     }

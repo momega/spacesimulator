@@ -9,20 +9,24 @@ import com.momega.spacesimulator.context.ModelHolder;
  * @author martin
  *
  */
-public abstract class AbstractOrbitalPoint extends NamedObject implements OrbitalPositionProvider {
+public abstract class AbstractOrbitalPoint extends NamedObject implements PositionProvider {
 
     private Vector3d position;
     private Timestamp timestamp;
     private KeplerianElements keplerianElements;
     private boolean visible;
     private MovingObject movingObject;
-	
+
+    @Override
     public Vector3d getPosition() {
 		return position;
 	}
+
 	public void setPosition(Vector3d position) {
 		this.position = position;
 	}
+
+    @Override
 	public Timestamp getTimestamp() {
 		return timestamp;
 	}
@@ -37,7 +41,6 @@ public abstract class AbstractOrbitalPoint extends NamedObject implements Orbita
 		this.keplerianElements = keplerianElements;
 	}
 	
-	@Override
 	public boolean isVisible() {
 		return visible;
 	}

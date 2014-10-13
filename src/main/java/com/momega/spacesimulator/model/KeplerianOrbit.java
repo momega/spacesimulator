@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 /**
  * Keplerian orbit contains all elements which defines single orbit. There multi infinite positions
- * located on the orbit. Typically several objects shared the same orbit.
+ * located on the orbit. Typically several objects shared the same instance of this class.
  * Created by martin on 10/12/14.
  */
 public class KeplerianOrbit {

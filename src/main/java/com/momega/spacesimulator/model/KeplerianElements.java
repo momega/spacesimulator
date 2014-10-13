@@ -211,14 +211,12 @@ public class KeplerianElements {
         }
 
         double timeInterval = diffM / n;
-        Timestamp result = timestamp.add(timeInterval);
-        return result;
+        return timestamp.add(timeInterval);
     }
 
     public static double solveEA(double eccentricity, double theta) {
         double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
-        double EA = 2 * Math.atan(Math.tan(theta/2) / param);
-        return EA;
+        return 2 * Math.atan(Math.tan(theta/2) / param);
     }
 
     public static double solveHA(double eccentricity, double theta) {

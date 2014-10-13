@@ -16,9 +16,9 @@ public final class VectorUtils {
     
     public static Vector3d transform(KeplerianOrbit keplerianOrbit, Vector3d vector) {
     	Rotation r = new Rotation(RotationOrder.ZXZ, keplerianOrbit.getAscendingNode(), keplerianOrbit.getInclination(), keplerianOrbit.getArgumentOfPeriapsis());
-    	Vector3D v = vector.asVector3D();
+    	Vector3D v = new Vector3D(vector.getX(), vector.getY(), vector.getZ());
     	Vector3D rv = r.applyInverseTo(v);
-    	Vector3d result = Vector3d.fromVector3D(rv);
+    	Vector3d result = new Vector3d(rv.getX(), rv.getY(), rv.getZ());
     	return result;
     }
     

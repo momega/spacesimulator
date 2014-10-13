@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
-
 import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
@@ -99,14 +97,6 @@ public class Vector3d {
 
     public double[] asArray() {
         return new double[] {x,y,z};
-    }
-    
-    public static Vector3d fromVector3D(Vector3D vector) {
-    	return new Vector3d(vector.getX(), vector.getY(), vector.getZ());
-    }
-    
-    public Vector3D asVector3D() {
-    	return new Vector3D(x, y, z);
     }
 
     public String toString() {
