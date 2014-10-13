@@ -45,7 +45,11 @@ public abstract class AbstractOrbitalPoint extends NamedObject implements Orbita
 	public void setVisible(boolean visible) {
 		this.visible = visible;
 	}
-	
+
+    /**
+     * Returns the moving object to which the orbital position provider belongs
+     * @return
+     */
 	public MovingObject getMovingObject() {
 		return movingObject;
 	}
@@ -54,13 +58,4 @@ public abstract class AbstractOrbitalPoint extends NamedObject implements Orbita
 		this.movingObject = movingObject;
 	}
 
-    /**
-     * Returns ETA time in seconds between current time and planned time of the orbital point
-     * @return the ETA in seconds
-     */
-    public double getETA() {
-    	Timestamp current = ModelHolder.getModel().getTime();
-    	Timestamp future = getTimestamp();
-    	return future.subtract(current).doubleValue();
-    }
 }

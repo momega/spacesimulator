@@ -9,7 +9,6 @@ import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.model.OrbitalPositionProvider;
 import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.utils.KeplerianUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
@@ -27,7 +26,7 @@ public abstract class AbstractOrbitalPositionProviderRenderer extends AbstractPo
 
     		Point size = getTextSize(orbitalPositionProvider.getName());
             drawString(orbitalPositionProvider.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
-            double eta = orbitalPositionProvider.getETA();
+            double eta = TimeUtils.getETA(orbitalPositionProvider);
             String etaTime = TimeUtils.periodAsString(eta);
             size = getTextSize(etaTime);
             drawString(etaTime, viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 26);

@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.utils;
 
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.AbstractOrbitalPoint;
+import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.TimeInterval;
 import com.momega.spacesimulator.model.Timestamp;
 import org.joda.time.DateTime;
@@ -142,6 +145,16 @@ public class TimeUtils {
     	long duration = Double.valueOf(period * DateTimeConstants.MILLIS_PER_SECOND).longValue();
     	Period p = new Period(duration);
     	return periodFormatter.print(p);
+    }
+
+    /**
+     * Returns ETA time in seconds between current time and planned time of the orbital point
+     * @return the ETA in seconds
+     */
+    public static double getETA(PositionProvider orbitalPoint) {
+        Timestamp current = ModelHolder.getModel().getTime();
+        Timestamp future = orbitalPoint.getTimestamp();
+        return future.subtract(current).doubleValue();
     }
 
 }
