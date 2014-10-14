@@ -15,7 +15,11 @@ import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
 
+import java.awt.*;
 import java.io.File;
+import java.nio.ByteBuffer;
+import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 
 /**
  * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
@@ -47,11 +51,23 @@ public class MainGLRenderer extends AbstractGLRenderer {
     @Override
     protected void draw(GLAutoDrawable drawable) {
         renderer.draw(drawable);
+        GL2 gl = drawable.getGL().getGL2();
 
         if (RendererModel.getInstance().isTakeScreenshot()) {
             File dir = new File(System.getProperty("user.home"));
             GLUtils.saveFrameAsPng(drawable, dir);
             RendererModel.getInstance().setTakeScreenshot(false);
+        }
+
+        Point position =  RendererModel.getInstance().getMouseCoordinates();
+        if ( position != null) {
+            ByteBuffer buffer = ByteBuffer.allocate(4);
+            gl.glReadBuffer(GL2.GL_FRONT);
+
+            FloatBuffer winZ = FloatBuffer.allocate(1);
+            gl.glReadPixels(position.x, position.y, 1, 1, GL2.GL_RGBA, GL2.GL_UNSIGNED_BYTE, buffer);
+            gl.glReadPixels(position.x, position.y, 1, 1, GL2.GL_DEPTH_COMPONENT, GL2.GL_FLOAT  , winZ);
+            logger.info("position={}, z = {}, color = {}", new Object[]{position, winZ.array(), buffer.array()});
         }
     }
 

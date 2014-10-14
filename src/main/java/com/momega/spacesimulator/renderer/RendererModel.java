@@ -41,7 +41,8 @@ public class RendererModel {
     private boolean pointsVisible;
 
     private boolean takeScreenshot = false;
-    
+    private Point mouseCoordinates = null;
+
 
     private RendererModel() {
         super();
@@ -323,6 +324,13 @@ public class RendererModel {
 			}
         });
         return list;
-    }    
+    }
 
+    public void setMouseCoordinates(Point mouseCoordinates) {
+        this.mouseCoordinates = mouseCoordinates;
+    }
+
+    public Point getMouseCoordinates() {
+        return mouseCoordinates;
+    }
 }

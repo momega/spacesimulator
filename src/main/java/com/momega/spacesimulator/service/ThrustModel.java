@@ -65,7 +65,7 @@ public class ThrustModel implements ForceModel {
         spacecraft.setMass( spacecraft.getMass() - dm);
         propulsion.setFuel( propulsion.getFuel() - dm);
 
-        logger.info("fuel level = {}, acc = {}", propulsion.getFuel(), acceleration.toString());
+        logger.debug("fuel level = {}, acc = {}", propulsion.getFuel(), acceleration.toString());
 
         return acceleration;
     }

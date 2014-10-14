@@ -4,6 +4,7 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.opengl.DefaultWindow;
+import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 import com.momega.spacesimulator.swing.DetailDialogHolder;
@@ -44,9 +45,7 @@ public class TargetController extends AbstractController {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        final GLCanvas canvas  = (GLCanvas) e.getSource();
-        GLDrawable drawable = canvas.getDelegatedDrawable();
-        final Point position = getPosition(drawable, e);
+        Point position = GLUtils.getPosition(e);
         logger.info("click count = {}, button  = {}", e.getClickCount(), e.getButton());
         final Timestamp timestamp = ModelHolder.getModel().getTime();
         final List<ViewCoordinates> viewCoordinatesList = RendererModel.getInstance().findViewCoordinates(position);
@@ -136,15 +135,6 @@ public class TargetController extends AbstractController {
         super.mouseClicked(e);
     }
 
-    protected Point getPosition(GLDrawable drawable, MouseEvent e) {
-        int x = e.getX();
-        int y = e.getY();
-        if (drawable.isGLOriented()) {
-            y = drawable.getHeight() - y;
-        }
-        return new Point(x, y);
-    }
-    
     @Override
     public void actionPerformed(ActionEvent e) {
     	if (SELECT_POSITION_PROVIDER.equals(e.getActionCommand())) {

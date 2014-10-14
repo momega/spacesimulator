@@ -14,8 +14,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.GLDrawable;
 import javax.media.opengl.GLProfile;
+import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
+import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -238,6 +242,20 @@ public class GLUtils {
         drawEllipse(gl, a, b, num_segments, color);
     }
 
+    public static Point getPosition(MouseEvent e) {
+        final GLAutoDrawable canvas  = (GLAutoDrawable) e.getSource();
+        return getPosition(canvas, e);
+    }
+
+    public static Point getPosition(GLDrawable drawable, MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+        if (drawable.isGLOriented()) {
+            y = drawable.getHeight() - y;
+        }
+        return new Point(x, y);
+    }
+
     /**
      * Gets the projection coordinates of the position in model-view based on the camera
      * @param drawable the drawable
@@ -313,8 +331,8 @@ public class GLUtils {
     /**
      * This method has to be called at the end
      * of {@link com.momega.spacesimulator.opengl.AbstractGLRenderer#display(javax.media.opengl.GLAutoDrawable)}
-     * @param drawable
-     * @param directory
+     * @param drawable the drawable
+     * @param directory the directory where the output file will be stores
      */
     public static void saveFrameAsPng( GLAutoDrawable drawable, File directory )
     {

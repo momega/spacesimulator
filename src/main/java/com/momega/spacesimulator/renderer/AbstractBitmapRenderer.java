@@ -60,6 +60,8 @@ public abstract class AbstractBitmapRenderer extends AbstractRenderer {
                 gl.glDrawPixels(imgWidth, imgHeight, GL2.GL_RGBA, GL.GL_UNSIGNED_BYTE, imgRGBA);
             }
 
+            gl.glEnable(GL2.GL_DEPTH_TEST);
+
         }
         gl.glPopAttrib();
         gl.glPopAttrib();
