@@ -50,6 +50,23 @@ public class NewtonianPropagator implements Propagator {
         computeApsides(spacecraft);
         computeIntersections(spacecraft, newTimestamp);
         computeManeuvers(spacecraft, newTimestamp);
+        computeUserPoints(spacecraft, newTimestamp);
+    }
+
+    protected void computeUserPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
+        for(UserOrbitalPoint userOrbitalPoint : spacecraft.getUserOrbitalPoints()) {
+            computeUserPoint(userOrbitalPoint, newTimestamp);
+        }
+    }
+
+    protected void computeUserPoint(UserOrbitalPoint userOrbitalPoint, Timestamp newTimestamp) {
+        KeplerianElements keplerianElements = userOrbitalPoint.getKeplerianElements();
+        double theta = keplerianElements.getTrueAnomaly();
+        Vector3d position = keplerianElements.getCartesianPosition();
+        userOrbitalPoint.setPosition(position);
+
+        Timestamp timestamp = userOrbitalPoint.getMovingObject().getKeplerianElements().timeToAngle(newTimestamp, theta, true);
+        userOrbitalPoint.setTimestamp(timestamp);
     }
 
     private void computeManeuvers(Spacecraft spacecraft, Timestamp newTimestamp) {

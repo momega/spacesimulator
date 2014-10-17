@@ -2,6 +2,7 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Trajectory;
 import com.momega.spacesimulator.opengl.GLUtils;
 import org.slf4j.Logger;
@@ -28,6 +29,13 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
             GL2 gl = drawable.getGL().getGL2();
             gl.glPushMatrix();
 
+            if (movingObject instanceof Spacecraft) {
+                gl.glEnable(GL2.GL_STENCIL_TEST);
+                gl.glStencilOp(GL2.GL_KEEP, GL2.GL_KEEP, GL2.GL_REPLACE);
+
+                gl.glStencilFunc(GL2.GL_ALWAYS, 1, 0xff);
+            }
+
             // the order is important, at first move to focus
             GLUtils.translate(gl, getKeplerianElements().getKeplerianOrbit().getCentralObject().getCartesianState().getPosition());
             GLUtils.rotate(gl, getKeplerianElements());
@@ -46,6 +54,10 @@ public class KeplerianTrajectoryRenderer extends AbstractRenderer {
             	double b = a * Math.sqrt(getKeplerianElements().getKeplerianOrbit().getEccentricity() * getKeplerianElements().getKeplerianOrbit().getEccentricity() - 1);
                 double HA = getKeplerianElements().getHyperbolicAnomaly();
                 GLUtils.drawHyperbolaPartial(gl, a, b, -2 * Math.PI, -HA, 7200, getTrajectory().getColor()); // -HA because of a<0
+            }
+
+            if (movingObject instanceof Spacecraft) {
+                gl.glDisable(GL2.GL_STENCIL_TEST);
             }
 
             gl.glPopMatrix();

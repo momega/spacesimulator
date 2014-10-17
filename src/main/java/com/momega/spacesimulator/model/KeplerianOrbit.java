@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -197,4 +198,10 @@ public class KeplerianOrbit {
         return result;
     }
 
+
+    @Override
+    public String toString() {
+        String result = String.format("(a=%6.2f, e=%6.2f, omega=%6.2f, i=%6.2f, OMEGA=%6.2f, Tp=%s)", semimajorAxis, eccentricity, argumentOfPeriapsis, inclination, ascendingNode, TimeUtils.timeAsString(timeOfPeriapsis));
+        return result;
+    }
 }

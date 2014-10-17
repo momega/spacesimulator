@@ -214,12 +214,12 @@ public class KeplerianElements {
         return timestamp.add(timeInterval);
     }
 
-    public static double solveEA(double eccentricity, double theta) {
+    private static double solveEA(double eccentricity, double theta) {
         double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
         return 2 * Math.atan(Math.tan(theta/2) / param);
     }
 
-    public static double solveHA(double eccentricity, double theta) {
+    private static double solveHA(double eccentricity, double theta) {
         double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
         double HA = MathUtils.asinh(sinH);
         logger.debug("HA = {}", HA);

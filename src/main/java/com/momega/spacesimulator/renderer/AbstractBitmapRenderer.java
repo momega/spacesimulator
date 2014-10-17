@@ -47,7 +47,7 @@ public abstract class AbstractBitmapRenderer extends AbstractRenderer {
         gl.glPushAttrib(GL2.GL_DEPTH_BUFFER_BIT);
         gl.glPushAttrib(GL2.GL_COLOR_BUFFER_BIT);
         {
-            gl.glDisable(GL2.GL_DEPTH_TEST);
+            //gl.glDisable(GL2.GL_DEPTH_TEST);
 
             // enable alpha mask (import from gif sets alpha bits)
             gl.glEnable(GL2.GL_BLEND);
@@ -60,7 +60,7 @@ public abstract class AbstractBitmapRenderer extends AbstractRenderer {
                 gl.glDrawPixels(imgWidth, imgHeight, GL2.GL_RGBA, GL.GL_UNSIGNED_BYTE, imgRGBA);
             }
 
-            gl.glEnable(GL2.GL_DEPTH_TEST);
+            //gl.glEnable(GL2.GL_DEPTH_TEST);
 
         }
         gl.glPopAttrib();

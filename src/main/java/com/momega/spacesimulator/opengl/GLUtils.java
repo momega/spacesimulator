@@ -16,13 +16,14 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLDrawable;
 import javax.media.opengl.GLProfile;
-import javax.media.opengl.awt.GLCanvas;
 import javax.media.opengl.glu.GLU;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.List;
 
 import static javax.media.opengl.GL.*;
@@ -257,6 +258,58 @@ public class GLUtils {
     }
 
     /**
+     * Finds the stenciled point around given coordinates
+     * @param drawable the GL canvas
+     * @param center the center of the search in projection coordinates
+     * @param size the size of the square to be sought. This has to be odd number
+     * @return the best of the point in near given coordinates. If no such the point is to be found, null is returned
+     */
+    public static Point getStencilPosition(GLAutoDrawable drawable, Point center, int size) {
+        GL2 gl = drawable.getGL().getGL2();
+        gl.glReadBuffer(GL2.GL_FRONT);
+
+        // for future usage
+        //ByteBuffer buffer = ByteBuffer.allocate(4);
+        //gl.glReadPixels(position.x, position.y, 1, 1, GL2.GL_RGBA, GL2.GL_UNSIGNED_BYTE, buffer);
+
+        logger.info("position x,y = {},{}", center.x, center.y);
+        int half = size / 2;
+        IntBuffer stencilBuffer = IntBuffer.allocate(1 * size * size);
+        gl.glReadPixels(center.x - half, center.y - half, size, size, GL2.GL_STENCIL_INDEX, GL2.GL_UNSIGNED_INT, stencilBuffer);
+
+        for(int i=0; i<size; i++) {
+            for(int j=0; j<size; j++) {
+                int realI = stencilFunction(i);
+                int realJ = stencilFunction(j);
+                int index = (realJ + size/2) * size + (realI + size/2);
+                int stencil = stencilBuffer.get(index);
+                if (stencil>0) {
+                    return new Point(center.x + realI, center.y + realJ);
+                }
+            }
+        }
+        return null;
+    }
+
+    private static int stencilFunction(int i) {
+        return ( (i+1)/2 * (i%2==0 ? 1 : -1));
+    }
+
+
+    /**
+     * Gets the depth on the given coordinates
+     * @param drawable the opengl canvas
+     * @param point the projection coordinates
+     * @return the the depth [0..1]
+     */
+    public static double getDepth(GLAutoDrawable drawable, Point point) {
+        GL2 gl = drawable.getGL().getGL2();
+        FloatBuffer depthBuffer = FloatBuffer.allocate(1);
+        gl.glReadPixels(point.x, point.y, 1, 1, GL2.GL_DEPTH_COMPONENT, GL2.GL_FLOAT, depthBuffer);
+        return depthBuffer.get(0);
+    }
+
+    /**
      * Gets the projection coordinates of the position in model-view based on the camera
      * @param drawable the drawable
      * @param position any position in 3D
@@ -286,6 +339,28 @@ public class GLUtils {
         }
 
         return null;
+    }
+
+    public static Vector3d getModelCoordinates(GLAutoDrawable drawable, Point position, double depth) {
+        double modelView[] = new double[16];
+        double projection[] = new double[16];
+        int viewport[] = new int[4];
+
+        double wcoord[] = new double[4];
+
+        GL2 gl = drawable.getGL().getGL2();
+        gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, modelView, 0);
+        gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projection, 0 );
+        gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
+
+        GLU glu = new GLU();
+        glu.gluUnProject(position.getX(),  position.getY(), depth, //
+                modelView, 0,
+                projection, 0,
+                viewport, 0,
+                wcoord, 0);
+
+        return new Vector3d(wcoord[0], wcoord[1], wcoord[2]);
     }
 
     public static Texture loadTexture(GL2 gl, Class<?> clazz, String fileName) {

@@ -19,6 +19,7 @@ public class Spacecraft extends PhysicalBody {
     private CelestialBody targetBody;
     private Vector3d thrust;
     private List<OrbitIntersection> orbitIntersections = new ArrayList<>();
+    private List<UserOrbitalPoint> userOrbitalPoints = new ArrayList<>();
 
     public HistoryTrajectory getHistoryTrajectory() {
         return historyTrajectory;
@@ -75,4 +76,12 @@ public class Spacecraft extends PhysicalBody {
     public Vector3d getThrust() {
 		return thrust;
 	}
+
+    public List<UserOrbitalPoint> getUserOrbitalPoints() {
+        return userOrbitalPoints;
+    }
+
+    public void setUserOrbitalPoints(List<UserOrbitalPoint> userOrbitalPoints) {
+        this.userOrbitalPoints = userOrbitalPoints;
+    }
 }

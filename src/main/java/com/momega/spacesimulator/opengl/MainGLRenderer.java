@@ -1,25 +1,23 @@
 package com.momega.spacesimulator.opengl;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.glu.GLU;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.service.UserPointService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.media.opengl.glu.GLU;
 import java.awt.*;
 import java.io.File;
-import java.nio.ByteBuffer;
-import java.nio.DoubleBuffer;
-import java.nio.FloatBuffer;
 
 /**
  * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
@@ -51,7 +49,6 @@ public class MainGLRenderer extends AbstractGLRenderer {
     @Override
     protected void draw(GLAutoDrawable drawable) {
         renderer.draw(drawable);
-        GL2 gl = drawable.getGL().getGL2();
 
         if (RendererModel.getInstance().isTakeScreenshot()) {
             File dir = new File(System.getProperty("user.home"));
@@ -60,14 +57,19 @@ public class MainGLRenderer extends AbstractGLRenderer {
         }
 
         Point position =  RendererModel.getInstance().getMouseCoordinates();
-        if ( position != null) {
-            ByteBuffer buffer = ByteBuffer.allocate(4);
-            gl.glReadBuffer(GL2.GL_FRONT);
+        if (position != null) {
+            position = GLUtils.getStencilPosition(drawable, position, RendererModel.MIN_TARGET_SIZE);
+            if (position != null) {
+                double depth = GLUtils.getDepth(drawable, position);
 
-            FloatBuffer winZ = FloatBuffer.allocate(1);
-            gl.glReadPixels(position.x, position.y, 1, 1, GL2.GL_RGBA, GL2.GL_UNSIGNED_BYTE, buffer);
-            gl.glReadPixels(position.x, position.y, 1, 1, GL2.GL_DEPTH_COMPONENT, GL2.GL_FLOAT  , winZ);
-            logger.info("position={}, z = {}, color = {}", new Object[]{position, winZ.array(), buffer.array()});
+                Vector3d modelCoordinates = GLUtils.getModelCoordinates(drawable, position, depth);
+                logger.info("model coordinates = {}", modelCoordinates.asArray());
+
+                Spacecraft spacecraft = (Spacecraft) RendererModel.getInstance().findByName("Spacecraft 1").getObject();
+                UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
+                userPointService.createUserOrbitalPoint(spacecraft, modelCoordinates);
+            }
+            RendererModel.getInstance().setMouseCoordinates(null);
         }
     }
 

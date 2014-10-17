@@ -3,23 +3,13 @@
  */
 package com.momega.spacesimulator.controller;
 
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
-
-import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.model.Camera;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.momega.spacesimulator.model.Camera;
-
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.media.opengl.GLDrawable;
-import javax.media.opengl.awt.GLCanvas;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
 
 /**
  * @author martin
@@ -80,14 +70,6 @@ public class SimpleCameraController extends AbstractController {
         } else {
             changeDistance(1.1);
         }
-    }
-
-    @Override
-    public void mouseMoved(MouseEvent e) {
-        final GLAutoDrawable canvas  = (GLAutoDrawable) e.getSource();
-        Point position = GLUtils.getPosition(canvas, e);
-
-        RendererModel.getInstance().setMouseCoordinates(position);
     }
 
     public Camera getCamera() {

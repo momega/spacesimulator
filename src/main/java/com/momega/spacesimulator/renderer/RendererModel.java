@@ -41,7 +41,9 @@ public class RendererModel {
     private boolean pointsVisible;
 
     private boolean takeScreenshot = false;
+
     private Point mouseCoordinates = null;
+    private Vector3d mouseModelCoordinates = null;
 
 
     private RendererModel() {
@@ -91,6 +93,9 @@ public class RendererModel {
                 }
                 for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
                     result.add(maneuverPoint);
+                }
+                for(UserOrbitalPoint userOrbitalPoint : spacecraft.getUserOrbitalPoints()) {
+                    result.add(userOrbitalPoint);
                 }
             }
         }

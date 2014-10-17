@@ -55,10 +55,10 @@ public class CartesianState {
     }
 
     /**
-     * Computes the keplerian elements
-     * @param soiBody
-     * @param newTimestamp
-     * @return
+     * Computes the keplerian elements from the cartesian coordinates.
+     * @param soiBody the central object of the result central object. This comes from from sphere of influence
+     * @param newTimestamp new timestamp
+     * @return new instance of the keplerian elements.
      */
     public KeplerianElements toKeplerianElements(CelestialBody soiBody, Timestamp newTimestamp) {
         Vector3d position = getPosition();

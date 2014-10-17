@@ -44,6 +44,7 @@ public class MainWindow extends DefaultWindow {
         
         MainGLRenderer mr = new MainGLRenderer();
         controller.addController(new QuitController(window));
+        controller.addController(new ClickController());
         controller.addController(new TargetController(window));
         controller.addController(new TakeScreenshotController());
         controller.addController(new CameraController(model.getCamera()));

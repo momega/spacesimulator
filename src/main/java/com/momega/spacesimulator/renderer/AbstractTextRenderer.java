@@ -21,7 +21,7 @@ public abstract class AbstractTextRenderer extends AbstractRenderer {
     }
 
     protected final void drawTexts(GLAutoDrawable drawable) {
-    	textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight());
+    	textRenderer.beginRendering(drawable.getWidth(), drawable.getHeight(), true);
         GL2 gl = drawable.getGL().getGL2();
         renderTexts(gl, drawable.getWidth(), drawable.getHeight());
         textRenderer.endRendering();
