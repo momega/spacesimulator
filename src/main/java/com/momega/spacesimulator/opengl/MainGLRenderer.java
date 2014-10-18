@@ -3,13 +3,10 @@ package com.momega.spacesimulator.opengl;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.service.UserPointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,17 +55,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
         Point position =  RendererModel.getInstance().getMouseCoordinates();
         if (position != null) {
-            position = GLUtils.getStencilPosition(drawable, position, RendererModel.MIN_TARGET_SIZE);
-            if (position != null) {
-                double depth = GLUtils.getDepth(drawable, position);
-
-                Vector3d modelCoordinates = GLUtils.getModelCoordinates(drawable, position, depth);
-                logger.info("model coordinates = {}", modelCoordinates.asArray());
-
-                Spacecraft spacecraft = (Spacecraft) RendererModel.getInstance().findByName("Spacecraft 1").getObject();
-                UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
-                userPointService.createUserOrbitalPoint(spacecraft, modelCoordinates);
-            }
+            RendererModel.getInstance().createUserPoint(drawable, position);
             RendererModel.getInstance().setMouseCoordinates(null);
         }
     }

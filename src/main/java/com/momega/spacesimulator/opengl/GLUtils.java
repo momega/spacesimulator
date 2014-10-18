@@ -24,7 +24,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static javax.media.opengl.GL.*;
 
@@ -262,9 +264,9 @@ public class GLUtils {
      * @param drawable the GL canvas
      * @param center the center of the search in projection coordinates
      * @param size the size of the square to be sought. This has to be odd number
-     * @return the best of the point in near given coordinates. If no such the point is to be found, null is returned
+     * @return result the map were keys are index of the stencil and value is the best point found
      */
-    public static Point getStencilPosition(GLAutoDrawable drawable, Point center, int size) {
+    public static Map<Integer, Point> getStencilPosition(GLAutoDrawable drawable, Point center, int size) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glReadBuffer(GL2.GL_FRONT);
 
@@ -277,6 +279,7 @@ public class GLUtils {
         IntBuffer stencilBuffer = IntBuffer.allocate(1 * size * size);
         gl.glReadPixels(center.x - half, center.y - half, size, size, GL2.GL_STENCIL_INDEX, GL2.GL_UNSIGNED_INT, stencilBuffer);
 
+        Map<Integer, Point> result = new HashMap<>();
         for(int i=0; i<size; i++) {
             for(int j=0; j<size; j++) {
                 int realI = stencilFunction(i);
@@ -284,11 +287,13 @@ public class GLUtils {
                 int index = (realJ + size/2) * size + (realI + size/2);
                 int stencil = stencilBuffer.get(index);
                 if (stencil>0) {
-                    return new Point(center.x + realI, center.y + realJ);
+                    if (!result.containsKey(stencil)) {
+                        result.put(stencil, new Point(center.x + realI, center.y + realJ));
+                    }
                 }
             }
         }
-        return null;
+        return result;
     }
 
     private static int stencilFunction(int i) {

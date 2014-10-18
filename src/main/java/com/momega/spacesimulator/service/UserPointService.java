@@ -48,4 +48,8 @@ public class UserPointService {
         spacecraft.getUserOrbitalPoints().add(userPoint);
         return userPoint;
     }
+
+    public void deleteUserPoint(Spacecraft spacecraft, UserOrbitalPoint point) {
+        spacecraft.getUserOrbitalPoints().remove(point);
+    }
 }

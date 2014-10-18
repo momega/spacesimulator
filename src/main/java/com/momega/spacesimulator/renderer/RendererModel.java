@@ -5,6 +5,7 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.UserPointService;
 import com.momega.spacesimulator.swing.MovingObjectsModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,8 @@ public class RendererModel {
     private MovingObjectsModel movingObjectsModel;
 
     private final ManeuverService maneuverService;
+
+    private final UserPointService userPointService;
     
     private boolean spacecraftVisible; 
     private boolean celestialVisible;
@@ -54,11 +57,9 @@ public class RendererModel {
 		pointsVisible = true;
         historyPointsVisible = true;
         maneuverService = Application.getInstance().getService(ManeuverService.class);
-
+        userPointService = Application.getInstance().getService(UserPointService.class);
 		movingObjectsModel = new MovingObjectsModel(selectMovingObjects());
 		movingObjectsModel.setSelectedItem(ModelHolder.getModel().getSelectedObject());
-
-
     }
 
     public static RendererModel getInstance() {
@@ -337,5 +338,20 @@ public class RendererModel {
 
     public Point getMouseCoordinates() {
         return mouseCoordinates;
+    }
+
+    public void createUserPoint(GLAutoDrawable drawable, Point point) {
+        Map<Integer, Point> positions = GLUtils.getStencilPosition(drawable, point, RendererModel.MIN_TARGET_SIZE);
+        if (positions.size()==1) { // only one object is selected
+            point = positions.values().iterator().next();
+            double depth = GLUtils.getDepth(drawable, point);
+
+            Vector3d modelCoordinates = GLUtils.getModelCoordinates(drawable, point, depth);
+            logger.info("model coordinates = {}", modelCoordinates.asArray());
+
+            Spacecraft spacecraft = (Spacecraft) RendererModel.getInstance().findByName("Spacecraft 1").getObject();
+            UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
+            userPointService.createUserOrbitalPoint(spacecraft, modelCoordinates);
+        }
     }
 }

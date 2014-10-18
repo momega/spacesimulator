@@ -1,16 +1,13 @@
 package com.momega.spacesimulator.swing;
 
-import java.awt.BorderLayout;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collections;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
@@ -18,6 +15,7 @@ import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.NewManeuverEvent;
 import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.UserPointService;
 
 /**
  * Created by martin on 8/31/14.
@@ -32,11 +30,13 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
     private boolean visible;
 	private final AbstractOrbitalPoint apsis;
     private final ManeuverService maneuverService;
+    private final UserPointService userPointService;
 
     public OrbitalPointPanel(final AbstractOrbitalPoint point) {
         super(new BorderLayout(5, 5));
 		this.apsis = point;
         this.maneuverService = Application.getInstance().getService(ManeuverService.class);
+        this.userPointService = Application.getInstance().getService(UserPointService.class);
 
         attrPanel = new AttributesPanel(LABELS, point, FIELDS);
         visible = point.isVisible();
@@ -70,9 +70,25 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 					DetailDialogHolder.getInstance().showDialog(spacecraft, Collections.<ModelChangeEvent>singletonList(event));
 				}
 			});
-	        
+
+            buttonPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 	        buttonPanel.add(maneuverButton);
+
+            if (point instanceof UserOrbitalPoint) {
+                JButton deleteButton = new JButton("Delete");
+                deleteButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        userPointService.deleteUserPoint(spacecraft, (UserOrbitalPoint) point);
+                        DetailDialogHolder.getInstance().hideDialog(point);
+                    }
+                });
+                buttonPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+                buttonPanel.add(deleteButton);
+            }
         }
+
+
 
         add(attrPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.LINE_END);
