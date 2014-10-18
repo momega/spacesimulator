@@ -3,7 +3,9 @@
  */
 package com.momega.spacesimulator.swing;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.SwingUtilities;
@@ -49,24 +51,24 @@ public class DetailDialogHolder {
 			logger.warn("nothing to remove");
 		}
 	}
-	
-	public void dispatchEvent(PositionProvider positionProvider, ModelChangeEvent event) {
-		DetailDialog dialog = dialogs.get(positionProvider);
-		if (dialog != null) {
-			dialog.modelChanged(event);
-		}
-	}
-	
+
 	public void showDialog(PositionProvider positionProvider) {
-		final DetailDialog dialog = getDialog(positionProvider);
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				dialog.setVisible(true);
-				RendererModel.getInstance().addModelChangeListener(dialog);
-			}
-		});
+		showDialog(positionProvider, Collections.<ModelChangeEvent>emptyList());
 	}
+
+    public void showDialog(PositionProvider positionProvider, final List<ModelChangeEvent> events) {
+        final DetailDialog dialog = getDialog(positionProvider);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                dialog.setVisible(true);
+                RendererModel.getInstance().addModelChangeListener(dialog);
+                for(ModelChangeEvent event : events) {
+                    dialog.modelChanged(event);
+                }
+            }
+        });
+    }
 	
     private DetailDialog getDialog(PositionProvider positionProvider) {
     	DetailDialog dialog = dialogs.get(positionProvider);
