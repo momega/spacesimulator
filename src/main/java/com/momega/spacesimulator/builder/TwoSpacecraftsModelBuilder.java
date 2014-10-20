@@ -33,6 +33,9 @@ public class TwoSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
         habitableModule.setName("Habitat");
         addSpacecraftSubsystem(spacecraft, habitableModule);
 
+        addManeuver(spacecraft, "M5", 0 * 60d, 1100d, 1d, 0, Math.toRadians(-90));
+        addManeuver(spacecraft, "M6", 82 * 60d, 1400d, 1d, 0, Math.toRadians(-90));
+
         setTarget(spacecraft, mars);
 
         addMovingObject(spacecraft);

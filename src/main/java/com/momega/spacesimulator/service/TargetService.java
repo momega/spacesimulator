@@ -45,6 +45,18 @@ public class TargetService {
         return target;
     }
 
+    public Double computePlanesAngle(Spacecraft spacecraft, CelestialBody targetBody) {
+        if (targetBody == null) {
+            return null;
+        }
+
+        Plane spacecraftPlane = createOrbitalPlane(spacecraft);
+        Plane targetBodyPlane = createOrbitalPlane(targetBody);
+
+        double angle = spacecraftPlane.angleBetween(targetBodyPlane);
+        return Double.valueOf(angle);
+    }
+
     /**
      * Computes the intersection points
      * @param spacecraft

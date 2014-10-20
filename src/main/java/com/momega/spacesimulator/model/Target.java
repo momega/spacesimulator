@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * The class represents single target of the spacecraft. It contains the target body, list of the planes intersections between spacecraft orbit
+ * and the target body orbital plane.
+ * It also contains the angle between planes.
  * Created by martin on 10/19/14.
  */
 public class Target {
 
     private CelestialBody targetBody;
     private List<OrbitIntersection> orbitIntersections = new ArrayList<>();
-    private double angle;
+    private Double angle = null;
 
     public CelestialBody getTargetBody() {
         return targetBody;
@@ -28,11 +31,11 @@ public class Target {
         this.orbitIntersections = orbitIntersections;
     }
 
-    public double getAngle() {
+    public Double getAngle() {
         return angle;
     }
 
-    public void setAngle(double angle) {
+    public void setAngle(Double angle) {
         this.angle = angle;
     }
 }

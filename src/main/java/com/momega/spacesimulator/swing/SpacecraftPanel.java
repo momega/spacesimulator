@@ -9,11 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.model.Target;
@@ -41,19 +37,21 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 	private static final Logger logger = LoggerFactory.getLogger(SpacecraftPanel.class);
 	private final CelestialBodyModel model;
 	private Spacecraft spacecraft;
-	private Target target = new Target();
-
+	private final Target target = new Target();
+    private final JTextField angleLabelValue;
     private final TargetService targetService;
+    private boolean updatingAngle = true;
 
-	public SpacecraftPanel(Spacecraft spacecraft) {
+	public SpacecraftPanel(final Spacecraft spacecraft) {
 		super(new BorderLayout(5, 5));
 		this.spacecraft = spacecraft;
         targetService = Application.getInstance().getService(TargetService.class);
 
-		this.target = this.spacecraft.getTarget();
+		this.target.setTargetBody(this.spacecraft.getTarget() == null ? null : this.spacecraft.getTarget().getTargetBody());
+        this.target.setAngle(this.spacecraft.getTarget() == null ? null : this.spacecraft.getTarget().getAngle());
 		attrPanel = new AttributesPanel(LABELS, spacecraft, FIELDS);
 
-		JPanel targetPanel = new JPanel(new GridLayout(1, 2, 5, 5));
+		JPanel targetPanel = new JPanel(new GridLayout(2, 2, 5, 5));
 
 		JLabel targetLabel = new JLabel("Target:", JLabel.TRAILING);
 		targetPanel.add(targetLabel);
@@ -61,33 +59,63 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 
 		JComboBox<String> targetBox = new JComboBox<String>();
 		model = new CelestialBodyModel();
-		model.setSelection((target == null) ? null : target.getTargetBody());
+		model.setSelection(target.getTargetBody());
 		targetBox.setModel(model);
 		targetPanel.add(targetBox);
 
-		targetBox.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (model.getSelectedItem() != null) {
-					String cb = (String) model.getSelectedItem();
-					logger.info("target object {}", cb);
-				}
-			}
-		});
+        JLabel angleLabel = new JLabel("Angle:", JLabel.TRAILING);
+        targetPanel.add(angleLabel);
+        angleLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+        angleLabelValue = new JTextField();
+        angleLabelValue.setEditable(false);
+        targetPanel.add(angleLabelValue);
+
+        targetBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (model.getSelectedItem() != null) {
+                    String cb = (String) model.getSelectedItem();
+                    logger.info("target object {}", cb);
+                    ViewCoordinates viewCoordinates = RendererModel.getInstance().findByName((String) model.getSelectedItem());
+                    target.setTargetBody((viewCoordinates == null) ? null : (CelestialBody) viewCoordinates.getObject());
+
+                    updatingAngle = false;
+                    Double angle = targetService.computePlanesAngle(spacecraft, (CelestialBody) viewCoordinates.getObject());
+                    target.setAngle(angle);
+
+                    updateAngle();
+                }
+            }
+        });
+
+        updateAngle();
 
 		add(attrPanel, BorderLayout.CENTER);
 		add(targetPanel, BorderLayout.PAGE_END);
 	}
 
+    protected void updateAngle() {
+        if (this.target.getAngle()!=null) {
+            angleLabelValue.setText(String.format("%6.2f°", Math.toDegrees(this.target.getAngle())));
+        } else {
+            angleLabelValue.setText("");
+        }
+    }
+
 	@Override
 	public void updateView(ModelChangeEvent event) {
 		attrPanel.updateView(event);
+
+        if (updatingAngle) {
+            target.setAngle(spacecraft.getTarget()==null ? null : spacecraft.getTarget().getAngle());
+            updateAngle();
+        }
 	}
 
 	@Override
 	public void updateModel() {
-        ViewCoordinates viewCoordinates = RendererModel.getInstance().findByName((String) model.getSelectedItem());
-        targetService.createTarget(spacecraft, (viewCoordinates == null) ? null : (CelestialBody) viewCoordinates.getObject());
+        targetService.createTarget(spacecraft, target.getTargetBody());
 	}
 
 	class CelestialBodyModel extends DefaultComboBoxModel<String> implements ComboBoxModel<String> {

@@ -317,6 +317,17 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         return ring;
     }
 
+    /**
+     * Creates maneuver
+     * @param spacecraft the spacecraft
+     * @param name the name of the maneuver
+     * @param startTime start of the maneuver in seconds from the start
+     * @param duration the duration of maneuver in seconds
+     * @param throttle
+     * @param throttleAlpha
+     * @param throttleDelta
+     * @return
+     */
     public Maneuver addManeuver(Spacecraft spacecraft, String name, Double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
         Maneuver maneuver = maneuverService.createManeuver(spacecraft, name, getModel().getTime(), startTime, duration, throttle, throttleAlpha, throttleDelta);
         spacecraft.getManeuvers().add(maneuver);
