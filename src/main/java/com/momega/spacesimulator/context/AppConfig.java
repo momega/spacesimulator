@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.context;
 
+import com.momega.spacesimulator.builder.TwoSpacecraftsModelBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,7 @@ public class AppConfig {
 	
 	@Bean
 	public ModelBuilder createModelBuilder() {
-		return new MediumSolarSystemModelBuilder();
+		return new TwoSpacecraftsModelBuilder();
 	}
 
     @Bean

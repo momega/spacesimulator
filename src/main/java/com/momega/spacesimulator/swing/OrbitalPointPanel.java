@@ -88,8 +88,6 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
             }
         }
 
-
-
         add(attrPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.LINE_END);
     }

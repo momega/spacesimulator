@@ -15,6 +15,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.model.Target;
+import com.momega.spacesimulator.service.TargetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,18 +34,23 @@ import com.momega.spacesimulator.renderer.ViewCoordinates;
 public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 
 	private static final long serialVersionUID = -1315250400241599867L;
+
 	private final AttributesPanel attrPanel;
 	private static final String[] LABELS = { "Name", "Mass" };
 	private static final String[] FIELDS = { "#obj.name", "#obj.mass" };
 	private static final Logger logger = LoggerFactory.getLogger(SpacecraftPanel.class);
 	private final CelestialBodyModel model;
 	private Spacecraft spacecraft;
-	private CelestialBody celestialBody;
+	private Target target = new Target();
+
+    private final TargetService targetService;
 
 	public SpacecraftPanel(Spacecraft spacecraft) {
 		super(new BorderLayout(5, 5));
 		this.spacecraft = spacecraft;
-		this.celestialBody = this.spacecraft.getTargetBody();
+        targetService = Application.getInstance().getService(TargetService.class);
+
+		this.target = this.spacecraft.getTarget();
 		attrPanel = new AttributesPanel(LABELS, spacecraft, FIELDS);
 
 		JPanel targetPanel = new JPanel(new GridLayout(1, 2, 5, 5));
@@ -53,7 +61,7 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 
 		JComboBox<String> targetBox = new JComboBox<String>();
 		model = new CelestialBodyModel();
-		model.setSelection(spacecraft.getTargetBody());
+		model.setSelection((target == null) ? null : target.getTargetBody());
 		targetBox.setModel(model);
 		targetPanel.add(targetBox);
 
@@ -63,18 +71,12 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 				if (model.getSelectedItem() != null) {
 					String cb = (String) model.getSelectedItem();
 					logger.info("target object {}", cb);
-					ViewCoordinates viewCoordinates = RendererModel.getInstance().findByName(cb);
-					setCelestialBody((CelestialBody) viewCoordinates.getObject());
 				}
 			}
 		});
 
 		add(attrPanel, BorderLayout.CENTER);
 		add(targetPanel, BorderLayout.PAGE_END);
-	}
-	
-	public void setCelestialBody(CelestialBody celestialBody) {
-		this.celestialBody = celestialBody;
 	}
 
 	@Override
@@ -84,19 +86,8 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 
 	@Override
 	public void updateModel() {
-		if (spacecraft.getTargetBody() != model.getSelectedItem()) {
-			if (model.getSelectedItem() == null) {
-				spacecraft.setTargetBody(null);
-				spacecraft.getOrbitIntersections().clear();
-				logger.info("unset for {}", spacecraft.getName());
-			} else {
-				spacecraft.setTargetBody(this.celestialBody);
-				spacecraft.getOrbitIntersections().clear();
-				logger.info("set target body {} for {}", spacecraft.getTargetBody().getName(), spacecraft.getName());
-			}
-		} else {
-			logger.debug("no change in target");
-		}
+        ViewCoordinates viewCoordinates = RendererModel.getInstance().findByName((String) model.getSelectedItem());
+        targetService.createTarget(spacecraft, (viewCoordinates == null) ? null : (CelestialBody) viewCoordinates.getObject());
 	}
 
 	class CelestialBodyModel extends DefaultComboBoxModel<String> implements ComboBoxModel<String> {

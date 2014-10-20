@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.TargetService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
@@ -39,6 +40,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     @Autowired
     private ManeuverService maneuverService;
+
+    @Autowired
+    private TargetService targetService;
 
     /**
      * Returns newly created instance
@@ -368,5 +372,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
             }
         }
         return null;
+    }
+
+    protected void setTarget(Spacecraft spacecraft, CelestialBody celestialBody) {
+        targetService.createTarget(spacecraft, celestialBody);
     }
 }

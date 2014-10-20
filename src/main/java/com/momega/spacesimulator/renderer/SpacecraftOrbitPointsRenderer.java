@@ -2,11 +2,9 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.ManeuverPoint;
-import com.momega.spacesimulator.model.OrbitIntersection;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.UserOrbitalPoint;
+import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.TargetService;
 
 import javax.media.opengl.GL2;
 import java.util.List;
@@ -18,15 +16,17 @@ public class SpacecraftOrbitPointsRenderer extends AbstractOrbitalPositionProvid
 
     private final Spacecraft spacecraft;
     private final ManeuverService maneuverService;
+    private final TargetService targetService;
 
     public SpacecraftOrbitPointsRenderer(Spacecraft spacecraft) {
         this.spacecraft = spacecraft;
         maneuverService = Application.getInstance().getService(ManeuverService.class);
+        targetService = Application.getInstance().getService(TargetService.class);
     }
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-        for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
+        for(OrbitIntersection intersection : targetService.getOrbitIntersections(spacecraft)) {
         	renderPositionProvider(intersection);
         }
         for(UserOrbitalPoint orbitalPoint : spacecraft.getUserOrbitalPoints()) {

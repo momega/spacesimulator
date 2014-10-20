@@ -36,6 +36,9 @@ public class NewtonianPropagator implements Propagator {
     @Autowired
     private ApsisService apsisService;
 
+    @Autowired
+    private TargetService targetService;
+
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
         Assert.isInstanceOf(Spacecraft.class, movingObject, "predication of trajectory is supported only for satellites");
@@ -86,71 +89,22 @@ public class NewtonianPropagator implements Propagator {
 
     protected void computeIntersections(Spacecraft spacecraft, Timestamp newTimestamp) {
     	// if there is no target
-    	if (spacecraft.getTargetBody() == null) {
-    		spacecraft.getOrbitIntersections().clear();
+    	if (spacecraft.getTarget() == null) {
     		return;
     	}
+
+        if (spacecraft.getTarget().getTargetBody() == null) {
+            targetService.clearOrbitIntersections(spacecraft);
+            return;
+        }
 
     	// if central of my trajectory is equal target
-    	if (spacecraft.getKeplerianElements().getKeplerianOrbit().getCentralObject() == spacecraft.getTargetBody()) {
-    		spacecraft.getOrbitIntersections().clear();
+    	if (spacecraft.getKeplerianElements().getKeplerianOrbit().getCentralObject() == spacecraft.getTarget().getTargetBody()) {
+    		targetService.clearOrbitIntersections(spacecraft);
     		return;
     	}
 
-        CelestialBody targetBody = spacecraft.getTargetBody();
-        Assert.notNull(targetBody);
-
-        Plane spacecraftPlane = createOrbitalPlane(spacecraft);
-        Plane targetBodyPlane = createOrbitalPlane(targetBody);
-
-        KeplerianOrbit orbit = spacecraft.getKeplerianElements().getKeplerianOrbit();
-        Line intersectionLine = spacecraftPlane.intersection(targetBodyPlane, orbit.getCentralObject().getPosition());
-
-        // now transform to 2D to compute intersections
-        Vector3d intersectionLinePoint = intersectionLine.getOrigin().subtract(orbit.getCentralObject().getPosition());
-        intersectionLinePoint = VectorUtils.transform(orbit, intersectionLinePoint);
-        Vector3d intersectionLineVector = VectorUtils.transform(orbit, intersectionLine.getDirection()).normalize();
-        intersectionLine = new Line(intersectionLinePoint, intersectionLineVector);
-        intersectionLine = intersectionLine.move(new Vector3d(orbit.getSemimajorAxis() * orbit.getEccentricity(), 0, 0));
-        double[] angles = orbit.lineIntersection(intersectionLine);
-
-        // create intersection, if there are not
-        List<OrbitIntersection> intersections = spacecraft.getOrbitIntersections();
-        if (intersections.isEmpty()) {
-        	for(int i=0; i<angles.length; i++) {
-        		OrbitIntersection intersection = new OrbitIntersection();
-        		intersection.setMovingObject(spacecraft);
-        		intersections.add(intersection);
-                KeplerianElements keplerianElements = new KeplerianElements();
-        		intersection.setKeplerianElements(keplerianElements);
-    	        intersection.setName(spacecraft.getName() +"/" + targetBody.getName() + " Intersection " + i);
-    	        intersection.setTargetObject(targetBody);
-    	        intersection.setVisible(true);
-        	}
-        }
-
-        // update orbital intersection
-        for(int i=0; i<intersections.size(); i++) {
-        	double EA = angles[i];
-            double theta = KeplerianElements.solveTheta(EA, orbit.getEccentricity());
-            OrbitIntersection intersection = intersections.get(i);
-            KeplerianElements keplerianElements = intersection.getKeplerianElements();
-            keplerianElements.setKeplerianOrbit(orbit);
-            keplerianElements.setTrueAnomaly(theta);
-            keplerianElements.setEccentricAnomaly(EA);
-
-        	Vector3d vector = orbit.getCartesianPosition(theta);
-
-	        intersection.setPosition(vector);
-	        intersection.setTimestamp(spacecraft.getKeplerianElements().timeToAngle(newTimestamp, theta, true));
-        }
-    }
-
-    public Plane createOrbitalPlane(MovingObject movingObject) {
-    	CartesianState relative = VectorUtils.relativeCartesianState(movingObject);
-    	Vector3d normal = relative.getAngularMomentum();
-    	Vector3d origin = movingObject.getKeplerianElements().getKeplerianOrbit().getCentralObject().getPosition();
-    	return new Plane(origin, normal);
+        targetService.computerOrbitIntersection(spacecraft, newTimestamp);
     }
 
     /**

@@ -25,6 +25,11 @@ public class Plane {
 	public Vector3d getNormal() {
 		return normal;
 	}
+
+    public double angleBetween(Plane other) {
+        double value = normal.dot(other.getNormal()); // |n|=1 and other.n=|1|
+        return Math.acos(value);
+    }
 	
 	/**
 	 * Builds intersection of the two planes. The origin is used to setup new origin 

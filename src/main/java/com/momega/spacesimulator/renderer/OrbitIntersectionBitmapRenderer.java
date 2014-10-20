@@ -22,7 +22,9 @@ public class OrbitIntersectionBitmapRenderer extends PositionProvidersBitmapRend
     @Override
     protected List<PositionProvider> getPositionProviders() {
         List<PositionProvider> list = new ArrayList<>();
-        list.addAll(spacecraft.getOrbitIntersections());
+        if (spacecraft.getTarget() != null) {
+            list.addAll(spacecraft.getTarget().getOrbitIntersections());
+        }
         return list;
     }
 }

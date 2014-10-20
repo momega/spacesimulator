@@ -5,6 +5,7 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.service.UserPointService;
 import com.momega.spacesimulator.swing.MovingObjectsModel;
 import org.slf4j.Logger;
@@ -37,6 +38,8 @@ public class RendererModel {
     private final ManeuverService maneuverService;
 
     private final UserPointService userPointService;
+
+    private final TargetService targetService;
     
     private boolean spacecraftVisible; 
     private boolean celestialVisible;
@@ -58,6 +61,7 @@ public class RendererModel {
         historyPointsVisible = true;
         maneuverService = Application.getInstance().getService(ManeuverService.class);
         userPointService = Application.getInstance().getService(UserPointService.class);
+        targetService = Application.getInstance().getService(TargetService.class);
 		movingObjectsModel = new MovingObjectsModel(selectMovingObjects());
 		movingObjectsModel.setSelectedItem(ModelHolder.getModel().getSelectedObject());
     }
@@ -89,7 +93,7 @@ public class RendererModel {
                 for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
                     result.add(hp);
                 }
-                for(OrbitIntersection intersection : spacecraft.getOrbitIntersections()) {
+                for(OrbitIntersection intersection : targetService.getOrbitIntersections(spacecraft)) {
                 	result.add(intersection);
                 }
                 for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
