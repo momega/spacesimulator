@@ -132,10 +132,11 @@ public class TargetService {
         return new Plane(origin, normal);
     }
 
-    public void clearOrbitIntersections(Spacecraft spacecraft) {
+    public void clear(Spacecraft spacecraft) {
         Target target = spacecraft.getTarget();
         if (target != null) {
             target.getOrbitIntersections().clear();
+            target.setKeplerianElements(null);
         }
     }
 }

@@ -14,6 +14,7 @@ public class Target {
     private CelestialBody targetBody;
     private List<OrbitIntersection> orbitIntersections = new ArrayList<>();
     private Double angle = null;
+    private KeplerianElements keplerianElements;
 
     public CelestialBody getTargetBody() {
         return targetBody;
@@ -37,5 +38,13 @@ public class Target {
 
     public void setAngle(Double angle) {
         this.angle = angle;
+    }
+
+    public KeplerianElements getKeplerianElements() {
+        return keplerianElements;
+    }
+
+    public void setKeplerianElements(KeplerianElements keplerianElements) {
+        this.keplerianElements = keplerianElements;
     }
 }

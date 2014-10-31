@@ -4,10 +4,7 @@ import com.jogamp.opengl.util.GLReadBufferUtil;
 import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.KeplerianElements;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.model.*;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -387,6 +384,16 @@ public class GLUtils {
 
     public static void translate(GL2 gl, Vector3d position) {
         gl.glTranslated(position.getX(), position.getY(), position.getZ());
+    }
+
+    /**
+     * Rotates by spherical coordinates
+     * @param gl the the GL context
+     * @param sphericalCoordinates the spherical coordinates
+     */
+    public static void rotate(GL2 gl, SphericalCoordinates sphericalCoordinates) {
+        gl.glRotated(Math.toDegrees(sphericalCoordinates.getPhi()), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(sphericalCoordinates.getTheta()), 0, 1, 0);
     }
 
     public static void rotate(GL2 gl, KeplerianElements keplerianElements) {

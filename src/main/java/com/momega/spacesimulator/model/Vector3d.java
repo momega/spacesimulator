@@ -18,6 +18,12 @@ public class Vector3d {
 
     public static final Vector3d ZERO = new Vector3d(0d, 0d, 0d);
 
+    public static final Vector3d ONE_X = new Vector3d(1d, 0d, 0d);
+
+    public static final Vector3d ONE_Y = new Vector3d(0d, 1d, 0d);
+
+    public static final Vector3d ONE_Z = new Vector3d(0d, 0d, 1d);
+
     /**
      * Constructs a new Vector3d with the specified x, y and z components.
      *
@@ -102,6 +108,10 @@ public class Vector3d {
     public String toString() {
         String result = String.format("(%6.2f, %6.2f, %6.2f)", x, y, z);
         return result;
+    }
+
+    public SphericalCoordinates toSphericalCoordinates() {
+        return new SphericalCoordinates(this);
     }
     
     public double getX() {

@@ -8,6 +8,7 @@ import com.momega.spacesimulator.controller.EventBusController;
 import com.momega.spacesimulator.controller.QuitController;
 import com.momega.spacesimulator.controller.SimpleCameraController;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.renderer.CompositeRenderer;
@@ -30,7 +31,7 @@ public class TestingWindow extends DefaultWindow {
         Camera camera = new Camera();
         camera.setPosition(Vector3d.ZERO);
         camera.setDistance(10);
-        camera.setOppositeOrientation(VectorUtils.createOrientation(new Vector3d(0, 0, 1), new Vector3d(0, 1, 0)));
+        camera.setOppositeOrientation(Orientation.createUnit());
         
         CompositeRenderer renderer = new CompositeRenderer();
         renderer.addRenderer(new DefaultCameraPositionRenderer(camera));

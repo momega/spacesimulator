@@ -64,6 +64,11 @@ public class NewtonianPropagator implements Propagator {
 
     protected void computeUserPoint(UserOrbitalPoint userOrbitalPoint, Timestamp newTimestamp) {
         KeplerianElements keplerianElements = userOrbitalPoint.getKeplerianElements();
+
+        KeplerianElements spacecraftKeplerianElements = userOrbitalPoint.getMovingObject().getKeplerianElements();
+        KeplerianOrbit keplerianOrbit = spacecraftKeplerianElements.getKeplerianOrbit();
+        keplerianElements.setKeplerianOrbit(keplerianOrbit);
+
         double theta = keplerianElements.getTrueAnomaly();
         Vector3d position = keplerianElements.getCartesianPosition();
         userOrbitalPoint.setPosition(position);
@@ -93,18 +98,25 @@ public class NewtonianPropagator implements Propagator {
     		return;
     	}
 
-        if (spacecraft.getTarget().getTargetBody() == null) {
-            targetService.clearOrbitIntersections(spacecraft);
+        Target target = spacecraft.getTarget();
+
+        if (target.getTargetBody() == null) {
+            targetService.clear(spacecraft);
             return;
         }
 
     	// if central of my trajectory is equal target
-    	if (spacecraft.getKeplerianElements().getKeplerianOrbit().getCentralObject() == spacecraft.getTarget().getTargetBody()) {
-    		targetService.clearOrbitIntersections(spacecraft);
+    	if (spacecraft.getKeplerianElements().getKeplerianOrbit().getCentralObject() == target.getTargetBody()) {
+    		targetService.clear(spacecraft);
     		return;
     	}
 
         targetService.computerOrbitIntersection(spacecraft, newTimestamp);
+
+        // compute trajectory relative to the target body
+        CartesianState cartesianState = spacecraft.getCartesianState().subtract(target.getTargetBody().getCartesianState());
+        KeplerianElements targetKeplerianElements = cartesianState.toKeplerianElements(target.getTargetBody(), newTimestamp);
+        target.setKeplerianElements(targetKeplerianElements);
     }
 
     /**
@@ -149,7 +161,7 @@ public class NewtonianPropagator implements Propagator {
         CartesianState cartesianState = spacecraft.getCartesianState().subtract(soiBody.getCartesianState());
 
         // TODO: remove automatic changing the orientation
-        Orientation orientation = VectorUtils.createOrientation(cartesianState.getVelocity(), cartesianState.getAngularMomentum());
+        Orientation orientation = new Orientation(cartesianState.getVelocity(), cartesianState.getAngularMomentum());
         spacecraft.setOrientation(orientation);
 
         keplerianElements = cartesianState.toKeplerianElements(soiBody, newTimestamp);

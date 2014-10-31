@@ -14,7 +14,7 @@ public class ApplicationTest {
         Application application = Application.getInstance();
         SolarSystemModelBuilder builder = new SolarSystemModelBuilder();
         application.init(0);
-        for(int i=0; i<10* 86400; i++) {
+        for(int i=0; i<86400; i++) {
             Application.getInstance().getModelWorker().next();
         }
         application.dispose();

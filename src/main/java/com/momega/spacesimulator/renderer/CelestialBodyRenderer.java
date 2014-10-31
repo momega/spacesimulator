@@ -2,10 +2,9 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.SphericalCoordinates;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.utils.VectorUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,12 +72,11 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     }
 
     public void setMatrix(GL2 gl ) {
-        double[] angles = VectorUtils.toSphericalCoordinates(celestialBody.getOrientation().getV());
+        SphericalCoordinates sphericalCoordinates = new SphericalCoordinates(celestialBody.getOrientation().getV());
 
         GLUtils.translate(gl, celestialBody.getCartesianState().getPosition());
-        gl.glRotated(Math.toDegrees(angles[2]), 0, 0, 1);
-        gl.glRotated(Math.toDegrees(angles[1]), 0, 1, 0);
-        logger.debug("object = {}, ra = {}, dec = {}", new Object[] {celestialBody.getName(), Math.toDegrees(angles[2]), 90-Math.toDegrees(angles[1])});
+        GLUtils.rotate(gl, sphericalCoordinates);
+        logger.debug("object = {}, ra = {}, dec = {}", new Object[] {celestialBody.getName(), Math.toDegrees(sphericalCoordinates.getPhi()), 90-Math.toDegrees(sphericalCoordinates.getTheta())});
 
         double phi = Math.toDegrees(celestialBody.getPrimeMeridian());
         gl.glRotated(phi, 0, 0, 1);

@@ -73,7 +73,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         Camera s = new Camera();
         s.setTargetObject(getModel().getSelectedObject());
         s.setDistance(100 * 1E6);
-        s.setOppositeOrientation(VectorUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+        s.setOppositeOrientation(Orientation.createUnit());
         model.setCamera(s);
     }
 
@@ -195,7 +195,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         }
 
         spacecraft.setCartesianState(cartesianState);
-        spacecraft.setOrientation(VectorUtils.createOrientation(new Vector3d(0, 1, 0d), new Vector3d(0, 0, 1d)));
+        spacecraft.setOrientation(Orientation.createUnit());
         KeplerianTrajectory keplerianTrajectory = new KeplerianTrajectory();
         keplerianTrajectory.setColor(new double[]{1, 1, 0});
         keplerianTrajectory.setType(TrajectoryType.NEWTONIAN);
@@ -231,7 +231,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         if (dp instanceof PhysicalBody) {
             PhysicalBody body = (PhysicalBody) dp;
             body.setMass(mass * 1E24);
-            body.setOrientation(VectorUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(0, 0, 1)));
+            body.setOrientation(Orientation.createUnit());
         }
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;

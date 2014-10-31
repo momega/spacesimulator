@@ -15,6 +15,16 @@ public class Orientation {
     private Vector3d u;
     private Vector3d v;
 
+    public Orientation(Vector3d nVector, Vector3d vVector) {
+        setN(nVector.normalize());
+        setV(vVector.normalize());
+        setU(getV().cross(getN()));
+    }
+
+    public static Orientation createUnit() {
+        return new Orientation(Vector3d.ONE_X, Vector3d.ONE_Z);
+    }
+
     /**
      * Returns the n vector of the object3d.
      */
@@ -71,15 +81,12 @@ public class Orientation {
     }
 
     public Orientation clone() {
-        Orientation o = new Orientation();
-        o.setN(getN().clone());
-        o.setV(getV().clone());
-        o.setU(getU().clone());
+        Orientation o = new Orientation(getN().clone(), getV().clone());
         return o;
     }
 
     /**
-     * Rotates the object3d anticlockwise by the specified angle about the specified axis.
+     * Rotates the orientation object anticlockwise by the specified angle about the specified axis.
      * @param axis	The axis about which to rotate
      * @param angle	The angle by which to rotate (in radians)
      */

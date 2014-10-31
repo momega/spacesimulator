@@ -1,4 +1,4 @@
-package com.momega.spacesimulator;
+package com.momega.spacesimulator.onetriangle;
 
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLEventListener;

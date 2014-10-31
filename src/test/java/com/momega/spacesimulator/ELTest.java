@@ -1,6 +1,7 @@
 package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.VectorUtils;
@@ -21,12 +22,11 @@ public class ELTest {
         Planet namedObject = new Planet();
         namedObject.setCartesianState(new CartesianState());
         namedObject.getCartesianState().setPosition(new Vector3d(1,2,3));
-        namedObject.setOrientation(VectorUtils.createOrientation(new Vector3d(1, 0, 0), new Vector3d(1, 0, 0)));
+        namedObject.setOrientation(Orientation.createUnit());
 
         ExpressionParser parser = new SpelExpressionParser();
         StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
         evaluationContext.setVariable("obj", namedObject);
-        evaluationContext.registerFunction("toSphericalCoordinates", VectorUtils.class.getDeclaredMethod("toSphericalCoordinates", Vector3d.class));
         evaluationContext.registerFunction("toDegrees", Math.class.getDeclaredMethod("toDegrees", double.class));
 
         // 1
@@ -36,9 +36,9 @@ public class ELTest {
         Assert.assertEquals("1.0", textValue);
 
         // 2
-        exp = "#toDegrees(#toSphericalCoordinates(#obj.orientation.v)[1])";
+        exp = "#toDegrees(#obj.orientation.v.toSphericalCoordinates().phi)";
         e = parser.parseExpression(exp);
         textValue = e.getValue(evaluationContext, String.class);
-        Assert.assertEquals("90.0", textValue);
+        Assert.assertEquals("0.0", textValue);
     }
 }

@@ -73,6 +73,8 @@ public class KeplerianElements {
 
     public void setKeplerianOrbit(KeplerianOrbit keplerianOrbit) {
         this.keplerianOrbit = keplerianOrbit;
+        this.eccentricAnomaly = null;
+        this.hyperbolicAnomaly = null;
     }
 
     public static KeplerianElements fromTimestamp(KeplerianOrbit keplerianOrbit, Timestamp timestamp) {
