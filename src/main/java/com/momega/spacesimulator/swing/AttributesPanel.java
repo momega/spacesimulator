@@ -88,7 +88,6 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
         try {
             StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
             evaluationContext.setVariable("obj", object);
-            evaluationContext.registerFunction("toSphericalCoordinates", VectorUtils.class.getDeclaredMethod("toSphericalCoordinates", Vector3d.class));
             evaluationContext.registerFunction("toDegrees", Math.class.getDeclaredMethod("toDegrees", double.class));
             evaluationContext.registerFunction("timeAsString", TimeUtils.class.getDeclaredMethod("timeAsString", Timestamp.class));
             evaluationContext.registerFunction("periodAsString", TimeUtils.class.getDeclaredMethod("periodAsString", double.class));

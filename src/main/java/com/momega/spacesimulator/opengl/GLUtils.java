@@ -88,9 +88,9 @@ public class GLUtils {
     	gl.glLineWidth(width);
         gl.glColor3dv(color, 0);
     	gl.glBegin(GL_LINE_STRIP);
-    	for(T point : points) {
-    		 gl.glVertex3dv(point.getPosition().asArray(), 0);
-    	}
+        for (T point : points) {
+            gl.glVertex3dv(point.getPosition().asArray(), 0);
+        }
     	gl.glEnd();
     }
     
