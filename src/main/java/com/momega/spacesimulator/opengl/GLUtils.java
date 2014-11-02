@@ -5,6 +5,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +35,8 @@ import static javax.media.opengl.GL.*;
 public class GLUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(GLUtils.class);
+
+    public static final double DEFAULT_THRESHOLD = 1E-3;
 
     /**
      * Draws the circle
@@ -258,13 +261,12 @@ public class GLUtils {
 
     /**
      * Finds the stenciled point around given coordinates
-     * @param drawable the GL canvas
+     * @param gl the opengl context
      * @param center the center of the search in projection coordinates
      * @param size the size of the square to be sought. This has to be odd number
      * @return result the map were keys are index of the stencil and value is the best point found
      */
-    public static Map<Integer, Point> getStencilPosition(GLAutoDrawable drawable, Point center, int size) {
-        GL2 gl = drawable.getGL().getGL2();
+    public static Map<Integer, ScreenCoordinates> getStencilPosition(GL2 gl, Point center, int size) {
         gl.glReadBuffer(GL2.GL_FRONT);
 
         // for future usage
@@ -276,7 +278,7 @@ public class GLUtils {
         IntBuffer stencilBuffer = IntBuffer.allocate(1 * size * size);
         gl.glReadPixels(center.x - half, center.y - half, size, size, GL2.GL_STENCIL_INDEX, GL2.GL_UNSIGNED_INT, stencilBuffer);
 
-        Map<Integer, Point> result = new HashMap<>();
+        Map<Integer, ScreenCoordinates> result = new HashMap<>();
         for(int i=0; i<size; i++) {
             for(int j=0; j<size; j++) {
                 int realI = stencilFunction(i);
@@ -285,7 +287,9 @@ public class GLUtils {
                 int stencil = stencilBuffer.get(index);
                 if (stencil>0) {
                     if (!result.containsKey(stencil)) {
-                        result.put(stencil, new Point(center.x + realI, center.y + realJ));
+                        Point point = new Point(center.x + realI, center.y + realJ);
+                        double depth = GLUtils.getDepth(gl, point);
+                        result.put(stencil, new ScreenCoordinates(point, depth));
                     }
                 }
             }
@@ -300,26 +304,39 @@ public class GLUtils {
 
     /**
      * Gets the depth on the given coordinates
-     * @param drawable the opengl canvas
+     * @param gl the opengl context
      * @param point the projection coordinates
      * @return the the depth [0..1]
      */
-    public static double getDepth(GLAutoDrawable drawable, Point point) {
-        GL2 gl = drawable.getGL().getGL2();
+    public static double getDepth(GL2 gl, Point point) {
         FloatBuffer depthBuffer = FloatBuffer.allocate(1);
         gl.glReadPixels(point.x, point.y, 1, 1, GL2.GL_DEPTH_COMPONENT, GL2.GL_FLOAT, depthBuffer);
         return depthBuffer.get(0);
     }
 
     /**
+     * Gets the depth on the given coordinates
+     * @param gl the opengl context
+     * @param point the projection coordinates
+     * @return the the depth [0..1]
+     */
+    public static double getDepth(GL2 gl, Point point, double threshold) {
+        return (getDepth(gl, point) + threshold);
+    }
+
+    public static boolean checkDepth(GL2 gl, ViewCoordinates viewCoordinates) {
+        return viewCoordinates.getScreenCoordinates().getDepth() <= getDepth(gl, viewCoordinates.getPoint(), DEFAULT_THRESHOLD);
+    }
+
+    /**
      * Gets the projection coordinates of the position in model-view based on the camera
-     * @param drawable the drawable
+     * @param gl open gl context
      * @param position any position in 3D
      * @param camera the camera
      * @return array of the coordinates, 0th coordinate is x, 1st coordinate is y, Result can be null if the point is behind
      * the camera
      */
-    public static java.awt.Point getProjectionCoordinates(GLAutoDrawable drawable, Vector3d position, Camera camera) {
+    public static ScreenCoordinates getProjectionCoordinates(GL2 gl, Vector3d position, Camera camera) {
         Vector3d viewVector = camera.getOppositeOrientation().getN();
         Vector3d diffVector = position.subtract(camera.getPosition());
 
@@ -327,7 +344,6 @@ public class GLUtils {
             double modelView[] = new double[16];
             double projection[] = new double[16];
             int viewport[] = new int[4];
-            GL2 gl = drawable.getGL().getGL2();
             gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, modelView, 0);
             gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projection, 0 );
             gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
@@ -337,26 +353,24 @@ public class GLUtils {
             glu.gluProject(position.getX(), position.getY(), position.getZ(),
                     modelView, 0, projection, 0, viewport, 0, my2DPoint, 0);
 
-            return new java.awt.Point((int)my2DPoint[0], (int)my2DPoint[1]);
+            return new ScreenCoordinates(my2DPoint);
         }
 
         return null;
     }
 
-    public static Vector3d getModelCoordinates(GLAutoDrawable drawable, Point position, double depth) {
+    public static Vector3d getModelCoordinates(GL2 gl, ScreenCoordinates screenCoordinates) {
         double modelView[] = new double[16];
         double projection[] = new double[16];
         int viewport[] = new int[4];
-
         double wcoord[] = new double[4];
 
-        GL2 gl = drawable.getGL().getGL2();
         gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, modelView, 0);
         gl.glGetDoublev(GL2.GL_PROJECTION_MATRIX, projection, 0 );
         gl.glGetIntegerv(GL2.GL_VIEWPORT, viewport, 0 );
 
         GLU glu = new GLU();
-        glu.gluUnProject(position.getX(),  position.getY(), depth, //
+        glu.gluUnProject(screenCoordinates.getPoint().getX(),  screenCoordinates.getPoint().getY(), screenCoordinates.getDepth(),
                 modelView, 0,
                 projection, 0,
                 viewport, 0,
@@ -396,11 +410,21 @@ public class GLUtils {
         gl.glRotated(Math.toDegrees(sphericalCoordinates.getTheta()), 0, 1, 0);
     }
 
+    /**
+     * Rotat open gl context based on the following 3 axis (Z,X,Z)
+     * @param gl
+     * @param angles
+     */
+    public static void rotateZXZ(GL2 gl, double[] angles) {
+        // the order is important
+        gl.glRotated(Math.toDegrees(angles[0]), 0, 0, 1);
+        gl.glRotated(Math.toDegrees(angles[1]), 1, 0, 0);
+        gl.glRotated(Math.toDegrees(angles[2]), 0, 0, 1);
+    }
+
     public static void rotate(GL2 gl, KeplerianElements keplerianElements) {
     	// the order is important
-        gl.glRotated(Math.toDegrees(keplerianElements.getKeplerianOrbit().getAscendingNode()), 0, 0, 1);
-        gl.glRotated(Math.toDegrees(keplerianElements.getKeplerianOrbit().getInclination()), 1, 0, 0);
-        gl.glRotated(Math.toDegrees(keplerianElements.getKeplerianOrbit().getArgumentOfPeriapsis()), 0, 0, 1);
+        rotateZXZ(gl, keplerianElements.getKeplerianOrbit().getAngles());
     }
 
     public static void drawPoint(GL2 gl, int size, double[] color, PositionProvider positionProvider) {

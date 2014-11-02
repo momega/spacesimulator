@@ -198,6 +198,13 @@ public class KeplerianOrbit {
         return result;
     }
 
+    public double[] getAngles() {
+        return new double[] {
+            getAscendingNode(),
+            getInclination(),
+            getArgumentOfPeriapsis()
+        };
+    }
 
     @Override
     public String toString() {

@@ -16,11 +16,13 @@ import com.momega.spacesimulator.opengl.GLUtils;
  */
 public abstract class AbstractPositionProviderRenderer extends AbstractTextRenderer {
 
-	protected void renderPositionProvider(PositionProvider positionProvider) {
+	protected void renderPositionProvider(GL2 gl, PositionProvider positionProvider) {
 		ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(positionProvider);
         if (viewCoordinates!=null && viewCoordinates.isVisible()) {
         	Point size = getTextSize(positionProvider.getName());
-            drawString(positionProvider.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+            if (GLUtils.checkDepth(gl, viewCoordinates)) {
+                drawString(positionProvider.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+            }
         }
     }
 }

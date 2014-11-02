@@ -5,7 +5,6 @@ package com.momega.spacesimulator.swing;
 
 import java.awt.Component;
 
-import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -54,7 +53,8 @@ public class MovingObjectListRenderer extends JLabel implements ListCellRenderer
 		} else if (value instanceof Spacecraft) {
 			setIcon(Icons.SPACECRAFT);
 		} else if (value instanceof CelestialBody) {
-            setIcon(Icons.CELESTIAL);
+            CelestialBody cb = (CelestialBody) value;
+            setIcon(SwingUtils.createImageIcon(cb.getIcon()));
         } else if (value instanceof ManeuverPoint) {
             ManeuverPoint mp = (ManeuverPoint) value;
             if (mp.isStart()) {

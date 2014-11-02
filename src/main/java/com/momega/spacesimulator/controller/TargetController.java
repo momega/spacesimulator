@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.controller;
 
 import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.opengl.DefaultWindow;
@@ -8,6 +9,7 @@ import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 import com.momega.spacesimulator.swing.DetailDialogHolder;
+import com.momega.spacesimulator.swing.SwingUtils;
 import com.momega.spacesimulator.swing.TimeDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +64,10 @@ public class TargetController extends AbstractController {
 						showDialog(viewCoordinates.getObject());
 					}
 				});
+                if (viewCoordinates.getObject() instanceof CelestialBody) {
+                    CelestialBody celestialBody = (CelestialBody) viewCoordinates.getObject();
+                    detailItem.setIcon(SwingUtils.createImageIcon(celestialBody.getIcon()));
+                }
                 popup.add(detailItem);
 
                 JMenuItem selectItem = new JMenuItem("Select of " + objectName);

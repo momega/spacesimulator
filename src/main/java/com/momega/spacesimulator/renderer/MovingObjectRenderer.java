@@ -1,10 +1,11 @@
 package com.momega.spacesimulator.renderer;
 
-import java.awt.Point;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.opengl.GLUtils;
 
 import javax.media.opengl.GL2;
-
-import com.momega.spacesimulator.model.MovingObject;
+import java.awt.*;
 
 /**
  * Renderer displays the the text at the moving position.
@@ -23,7 +24,9 @@ public class MovingObjectRenderer extends AbstractTextRenderer {
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(movingObject);
         if (viewCoordinates.isVisible()) {
             Point size = getTextSize(movingObject.getName());
-            drawString(movingObject.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+            if (GLUtils.checkDepth(gl, viewCoordinates)) {
+                drawString(movingObject.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
+            }
         }
     }
 

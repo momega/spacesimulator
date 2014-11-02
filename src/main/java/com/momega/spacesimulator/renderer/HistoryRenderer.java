@@ -22,8 +22,7 @@ public class HistoryRenderer extends AbstractRenderer {
     public void draw(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
         gl.glPushMatrix();
-        GLUtils.drawMultiLine(gl, 1, spacecraft.getHistoryTrajectory().getColor(), 
-        		spacecraft.getHistoryTrajectory().getHistoryPoints());
+        GLUtils.drawMultiLine(gl, 1, spacecraft.getHistoryTrajectory().getColor(), spacecraft.getHistoryTrajectory().getHistoryPoints());
         gl.glPopMatrix();
     }
 }

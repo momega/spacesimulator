@@ -53,20 +53,15 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         } else {
         	if (positionProvider instanceof AbstractOrbitalPoint) {
                 tabbedPane.addTab("Basic", SwingUtils.createImageIcon("/images/application.png"), createOrbitalPointPanel(), "Basic Information");
-            } else if (positionProvider instanceof PositionProvider) {
+                tabbedPane.addTab("Keplerian", SwingUtils.createImageIcon("/images/time.png"), createKeplerianPanel(), "Keplerian Information");
+            } else {
                 tabbedPane.addTab("Basic", SwingUtils.createImageIcon("/images/application.png"), createPositionProviderPanel(), "Basic Information");
             }
         }
 
         if (positionProvider instanceof Spacecraft) {
-            Spacecraft spacecraft = (Spacecraft) positionProvider;
-            ManeuverPanel maneuverPanel = new ManeuverPanel(spacecraft);
-            tabbedPane.addTab("Maneuvers", SwingUtils.createImageIcon("/images/hourglass.png"), maneuverPanel, "Spacecraft Maneuvers");
-            attributesPanelList.add(maneuverPanel);
-
-            SubsystemsPanel spacecraftPanel = new SubsystemsPanel(spacecraft);
-            attributesPanelList.add(spacecraftPanel);
-            tabbedPane.addTab("Subsystems", SwingUtils.createImageIcon("/images/cog.png"), spacecraftPanel, "Spacecraft Subsystems");
+            tabbedPane.addTab("Maneuvers", SwingUtils.createImageIcon("/images/hourglass.png"), createManeuverPanel(), "Spacecraft Maneuvers");
+            tabbedPane.addTab("Subsystems", SwingUtils.createImageIcon("/images/cog.png"), createSubsystemsPanel(), "Spacecraft Subsystems");
         }
 
         JPanel buttonsPanel = new JPanel(new FlowLayout());
@@ -147,9 +142,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     }
 
     protected JPanel createCartesianPanel() {
-        String[] labels = {"Position X", "Position Y", "Position Z", "Velocity", "Velocity X", "Velocity Y", "Velocity Z", "Orientation N", "Orientation V"};
-        String[] fields = {"#obj.position.x", "#obj.position.y", "#obj.position.z", "#obj.cartesianState.velocity.length()", "#obj.cartesianState.velocity.x", "#obj.cartesianState.velocity.y", "#obj.cartesianState.velocity.z", "#obj.orientation.n.toString()", "#obj.orientation.v.toString()"};
-        AttributesPanel result = new AttributesPanel(labels, positionProvider, fields);
+        CartesianStatePanel result = new CartesianStatePanel(positionProvider);
         attributesPanelList.add(result);
         return result;
     }
@@ -161,15 +154,25 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     }
 
     protected JPanel createPhysicalPanel() {
-        String[] labels = {"Name", "Mass", "Radius", "Rotation Period", "North Pole RA", "North Pole DEC", "Prime Meridian", "Prime Meridian JD2000"};
-        String[] fields = {"#obj.name", "#obj.mass", "#obj.radius", "#obj.rotationPeriod", "#toDegrees(#obj.orientation.v.toSphericalCoordinates().phi)", "#toDegrees(#obj.orientation.toSphericalCoordinates().theta)", "#toDegrees(#obj.primeMeridian)", "#toDegrees(#obj.primeMeridianJd2000)"};
-        AttributesPanel result =  new AttributesPanel(labels, positionProvider, fields);
+        PhysicalBodyPanel result =  new PhysicalBodyPanel(positionProvider);
         attributesPanelList.add(result);
         return result;
     }
 
     protected JPanel createKeplerianPanel() {
         KeplerianPanel result =  new KeplerianPanel(positionProvider);
+        attributesPanelList.add(result);
+        return result;
+    }
+
+    protected JPanel createManeuverPanel() {
+        ManeuverPanel result =  new ManeuverPanel((Spacecraft) positionProvider);
+        attributesPanelList.add(result);
+        return result;
+    }
+
+    protected JPanel createSubsystemsPanel() {
+        SubsystemsPanel result =  new SubsystemsPanel((Spacecraft) positionProvider);
         attributesPanelList.add(result);
         return result;
     }

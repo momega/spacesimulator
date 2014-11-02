@@ -27,14 +27,14 @@ public class SpacecraftOrbitPointsRenderer extends AbstractOrbitalPositionProvid
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
         for(OrbitIntersection intersection : targetService.getOrbitIntersections(spacecraft)) {
-        	renderPositionProvider(intersection);
+        	renderPositionProvider(gl, intersection);
         }
         for(UserOrbitalPoint orbitalPoint : spacecraft.getUserOrbitalPoints()) {
-            renderPositionProvider(orbitalPoint);
+            renderPositionProvider(gl, orbitalPoint);
         }
         List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime());
         for(ManeuverPoint maneuverPoint : maneuverPoints) {
-            renderPositionProvider(maneuverPoint);
+            renderPositionProvider(gl, maneuverPoint);
         }
     }
 

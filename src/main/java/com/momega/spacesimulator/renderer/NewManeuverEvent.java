@@ -20,8 +20,8 @@ public class NewManeuverEvent extends ModelChangeEvent {
 	
 	/**
 	 * @param model the model
-	 * @param the maneuver to be added
-	 * @param the spacecraft
+	 * @param maneuver the maneuver to be added
+	 * @param spacecraft the spacecraft
 	 */
 	public NewManeuverEvent(Model model, Maneuver maneuver, Spacecraft spacecraft) {
 		super(model);

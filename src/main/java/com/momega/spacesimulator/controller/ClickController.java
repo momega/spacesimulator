@@ -14,7 +14,7 @@ public class ClickController extends AbstractController {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (e.getButton() == 1) {
+        if (e.getButton() == 1 && e.getClickCount()>1) {
             final GLAutoDrawable canvas = (GLAutoDrawable) e.getSource();
             Point position = GLUtils.getPosition(canvas, e);
             RendererModel.getInstance().setMouseCoordinates(position);

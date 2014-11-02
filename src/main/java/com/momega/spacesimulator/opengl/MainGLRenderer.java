@@ -69,7 +69,6 @@ public class MainGLRenderer extends AbstractGLRenderer {
     protected void computeScene() {
         Application.getInstance().getModelWorker().next();
 
-
 //        // TODO: place this into the method
 //        double x = drawable.getWidth();
 //        double y = drawable.getHeight();
@@ -171,6 +170,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     public void changeZnear(double factor) {
         znear *= factor;
+        logger.info("change z near: {}",znear);
         setReshape();
     }
 

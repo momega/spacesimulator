@@ -15,24 +15,24 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
     @Override
     public void initPlanets() {
         sun = new CelestialBody();
-        updateDynamicalPoint(sun, "Sun", 1.989 * 1E6, 25.05, 696.342, 286.13, 63.87, "Sun");
+        updateDynamicalPoint(sun, "Sun", 1.989 * 1E6, 25.05, 696.342, 286.13, 63.87, "Sun", "/images/sun.png");
         setCentralPoint(sun);
         createTrajectory(sun, new double[] {1, 0.7, 0});
         sun.setTextureFileName("sun.jpg");
 
         BaryCentre earthMoonBarycenter = new BaryCentre();
-        updateDynamicalPoint(earthMoonBarycenter, "Earth-Moon Barycenter", 0, 0, 1, 0, null);
+        updateDynamicalPoint(earthMoonBarycenter, "Earth-Moon Barycenter", 0, 0, 1, 0, null, null);
         createKeplerianElements(earthMoonBarycenter, sun, 149598.261d * 1E6, 0.0166739, 287.5824, 365.256814, 2456661.138788696378, 0.0018601064, 175.395d);
         createTrajectory(earthMoonBarycenter, new double[]{0, 0.5, 1});
 
         CelestialBody earth = new Planet();
-        updateDynamicalPoint(earth, "Earth", 5.97219, 0.997269, 6.371, 0d, 90d, 190.147d,  "Earth");
+        updateDynamicalPoint(earth, "Earth", 5.97219, 0.997269, 6.371, 0d, 90d, 190.147d,  "Earth", "/images/earth.png");
         createKeplerianElements(earth, earthMoonBarycenter, 4.686955382086 * 1E6, 0.055557, 264.7609, 27.427302, 2456796.39770, 5.241500, 208.1199);
         createTrajectory(earth, new double[]{0, 0.5, 1});
         earth.setTextureFileName("earth.jpg");
 
         CelestialBody moon = new Planet();
-        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687, "Moon");
+        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687, "Moon", "/images/moon.png");
         createKeplerianElements(moon, earthMoonBarycenter, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.241500, 208.1199);
         createTrajectory(moon, new double[]{0.5,0.5,0.5});
         moon.setTextureFileName("moon.jpg");

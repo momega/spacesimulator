@@ -30,7 +30,7 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
         super(new BorderLayout(5, 5));
         this.object = object;
 
-        attrPanel = new AttributesPanel(LABELS, object, FIELDS);
+        attrPanel = new AttributesPanel(object, LABELS, FIELDS);
         add(attrPanel, BorderLayout.CENTER);
 
         if (object instanceof MovingObject) {

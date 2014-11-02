@@ -28,17 +28,17 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 
     private final AttributesPanel attrPanel;
     private boolean visible;
-	private final AbstractOrbitalPoint apsis;
+	private final AbstractOrbitalPoint orbitalPoint;
     private final ManeuverService maneuverService;
     private final UserPointService userPointService;
 
     public OrbitalPointPanel(final AbstractOrbitalPoint point) {
         super(new BorderLayout(5, 5));
-		this.apsis = point;
+		this.orbitalPoint = point;
         this.maneuverService = Application.getInstance().getService(ManeuverService.class);
         this.userPointService = Application.getInstance().getService(UserPointService.class);
 
-        attrPanel = new AttributesPanel(LABELS, point, FIELDS);
+        attrPanel = new AttributesPanel(point, LABELS, FIELDS);
         visible = point.isVisible();
 
         JPanel buttonPanel = new JPanel();
@@ -86,6 +86,20 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
                 buttonPanel.add(Box.createRigidArea(new Dimension(0, 5)));
                 buttonPanel.add(deleteButton);
             }
+
+            JButton nameButton = new JButton("Rename...");
+            nameButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Object newName = JOptionPane.showInputDialog(OrbitalPointPanel.this, "Rename:", "Rename Dialog", JOptionPane.PLAIN_MESSAGE, null, null, orbitalPoint.getName());
+                    if (newName instanceof String && ((String) newName).length()>0) {
+                        orbitalPoint.setName((String)newName);
+                    }
+                }
+            });
+
+            buttonPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+            buttonPanel.add(nameButton);
         }
 
         add(attrPanel, BorderLayout.CENTER);
@@ -94,7 +108,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 
     @Override
     public void updateModel() {
-    	apsis.setVisible(visible);
+    	orbitalPoint.setVisible(visible);
     }
 
     @Override

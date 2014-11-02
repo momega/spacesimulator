@@ -20,8 +20,8 @@ public class ApsidesRenderer extends AbstractOrbitalPositionProviderRenderer {
     protected void renderTexts(GL2 gl, int width, int height) {
         KeplerianTrajectory keplerianTrajectory = movingObject.getTrajectory();
         if (RendererModel.getInstance().isVisibleOnScreen(movingObject)) {
-        	renderPositionProvider(keplerianTrajectory.getApoapsis());
-        	renderPositionProvider(keplerianTrajectory.getPeriapsis());
+        	renderPositionProvider(gl, keplerianTrajectory.getApoapsis());
+        	renderPositionProvider(gl, keplerianTrajectory.getPeriapsis());
         }
     }
 

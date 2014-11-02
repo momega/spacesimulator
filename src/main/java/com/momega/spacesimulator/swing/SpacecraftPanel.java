@@ -49,7 +49,7 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 
 		this.target.setTargetBody(this.spacecraft.getTarget() == null ? null : this.spacecraft.getTarget().getTargetBody());
         this.target.setAngle(this.spacecraft.getTarget() == null ? null : this.spacecraft.getTarget().getAngle());
-		attrPanel = new AttributesPanel(LABELS, spacecraft, FIELDS);
+		attrPanel = new AttributesPanel(spacecraft, LABELS, FIELDS);
 
 		JPanel targetPanel = new JPanel(new GridLayout(2, 2, 5, 5));
 

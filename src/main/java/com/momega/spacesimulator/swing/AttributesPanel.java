@@ -35,7 +35,7 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
     protected Map<JComponent, Expression> jFields = new HashMap<>();
     protected List<JLabel> jLabels = new ArrayList<>();
 
-    public AttributesPanel(String[] labels, Object object, String[] fields) {
+    public AttributesPanel(Object object, String[] labels, String[] fields) {
         this.object = object;
         int numPairs = labels.length;
         GridLayout layout = new GridLayout(numPairs, 2, 5, 5);

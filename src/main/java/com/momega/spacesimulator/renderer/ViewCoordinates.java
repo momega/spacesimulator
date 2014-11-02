@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.opengl.ScreenCoordinates;
 
 import java.awt.*;
 
@@ -9,17 +10,25 @@ import java.awt.*;
  */
 public class ViewCoordinates {
 
-    private Point point;
+    private ScreenCoordinates screenCoordinates;
     private boolean visible;
     private double radius;
     private PositionProvider object;
 
-    public Point getPoint() {
-        return point;
+    public ScreenCoordinates getScreenCoordinates() {
+        return screenCoordinates;
     }
 
-    public void setPoint(Point point) {
-        this.point = point;
+    public void setScreenCoordinates(ScreenCoordinates screenCoordinates) {
+        this.screenCoordinates = screenCoordinates;
+    }
+
+    public Point getPoint() {
+        if (getScreenCoordinates() == null) {
+            return null;
+        } else {
+            return getScreenCoordinates().getPoint();
+        }
     }
 
     public boolean isVisible() {

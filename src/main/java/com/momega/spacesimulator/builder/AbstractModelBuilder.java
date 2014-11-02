@@ -223,7 +223,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         spacecraft.setMass(spacecraft.getMass() + subsystem.getMass());
     }
 
-    private void updateDynamicalPoint(MovingObject dp, String name, double mass, double rotationPeriod, double radius, String wiki) {
+    private void updateDynamicalPoint(MovingObject dp, String name, double mass, double rotationPeriod, double radius, String wiki, String icon) {
         dp.setName(name);
         if (dp.getCartesianState() == null) {
             dp.setCartesianState(new CartesianState());
@@ -241,6 +241,11 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         if (dp instanceof CelestialBody) {
             CelestialBody cb = (CelestialBody) dp;
             cb.setWiki(wiki);
+            if (icon == null) {
+                cb.setIcon("/images/celestial.png");
+            } else {
+                cb.setIcon(icon);
+            }
         }
     }
 
@@ -253,9 +258,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param radius radius in kilometers
      * @param axialTilt axial tilt
      * @param wiki the wiki page
+     * @param icon the icon
      */
-    protected void updateDynamicalPoint(MovingObject dp, String name, double mass, double rotationPeriod, double radius, double axialTilt, String wiki) {
-        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki);
+    protected void updateDynamicalPoint(MovingObject dp, String name, double mass, double rotationPeriod, double radius, double axialTilt, String wiki, String icon) {
+        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki, icon);
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
             ro.getOrientation().twist(Math.toRadians(axialTilt));
@@ -272,9 +278,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param ra right ascension RA of the north pole
      * @param dec declination 0of the north pole
      * @param wiki the wiki page
+     * @param icon
      */
-    protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, String wiki) {
-        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki);
+    protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, String wiki, String icon) {
+        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki, icon);
         if (dp instanceof RotatingObject) {
             Orientation orientation = VectorUtils.createOrientation(Math.toRadians(ra), Math.toRadians(dec), true);
             dp.setOrientation(orientation);
@@ -291,9 +298,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param ra right ascension RA of the north pole
      * @param dec declination 0of the north pole
      * @param primeMeridianJd2000 prime meridian at JD2000 epoch
+     * @param icon the icon
      */
-    protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, double primeMeridianJd2000, String wiki) {
-        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, ra, dec, wiki);
+    protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, double primeMeridianJd2000, String wiki, String icon) {
+        updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, ra, dec, wiki, icon);
         if (dp instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) dp;
             ro.setPrimeMeridianJd2000(Math.toRadians(primeMeridianJd2000));

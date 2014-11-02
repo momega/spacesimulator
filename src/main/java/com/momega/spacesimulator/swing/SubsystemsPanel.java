@@ -74,14 +74,14 @@ public class SubsystemsPanel extends JPanel implements UpdatablePanel {
     protected AttributesPanel createPropulsionPanel(SpacecraftSubsystem subsystem) {
         String[] labels = new String[]  {"Name", "Mass", "Specific Impulse", "Mass Flow", "Fuel"};
         String[] fields = new String[]  {"#obj.name", "#obj.mass", "#obj.specificImpulse", "#obj.massFlow", "#obj.fuel"};
-        AttributesPanel ap = new AttributesPanel(labels, subsystem, fields);
+        AttributesPanel ap = new AttributesPanel(subsystem, labels, fields);
         return ap;
     }
 
     protected AttributesPanel createHabitatPanel(SpacecraftSubsystem subsystem) {
         String[] labels = new String[]  {"Name", "Mass", "Crew Capacity"};
         String[] fields = new String[]  {"#obj.name", "#obj.mass", "#obj.crewCapacity"};
-        AttributesPanel ap = new AttributesPanel(labels, subsystem, fields);
+        AttributesPanel ap = new AttributesPanel(subsystem, labels, fields);
         return ap;
     }
     

@@ -20,11 +20,11 @@ public class PerspectiveController extends AbstractController {
         int keyCode = e.getKeyCode();
         switch (keyCode) {
             case KeyEvent.VK_PAGE_UP:
-                renderer.changeZnear(2);
+                renderer.changeZnear(1.1);
                 break;
 
             case KeyEvent.VK_PAGE_DOWN:
-                renderer.changeZnear(0.5);
+                renderer.changeZnear(0.9);
                 break;
 
         }

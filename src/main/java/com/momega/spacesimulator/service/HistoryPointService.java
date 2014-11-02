@@ -59,7 +59,10 @@ public class HistoryPointService {
     	HistoryPoint hp = getLastHistoryPoint(spacecraft);
     	hp.setName("Change SOI "+ oldSoi.getName() + "->" + newSoi.getName());
     	spacecraft.getHistoryTrajectory().getNamedHistoryPoints().add(hp);
-    	
+
+        // TODO: clear related user orbital points
+    	spacecraft.getUserOrbitalPoints().clear();
+
     	HistoryPoint startPoint = getStartPoint(spacecraft);
     	logger.info("time = {}", hp.getTimestamp().subtract(startPoint.getTimestamp()));
     	

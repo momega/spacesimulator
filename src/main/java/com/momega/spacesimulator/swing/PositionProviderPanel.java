@@ -21,7 +21,7 @@ public class PositionProviderPanel extends JPanel implements UpdatablePanel {
     public PositionProviderPanel(PositionProvider positionProvider) {
         super(new BorderLayout(5, 5));
 
-        attrPanel = new AttributesPanel(LABELS, positionProvider, FIELDS);
+        attrPanel = new AttributesPanel(positionProvider, LABELS, FIELDS);
         add(attrPanel, BorderLayout.CENTER);
     }
     

@@ -7,6 +7,7 @@ import com.momega.spacesimulator.opengl.GLUtils;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import java.awt.*;
+import java.awt.geom.Rectangle2D;
 
 /**
  * Created by martin on 10/29/14.
@@ -16,7 +17,7 @@ public abstract class AbstractText3dRenderer extends AbstractRenderer {
     protected TextRenderer textRenderer;
 
     public void init(GL2 gl) {
-        textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 72), true, true);
+        textRenderer = new TextRenderer(new Font("SansSerif", Font.PLAIN, 32), true, true);
     }
 
     @Override
@@ -26,6 +27,7 @@ public abstract class AbstractText3dRenderer extends AbstractRenderer {
     }
 
     protected void drawString(CharSequence str, double x, double y, double z) {
+        textRenderer.setSmoothing(true);
         textRenderer.begin3DRendering();
         textRenderer.draw3D(str, (float)x, (float)y, (float)z, 10000f);
         textRenderer.end3DRendering();

@@ -4,6 +4,7 @@ import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.opengl.ScreenCoordinates;
 import com.momega.spacesimulator.service.ManeuverService;
 import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.service.UserPointService;
@@ -11,6 +12,7 @@ import com.momega.spacesimulator.swing.MovingObjectsModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import java.awt.*;
 import java.util.*;
@@ -49,8 +51,6 @@ public class RendererModel {
     private boolean takeScreenshot = false;
 
     private Point mouseCoordinates = null;
-    private Vector3d mouseModelCoordinates = null;
-
 
     private RendererModel() {
         super();
@@ -120,9 +120,10 @@ public class RendererModel {
         }
 
         ViewCoordinates viewCoordinates = new ViewCoordinates();
-        Point point = GLUtils.getProjectionCoordinates(drawable, positionProvider.getPosition(), camera);
-        viewCoordinates.setVisible(point != null);
-        viewCoordinates.setPoint(point);
+        GL2 gl = drawable.getGL().getGL2();
+        ScreenCoordinates screenCoordinates = GLUtils.getProjectionCoordinates(gl, positionProvider.getPosition(), camera);
+        viewCoordinates.setVisible(screenCoordinates != null);
+        viewCoordinates.setScreenCoordinates(screenCoordinates);
         double radiusAngle;
         if (positionProvider instanceof RotatingObject) {
             RotatingObject ro = (RotatingObject) positionProvider;
@@ -345,12 +346,12 @@ public class RendererModel {
     }
 
     public void createUserPoint(GLAutoDrawable drawable, Point point) {
-        Map<Integer, Point> positions = GLUtils.getStencilPosition(drawable, point, RendererModel.MIN_TARGET_SIZE);
-        if (positions.size()==1) { // only one object is selected
-            point = positions.values().iterator().next();
-            double depth = GLUtils.getDepth(drawable, point);
+        GL2 gl = drawable.getGL().getGL2();
+        Map<Integer, ScreenCoordinates> screenCoordinatesMap = GLUtils.getStencilPosition(gl, point, RendererModel.MIN_TARGET_SIZE);
+        if (screenCoordinatesMap.size()==1) { // only one object is selected
+            ScreenCoordinates screenCoordinates = screenCoordinatesMap.values().iterator().next();
 
-            Vector3d modelCoordinates = GLUtils.getModelCoordinates(drawable, point, depth);
+            Vector3d modelCoordinates = GLUtils.getModelCoordinates(gl, screenCoordinates);
             logger.info("model coordinates = {}", modelCoordinates.asArray());
 
             Spacecraft spacecraft = (Spacecraft) RendererModel.getInstance().findByName("Spacecraft 1").getObject();
