@@ -1,1 +1,8 @@
-box: mies/openjdk7@0.0.3
+box: pjvds/java@0.1.3
+
+build:
+    steps:
+        - script:
+                name: mvn clean install
+                code: |
+                  mvn clean install
