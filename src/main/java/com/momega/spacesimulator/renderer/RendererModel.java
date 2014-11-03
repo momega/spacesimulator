@@ -4,7 +4,6 @@ import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.opengl.ScreenCoordinates;
 import com.momega.spacesimulator.service.ManeuverService;
 import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.service.UserPointService;
@@ -49,6 +48,8 @@ public class RendererModel {
     private boolean pointsVisible;
 
     private boolean takeScreenshot = false;
+
+    private boolean beamsShowed = false;
 
     private Point mouseCoordinates = null;
 
@@ -358,5 +359,13 @@ public class RendererModel {
             UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
             userPointService.createUserOrbitalPoint(spacecraft, modelCoordinates);
         }
+    }
+
+    public void setBeamsShowed(boolean beamsShowed) {
+        this.beamsShowed = beamsShowed;
+    }
+
+    public boolean isBeamsShowed() {
+        return beamsShowed;
     }
 }

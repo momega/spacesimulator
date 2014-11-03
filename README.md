@@ -6,8 +6,8 @@ and spacecraft(s).
 
 The planets are moving based on Keplerian law (simplified elliptical) trajectory.
 
-The spacecraft(s) are moving based on the Newtonian trajectory. The gravitation of the planets
-influences the trajectory of the spacecraft.
+The spacecraft(s) are moving based on the Newtonian trajectory. The gravitation of all the planets
+influences the trajectory of the spacecrafts.
 
 Features
 ========
@@ -17,6 +17,8 @@ Features
 * Time warp
 * Display popup dialogs with detail information about all objects
 * 7 planets and their moon included in model
+* User defined points
+* Take a screenshot
 
 Screenshots
 ===========
@@ -26,6 +28,12 @@ Screenshots
 ![High eccentricity orbit](/images/spacecraft.png "High eccentricity orbit")
 
 ![Near the Moon](/images/moon.png "Near the Moon")
+
+Build
+=====
+
+[![wercker status](https://app.wercker.com/status/262d561454952437fddc94f925ffc667/m/master "wercker status")](https://app.wercker.com/project/bykey/262d561454952437fddc94f925ffc667)
+
 
 
 

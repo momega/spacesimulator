@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.opengl.ScreenCoordinates;
 
 import java.awt.*;
 

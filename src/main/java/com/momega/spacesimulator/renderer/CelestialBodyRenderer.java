@@ -84,7 +84,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
     @Override
     protected void additionalDraw(GL2 gl) {
-        if (ModelHolder.getModel().getSelectedObject() == celestialBody) {
+        if (RendererModel.getInstance().isBeamsShowed() && ModelHolder.getModel().getSelectedObject() == celestialBody) {
             GLUtils.drawBeansAndCircles(gl, 0, 0, celestialBody.getRadius() * 5, 18, 5, celestialBody.getTrajectory().getColor());
         }
         

@@ -5,6 +5,7 @@ import com.jogamp.opengl.util.texture.Texture;
 import com.jogamp.opengl.util.texture.TextureData;
 import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.renderer.ScreenCoordinates;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;

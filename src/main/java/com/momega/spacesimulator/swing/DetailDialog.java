@@ -5,20 +5,15 @@ import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 /**
@@ -102,25 +97,6 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             }
         });
         buttonsPanel.add(applyButton);
-        
-        if (positionProvider instanceof CelestialBody) {
-            JButton wikiButton = new JButton("Wiki");
-            final CelestialBody celestialBody = (CelestialBody) positionProvider;
-            if (celestialBody.getWiki() != null) {
-                try {
-                    final URI wikiUri = new URI("http://en.wikipedia.org/wiki/" + celestialBody.getWiki());
-                    wikiButton.addActionListener(new ActionListener() {
-                        @Override
-                        public void actionPerformed(ActionEvent e) {
-                            open(wikiUri);
-                        }
-                    });
-                    buttonsPanel.add(wikiButton);
-                } catch (URISyntaxException urie) {
-                    throw new IllegalArgumentException(urie);
-                }
-            }
-        }
 
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
         mainPanel.add(buttonsPanel, BorderLayout.PAGE_END);
@@ -154,7 +130,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     }
 
     protected JPanel createPhysicalPanel() {
-        PhysicalBodyPanel result =  new PhysicalBodyPanel(positionProvider);
+        PhysicalBodyPanel result =  new PhysicalBodyPanel((CelestialBody) positionProvider);
         attributesPanelList.add(result);
         return result;
     }
@@ -178,7 +154,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
     }
 
     protected JPanel createOrbitalPointPanel() {
-        OrbitalPointPanel result =  new OrbitalPointPanel((AbstractOrbitalPoint) positionProvider);
+        OrbitalPointPanel result = new OrbitalPointPanel((AbstractOrbitalPoint) positionProvider);
         attributesPanelList.add(result);
         return result;
     }
@@ -187,22 +163,6 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         PositionProviderPanel result =  new PositionProviderPanel(positionProvider);
         attributesPanelList.add(result);
         return result;
-    }
-
-    private static void open(URI uri) {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                Desktop.getDesktop().browse(uri);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null,
-                    "Failed to launch the link, " +
-                            "your computer is likely misconfigured.",
-                    "Cannot Launch Link",JOptionPane.WARNING_MESSAGE); }
-        } else {
-            JOptionPane.showMessageDialog(null,
-                "Java is not able to launch links on your computer.",
-                "Cannot Launch Link",JOptionPane.WARNING_MESSAGE);
-        }
     }
 
     @Override

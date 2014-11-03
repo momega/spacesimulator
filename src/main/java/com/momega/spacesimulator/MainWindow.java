@@ -51,6 +51,7 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new TimeController(window));
         controller.addController(new PerspectiveController(mr));
         controller.addController(new ToolbarController());
+        controller.addController(new PreferencesController());
         window.openWindow(mr, controller);
     }
     
@@ -72,6 +73,8 @@ public class MainWindow extends DefaultWindow {
         saveScreenshotItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_DOWN_MASK));
         saveScreenshotItem.addActionListener(controller);
     	JMenuItem preferencesItem = new JMenuItem("Preferences...");
+        preferencesItem.setActionCommand(PreferencesController.COMMAND);
+        preferencesItem.addActionListener(controller);
     	
     	JMenuItem exitItem = new JMenuItem("Exit...");
     	exitItem.setActionCommand(QuitController.COMMAND);

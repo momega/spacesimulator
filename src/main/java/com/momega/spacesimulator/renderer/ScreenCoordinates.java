@@ -1,4 +1,4 @@
-package com.momega.spacesimulator.opengl;
+package com.momega.spacesimulator.renderer;
 
 import java.awt.*;
 

@@ -41,11 +41,11 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
         attrPanel = new AttributesPanel(point, LABELS, FIELDS);
         visible = point.isVisible();
 
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
+        JPanel buttonsPanel = new JPanel();
+        buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
         JCheckBox visibleButton = new JCheckBox("Visible");
-        buttonPanel.add(visibleButton);
+        buttonsPanel.add(visibleButton);
         visibleButton.setSelected(visible);
         visibleButton.addItemListener(new ItemListener() {
             @Override
@@ -71,8 +71,8 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 				}
 			});
 
-            buttonPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-	        buttonPanel.add(maneuverButton);
+            buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+	        buttonsPanel.add(maneuverButton);
 
             if (point instanceof UserOrbitalPoint) {
                 JButton deleteButton = new JButton("Delete");
@@ -83,8 +83,8 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
                         DetailDialogHolder.getInstance().hideDialog(point);
                     }
                 });
-                buttonPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-                buttonPanel.add(deleteButton);
+                buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+                buttonsPanel.add(deleteButton);
             }
 
             JButton nameButton = new JButton("Rename...");
@@ -98,12 +98,12 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
                 }
             });
 
-            buttonPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-            buttonPanel.add(nameButton);
+            buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+            buttonsPanel.add(nameButton);
         }
 
         add(attrPanel, BorderLayout.CENTER);
-        add(buttonPanel, BorderLayout.LINE_END);
+        add(buttonsPanel, BorderLayout.LINE_END);
     }
 
     @Override
