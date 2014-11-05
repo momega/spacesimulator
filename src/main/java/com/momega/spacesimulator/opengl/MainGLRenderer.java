@@ -3,6 +3,7 @@ package com.momega.spacesimulator.opengl;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.PerspectiveRenderer;
@@ -57,6 +58,12 @@ public class MainGLRenderer extends AbstractGLRenderer {
         if (position != null) {
             RendererModel.getInstance().createUserPoint(drawable, position);
             RendererModel.getInstance().setMouseCoordinates(null);
+        }
+
+        UserOrbitalPoint userOrbitalPoint = RendererModel.getInstance().getSelectedUserOrbitalPoint();
+        Point draggedPoint = RendererModel.getInstance().getDraggedPoint();
+        if (userOrbitalPoint!=null && draggedPoint!=null) {
+            RendererModel.getInstance().dragUserPoint(drawable);
         }
     }
 

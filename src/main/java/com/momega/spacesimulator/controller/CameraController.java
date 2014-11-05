@@ -1,15 +1,22 @@
 package com.momega.spacesimulator.controller;
 
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
+import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.renderer.Renderer;
+import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.renderer.ViewCoordinates;
+import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by martin on 5/8/14.
@@ -20,8 +27,48 @@ public class CameraController extends SimpleCameraController {
 
     private double height;
 
+    private UserOrbitalPoint selectedUserOrbitalPoint = null;
+
     public CameraController(Camera camera) {
         super(camera);
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        if ((e.getModifiers() & InputEvent.BUTTON1_MASK)>0) {
+            Point position = GLUtils.getPosition(e);
+            final java.util.List<ViewCoordinates> viewCoordinatesList = RendererModel.getInstance().findViewCoordinates(position);
+            List<UserOrbitalPoint> points = new ArrayList<>();
+            for (ViewCoordinates viewCoordinates : viewCoordinatesList) {
+                if (viewCoordinates.getObject() instanceof UserOrbitalPoint) {
+                    points.add((UserOrbitalPoint) viewCoordinates.getObject());
+                }
+            }
+
+            if (selectedUserOrbitalPoint == null && points.size() == 1) {
+                selectedUserOrbitalPoint = points.get(0);
+                logger.info("selected user orbital point = {}", selectedUserOrbitalPoint);
+                RendererModel.getInstance().setSelectedUserOrbitalPoint(selectedUserOrbitalPoint);
+                RendererModel.getInstance().setDraggedPoint(position);
+                return;
+            }
+
+            if (selectedUserOrbitalPoint != null) {
+                logger.info("dragging = {}", position);
+                RendererModel.getInstance().setDraggedPoint(position);
+                return;
+            }
+        }
+
+        super.mouseDragged(e);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        super.mouseReleased(e);
+        selectedUserOrbitalPoint = null;
+        RendererModel.getInstance().setDraggedPoint(null);
+        RendererModel.getInstance().setSelectedUserOrbitalPoint(null);
     }
 
     @Override

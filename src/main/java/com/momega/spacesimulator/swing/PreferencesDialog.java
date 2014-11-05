@@ -1,6 +1,6 @@
 package com.momega.spacesimulator.swing;
 
-import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.Preferences;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 public class PreferencesDialog extends JDialog {
 
     private JCheckBox chkBeams;
+    private JCheckBox chkSpacecraftAxis;
 
     public PreferencesDialog() {
         super((Frame)null, "Preferences...", true);
@@ -26,7 +27,11 @@ public class PreferencesDialog extends JDialog {
 
         chkBeams = new JCheckBox("Show equatorial plane around selected planet");
         mainPanel.add(chkBeams);
-        chkBeams.setSelected(RendererModel.getInstance().isBeamsShowed());
+        chkBeams.setSelected(Preferences.getInstance().isDrawBeamsActivated());
+
+        chkSpacecraftAxis = new JCheckBox("Show spacecraft orientation axis");
+        mainPanel.add(chkSpacecraftAxis);
+        chkSpacecraftAxis.setSelected(Preferences.getInstance().isDrawSpacecraftAxisActivated());
 
         setContentPane(rootPanel);
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -37,7 +42,8 @@ public class PreferencesDialog extends JDialog {
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                RendererModel.getInstance().setBeamsShowed(chkBeams.isSelected());
+                Preferences.getInstance().setDrawBeamsActivated(chkBeams.isSelected());
+                Preferences.getInstance().setDrawSpacecraftAxisActivated(chkSpacecraftAxis.isSelected());
                 setVisible(false);
             }
         });

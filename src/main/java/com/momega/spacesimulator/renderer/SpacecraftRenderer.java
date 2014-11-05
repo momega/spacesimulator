@@ -8,6 +8,7 @@ import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 
 /**
+ * Simple renderer of the spacecraft
  * Created by martin on 5/6/14.
  */
 public class SpacecraftRenderer extends CompositeRenderer {
@@ -17,11 +18,9 @@ public class SpacecraftRenderer extends CompositeRenderer {
     private final double axisSize = 1E6;
 
     private final Spacecraft spacecraft;
-	private boolean drawAxis;
 
-    public SpacecraftRenderer(Spacecraft spacecraft, boolean drawAxis) {
+    public SpacecraftRenderer(Spacecraft spacecraft) {
         this.spacecraft = spacecraft;
-		this.drawAxis = drawAxis;
 
         addRenderer(new SpacecraftBitmapRenderer(spacecraft));
     }
@@ -33,7 +32,7 @@ public class SpacecraftRenderer extends CompositeRenderer {
             
             gl.glPushMatrix();
 
-        	if (drawAxis) {
+        	if (Preferences.getInstance().isDrawSpacecraftAxisActivated()) {
     	        Vector3d n = spacecraft.getPosition().scaleAdd(axisSize, spacecraft.getOrientation().getN());
     	        Vector3d z = spacecraft.getPosition().scaleAdd(axisSize, spacecraft.getOrientation().getV());
     	        Vector3d u = spacecraft.getPosition().scaleAdd(axisSize, spacecraft.getOrientation().getU());

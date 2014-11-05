@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.awt.*;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 
@@ -34,6 +35,10 @@ public class SimpleCameraController extends AbstractController {
 
     @Override
     public void mouseDragged(MouseEvent e) {
+        if ((e.getModifiers() & InputEvent.BUTTON1_MASK)>0) {
+            return;
+        }
+
         if (mouseLast == null) {
             mouseLast = new Point(e.getX(), e.getY());
             return;

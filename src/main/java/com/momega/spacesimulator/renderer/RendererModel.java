@@ -18,13 +18,14 @@ import java.util.*;
 import java.util.List;
 
 /**
+ * The renderer model
  * Created by martin on 6/20/14.
  */
 public class RendererModel {
 
     private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
 
-    public final static int MIN_TARGET_SIZE = 5;
+    public final static int MIN_TARGET_SIZE = 9;
     
     public static final double FOVY = 45.0;    
 
@@ -49,9 +50,11 @@ public class RendererModel {
 
     private boolean takeScreenshot = false;
 
-    private boolean beamsShowed = false;
+
 
     private Point mouseCoordinates = null;
+    private UserOrbitalPoint selectedUserOrbitalPoint;
+    private Point draggedPoint;
 
     private RendererModel() {
         super();
@@ -166,8 +169,7 @@ public class RendererModel {
     }
     
     public List<PositionProvider> getAll() {
-    	List<PositionProvider> result = new ArrayList<>(viewData.keySet());
-    	return result;
+    	return new ArrayList<>(viewData.keySet());
     }
 
     public boolean isVisibleOnScreen(PositionProvider positionProvider) {
@@ -361,11 +363,31 @@ public class RendererModel {
         }
     }
 
-    public void setBeamsShowed(boolean beamsShowed) {
-        this.beamsShowed = beamsShowed;
+    public void dragUserPoint(GLAutoDrawable drawable) {
+        GL2 gl = drawable.getGL().getGL2();
+        Map<Integer, ScreenCoordinates> screenCoordinatesMap = GLUtils.getStencilPosition(gl, draggedPoint, RendererModel.MIN_TARGET_SIZE);
+        if (screenCoordinatesMap.size()==1) { // only one object is selected
+            ScreenCoordinates screenCoordinates = screenCoordinatesMap.values().iterator().next();
+            Vector3d modelCoordinates = GLUtils.getModelCoordinates(gl, screenCoordinates);
+
+            logger.info("dragged model coordinates = {}", modelCoordinates.asArray());
+            userPointService.updateUserOrbitalPoint(selectedUserOrbitalPoint, modelCoordinates);
+        }
     }
 
-    public boolean isBeamsShowed() {
-        return beamsShowed;
+    public void setSelectedUserOrbitalPoint(UserOrbitalPoint selectedUserOrbitalPoint) {
+        this.selectedUserOrbitalPoint = selectedUserOrbitalPoint;
+    }
+
+    public UserOrbitalPoint getSelectedUserOrbitalPoint() {
+        return selectedUserOrbitalPoint;
+    }
+
+    public void setDraggedPoint(Point draggedPoint) {
+        this.draggedPoint = draggedPoint;
+    }
+
+    public Point getDraggedPoint() {
+        return draggedPoint;
     }
 }
