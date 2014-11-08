@@ -1,13 +1,11 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.renderer.ModelChangeEvent;
-import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.swing.PreferencesDialog;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
+
+import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
+
+import com.momega.spacesimulator.swing.PreferencesDialog;
 
 /**
  * Created by martin on 11/2/14.

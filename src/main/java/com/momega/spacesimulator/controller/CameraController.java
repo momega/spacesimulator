@@ -4,7 +4,6 @@ import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.renderer.Renderer;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 import org.slf4j.Logger;

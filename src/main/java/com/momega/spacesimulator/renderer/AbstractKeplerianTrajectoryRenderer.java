@@ -27,10 +27,10 @@ public abstract class AbstractKeplerianTrajectoryRenderer extends AbstractRender
         gl.glLineWidth(1.5f);
         gl.glTranslated(-e, 0, 0); // move from foci to center
         if (keplerianElements.getKeplerianOrbit().getEccentricity() < 1) {
-            double b = a * Math.sqrt(1 - keplerianElements.getKeplerianOrbit().getEccentricity() * keplerianElements.getKeplerianOrbit().getEccentricity());
+            double b = keplerianElements.getKeplerianOrbit().getSemiminorAxis();
             GLUtils.drawEllipse(gl, a, b, 7200, getColor());
         } else {
-            double b = a * Math.sqrt(keplerianElements.getKeplerianOrbit().getEccentricity() * keplerianElements.getKeplerianOrbit().getEccentricity() - 1);
+            double b = keplerianElements.getKeplerianOrbit().getSemiminorAxis();
             double HA = keplerianElements.getHyperbolicAnomaly();
             GLUtils.drawHyperbolaPartial(gl, a, b, -2 * Math.PI, -HA, 7200, getColor()); // -HA because of a<0
         }

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -84,7 +83,7 @@ public class TargetService {
         Vector3d intersectionLineVector = VectorUtils.transform(orbit, intersectionLine.getDirection()).normalize();
         intersectionLine = new Line(intersectionLinePoint, intersectionLineVector);
         intersectionLine = intersectionLine.move(new Vector3d(orbit.getSemimajorAxis() * orbit.getEccentricity(), 0, 0));
-        double[] angles = orbit.lineIntersection(intersectionLine);
+        Double[] angles = orbit.lineIntersection(intersectionLine);
 
         // create intersection, if there are not
         List<OrbitIntersection> intersections = target.getOrbitIntersections();
@@ -103,14 +102,17 @@ public class TargetService {
 
         // update orbital intersection
         for(int i=0; i<intersections.size(); i++) {
-            double EA = angles[i];
-            double theta = KeplerianElements.solveTheta(EA, orbit.getEccentricity());
+            double eha = angles[i];
+            double theta = KeplerianElements.solveTheta(eha, orbit.getEccentricity());
             OrbitIntersection intersection = intersections.get(i);
             KeplerianElements keplerianElements = intersection.getKeplerianElements();
             keplerianElements.setKeplerianOrbit(orbit);
             keplerianElements.setTrueAnomaly(theta);
-            keplerianElements.setEccentricAnomaly(EA);
-
+            if (orbit.isHyperbolic()) {
+            	keplerianElements.setHyperbolicAnomaly(eha);
+            } else {
+            	keplerianElements.setEccentricAnomaly(eha);
+            }
             Vector3d vector = orbit.getCartesianPosition(theta);
 
             intersection.setPosition(vector);

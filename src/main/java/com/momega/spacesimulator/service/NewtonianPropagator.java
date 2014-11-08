@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.utils.VectorUtils;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import java.util.List;
+import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.KeplerianOrbit;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.ManeuverPoint;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Orientation;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.SphereOfInfluence;
+import com.momega.spacesimulator.model.Target;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.model.Trajectory;
+import com.momega.spacesimulator.model.TrajectoryType;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
+import com.momega.spacesimulator.model.Vector3d;
 
 /**
  * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along Newtonian Trajectory. The

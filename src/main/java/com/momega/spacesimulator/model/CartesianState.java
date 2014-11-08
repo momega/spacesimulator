@@ -1,9 +1,9 @@
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.VectorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.momega.spacesimulator.utils.MathUtils;
 
 /**
  * Created by martin on 8/12/14.

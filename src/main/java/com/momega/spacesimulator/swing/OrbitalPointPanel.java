@@ -100,27 +100,30 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 
             buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
             buttonsPanel.add(nameButton);
+            
+            if (point instanceof UserOrbitalPoint) {
 
-            JButton thetaButton = new JButton("True Anomaly...");
-            thetaButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Object newTheta = JOptionPane.showInputDialog(OrbitalPointPanel.this, "True Anomaly:", "True Anomaly Dialog", JOptionPane.PLAIN_MESSAGE, null, null, Math.toDegrees(orbitalPoint.getKeplerianElements().getTrueAnomaly()));
-                    if (newTheta instanceof String && ((String) newTheta).length()>0) {
-                        try {
-                            userPointService.updateUserOrbitalPoint((UserOrbitalPoint) point, Math.toRadians(Double.valueOf((String) newTheta)));
-                        } catch (NumberFormatException nfe) {
-                            JOptionPane.showMessageDialog(OrbitalPointPanel.this,
-                                    "Incorrect angle",
-                                    "Update True Anomaly Error",
-                                    JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            });
-
-            buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-            buttonsPanel.add(thetaButton);
+	            JButton thetaButton = new JButton("True Anomaly...");
+	            thetaButton.addActionListener(new ActionListener() {
+	                @Override
+	                public void actionPerformed(ActionEvent e) {
+	                    Object newTheta = JOptionPane.showInputDialog(OrbitalPointPanel.this, "True Anomaly:", "True Anomaly Dialog", JOptionPane.PLAIN_MESSAGE, null, null, Math.toDegrees(orbitalPoint.getKeplerianElements().getTrueAnomaly()));
+	                    if (newTheta instanceof String && ((String) newTheta).length()>0) {
+	                        try {
+	                            userPointService.updateUserOrbitalPoint((UserOrbitalPoint) point, Math.toRadians(Double.valueOf((String) newTheta)));
+	                        } catch (NumberFormatException nfe) {
+	                            JOptionPane.showMessageDialog(OrbitalPointPanel.this,
+	                                    "Incorrect angle",
+	                                    "Update True Anomaly Error",
+	                                    JOptionPane.ERROR_MESSAGE);
+	                        }
+	                    }
+	                }
+	            });
+	
+	            buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+	            buttonsPanel.add(thetaButton);
+            }
         }
 
         add(attrPanel, BorderLayout.CENTER);

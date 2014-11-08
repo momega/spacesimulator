@@ -3,11 +3,10 @@
  */
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.context.ModelHolder;
 
 /**
+ * The class is the superclass for all point associated with the orbit
  * @author martin
- *
  */
 public abstract class AbstractOrbitalPoint extends NamedObject implements PositionProvider {
 

@@ -1,15 +1,11 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.MainWindow;
-import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.renderer.Renderer;
-import com.momega.spacesimulator.renderer.RendererModel;
+import java.awt.event.ActionEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.media.opengl.GLAutoDrawable;
-import java.awt.event.ActionEvent;
-import java.io.File;
+import com.momega.spacesimulator.renderer.RendererModel;
 
 /**
  * Created by martin on 10/12/14.

@@ -1,16 +1,17 @@
 package com.momega.spacesimulator;
 
-import com.momega.spacesimulator.model.CartesianState;
-import com.momega.spacesimulator.model.Orientation;
-import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.utils.VectorUtils;
 import junit.framework.Assert;
+
 import org.junit.Test;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+
+import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.Orientation;
+import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.Vector3d;
 
 /**
  * Created by martin on 8/11/14.

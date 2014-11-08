@@ -76,7 +76,9 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         addManeuver(spacecraft, "M1", 20 * 60d, 2600d, 1d, 0, Math.toRadians(90));
         addManeuver(spacecraft, "M2", 130 * 60d, 950d, 1d, 0, Math.toRadians(90));
         addManeuver(spacecraft, "M3", 200 * 60d, 1500d, 1d, 0, Math.toRadians(0));
-        addManeuver(spacecraft, "M4", 5915 * 60d, 210d, 1d, Math.toRadians(180), Math.toRadians(0));
+        addManeuver(spacecraft, "M4", 5000 * 60d, 25, 0.1d, Math.toRadians(90), Math.toRadians(0));
+        addManeuver(spacecraft, "M5", 5712 * 60d, 45, 1d, Math.toRadians(270), Math.toRadians(90));
+        addManeuver(spacecraft, "M6", 5910 * 60d, 205, 1d, Math.toRadians(180), Math.toRadians(0));
 
         setTarget(spacecraft, moon);
 

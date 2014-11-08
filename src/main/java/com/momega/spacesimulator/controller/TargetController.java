@@ -14,8 +14,6 @@ import com.momega.spacesimulator.swing.TimeDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.media.opengl.GLDrawable;
-import javax.media.opengl.awt.GLCanvas;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

@@ -13,7 +13,8 @@ import java.awt.event.ActionListener;
  */
 public class PreferencesDialog extends JDialog {
 
-    private JCheckBox chkBeams;
+	private static final long serialVersionUID = -1915023260172641370L;
+	private JCheckBox chkBeams;
     private JCheckBox chkSpacecraftAxis;
 
     public PreferencesDialog() {

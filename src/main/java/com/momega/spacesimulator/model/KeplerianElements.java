@@ -19,7 +19,6 @@ public class KeplerianElements {
 
     private Double hyperbolicAnomaly; // HA
     private Double eccentricAnomaly; //EA
-    private Double meanAnomaly; //MA
 
     /**
      * Gets the true anomaly
@@ -87,7 +86,7 @@ public class KeplerianElements {
         double theta;
         if (keplerianOrbit.isHyperbolic()) {
             double HA = solveHyperbolicAnomaly(keplerianOrbit, meanAnomaly);
-            theta = solveThetaFromHA(HA, keplerianOrbit.getEccentricity());
+            theta = solveTheta(HA, keplerianOrbit.getEccentricity());
             keplerianElements.setHyperbolicAnomaly(HA);
         } else {
             meanAnomaly = MathUtils.normalizeAngle(meanAnomaly);
@@ -130,8 +129,21 @@ public class KeplerianElements {
         }
         return H;
     }
+    
+    /**
+     * Solve true anomaly from eccentric anomaly for elliptic orbit or from hyperbolic anomaly for hyperbolic orbit
+     * @param EHA angle in radians
+     * @param eccentricity the eccentricity
+     * @return the true anonaly
+     */
+    public static double solveTheta(double EHA, double eccentricity) {
+    	if (eccentricity >1) {
+    		return solveThetaFromHA(EHA, eccentricity);
+    	}
+    	return solveThetaFromEA(EHA, eccentricity);
+    }
 
-    public static double solveTheta(double EA, double eccentricity) {
+    private static double solveThetaFromEA(double EA, double eccentricity) {
         double cosTheta = (Math.cos(EA) - eccentricity) / (1.0 - eccentricity * Math.cos(EA));
         double theta;
         if (EA < 0) {
@@ -144,7 +156,7 @@ public class KeplerianElements {
         return theta;
     }
 
-    public static double solveThetaFromHA(double HA, double eccentricity) {
+    private static double solveThetaFromHA(double HA, double eccentricity) {
         double param = Math.sqrt((eccentricity + 1) / (eccentricity -1));
         double theta = 2 * Math.atan(param * Math.tanh(HA / 2));
         if (theta < 0) {

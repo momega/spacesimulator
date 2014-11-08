@@ -2,10 +2,8 @@ package com.momega.spacesimulator.swing;
 
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.utils.TimeUtils;
-import com.momega.spacesimulator.utils.VectorUtils;
 
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.EvaluationException;

@@ -22,7 +22,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.DateFormatter;
 import java.awt.event.*;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -32,7 +31,8 @@ import java.util.List;
  */
 public class TimeDialog extends JDialog {
 
-    private static final Logger logger = LoggerFactory.getLogger(TimeDialog.class);
+	private static final long serialVersionUID = -747554595762069797L;
+	private static final Logger logger = LoggerFactory.getLogger(TimeDialog.class);
     private final DateTimeModel model;
     private final UtilCalendarModel dateModel;
     private final JButton goButton;
@@ -121,7 +121,7 @@ public class TimeDialog extends JDialog {
         JButton plus10Minutes = new JButton("+10min");
         JButton plusOneHour = new JButton("+1h");
         quickTimeButtons.add(minusOneHour);
-        minus10Minutes.addActionListener(new ActionListener() {
+        minusOneHour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 model.addTime(BigDecimal.valueOf(-60*60.0));
@@ -213,12 +213,10 @@ public class TimeDialog extends JDialog {
         private final Calendar calendar;
         private Timestamp timestamp;
         private boolean timeInFuture;
-        private boolean run;
 
         DateTimeModel(Calendar calendar) {
             this.calendar = calendar;
             timestamp = TimeUtils.fromCalendar(calendar);
-            run = false;
         }
 
         @Override
@@ -256,7 +254,6 @@ public class TimeDialog extends JDialog {
 
             TimeWorker worker = new TimeWorker(timestamp);
             worker.execute();
-            run = true;
         }
 
         @Override

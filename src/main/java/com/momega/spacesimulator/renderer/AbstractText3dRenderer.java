@@ -1,13 +1,12 @@
 package com.momega.spacesimulator.renderer;
 
-import com.jogamp.opengl.util.awt.TextRenderer;
-import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.opengl.GLUtils;
+import java.awt.Font;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
-import java.awt.*;
-import java.awt.geom.Rectangle2D;
+
+import com.jogamp.opengl.util.awt.TextRenderer;
+import com.momega.spacesimulator.model.Vector3d;
 
 /**
  * Created by martin on 10/29/14.

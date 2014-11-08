@@ -5,7 +5,6 @@ package com.momega.spacesimulator.renderer;
 
 import javax.media.opengl.GL2;
 
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
 
 /**

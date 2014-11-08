@@ -13,7 +13,6 @@ import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.renderer.CompositeRenderer;
 import com.momega.spacesimulator.renderer.DefaultCameraPositionRenderer;
-import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
  * Created by martin on 7/1/14.

@@ -1,19 +1,13 @@
 package com.momega.spacesimulator.simple;
 
-import com.jogamp.common.nio.Buffers;
-import com.jogamp.opengl.util.texture.Texture;
-import com.momega.spacesimulator.opengl.AbstractGLRenderer;
-import org.springframework.core.io.ClassPathResource;
+import java.nio.Buffer;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
-import java.awt.*;
-import java.awt.color.ColorSpace;
-import java.awt.geom.AffineTransform;
-import java.awt.image.*;
-import java.io.IOException;
-import java.nio.Buffer;
+
+import com.jogamp.opengl.util.texture.Texture;
+import com.momega.spacesimulator.opengl.AbstractGLRenderer;
 
 /**
  */
@@ -157,7 +151,7 @@ public class SimpleGLRenderer extends AbstractGLRenderer {
             gl.glWindowPos2i(200, 200);
             gl.glPixelZoom(1f, 1f); // x-factor, y-factor
             gl.glDrawPixels(imgWidth, imgHeight,
-                    gl.GL_RGBA, gl.GL_UNSIGNED_BYTE,
+                    GL2.GL_RGBA, GL2.GL_UNSIGNED_BYTE,
                     imgRGBA);
 
 //            gl.glPixelZoom(-2.0f, 3.0f); // x-factor, y-factor

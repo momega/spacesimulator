@@ -1,11 +1,11 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.opengl.GLUtils;
+import java.awt.Point;
 
 import javax.media.opengl.GL2;
-import java.awt.*;
+
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.opengl.GLUtils;
 
 /**
  * Renderer displays the the text at the moving position.

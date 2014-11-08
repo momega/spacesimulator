@@ -2,11 +2,15 @@ package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
+
+import org.apache.commons.math3.util.FastMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Keplerian orbit contains all elements which defines single orbit. There multi infinite positions
@@ -129,8 +133,16 @@ public class KeplerianOrbit {
         return meanMotion;
     }
 
+    public double getSemiminorAxis() {
+        if (isHyperbolic()) {
+            return getSemimajorAxis() * Math.sqrt(getEccentricity() * getEccentricity() -1);
+        } else {
+            return getSemimajorAxis() * Math.sqrt(1 - getEccentricity() * getEccentricity());
+        }
+    }
+
     /**
-     * Calculated element of the period
+     * Calculated element o f the period
      * @return the period in seconds
      */
     public BigDecimal getPeriod() {
@@ -154,7 +166,7 @@ public class KeplerianOrbit {
     public Vector3d getCartesianPosition(double trueAnomaly) {
         double argumentOfPeriapsis = getArgumentOfPeriapsis();
         double e = getEccentricity();
-        double r = getSemimajorAxis() * (1 - e * e) / (1 + e * Math.cos(trueAnomaly));
+        double r = getSemimajorAxis() * (1 - e * e) / (1 + e * FastMath.cos(trueAnomaly));
         double inclination = getInclination();
         double ascendingNode = getAscendingNode();
         Vector3d v = getCartesianPosition(r, trueAnomaly, inclination, ascendingNode, argumentOfPeriapsis );
@@ -163,39 +175,44 @@ public class KeplerianOrbit {
 
     public static Vector3d getCartesianPosition(double r, double theta, double inclination, double ascendingNode, double argumentOfPeriapsis) {
         double u = theta + argumentOfPeriapsis;
-        double x = r * (Math.cos(u) * Math.cos(ascendingNode) - Math.sin(u) * Math.cos(inclination) * Math.sin(ascendingNode));
-        double y = r * (Math.cos(u) * Math.sin(ascendingNode) + Math.sin(u) * Math.cos(inclination) * Math.cos(ascendingNode));
-        double z = r * (Math.sin(u) * Math.sin(inclination));
+        double x = r * (FastMath.cos(u) * FastMath.cos(ascendingNode) - FastMath.sin(u) * FastMath.cos(inclination) * FastMath.sin(ascendingNode));
+        double y = r * (FastMath.cos(u) * FastMath.sin(ascendingNode) + FastMath.sin(u) * FastMath.cos(inclination) * FastMath.cos(ascendingNode));
+        double z = r * (FastMath.sin(u) * FastMath.sin(inclination));
         return new Vector3d(x, y, z);
     }
 
     /**
      * Returns the intersections of the orbit with line located in the same plane. The method can result zero, one or
-     * two results. The results are eccentric anomalies in radians
+     * two results. The results are eccentric anomalies in radians for elliptic orbit or hyperbolic anomaly for
+     * hyperbolic orbit
      * @param line the line
-     * @return the set of the angles as eccentric anomalies
+     * @return the set of the angles as eccentric/hyperbolic anomalies
      */
-    public double[] lineIntersection(Line line) {
+    public Double[] lineIntersection(Line line) {
         double p0 = line.getOrigin().getX();
         double p1 = line.getOrigin().getY();
         double d0 = line.getDirection().getX();
         double d1 = line.getDirection().getY();
 
         double a = getSemimajorAxis();
-        double b = a * Math.sqrt(1 - getEccentricity() * getEccentricity());
+        double b = getSemiminorAxis();
 
         double A = a*d1;
         double B = b*d0;
         double Z = p0*d1 - p1*d0;
 
-        double[] tArray = MathUtils.solveQuadraticFunction(A+Z, 2*B, Z-A);
-        double[] result = new double[tArray.length];
+        double sgn = Math.signum(1 - getEccentricity());
+
+        double[] tArray = MathUtils.solveQuadraticFunction(A+Z, sgn*2*B, (sgn) * Z-A);
+        List<Double> result = new ArrayList<>(tArray.length);
         for(int i=0; i<tArray.length; i++) {
-            double EA = 2 * Math.atan(tArray[i]);
-            result[i] = EA;
+        	double angle = 2 * (isHyperbolic() ? FastMath.atanh(tArray[i]) : FastMath.atan(tArray[i]));
+        	if (!Double.isNaN(angle)) {
+        		result.add(angle);
+        	}
         }
-        logger.debug("result = {}", result);
-        return result;
+        logger.debug("lineIntersection result = {}", result);
+        return result.toArray(new Double[result.size()]);
     }
 
     public double[] getAngles() {

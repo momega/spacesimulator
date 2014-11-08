@@ -1,7 +1,6 @@
 package com.momega.spacesimulator.utils;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.AbstractOrbitalPoint;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.TimeInterval;
 import com.momega.spacesimulator.model.Timestamp;
