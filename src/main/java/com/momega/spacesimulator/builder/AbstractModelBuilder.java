@@ -182,7 +182,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param velocity the initial velocity
      * @return new instance of the satellite
      */
-    public Spacecraft createSpacecraft(PhysicalBody centralPoint, String name, Vector3d position, Vector3d velocity) {
+    public Spacecraft createSpacecraft(PhysicalBody centralPoint, String name, Vector3d position, Vector3d velocity, int index) {
         Spacecraft spacecraft = new Spacecraft();
         spacecraft.setName(name);
 
@@ -201,6 +201,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         keplerianTrajectory.setType(TrajectoryType.NEWTONIAN);
         spacecraft.setTrajectory(keplerianTrajectory);
         spacecraft.setMass(0d);
+        spacecraft.setIndex(index);
 
         HistoryTrajectory historyTrajectory = new HistoryTrajectory();
         historyTrajectory.setType(TrajectoryType.HISTORY);

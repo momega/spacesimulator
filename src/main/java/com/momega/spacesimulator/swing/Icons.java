@@ -20,5 +20,4 @@ public final class Icons {
     public static final ImageIcon START_MANEUVER_POINT = SwingUtils.createImageIcon("/images/Math-lower-than-icon.png");
 
     public static final ImageIcon USER_POINT = SwingUtils.createImageIcon("/images/Letter-U-icon.png");
-    public static final ImageIcon SPACECRAFT1 = SwingUtils.createImageIcon("/images/Number-1-icon.png");
 }

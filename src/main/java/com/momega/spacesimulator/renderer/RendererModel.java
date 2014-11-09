@@ -9,6 +9,7 @@ import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.service.UserPointService;
 import com.momega.spacesimulator.swing.MovingObjectsModel;
 
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -207,6 +208,19 @@ public class RendererModel {
         return result;
     }
     
+    public Spacecraft findSpacecraftByIndex(int index) {
+    	Assert.assertTrue(index>0);
+    	for(MovingObject movingObject : ModelHolder.getModel().getMovingObjects()) {
+            if (movingObject instanceof Spacecraft) {
+                Spacecraft spacecraft = (Spacecraft) movingObject;
+                if (spacecraft.getIndex()==index) {
+                	return spacecraft;
+                }
+            }
+    	}
+        return null;
+    }
+    
     public ViewCoordinates findByName(String name) {
         if (name == null) {
             return null;
@@ -364,12 +378,13 @@ public class RendererModel {
         GL2 gl = drawable.getGL().getGL2();
         Map<Integer, ScreenCoordinates> screenCoordinatesMap = GLUtils.getStencilPosition(gl, point, RendererModel.MIN_TARGET_SIZE);
         if (screenCoordinatesMap.size()==1) { // only one object is selected
+        	Map.Entry<Integer, ScreenCoordinates> entry = screenCoordinatesMap.entrySet().iterator().next();
             ScreenCoordinates screenCoordinates = screenCoordinatesMap.values().iterator().next();
 
             Vector3d modelCoordinates = GLUtils.getModelCoordinates(gl, screenCoordinates);
             logger.info("model coordinates = {}", modelCoordinates.asArray());
 
-            Spacecraft spacecraft = (Spacecraft) RendererModel.getInstance().findByName("Spacecraft 1").getObject();
+            Spacecraft spacecraft = RendererModel.getInstance().findSpacecraftByIndex(entry.getKey().intValue());
             UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
             userPointService.createUserOrbitalPoint(spacecraft, modelCoordinates);
         }

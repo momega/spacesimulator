@@ -4,6 +4,7 @@ import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,6 +31,7 @@ public class PhysicalBodyPanel extends JPanel implements UpdatablePanel {
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.Y_AXIS));
 
         JButton wikiButton = new JButton("Wiki...");
+        wikiButton.setIcon(SwingUtils.createImageIcon("/images/wikipedia-icon.png"));
         if (celestialBody.getWiki() != null) {
             try {
                 final URI wikiUri = new URI("http://en.wikipedia.org/wiki/" + celestialBody.getWiki());

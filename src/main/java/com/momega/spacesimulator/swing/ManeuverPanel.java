@@ -50,6 +50,7 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
         JButton newButton = new JButton("Add");
+        newButton.setIcon(SwingUtils.createImageIcon("/images/add.png"));
         newButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         newButton.addActionListener(new ActionListener() {
             @Override
@@ -60,6 +61,7 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
 
         JButton deleteButton = new JButton("Delete");
         deleteButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        deleteButton.setIcon(SwingUtils.createImageIcon("/images/delete.png"));
         deleteButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

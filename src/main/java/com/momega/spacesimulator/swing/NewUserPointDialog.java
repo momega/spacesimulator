@@ -108,6 +108,7 @@ public class NewUserPointDialog extends JDialog {
         
         JPanel buttonsPanel = new JPanel(new FlowLayout());
         JButton okButton = new JButton("OK");
+        okButton.setIcon(SwingUtils.createImageIcon("/images/accept.png"));
         okButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -128,6 +129,7 @@ public class NewUserPointDialog extends JDialog {
         buttonsPanel.add(okButton);
         
         JButton cancelButton = new JButton("Cancel");
+        cancelButton.setIcon(SwingUtils.createImageIcon("/images/cancel.png"));
         cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {

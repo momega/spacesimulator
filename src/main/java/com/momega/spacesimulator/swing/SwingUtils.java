@@ -7,11 +7,16 @@ import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author martin
  *
  */
 public final class SwingUtils {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SwingUtils.class);
 
 	private SwingUtils() {
 		super();
@@ -22,7 +27,7 @@ public final class SwingUtils {
 	    if (imgURL != null) {
 	        return new ImageIcon(imgURL);
 	    } else {
-	        DetailDialog.logger.warn("Couldn't find file: {}", path);
+	        logger.warn("Couldn't find file: {}", path);
 	        return null;
 	    }
 	}

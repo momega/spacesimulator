@@ -61,6 +61,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
         if (point.getMovingObject() instanceof Spacecraft) {
         	final Spacecraft spacecraft = (Spacecraft) point.getMovingObject();
 	        JButton maneuverButton = new JButton("Maneuver At...");
+	        maneuverButton.setIcon(SwingUtils.createImageIcon("/images/vector_add.png"));
 	        maneuverButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
@@ -76,6 +77,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 
             if (point instanceof UserOrbitalPoint) {
                 JButton deleteButton = new JButton("Delete");
+                deleteButton.setIcon(SwingUtils.createImageIcon("/images/delete.png"));
                 deleteButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -88,6 +90,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
             }
 
             JButton nameButton = new JButton("Rename...");
+            nameButton.setIcon(SwingUtils.createImageIcon("/images/textfield_rename.png"));
             nameButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -104,6 +107,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
             if (point instanceof UserOrbitalPoint) {
 
 	            JButton thetaButton = new JButton("True Anomaly...");
+	            thetaButton.setIcon(SwingUtils.createImageIcon("/images/pencil.png"));
 	            thetaButton.addActionListener(new ActionListener() {
 	                @Override
 	                public void actionPerformed(ActionEvent e) {

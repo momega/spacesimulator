@@ -9,17 +9,17 @@ import java.util.List;
  * 
  * Created by martin on 5/5/14.
  */
-public class Spacecraft extends PhysicalBody {
+public class Spacecraft extends PhysicalBody implements IconProvider {
 
     private HistoryTrajectory historyTrajectory;
     private List<SpacecraftSubsystem> subsystems = new ArrayList<>();
     private List<Maneuver> maneuvers = new ArrayList<>();
     private Maneuver currentManeuver;
-
     private Target target;
     private Vector3d thrust;
     private List<UserOrbitalPoint> userOrbitalPoints = new ArrayList<>();
-
+    private int index;
+    
     public HistoryTrajectory getHistoryTrajectory() {
         return historyTrajectory;
     }
@@ -75,4 +75,17 @@ public class Spacecraft extends PhysicalBody {
     public void setUserOrbitalPoints(List<UserOrbitalPoint> userOrbitalPoints) {
         this.userOrbitalPoints = userOrbitalPoints;
     }
+    
+    public int getIndex() {
+		return index;
+	}
+    
+    public void setIndex(int index) {
+		this.index = index;
+	}
+    
+    public String getIcon() {
+		return "/images/Number-" + index + "-icon.png";
+	}
+    
 }

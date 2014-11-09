@@ -6,7 +6,7 @@ package com.momega.spacesimulator.model;
  *
  * Created by martin on 4/15/14.
  */
-public class CelestialBody extends RotatingObject {
+public class CelestialBody extends RotatingObject implements IconProvider {
 
     private String textureFileName;
     private String icon;

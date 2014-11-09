@@ -1,7 +1,20 @@
 package com.momega.spacesimulator.controller;
 
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.util.List;
+
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.IconProvider;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.opengl.DefaultWindow;
@@ -11,17 +24,6 @@ import com.momega.spacesimulator.renderer.ViewCoordinates;
 import com.momega.spacesimulator.swing.DetailDialogHolder;
 import com.momega.spacesimulator.swing.SwingUtils;
 import com.momega.spacesimulator.swing.TimeDialog;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.util.List;
 
 /**
  * Controller which enables functionality after clicking to the screen
@@ -64,9 +66,9 @@ public class TargetController extends AbstractController {
 						showDialog(viewCoordinates.getObject());
 					}
 				});
-                if (viewCoordinates.getObject() instanceof CelestialBody) {
-                    CelestialBody celestialBody = (CelestialBody) viewCoordinates.getObject();
-                    detailItem.setIcon(SwingUtils.createImageIcon(celestialBody.getIcon()));
+                if (viewCoordinates.getObject() instanceof IconProvider) {
+                	IconProvider iconProvider = (IconProvider) viewCoordinates.getObject();
+                    detailItem.setIcon(SwingUtils.createImageIcon(iconProvider.getIcon()));
                 }
                 popup.add(detailItem);
 

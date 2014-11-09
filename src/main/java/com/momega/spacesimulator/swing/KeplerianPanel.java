@@ -40,6 +40,7 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
             JPanel buttonPanel = new JPanel();
             buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
             peButton = new JButton("Periapsis");
+            peButton.setIcon(SwingUtils.createImageIcon("/images/Letter-P-icon.png"));
             peButton.setAlignmentX(Component.CENTER_ALIGNMENT);
             buttonPanel.add(peButton);
             peButton.addActionListener(new ActionListener() {
@@ -52,6 +53,7 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
 
             apButton = new JButton("Apoapsis");
             apButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            apButton.setIcon(SwingUtils.createImageIcon("/images/Letter-A-icon.png"));
             buttonPanel.add(apButton);
             apButton.addActionListener(new ActionListener() {
                 @Override

@@ -44,17 +44,15 @@ public class MovingObjectListRenderer extends JLabel implements ListCellRenderer
 			setText(" ");
 		}
 		
-		if (value instanceof Apsis) {
+		if (value instanceof IconProvider) {
+			IconProvider iconProvider = (IconProvider) value;
+			setIcon(SwingUtils.createImageIcon(iconProvider.getIcon()));
+		} else if (value instanceof Apsis) {
 			setIcon(Icons.APSIS_POINT);
 		} else if (value instanceof OrbitIntersection) {
 			setIcon(Icons.INTERSECTION_POINT);
 		} else if (value instanceof HistoryPoint) {
 			setIcon(Icons.HISTORY_POINT);
-		} else if (value instanceof Spacecraft) {
-			setIcon(Icons.SPACECRAFT);
-		} else if (value instanceof CelestialBody) {
-            CelestialBody cb = (CelestialBody) value;
-            setIcon(SwingUtils.createImageIcon(cb.getIcon()));
         } else if (value instanceof ManeuverPoint) {
             ManeuverPoint mp = (ManeuverPoint) value;
             if (mp.isStart()) {
