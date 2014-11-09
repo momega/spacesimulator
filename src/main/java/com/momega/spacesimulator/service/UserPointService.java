@@ -30,12 +30,23 @@ public class UserPointService {
         userPoint.setVisible(true);
 
         createKeplerianElementsByPosition(spacecraft, userPoint, modelCoordinates);
-
-        //TODO: Compute the following attributes
         userPoint.setName("User Point");
         spacecraft.getUserOrbitalPoints().add(userPoint);
 
         return userPoint;
+    }
+    
+    public UserOrbitalPoint createUserOrbitalPoint(Spacecraft spacecraft, String name, double trueAnomaly) {
+    	 UserOrbitalPoint userPoint = new UserOrbitalPoint();
+    	 userPoint.setMovingObject(spacecraft);
+         userPoint.setVisible(true);
+         userPoint.setName(name);
+         updateUserOrbitalPoint(userPoint, trueAnomaly);
+         Vector3d position = userPoint.getKeplerianElements().getKeplerianOrbit().getCartesianPosition(trueAnomaly);
+         userPoint.setPosition(position);
+         
+         spacecraft.getUserOrbitalPoints().add(userPoint);
+         return userPoint;
     }
 
     /**

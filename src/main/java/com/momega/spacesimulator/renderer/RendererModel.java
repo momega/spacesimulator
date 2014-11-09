@@ -8,11 +8,13 @@ import com.momega.spacesimulator.service.ManeuverService;
 import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.service.UserPointService;
 import com.momega.spacesimulator.swing.MovingObjectsModel;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -80,6 +82,16 @@ public class RendererModel {
 
     public void removeModelChangeListener(ModelChangeListener listener) {
         modelChangeListeners.remove(listener);
+    }
+    
+    public List<Spacecraft> findAllSpacecrafs() {
+    	List<Spacecraft> result = new ArrayList<>();
+    	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+    		if (dp instanceof Spacecraft) {
+    			result.add((Spacecraft) dp);
+    		}
+    	}
+    	return result;
     }
     
     public List<PositionProvider> findAllPositionProviders() {
@@ -194,7 +206,7 @@ public class RendererModel {
         }
         return result;
     }
-
+    
     public ViewCoordinates findByName(String name) {
         if (name == null) {
             return null;

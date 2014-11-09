@@ -11,10 +11,12 @@ import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.swing.Icons;
 import com.momega.spacesimulator.swing.MovingObjectListRenderer;
 import com.momega.spacesimulator.swing.SwingUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.InputEvent;
 
@@ -44,7 +46,7 @@ public class MainWindow extends DefaultWindow {
         
         MainGLRenderer mr = new MainGLRenderer();
         controller.addController(new QuitController(window));
-        controller.addController(new ClickController());
+        controller.addController(new UserPointController());
         controller.addController(new TargetController(window));
         controller.addController(new TakeScreenshotController());
         controller.addController(new CameraController(model.getCamera()));
@@ -103,6 +105,8 @@ public class MainWindow extends DefaultWindow {
         JMenuItem deleteSpacecraftItem = new JMenuItem("Delete Spacecraft...");
         deleteSpacecraftItem.setIcon(Icons.DELETE_SPACECRAFT);
     	JMenuItem newPointItem = new JMenuItem("New Point...");
+    	newPointItem.setActionCommand(UserPointController.NEW_USER_POINT);
+    	newPointItem.addActionListener(controller);
     	projectMenu.add(timeItem);
     	projectMenu.add(findItem);
         projectMenu.addSeparator();

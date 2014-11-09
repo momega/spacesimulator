@@ -30,8 +30,8 @@ public class KeplerianOrbit {
     private Timestamp timeOfPeriapsis; // seconds
 
     // computed elements
-    private BigDecimal period; // in seconds
-    private Double meanMotion; // n
+    private transient BigDecimal period; // in seconds
+    private transient Double meanMotion; // n
 
     /**
      * Semimajor axis in meters of the orbit

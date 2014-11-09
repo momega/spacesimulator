@@ -14,11 +14,10 @@ public class KeplerianElements {
     private static final Logger logger = LoggerFactory.getLogger(KeplerianElements.class);
 
     private KeplerianOrbit keplerianOrbit;
-
     private double trueAnomaly; // theta
 
-    private Double hyperbolicAnomaly; // HA
-    private Double eccentricAnomaly; //EA
+    private transient Double hyperbolicAnomaly; // HA
+    private transient Double eccentricAnomaly; //EA
 
     /**
      * Gets the true anomaly

@@ -1,14 +1,14 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.opengl.DefaultWindow;
-import com.momega.spacesimulator.swing.TimeDialog;
-
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
+
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.opengl.DefaultWindow;
+import com.momega.spacesimulator.swing.SwingUtils;
+import com.momega.spacesimulator.swing.TimeDialog;
 
 /**
  * Time controller handles warp factor of the model
@@ -65,12 +65,7 @@ public class TimeController extends AbstractController {
 
     private void timeDialog() {
         final TimeDialog timeDialog = new TimeDialog(window, ModelHolder.getModel().getTime());
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                timeDialog.setVisible(true);
-            }
-        });
+        SwingUtils.openDialog(timeDialog);
     }
 
     private void pauseOrStart() {

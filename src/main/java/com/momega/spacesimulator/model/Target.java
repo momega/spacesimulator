@@ -13,7 +13,7 @@ public class Target {
 
     private CelestialBody targetBody;
     private List<OrbitIntersection> orbitIntersections = new ArrayList<>();
-    private Double angle = null;
+    private transient Double angle = null;
     private KeplerianElements keplerianElements;
 
     public CelestialBody getTargetBody() {

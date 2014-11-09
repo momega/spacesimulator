@@ -11,10 +11,12 @@ import com.momega.spacesimulator.renderer.ViewCoordinates;
 import com.momega.spacesimulator.swing.DetailDialogHolder;
 import com.momega.spacesimulator.swing.SwingUtils;
 import com.momega.spacesimulator.swing.TimeDialog;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -112,7 +114,6 @@ public class TargetController extends AbstractController {
                     }
                 }
             });
-
             popup.show(e.getComponent(), e.getX(), e.getY());
         } else if (e.getClickCount() > 1) {
             logger.info("click count = {}", e.getClickCount());
@@ -156,12 +157,7 @@ public class TargetController extends AbstractController {
     protected void showTimeDialog(PositionProvider positionProvider) {
         // TODO: How to forward events
         final TimeDialog timeDialog = new TimeDialog(window, positionProvider.getTimestamp());
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                timeDialog.setVisible(true);
-            }
-        });
+        SwingUtils.openDialog(timeDialog);
     }
     
     protected void showDialog(PositionProvider positionProvider) {
