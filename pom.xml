@@ -8,6 +8,9 @@
     <properties>
         <swt.version>4.4</swt.version>
         <spring.version>4.1.1.RELEASE</spring.version>
+        <jogl.version>2.2.4</jogl.version>
+        <joda.version>2.5</joda.version>
+        <slf.version>1.7.7</slf.version>
     </properties>
 
     <build>
@@ -27,7 +30,12 @@
         <dependency>
             <groupId>org.jogamp.jogl</groupId>
             <artifactId>jogl-all-main</artifactId>
-            <version>2.1.5-01</version>
+            <version>${jogl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jogamp.gluegen</groupId>
+            <artifactId>gluegen-rt-main</artifactId>
+            <version>${jogl.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -50,14 +58,9 @@
             <version>${spring.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.jogamp.gluegen</groupId>
-            <artifactId>gluegen-rt-main</artifactId>
-            <version>2.1.5-01</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <version>1.6.4</version>
+            <version>${slf.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -68,7 +71,7 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.3</version>
+            <version>${joda.version}</version>
         </dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>

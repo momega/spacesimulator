@@ -145,7 +145,7 @@ public class RendererModel {
             RotatingObject ro = (RotatingObject) positionProvider;
             Vector3d distance = positionProvider.getPosition().subtract(camera.getPosition());
             radiusAngle = Math.toDegrees(Math.atan2(ro.getRadius(), distance.length()));
-            double radius = (int)((radiusAngle/ FOVY) * drawable.getHeight());
+            double radius = (int)((radiusAngle/ FOVY) * drawable.getSurfaceHeight());
             viewCoordinates.setRadius(radius);
         } else {
             viewCoordinates.setRadius(MIN_TARGET_SIZE);

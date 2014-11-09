@@ -255,7 +255,7 @@ public class GLUtils {
         int x = e.getX();
         int y = e.getY();
         if (drawable.isGLOriented()) {
-            y = drawable.getHeight() - y;
+            y = drawable.getSurfaceHeight() - y;
         }
         return new Point(x, y);
     }

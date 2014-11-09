@@ -88,7 +88,7 @@ public abstract class AbstractGLRenderer implements GLEventListener {
     protected final void reshapeRequired(GLAutoDrawable drawable) {
         if (reshape) {
             logger.info("reshape required manually");
-            reshape(drawable, 0, 0, drawable.getWidth(), drawable.getHeight());
+            reshape(drawable, 0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
             reshape = false;
         }
     }

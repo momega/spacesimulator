@@ -22,7 +22,7 @@ public abstract class AbstractText3dRenderer extends AbstractRenderer {
     @Override
     public final void draw(GLAutoDrawable drawable) {
         GL2 gl = drawable.getGL().getGL2();
-        renderTexts(gl, drawable.getWidth(), drawable.getHeight());
+        renderTexts(gl, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
     }
 
     protected void drawString(CharSequence str, double x, double y, double z) {
