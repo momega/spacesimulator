@@ -9,9 +9,9 @@ import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.service.UserPointService;
 import com.momega.spacesimulator.swing.MovingObjectsModel;
 
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
@@ -209,7 +209,7 @@ public class RendererModel {
     }
     
     public Spacecraft findSpacecraftByIndex(int index) {
-    	Assert.assertTrue(index>0);
+    	Assert.isTrue(index>0);
     	for(MovingObject movingObject : ModelHolder.getModel().getMovingObjects()) {
             if (movingObject instanceof Spacecraft) {
                 Spacecraft spacecraft = (Spacecraft) movingObject;

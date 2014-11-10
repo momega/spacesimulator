@@ -9,8 +9,6 @@ public class TwoSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
 
     @Override
     public void initSpacecrafts() {
-        super.initSpacecrafts();
-
         CelestialBody earth = (CelestialBody) findMovingObject("Earth");
         CelestialBody mars = (CelestialBody) findMovingObject("Mars");
 
