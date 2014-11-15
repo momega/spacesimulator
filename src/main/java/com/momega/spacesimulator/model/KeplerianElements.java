@@ -227,7 +227,7 @@ public class KeplerianElements {
         return timestamp.add(timeInterval);
     }
 
-    private static double solveEA(double eccentricity, double theta) {
+    public static double solveEA(double eccentricity, double theta) {
         double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
         return 2 * Math.atan(Math.tan(theta/2) / param);
     }

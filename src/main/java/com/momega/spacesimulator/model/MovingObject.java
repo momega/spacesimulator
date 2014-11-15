@@ -53,5 +53,14 @@ public abstract class MovingObject extends NamedObject implements PositionProvid
             return getCartesianState().getPosition();
         }
     }
+    
+    public MovingObject getOrbitingBody() {
+    	return getKeplerianElements().getKeplerianOrbit().getCentralObject();
+    }
+    
+    public boolean isStatic() {
+    	return getTrajectory().getType()==TrajectoryType.STATIC;
+    }
+
 }
 

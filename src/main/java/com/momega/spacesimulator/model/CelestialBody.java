@@ -39,4 +39,5 @@ public class CelestialBody extends RotatingObject implements IconProvider {
     public void setIcon(String icon) {
         this.icon = icon;
     }
+     
 }

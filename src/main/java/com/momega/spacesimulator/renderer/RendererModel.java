@@ -95,6 +95,16 @@ public class RendererModel {
     	return result;
     }
     
+    public List<Planet> findAllPlanets() {
+    	List<Planet> result = new ArrayList<>();
+    	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+    		if (dp instanceof Planet) {
+    			result.add((Planet) dp);
+    		}
+    	}
+    	return result;
+    }
+    
     public List<PositionProvider> findAllPositionProviders() {
     	List<PositionProvider> result = new ArrayList<>();
     	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {

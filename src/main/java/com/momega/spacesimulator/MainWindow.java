@@ -54,6 +54,7 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new PerspectiveController(mr));
         controller.addController(new ToolbarController());
         controller.addController(new PreferencesController());
+        controller.addController(new InterplanetaryFlightController());
         window.openWindow(mr, controller);
     }
     
@@ -107,12 +108,18 @@ public class MainWindow extends DefaultWindow {
     	JMenuItem newPointItem = new JMenuItem("New Point...");
     	newPointItem.setActionCommand(UserPointController.NEW_USER_POINT);
     	newPointItem.addActionListener(controller);
+    	
+    	JMenuItem interplanetaryFlightItem = new JMenuItem("Interplanetary Flight...");
+    	interplanetaryFlightItem.setActionCommand(InterplanetaryFlightController.INTERPLANETARY_FLIGHT);
+    	interplanetaryFlightItem.addActionListener(controller);
+    	
     	projectMenu.add(timeItem);
     	projectMenu.add(findItem);
         projectMenu.addSeparator();
     	projectMenu.add(newSpacecraftItem);
         projectMenu.add(deleteSpacecraftItem);
     	projectMenu.add(newPointItem);
+    	projectMenu.add(interplanetaryFlightItem);
     	
     	JMenu helpMenu = new JMenu("Help");
     	helpMenu.setMnemonic(KeyEvent.VK_H);
