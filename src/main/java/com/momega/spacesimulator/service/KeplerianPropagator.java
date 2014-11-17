@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.service;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,14 @@ public class KeplerianPropagator implements Propagator {
 
         movingObject.setKeplerianElements(keplerianElements);
         movingObject.setCartesianState(cartesianState);
-
-        apsisService.updatePeriapsis(movingObject);
-        apsisService.updateApoapsis(movingObject);
         
-        if (movingObject instanceof PhysicalBody) {
-        	userPointService.computeUserPoints((PhysicalBody) movingObject, newTimestamp);
+        if (!ModelHolder.getModel().isRunningHeadless()) {
+	        apsisService.updatePeriapsis(movingObject);
+	        apsisService.updateApoapsis(movingObject);
+	        
+	        if (movingObject instanceof PhysicalBody) {
+	        	userPointService.computeUserPoints((PhysicalBody) movingObject, newTimestamp);
+	        }
         }
     }
 

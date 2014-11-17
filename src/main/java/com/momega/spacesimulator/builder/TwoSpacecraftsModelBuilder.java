@@ -14,7 +14,7 @@ import com.momega.spacesimulator.utils.TimeUtils;
 public class TwoSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
 	
 	protected void initTime() {
-        model.setTime(TimeUtils.fromDateTime(new DateTime(2016, 2, 10, 12, 0, DateTimeZone.UTC)));
+        model.setTime(TimeUtils.fromDateTime(new DateTime(2016, 2, 22, 03, 0, DateTimeZone.UTC)));
         model.setWarpFactor(BigDecimal.ONE);
     }
 
@@ -44,8 +44,9 @@ public class TwoSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
 
         addManeuver(spacecraft, "M5", 0 * 60d, 1100d, 1d, 0, Math.toRadians(-90));
         addManeuver(spacecraft, "M6", 82 * 60d, 1200d, 1d, 0, Math.toRadians(-90));
-        addManeuver(spacecraft, "M7", 107.5 * 60d, 2650d, 1d, 0, Math.toRadians(0));
-        addManeuver(spacecraft, "M8", 116107 * 60d, 260d, 1d, 0, Math.toRadians(90));
+        addManeuver(spacecraft, "M7", 107.5 * 60d, 2653d, 1d, 0, Math.toRadians(0));
+        addManeuver(spacecraft, "M8", 116107 * 60d, 261d, 1d, 0, Math.toRadians(90));
+        addManeuver(spacecraft, "M9", 264824 * 60d, 10, 1d, 0, Math.toRadians(90));
 
         setTarget(spacecraft, mars);
 

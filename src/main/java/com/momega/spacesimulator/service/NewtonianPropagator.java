@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CartesianState;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.KeplerianElements;
@@ -67,10 +68,12 @@ public class NewtonianPropagator implements Propagator {
         movingObject.setCartesianState(cartesianState);
 
         computePrediction(spacecraft, newTimestamp);
-        computeApsides(spacecraft);
-        computeIntersections(spacecraft, newTimestamp);
-        computeManeuvers(spacecraft, newTimestamp);
-        computeUserPoints(spacecraft, newTimestamp);
+        if (!ModelHolder.getModel().isRunningHeadless()) {
+	        computeApsides(spacecraft);
+	        computeIntersections(spacecraft, newTimestamp);
+	        computeManeuvers(spacecraft, newTimestamp);
+	        computeUserPoints(spacecraft, newTimestamp);
+        }
     }
 
     protected void computeUserPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
@@ -161,13 +164,13 @@ public class NewtonianPropagator implements Propagator {
             historyPointService.changeSoi(spacecraft, keplerianElements.getKeplerianOrbit().getCentralObject(), soiBody);
             logger.info("changing soi to {} for spacecraft {}", soiBody.getName(), spacecraft.getName());
         }
-
+        
         CartesianState cartesianState = spacecraft.getCartesianState().subtract(soiBody.getCartesianState());
 
         // TODO: remove automatic changing the orientation
         Orientation orientation = new Orientation(cartesianState.getVelocity(), cartesianState.getAngularMomentum());
         spacecraft.setOrientation(orientation);
-
+        
         keplerianElements = cartesianState.toKeplerianElements(soiBody, newTimestamp);
         spacecraft.setKeplerianElements(keplerianElements);
     }

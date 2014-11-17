@@ -35,7 +35,7 @@ public class MotionService {
         logger.debug("time={}", newTimestamp.getValue());
         if (!warpFactor.equals(BigDecimal.ZERO)) {
             for (MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
-                if (dp instanceof RotatingObject) {
+                if (dp instanceof RotatingObject && !ModelHolder.getModel().isRunningHeadless()) {
                     rotationService.rotate((RotatingObject) dp, newTimestamp);
                 }
                 trajectoryService.move(dp, newTimestamp);

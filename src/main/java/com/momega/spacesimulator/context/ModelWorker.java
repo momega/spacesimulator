@@ -23,13 +23,17 @@ public class ModelWorker {
 
     /**
      * Next step of the model iteration
+     * @param runningHeadless running headless
      */
-    public void next() {
+    public void next(boolean runningHeadless) {
         Model model = ModelHolder.getModel();
+        model.setRunningHeadless(runningHeadless);
         Timestamp t = motionService.move(model.getTime(), model.getWarpFactor());
         model.setTime(t);
-        cameraService.updatePosition(model.getCamera());
-        logger.debug("time = {}", model.getTime());
+        if (!model.isRunningHeadless()) {
+	        cameraService.updatePosition(model.getCamera());
+	        logger.debug("time = {}", model.getTime());
+        }
     }
 
 }

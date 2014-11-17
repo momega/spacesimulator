@@ -55,7 +55,7 @@ public class Application {
         Timestamp showTime = ModelHolder.getModel().getTime().add(BigDecimal.valueOf(seconds));
         logger.info("show time = {}", TimeUtils.timeAsString(showTime));
         while(ModelHolder.getModel().getTime().compareTo(showTime)<=0) {
-        	modelWorker.next();
+        	modelWorker.next(true);
         }
         
         logger.info("model data built");

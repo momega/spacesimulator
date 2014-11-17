@@ -21,6 +21,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
@@ -58,6 +59,7 @@ public class TimeDialog extends JDialog {
     private final JProgressBar progressBar;
     private final DefaultWindow window;
 	private JButton closeButton;
+	private JTextField txtTime;
 
     /**
      * Constructor
@@ -83,10 +85,12 @@ public class TimeDialog extends JDialog {
         JDatePicker picker = JDateComponentFactory.createJDatePicker(dateModel);
         picker.setTextEditable(true);
         picker.setShowYearButtons(false);
+        ((Component)picker).setPreferredSize(new Dimension(300, 30));
         dateModel.addChangeListener(model);
 
         JLabel timeLabel = new JLabel("Wait until:");
         JLabel progressLabel = new JLabel("Progress until:");
+        JLabel lblTime = new JLabel("Current Time:");
 
         timeModel = new SpinnerDateModel();
         timeModel.setValue(model.getCalendar().getTime());
@@ -132,6 +136,7 @@ public class TimeDialog extends JDialog {
 				model.stop();			
 			}
 		});
+        cancelButton.setEnabled(false);
 
         JPanel buttonsPanel = new JPanel(new FlowLayout());
         
@@ -142,6 +147,9 @@ public class TimeDialog extends JDialog {
             }
         });
         buttonsPanel.add(closeButton);
+        
+        txtTime = new JTextField();
+        txtTime.setEnabled(false);
 
         JPanel quickTimeButtons = new JPanel(new GridLayout(1,4));
         JButton minusOneHour = new JButton("-1h");
@@ -190,11 +198,13 @@ public class TimeDialog extends JDialog {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(timeLabel)
                     .addComponent(progressLabel)
+                    .addComponent(lblTime)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(timePanel)
                     .addComponent(progressBar)
                     .addComponent(quickTimeButtons)
+                    .addComponent(txtTime)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(goButton)
@@ -218,6 +228,10 @@ public class TimeDialog extends JDialog {
                                 .addComponent(progressLabel)
                                 .addComponent(progressBar)
                                 .addComponent(cancelButton)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(lblTime)
+                    .addComponent(txtTime)
                 )
         );
 
@@ -313,8 +327,11 @@ public class TimeDialog extends JDialog {
         @Override
         protected Void doInBackground() throws Exception {
             while(ModelHolder.getModel().getTime().compareTo(endTime)<=0) {
-                Application.getInstance().getModelWorker().next();
+                Application.getInstance().getModelWorker().next(true);
                 publish(ModelHolder.getModel().getTime());
+                if (Thread.interrupted()) {
+                	return null;
+                }
             }
             return null;
         }
@@ -324,6 +341,7 @@ public class TimeDialog extends JDialog {
             if (!CollectionUtils.isEmpty(chunks)) {
                 Timestamp val = chunks.get(chunks.size()-1);
                 progressBar.setValue(val.getValue().intValue());
+                txtTime.setText(TimeUtils.timeAsString(val));
             }
         }
         

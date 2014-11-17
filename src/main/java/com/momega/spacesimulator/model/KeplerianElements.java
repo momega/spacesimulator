@@ -240,10 +240,10 @@ public class KeplerianElements {
     }
 
     private static double solveHA(double eccentricity, double theta) {
-        //double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
-        //double HA = MathUtils.asinh(sinH);
-    	double cosHA = (eccentricity + Math.cos(theta))/(1 + eccentricity*Math.cos(theta));
-    	double HA = MathUtils.acosh(cosHA);
+        double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
+        double HA = MathUtils.asinh(sinH);
+    	//double cosHA = (eccentricity + Math.cos(theta))/(1 + eccentricity*Math.cos(theta));
+    	//double HA = MathUtils.acosh(cosHA);
         logger.debug("HA = {}", HA);
         return HA;
     }

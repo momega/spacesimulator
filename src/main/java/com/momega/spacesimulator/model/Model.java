@@ -17,6 +17,7 @@ public class Model {
     private PositionProvider selectedObject;
     protected final List<MovingObject> movingObjects = new ArrayList<>();
     private SphereOfInfluence rootSoi;
+    private boolean runningHeadless;
 
     public Camera getCamera() {
         return camera;
@@ -73,4 +74,12 @@ public class Model {
     public void setRootSoi(SphereOfInfluence rootSoi) {
         this.rootSoi = rootSoi;
     }
+    
+    public boolean isRunningHeadless() {
+		return runningHeadless;
+	}
+    
+    public void setRunningHeadless(boolean runningHeadless) {
+		this.runningHeadless = runningHeadless;
+	}
 }
