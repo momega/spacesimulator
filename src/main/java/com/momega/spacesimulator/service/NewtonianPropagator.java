@@ -16,13 +16,13 @@ import com.momega.spacesimulator.model.KeplerianTrajectory;
 import com.momega.spacesimulator.model.ManeuverPoint;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Orientation;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SphereOfInfluence;
 import com.momega.spacesimulator.model.Target;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.model.Trajectory;
 import com.momega.spacesimulator.model.TrajectoryType;
-import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.model.Vector3d;
 
 /**
@@ -46,6 +46,9 @@ public class NewtonianPropagator implements Propagator {
 
     @Autowired
     private ManeuverService maneuverService;
+    
+    @Autowired
+    private UserPointService userPointService;
 
     @Autowired
     private ApsisService apsisService;
@@ -71,27 +74,10 @@ public class NewtonianPropagator implements Propagator {
     }
 
     protected void computeUserPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
-        for(UserOrbitalPoint userOrbitalPoint : spacecraft.getUserOrbitalPoints()) {
-            computeUserPoint(userOrbitalPoint, newTimestamp);
-        }
-    }
+		userPointService.computeUserPoints(spacecraft, newTimestamp);
+	}
 
-    protected void computeUserPoint(UserOrbitalPoint userOrbitalPoint, Timestamp newTimestamp) {
-        KeplerianElements keplerianElements = userOrbitalPoint.getKeplerianElements();
-
-        KeplerianElements spacecraftKeplerianElements = userOrbitalPoint.getMovingObject().getKeplerianElements();
-        KeplerianOrbit keplerianOrbit = spacecraftKeplerianElements.getKeplerianOrbit();
-        keplerianElements.setKeplerianOrbit(keplerianOrbit);
-
-        double theta = keplerianElements.getTrueAnomaly();
-        Vector3d position = keplerianElements.getCartesianPosition();
-        userOrbitalPoint.setPosition(position);
-
-        Timestamp timestamp = userOrbitalPoint.getMovingObject().getKeplerianElements().timeToAngle(newTimestamp, theta, true);
-        userOrbitalPoint.setTimestamp(timestamp);
-    }
-
-    private void computeManeuvers(Spacecraft spacecraft, Timestamp newTimestamp) {
+	private void computeManeuvers(Spacecraft spacecraft, Timestamp newTimestamp) {
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
         List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, newTimestamp);
         for(ManeuverPoint maneuverPoint : maneuverPoints) {
@@ -124,8 +110,12 @@ public class NewtonianPropagator implements Propagator {
     		targetService.clear(spacecraft);
     		return;
     	}
-
-        targetService.computerOrbitIntersection(spacecraft, newTimestamp);
+    	
+    	if (target.getTargetBody().isStatic()) {
+    		targetService.clear(spacecraft);
+    	} else {
+    		targetService.computerOrbitIntersection(spacecraft, newTimestamp);
+    	}
 
         // compute trajectory relative to the target body
         CartesianState cartesianState = spacecraft.getCartesianState().subtract(target.getTargetBody().getCartesianState());
@@ -137,7 +127,7 @@ public class NewtonianPropagator implements Propagator {
      * Computes apsides for the spacecraft trajectory
      * @param spacecraft the spacecraft
      */
-    protected void computeApsides(Spacecraft spacecraft) {
+    protected void computeApsides(PhysicalBody spacecraft) {
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
 
         // TODO: fix for eccentricity near 1

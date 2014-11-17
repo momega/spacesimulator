@@ -59,6 +59,11 @@ public class MainWindow extends DefaultWindow {
     }
     
     @Override
+    protected Image getIcon() {
+    	return Icons.FRAME_ICON.getImage();
+    }
+    
+    @Override
     protected JMenuBar createMenuBar(Controller controller) {
     	JMenuBar menuBar = new JMenuBar();
     	JMenu fileMenu = new JMenu("File");

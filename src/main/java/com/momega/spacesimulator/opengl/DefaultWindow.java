@@ -69,6 +69,10 @@ public abstract class DefaultWindow {
                     if (menuBar != null) {
                     	frame.setJMenuBar(menuBar);
                     }
+                    Image icon = getIcon();
+                    if (icon != null) {
+                    	frame.setIconImage(icon);
+                    }
                     JToolBar toolBar = createToolBar(controller);
                     frame.setLayout(new java.awt.BorderLayout());
                     if (toolBar != null) {
@@ -118,6 +122,10 @@ public abstract class DefaultWindow {
     protected abstract JMenuBar createMenuBar(Controller controller);
     
     protected abstract JToolBar createToolBar(Controller controller);
+    
+    protected Image getIcon() {
+    	return null;
+    }
 
     public void pauseAnimator() {
         animator.pause();
@@ -130,6 +138,10 @@ public abstract class DefaultWindow {
     public void resumeAnimator() {
         animator.resume();
     }
+    
+    public JFrame getFrame() {
+		return frame;
+	}
 
     public void stopAnimator() {
     	if (exitQuestion) {

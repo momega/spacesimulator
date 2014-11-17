@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 
 import javax.swing.GroupLayout;
@@ -23,22 +25,26 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
+import com.momega.spacesimulator.renderer.ModelChangeListener;
+import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.utils.MathUtils;
 
 /**
  * @author martin
  *
  */
-public class InterplanetaryFlightDialog extends DefaultDialog {
+public class InterplanetaryFlightDialog extends DefaultDialog implements ModelChangeListener {
 
 	private static final long serialVersionUID = -6729550892556811416L;
 	
 	private SpacecraftObjectModel spacecraftObjectModel;
 	private PlanetsObjectModel planetObjectModel;
 	private JFormattedTextField txtTransferA;
-	private Spacecraft selectedSpacecraft;
+	private PhysicalBody selectedSpacecraft;
 	private MovingObject sourceBody; // could be also earth-moon center
 	private MovingObject targetPlanet;
 	private JFormattedTextField txtEccentricity;
@@ -50,12 +56,10 @@ public class InterplanetaryFlightDialog extends DefaultDialog {
 	private double rB;
 
 	private JFormattedTextField txtTheta;
-
 	private JFormattedTextField txtTof;
-
 	private MovingObject targetBody;
-
 	private JFormattedTextField txtAngle;
+	private JFormattedTextField txtCurrentAngle;
 
 	public InterplanetaryFlightDialog() {
 		 super("Interplanetary Flight");
@@ -79,19 +83,20 @@ public class InterplanetaryFlightDialog extends DefaultDialog {
         JLabel lblTargetTheta = new JLabel("Target true anomaly:", SwingConstants.RIGHT);
         JLabel lblTof = new JLabel("Time of flight:", SwingConstants.RIGHT);
         JLabel lblAngle = new JLabel("Phase angle:", SwingConstants.RIGHT);
+        JLabel lblCurrentAngle = new JLabel("Current angle:", SwingConstants.RIGHT);
         
         JComboBox<Spacecraft> spacecraftBox = new JComboBox<Spacecraft>();
         spacecraftBox.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				Object[] objs = e.getItemSelectable().getSelectedObjects();
-				Spacecraft spacecraft = (Spacecraft) objs[0];
+				PhysicalBody spacecraft = (PhysicalBody) objs[0];
 				selectedSpacecraft = spacecraft; 
 				calculateSemimajorTargetTrajectory();
 			}
 		});
         spacecraftBox.setModel(spacecraftObjectModel);
-        selectedSpacecraft = (Spacecraft) spacecraftObjectModel.getSelectedItem();
+        selectedSpacecraft = (PhysicalBody) spacecraftObjectModel.getSelectedItem();
         spacecraftBox.setRenderer(new MovingObjectListRenderer());
         spacecraftBox.setMaximumSize(new Dimension(300, 100));
         
@@ -133,6 +138,10 @@ public class InterplanetaryFlightDialog extends DefaultDialog {
         txtAngle.setText("0.0");
         txtAngle.setEnabled(false);
         
+        txtCurrentAngle = new JFormattedTextField(formatter);
+        txtCurrentAngle.setText("0.0");
+        txtCurrentAngle.setEnabled(false);
+        
         JButton btnCalculate = new JButton("Calculate");
         btnCalculate.setIcon(SwingUtils.createImageIcon("/images/calculator.png"));
         btnCalculate.addActionListener(new ActionListener() {
@@ -173,6 +182,10 @@ public class InterplanetaryFlightDialog extends DefaultDialog {
                         .addComponent(lblAngle)
                         .addComponent(txtAngle)
                     )
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(lblCurrentAngle)
+                        .addComponent(txtCurrentAngle)
+                    )
             );
         
         layout.setHorizontalGroup(
@@ -185,6 +198,7 @@ public class InterplanetaryFlightDialog extends DefaultDialog {
                         .addComponent(lblTargetTheta)
                         .addComponent(lblTof)
                         .addComponent(lblAngle)
+                        .addComponent(lblCurrentAngle)
                     )
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     	.addComponent(spacecraftBox)
@@ -194,11 +208,20 @@ public class InterplanetaryFlightDialog extends DefaultDialog {
                         .addComponent(txtTheta)
                         .addComponent(txtTof)
                         .addComponent(txtAngle)
+                        .addComponent(txtCurrentAngle)
                     )
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     	.addComponent(btnCalculate)
                     )
             );
+        
+        RendererModel.getInstance().addModelChangeListener(this);
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                RendererModel.getInstance().removeModelChangeListener(InterplanetaryFlightDialog.this);
+            }
+        });
         
         calculateSemimajorTargetTrajectory();
         
@@ -253,6 +276,16 @@ public class InterplanetaryFlightDialog extends DefaultDialog {
 	@Override
 	protected boolean okPressed() {
 		return true;
+	}
+	
+	protected void calculateCurrentAngle() {
+		double currentAngle = selectedSpacecraft.getPosition().angle(targetPlanet.getPosition());
+		txtCurrentAngle.setText(String.format("%3.6f", Math.toDegrees(currentAngle)));
+	}
+
+	@Override
+	public void modelChanged(ModelChangeEvent event) {
+		calculateCurrentAngle();
 	}
 
 }

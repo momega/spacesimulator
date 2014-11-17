@@ -3,6 +3,7 @@ package com.momega.spacesimulator.swing;
 import com.momega.spacesimulator.model.Apsis;
 import com.momega.spacesimulator.model.KeplerianTrajectory;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 
@@ -76,7 +77,7 @@ public class KeplerianPanel extends JPanel implements UpdatablePanel {
     public void updateView(ModelChangeEvent event) {
         attrPanel.updateView(event);
         if (object instanceof Spacecraft) {
-            Spacecraft spacecraft = (Spacecraft) object;
+            PhysicalBody spacecraft = (PhysicalBody) object;
             final KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();
             peButton.setEnabled(keplerianTrajectory.getPeriapsis() != null);
             apButton.setEnabled(keplerianTrajectory.getApoapsis() != null);

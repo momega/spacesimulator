@@ -19,7 +19,7 @@ public class Timestamp implements Comparable<Timestamp> {
     }
 
     public Timestamp add(double delta) {
-        return add(BigDecimal.valueOf(delta));
+        return add(new BigDecimal(delta));
     }
 
     public Timestamp add(BigDecimal delta) {

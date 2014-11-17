@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
  */
 public final class VectorUtils {
 
-    public final static double SMALL_EPSILON = 0.0001;
+    public final static double SMALL_EPSILON = 0.00001;
     
     public static Vector3d transform(KeplerianOrbit keplerianOrbit, Vector3d vector) {
     	Rotation r = new Rotation(RotationOrder.ZXZ, keplerianOrbit.getAscendingNode(), keplerianOrbit.getInclination(), keplerianOrbit.getArgumentOfPeriapsis());
@@ -62,14 +62,6 @@ public final class VectorUtils {
         ret = ret.scaleAdd(Math.sin(angle), cross);
         ret = ret.scaleAdd(axis.dot(v) * (1 - cosAngle), axis);
         return ret;
-    }
-
-    public static double angleBetween(Vector3d a, Vector3d b) {
-        double cosAlpha = a.dot(b) / a.length() / b.length();
-        if(cosAlpha > 1) {
-            cosAlpha = 1;
-        }
-        return Math.acos(cosAlpha);
     }
 
     public static Orientation rotateByAngles(Orientation o, double alpha, double delta) {

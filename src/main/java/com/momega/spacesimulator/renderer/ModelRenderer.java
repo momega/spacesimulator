@@ -2,6 +2,7 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +23,8 @@ public class ModelRenderer extends CompositeRenderer {
             if (dp instanceof PhysicalBody) {
                 addRenderer(new MovingObjectRenderer(dp));
                 addRenderer(new ApsidesRenderer(dp));
+                addRenderer(new UserOrbitalPointBitmapRenderer((PhysicalBody) dp));
+                addRenderer(new PhysicalBodyOrbitPointsRenderer((PhysicalBody) dp));
             }
             if (dp instanceof BaryCentre) {
             	addRenderer(new MovingObjectRenderer(dp));
@@ -56,7 +59,6 @@ public class ModelRenderer extends CompositeRenderer {
                 addRenderer(new StartManeuverBitmapRenderer(spacecraft));
                 addRenderer(new EndManeuverBitmapRenderer(spacecraft));
 
-                addRenderer(new UserOrbitalPointBitmapRenderer(spacecraft));
                 addRenderer(new TargetTrajectoryRenderer(spacecraft));
             }
         }

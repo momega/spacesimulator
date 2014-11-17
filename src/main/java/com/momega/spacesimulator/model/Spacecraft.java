@@ -17,8 +17,6 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
     private Maneuver currentManeuver;
     private Target target;
     private Vector3d thrust;
-    private List<UserOrbitalPoint> userOrbitalPoints = new ArrayList<>();
-    private int index;
     
     public HistoryTrajectory getHistoryTrajectory() {
         return historyTrajectory;
@@ -68,22 +66,6 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
 		return thrust;
 	}
 
-    public List<UserOrbitalPoint> getUserOrbitalPoints() {
-        return userOrbitalPoints;
-    }
-
-    public void setUserOrbitalPoints(List<UserOrbitalPoint> userOrbitalPoints) {
-        this.userOrbitalPoints = userOrbitalPoints;
-    }
-    
-    public int getIndex() {
-		return index;
-	}
-    
-    public void setIndex(int index) {
-		this.index = index;
-	}
-    
     public String getIcon() {
 		return "/images/Number-" + index + "-icon.png";
 	}

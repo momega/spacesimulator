@@ -44,7 +44,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         Orientation o = new Orientation(Vector3d.ONE_Y, Vector3d.ONE_Z);
         o.lookUp(Math.toRadians(-23.75d));
         Vector3d velocity = o.getN().scale(9000d);
-        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity, 1);
+        PhysicalBody spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity, 1);
         addMovingObject(spacecraft);
 
 //        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);

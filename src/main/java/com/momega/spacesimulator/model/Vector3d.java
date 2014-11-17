@@ -74,6 +74,14 @@ public class Vector3d {
     public double length() {
         return Math.sqrt(x * x + y * y + z * z);    // note that the squared length has been put inline for efficiency
     }
+    
+    public double angle(Vector3d vector) {
+    	double cosAlpha = dot(vector) / length() / vector.length();
+    	if(cosAlpha > 1) {
+            cosAlpha = 1;
+        }
+    	return Math.acos(cosAlpha);
+    }
 
     public double lengthSquared() {
         return x * x + y * y + z * z; // note that dot(this); would do, but it's needlessly inefficient

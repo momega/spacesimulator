@@ -114,7 +114,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
         setPreferredSize(new Dimension(600, 400));
         pack();
 
-        RendererModel.getInstance().addModelChangeListener(DetailDialog.this);
+        RendererModel.getInstance().addModelChangeListener(this);
     }
 
     protected JPanel createCartesianPanel() {

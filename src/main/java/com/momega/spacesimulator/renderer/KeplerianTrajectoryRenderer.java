@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.Spacecraft;
 
 import javax.media.opengl.GL2;
@@ -23,8 +24,8 @@ public class KeplerianTrajectoryRenderer extends AbstractKeplerianTrajectoryRend
             GL2 gl = drawable.getGL().getGL2();
             gl.glPushMatrix();
 
-            if (movingObject instanceof Spacecraft) {
-            	Spacecraft spacecraft  = (Spacecraft) movingObject;
+            if (movingObject instanceof PhysicalBody) {
+            	PhysicalBody spacecraft  = (PhysicalBody) movingObject;
                 gl.glEnable(GL2.GL_STENCIL_TEST);
                 gl.glStencilOp(GL2.GL_KEEP, GL2.GL_KEEP, GL2.GL_REPLACE);
 
@@ -33,7 +34,7 @@ public class KeplerianTrajectoryRenderer extends AbstractKeplerianTrajectoryRend
 
             drawTrajectory(gl, movingObject.getKeplerianElements());
 
-            if (movingObject instanceof Spacecraft) {
+            if (movingObject instanceof PhysicalBody) {
                 gl.glDisable(GL2.GL_STENCIL_TEST);
             }
 

@@ -3,6 +3,7 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.VectorUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -15,37 +16,58 @@ import org.springframework.util.Assert;
 public class UserPointService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserPointService.class);
+    
+    public void computeUserPoints(PhysicalBody physicalBody, Timestamp newTimestamp) {
+        for(UserOrbitalPoint userOrbitalPoint : physicalBody.getUserOrbitalPoints()) {
+            computeUserPoint(userOrbitalPoint, newTimestamp);
+        }
+    }
+
+    public void computeUserPoint(UserOrbitalPoint userOrbitalPoint, Timestamp newTimestamp) {
+        KeplerianElements keplerianElements = userOrbitalPoint.getKeplerianElements();
+
+        KeplerianElements spacecraftKeplerianElements = userOrbitalPoint.getMovingObject().getKeplerianElements();
+        KeplerianOrbit keplerianOrbit = spacecraftKeplerianElements.getKeplerianOrbit();
+        keplerianElements.setKeplerianOrbit(keplerianOrbit);
+
+        double theta = keplerianElements.getTrueAnomaly();
+        Vector3d position = keplerianElements.getCartesianPosition();
+        userOrbitalPoint.setPosition(position);
+
+        Timestamp timestamp = userOrbitalPoint.getMovingObject().getKeplerianElements().timeToAngle(newTimestamp, theta, true);
+        userOrbitalPoint.setTimestamp(timestamp);
+    }
 
     /**
      * Creates the user orbital point
-     * @param spacecraft the {@link com.momega.spacesimulator.model.Spacecraft}
+     * @param physicalBody the {@link com.momega.spacesimulator.model.PhysicalBody}
      * @param modelCoordinates the model coordinates
      * @return new instance of the {@link com.momega.spacesimulator.model.UserOrbitalPoint}. The point is registered
-     * to the spacecraft
+     * to the physicalbody
      */
-    public UserOrbitalPoint createUserOrbitalPoint(Spacecraft spacecraft, Vector3d modelCoordinates) {
+    public UserOrbitalPoint createUserOrbitalPoint(PhysicalBody physicalBody, Vector3d modelCoordinates) {
         UserOrbitalPoint userPoint = new UserOrbitalPoint();
         userPoint.setPosition(modelCoordinates);
-        userPoint.setMovingObject(spacecraft);
+        userPoint.setMovingObject(physicalBody);
         userPoint.setVisible(true);
 
-        createKeplerianElementsByPosition(spacecraft, userPoint, modelCoordinates);
+        createKeplerianElementsByPosition(physicalBody, userPoint, modelCoordinates);
         userPoint.setName("User Point");
-        spacecraft.getUserOrbitalPoints().add(userPoint);
+        physicalBody.getUserOrbitalPoints().add(userPoint);
 
         return userPoint;
     }
     
-    public UserOrbitalPoint createUserOrbitalPoint(Spacecraft spacecraft, String name, double trueAnomaly) {
+    public UserOrbitalPoint createUserOrbitalPoint(PhysicalBody physicalBody, String name, double trueAnomaly) {
     	 UserOrbitalPoint userPoint = new UserOrbitalPoint();
-    	 userPoint.setMovingObject(spacecraft);
+    	 userPoint.setMovingObject(physicalBody);
          userPoint.setVisible(true);
          userPoint.setName(name);
          updateUserOrbitalPoint(userPoint, trueAnomaly);
          Vector3d position = userPoint.getKeplerianElements().getKeplerianOrbit().getCartesianPosition(trueAnomaly);
          userPoint.setPosition(position);
          
-         spacecraft.getUserOrbitalPoints().add(userPoint);
+         physicalBody.getUserOrbitalPoints().add(userPoint);
          return userPoint;
     }
 
@@ -55,7 +77,7 @@ public class UserPointService {
      * @param newPosition new position
      */
     public void updateUserOrbitalPoint(UserOrbitalPoint userOrbitalPoint, Vector3d newPosition) {
-        Spacecraft spacecraft = (Spacecraft) userOrbitalPoint.getMovingObject();
+        PhysicalBody spacecraft = (PhysicalBody) userOrbitalPoint.getMovingObject();
 
         createKeplerianElementsByPosition(spacecraft, userOrbitalPoint, newPosition);
     }
@@ -67,13 +89,13 @@ public class UserPointService {
      */
     public void updateUserOrbitalPoint(UserOrbitalPoint userOrbitalPoint, Double trueAnomaly) {
         Assert.notNull(trueAnomaly);
-        Spacecraft spacecraft = (Spacecraft) userOrbitalPoint.getMovingObject();
+        PhysicalBody spacecraft = (PhysicalBody) userOrbitalPoint.getMovingObject();
         KeplerianOrbit keplerianOrbit = spacecraft.getKeplerianElements().getKeplerianOrbit();
         createKeplerianElementsByOrbit(spacecraft, userOrbitalPoint, keplerianOrbit, trueAnomaly);
     }
 
-    protected void createKeplerianElementsByPosition(Spacecraft spacecraft, UserOrbitalPoint userPoint, Vector3d position) {
-        KeplerianOrbit keplerianOrbit = spacecraft.getKeplerianElements().getKeplerianOrbit();
+    protected void createKeplerianElementsByPosition(PhysicalBody physicalBody, UserOrbitalPoint userPoint, Vector3d position) {
+        KeplerianOrbit keplerianOrbit = physicalBody.getKeplerianElements().getKeplerianOrbit();
         logger.debug("orbit = {}", keplerianOrbit.toString());
         Vector3d v = position.subtract(keplerianOrbit.getCentralObject().getPosition());
         v = VectorUtils.transform(keplerianOrbit, v);
@@ -81,20 +103,25 @@ public class UserPointService {
         double theta = Math.atan2(v.getY(), v.getX());
 
         logger.info("theta = {}", Math.toDegrees(theta));
-        createKeplerianElementsByOrbit(spacecraft, userPoint, keplerianOrbit, theta);
+        createKeplerianElementsByOrbit(physicalBody, userPoint, keplerianOrbit, theta);
     }
 
-    protected void createKeplerianElementsByOrbit(Spacecraft spacecraft, UserOrbitalPoint userPoint, KeplerianOrbit keplerianOrbit, double trueAnomaly) {
-        Assert.notNull(spacecraft);
+    protected void createKeplerianElementsByOrbit(PhysicalBody physicalBody, UserOrbitalPoint userPoint, KeplerianOrbit keplerianOrbit, double trueAnomaly) {
+        Assert.notNull(physicalBody);
         Assert.notNull(userPoint);
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setTrueAnomaly(trueAnomaly);
         keplerianElements.setKeplerianOrbit(keplerianOrbit);
         userPoint.setKeplerianElements(keplerianElements);
-        userPoint.setTimestamp(spacecraft.getKeplerianElements().timeToAngle(ModelHolder.getModel().getTime(), trueAnomaly, true));
+        userPoint.setTimestamp(physicalBody.getKeplerianElements().timeToAngle(ModelHolder.getModel().getTime(), trueAnomaly, true));
     }
 
-    public void deleteUserPoint(Spacecraft spacecraft, UserOrbitalPoint point) {
-        spacecraft.getUserOrbitalPoints().remove(point);
+    /**
+     * Deletes the user defined point
+     * @param physicalBody the physical body the point belong
+     * @param point the given point
+     */
+    public void deleteUserPoint(PhysicalBody physicalBody, UserOrbitalPoint point) {
+        physicalBody.getUserOrbitalPoints().remove(point);
     }
 }

@@ -74,14 +74,17 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 
             buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 	        buttonsPanel.add(maneuverButton);
-
+        }
+        
+        if (point.getMovingObject() instanceof PhysicalBody) {
+        	final PhysicalBody physicalBody = (PhysicalBody) point.getMovingObject();
             if (point instanceof UserOrbitalPoint) {
                 JButton deleteButton = new JButton("Delete");
                 deleteButton.setIcon(SwingUtils.createImageIcon("/images/delete.png"));
                 deleteButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        userPointService.deleteUserPoint(spacecraft, (UserOrbitalPoint) point);
+                        userPointService.deleteUserPoint(physicalBody, (UserOrbitalPoint) point);
                         DetailDialogHolder.getInstance().hideDialog(point);
                     }
                 });

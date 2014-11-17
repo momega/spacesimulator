@@ -34,9 +34,9 @@ public class TrajectoryService {
         Assert.notNull(movingObject);
         Trajectory trajectory = movingObject.getTrajectory();
         Assert.notNull(trajectory);
-        for (Propagator m : propagators) {
-            if (m.supports(trajectory)) {
-                m.computePosition(movingObject, newTime);
+        for (Propagator propagator : propagators) {
+            if (propagator.supports(trajectory)) {
+                propagator.computePosition(movingObject, newTime);
                 movingObject.setTimestamp(newTime);
             }
         }

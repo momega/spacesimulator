@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.Apsis;
-import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.swing.Icons;
 
 /**
@@ -9,7 +9,7 @@ import com.momega.spacesimulator.swing.Icons;
  */
 public class PeriapsisBitmapRenderer extends AbstractApsisBitmapRenderer {
 
-    protected PeriapsisBitmapRenderer(Spacecraft spacecraft) {
+    protected PeriapsisBitmapRenderer(PhysicalBody spacecraft) {
         super(spacecraft, Icons.PERIAPSIS_POINT);
     }
 

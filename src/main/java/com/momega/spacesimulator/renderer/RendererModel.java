@@ -53,8 +53,6 @@ public class RendererModel {
 
     private boolean takeScreenshot = false;
 
-
-
     private Point mouseCoordinates = null;
     private UserOrbitalPoint selectedUserOrbitalPoint;
     private Point draggedPoint;
@@ -114,6 +112,13 @@ public class RendererModel {
                 result.add(keplerianTrajectory.getApoapsis());
                 result.add(keplerianTrajectory.getPeriapsis());
             }
+            
+            if (dp instanceof PhysicalBody) {
+            	PhysicalBody body = (PhysicalBody) dp;
+            	for(UserOrbitalPoint userOrbitalPoint : body.getUserOrbitalPoints()) {
+                    result.add(userOrbitalPoint);
+                }
+            }
 
             if (dp instanceof Spacecraft) {
                 Spacecraft spacecraft = (Spacecraft) dp;
@@ -126,9 +131,7 @@ public class RendererModel {
                 for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
                     result.add(maneuverPoint);
                 }
-                for(UserOrbitalPoint userOrbitalPoint : spacecraft.getUserOrbitalPoints()) {
-                    result.add(userOrbitalPoint);
-                }
+                
             }
         }
     	return result;
@@ -144,6 +147,10 @@ public class RendererModel {
     protected void addViewCoordinates(GLAutoDrawable drawable, PositionProvider positionProvider, Camera camera) {
         if (positionProvider == null) {
             return;
+        }
+        
+        if (positionProvider.getPosition() == null) {
+        	return;
         }
 
         ViewCoordinates viewCoordinates = new ViewCoordinates();
@@ -163,8 +170,8 @@ public class RendererModel {
         }
 
         if (positionProvider instanceof AbstractOrbitalPoint) {
-        	AbstractOrbitalPoint apsis = (AbstractOrbitalPoint) positionProvider;
-            viewCoordinates.setVisible(viewCoordinates.isVisible() && apsis.isVisible());
+        	AbstractOrbitalPoint point = (AbstractOrbitalPoint) positionProvider;
+            viewCoordinates.setVisible(viewCoordinates.isVisible() && point.isVisible());
         }
 
         viewCoordinates.setObject(positionProvider);
@@ -218,13 +225,13 @@ public class RendererModel {
         return result;
     }
     
-    public Spacecraft findSpacecraftByIndex(int index) {
+    public PhysicalBody findPhysicalBodyByIndex(int index) {
     	Assert.isTrue(index>0);
     	for(MovingObject movingObject : ModelHolder.getModel().getMovingObjects()) {
-            if (movingObject instanceof Spacecraft) {
-                Spacecraft spacecraft = (Spacecraft) movingObject;
-                if (spacecraft.getIndex()==index) {
-                	return spacecraft;
+            if (movingObject instanceof PhysicalBody) {
+                PhysicalBody body = (PhysicalBody) movingObject;
+                if (body.getIndex()==index) {
+                	return body;
                 }
             }
     	}
@@ -325,7 +332,7 @@ public class RendererModel {
         for (MovingObject mo : ModelHolder.getModel().getMovingObjects()) {
 	        if (mo instanceof CelestialBody) {
 	        	CelestialBody cb = (CelestialBody) mo;
-	        	if (!onlyMoving || !cb.getTrajectory().getType().equals(TrajectoryType.STATIC)) {
+	        	if (!onlyMoving || !cb.isStatic()) {
 	        		list.add(cb);
 	        	}
 	        }
@@ -394,9 +401,9 @@ public class RendererModel {
             Vector3d modelCoordinates = GLUtils.getModelCoordinates(gl, screenCoordinates);
             logger.info("model coordinates = {}", modelCoordinates.asArray());
 
-            Spacecraft spacecraft = RendererModel.getInstance().findSpacecraftByIndex(entry.getKey().intValue());
+            PhysicalBody physicalBody = RendererModel.getInstance().findPhysicalBodyByIndex(entry.getKey().intValue());
             UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
-            userPointService.createUserOrbitalPoint(spacecraft, modelCoordinates);
+            userPointService.createUserOrbitalPoint(physicalBody, modelCoordinates);
         }
     }
 

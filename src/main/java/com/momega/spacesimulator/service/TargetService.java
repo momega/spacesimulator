@@ -2,12 +2,14 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.VectorUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,9 +46,13 @@ public class TargetService {
         return target;
     }
 
-    public Double computePlanesAngle(Spacecraft spacecraft, CelestialBody targetBody) {
+    public Double computePlanesAngle(PhysicalBody spacecraft, CelestialBody targetBody) {
         if (targetBody == null) {
             return null;
+        }
+        
+        if (targetBody.isStatic()) {
+        	return null;
         }
 
         Plane spacecraftPlane = createOrbitalPlane(spacecraft);
@@ -69,13 +75,25 @@ public class TargetService {
 
         Plane spacecraftPlane = createOrbitalPlane(spacecraft);
         Plane targetBodyPlane = createOrbitalPlane(targetBody);
+        
+        if (targetBodyPlane == null) {
+        	target.setOrbitIntersections(new ArrayList<OrbitIntersection>());
+        	return;
+        }
 
         double angle = spacecraftPlane.angleBetween(targetBodyPlane);
         target.setAngle(angle);
         logger.debug("planesAngle = {}", Math.toDegrees(angle));
 
         KeplerianOrbit orbit = spacecraft.getKeplerianElements().getKeplerianOrbit();
-        Line intersectionLine = spacecraftPlane.intersection(targetBodyPlane, orbit.getCentralObject().getPosition());
+        Line intersectionLine;
+        try {
+        	intersectionLine = spacecraftPlane.intersection(targetBodyPlane, orbit.getCentralObject().getPosition());
+        } catch (IllegalStateException e) {
+        	logger.warn("almost colinear planes, planesAngle = {}", Math.toDegrees(angle));
+        	target.setOrbitIntersections(new ArrayList<OrbitIntersection>());
+        	return;
+        }
 
         // now transform to 2D to compute intersections
         Vector3d intersectionLinePoint = intersectionLine.getOrigin().subtract(orbit.getCentralObject().getPosition());

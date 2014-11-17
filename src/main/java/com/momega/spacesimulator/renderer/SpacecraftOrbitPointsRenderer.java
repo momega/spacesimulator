@@ -29,15 +29,6 @@ public class SpacecraftOrbitPointsRenderer extends AbstractOrbitalPositionProvid
         for(OrbitIntersection intersection : targetService.getOrbitIntersections(spacecraft)) {
         	renderPositionProvider(gl, intersection);
         }
-        for(UserOrbitalPoint orbitalPoint : spacecraft.getUserOrbitalPoints()) {
-            if (orbitalPoint == RendererModel.getInstance().getSelectedUserOrbitalPoint()) {
-                setColor(255,255,0);
-            }
-            renderPositionProvider(gl, orbitalPoint);
-            if (orbitalPoint == RendererModel.getInstance().getSelectedUserOrbitalPoint()) {
-                setColor(255,255,255);
-            }
-        }
         List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime());
         for(ManeuverPoint maneuverPoint : maneuverPoints) {
             renderPositionProvider(gl, maneuverPoint);

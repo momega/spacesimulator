@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.utils.MathUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -218,13 +219,19 @@ public class KeplerianElements {
         }
 
         double diffM = (targetM - initM);
-        double n = keplerianOrbit.getMeanMotion();
+        Double n = keplerianOrbit.getMeanMotion();
+        if (n== null || Double.isNaN(n) || Double.isInfinite(n)) {
+        	throw new IllegalStateException("undefined mean motion");
+        }
+        if (n == 0) {
+        	throw new IllegalStateException("mean motion is zero");
+        }
         if (diffM < 0 && future) {
             diffM = targetM + 2 * Math.PI - initM;
         }
 
         double timeInterval = diffM / n;
-        return timestamp.add(timeInterval);
+       	return timestamp.add(timeInterval);
     }
 
     public static double solveEA(double eccentricity, double theta) {
@@ -233,8 +240,10 @@ public class KeplerianElements {
     }
 
     private static double solveHA(double eccentricity, double theta) {
-        double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
-        double HA = MathUtils.asinh(sinH);
+        //double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
+        //double HA = MathUtils.asinh(sinH);
+    	double cosHA = (eccentricity + Math.cos(theta))/(1 + eccentricity*Math.cos(theta));
+    	double HA = MathUtils.acosh(cosHA);
         logger.debug("HA = {}", HA);
         return HA;
     }
@@ -244,7 +253,7 @@ public class KeplerianElements {
      * @return the 3d vector
      */
     public Vector3d getCartesianPosition() {
-           return keplerianOrbit.getCartesianPosition(getTrueAnomaly());
+    	return keplerianOrbit.getCartesianPosition(getTrueAnomaly());
     }
 
     public double getAltitude() {

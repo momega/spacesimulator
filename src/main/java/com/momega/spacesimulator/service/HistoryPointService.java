@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Maneuver;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.utils.TimeUtils;
@@ -33,7 +34,7 @@ public class HistoryPointService {
         historyPoints.add(hp);
     }
 
-    public HistoryPoint createHistoryPoint(Spacecraft spacecraft, Timestamp timestamp) {
+    public HistoryPoint createHistoryPoint(PhysicalBody spacecraft, Timestamp timestamp) {
         HistoryPoint hp = new HistoryPoint();
         hp.setPosition(spacecraft.getCartesianState().getPosition());
         hp.setTimestamp(timestamp);

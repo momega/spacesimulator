@@ -2,16 +2,18 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
+
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
 
 import javax.media.opengl.GL2;
+
 import java.awt.geom.Rectangle2D;
 
 /**
@@ -19,9 +21,9 @@ import java.awt.geom.Rectangle2D;
  */
 public class TestingTextRenderer extends AbstractText3dRenderer {
 
-    private final Spacecraft spacecraft;
+    private final PhysicalBody spacecraft;
 
-    public TestingTextRenderer(Spacecraft spacecraft) {
+    public TestingTextRenderer(PhysicalBody spacecraft) {
         this.spacecraft = spacecraft;
     }
 

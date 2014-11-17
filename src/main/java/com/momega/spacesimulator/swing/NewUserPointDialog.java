@@ -17,6 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
 import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.service.UserPointService;
 
@@ -99,7 +100,7 @@ public class NewUserPointDialog extends DefaultDialog {
 	
 	@Override
 	protected boolean okPressed() {
-		Spacecraft spacecraft = (Spacecraft) spacecraftObjectModel.getSelectedItem();
+		PhysicalBody spacecraft = (PhysicalBody) spacecraftObjectModel.getSelectedItem();
 		try {
 			double theta = Double.parseDouble(txtTrueAnomaly.getText());
 			String name = txtName.getText();
