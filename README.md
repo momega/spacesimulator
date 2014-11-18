@@ -29,6 +29,14 @@ Screenshots
 
 ![Near the Moon](/images/moon.png "Near the Moon")
 
+![Arriving to Mars](/images/mars1.png "Arriving to Mars")
+
+![Arriving to Mars](/images/mars1.png "Arriving to Mars")
+
+![Maneuver at Periapsis](/images/mars2.png "Maneuver at Periapsis")
+
+![Orbit around Mars](/images/mars3.png "Orbit around Mars")
+
 Build
 =====
 

@@ -46,8 +46,10 @@ public class TwoSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
         addManeuver(spacecraft, "M6", 82 * 60d, 1200d, 1d, 0, Math.toRadians(-90));
         addManeuver(spacecraft, "M7", 107.5 * 60d, 2654d, 1d, 0, Math.toRadians(0));
         addManeuver(spacecraft, "M8", 116107 * 60d, 261d, 1d, 0, Math.toRadians(90));
-        addManeuver(spacecraft, "M9", 264824 * 60d, 5, 1d, 0, Math.toRadians(90));
-        addManeuver(spacecraft, "M10", 308000 * 60d, 90, 1d, Math.toRadians(90), Math.toRadians(45));
+        addManeuver(spacecraft, "M9", 264824 * 60d, 4, 1d, 0, Math.toRadians(90));
+        addManeuver(spacecraft, "M10", 308000 * 60d, 96, 1d, Math.toRadians(90), Math.toRadians(45));
+        addManeuver(spacecraft, "M11", 308100 * 60d, 40, 1d, Math.toRadians(45), Math.toRadians(-30));
+        addManeuver(spacecraft, "M12", 310495 * 60d, 500, 1d, Math.toRadians(180), Math.toRadians(0));
 
         setTarget(spacecraft, mars);
 
