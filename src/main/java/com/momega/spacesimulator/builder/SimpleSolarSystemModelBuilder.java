@@ -45,8 +45,6 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         sunSoi = addPlanetToSoiTree(sun, null);
         SphereOfInfluence earthSoi = addPlanetToSoiTree(earth, sunSoi, earthMoonBarycenter.getKeplerianElements());
         addPlanetToSoiTree(moon, earthSoi);
-
-        model.setSelectedObject(earth);
     }
 
     @Override
@@ -83,6 +81,12 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         setTarget(spacecraft, moon);
 
         addMovingObject(spacecraft);
+    }
+    
+    @Override
+    protected void initCamera() {
+    	CelestialBody earth = (CelestialBody) findMovingObject("Earth");
+    	createCamera(earth);
     }
 
     @Override

@@ -11,19 +11,20 @@ import java.util.List;
  */
 public class Spacecraft extends PhysicalBody implements IconProvider {
 
-    private HistoryTrajectory historyTrajectory;
     private List<SpacecraftSubsystem> subsystems = new ArrayList<>();
     private List<Maneuver> maneuvers = new ArrayList<>();
     private Maneuver currentManeuver;
     private Target target;
     private Vector3d thrust;
     
-    public HistoryTrajectory getHistoryTrajectory() {
-        return historyTrajectory;
+    private List<HistoryPoint> namedHistoryPoints = new ArrayList<>();
+
+    public List<HistoryPoint> getNamedHistoryPoints() {
+        return namedHistoryPoints;
     }
 
-    public void setHistoryTrajectory(HistoryTrajectory historyTrajectory) {
-        this.historyTrajectory = historyTrajectory;
+    public void setNamedHistoryPoints(List<HistoryPoint> namedHistoryPoints) {
+        this.namedHistoryPoints = namedHistoryPoints;
     }
 
     public List<SpacecraftSubsystem> getSubsystems() {

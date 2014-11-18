@@ -31,8 +31,6 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
 
         SphereOfInfluence earthSoi = addPlanetToSoiTree(earth, null);
         addPlanetToSoiTree(moon, earthSoi);
-
-        model.setSelectedObject(earth);
     }
 
     @Override
@@ -73,10 +71,6 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
     }
 
     protected void initCamera() {
-        Camera s = new Camera();
-        s.setTargetObject(findMovingObject("Earth"));
-        s.setDistance(100 * 1E6);
-        s.setOppositeOrientation(Orientation.createUnit());
-        model.setCamera(s);
+        createCamera(findMovingObject("Earth"));
     }
 }

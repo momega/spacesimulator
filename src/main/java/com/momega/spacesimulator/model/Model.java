@@ -14,7 +14,6 @@ public class Model {
     private Timestamp time;
     private BigDecimal warpFactor;
     private Camera camera;
-    private PositionProvider selectedObject;
     protected final List<MovingObject> movingObjects = new ArrayList<>();
     private SphereOfInfluence rootSoi;
     private boolean runningHeadless;
@@ -45,14 +44,6 @@ public class Model {
 
     public BigDecimal getWarpFactor() {
         return warpFactor;
-    }
-
-    public PositionProvider getSelectedObject() {
-        return selectedObject;
-    }
-
-    public void setSelectedObject(PositionProvider selectedObject) {
-        this.selectedObject = selectedObject;
     }
 
     /**

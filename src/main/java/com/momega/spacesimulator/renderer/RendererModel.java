@@ -68,7 +68,7 @@ public class RendererModel {
         userPointService = Application.getInstance().getService(UserPointService.class);
         targetService = Application.getInstance().getService(TargetService.class);
 		movingObjectsModel = new MovingObjectsModel(selectMovingObjects());
-		movingObjectsModel.setSelectedItem(ModelHolder.getModel().getSelectedObject());
+		movingObjectsModel.setSelectedItem(ModelHolder.getModel().getCamera().getTargetObject());
     }
 
     public static RendererModel getInstance() {
@@ -122,7 +122,7 @@ public class RendererModel {
 
             if (dp instanceof Spacecraft) {
                 Spacecraft spacecraft = (Spacecraft) dp;
-                for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
+                for(HistoryPoint hp : spacecraft.getNamedHistoryPoints()) {
                     result.add(hp);
                 }
                 for(OrbitIntersection intersection : targetService.getOrbitIntersections(spacecraft)) {
@@ -273,13 +273,16 @@ public class RendererModel {
                 camera.setDistance(ro.getRadius() * 10);
             }
         }
-        model.setSelectedObject(viewCoordinates.getObject());
         setSelectedItem(viewCoordinates.getObject());
         logger.info("selected dynamical point changed to {}", viewCoordinates.getObject().getName());
     }
     
     public void setSelectedItem(PositionProvider positionProvider) {
     	movingObjectsModel.setSelectedItem(positionProvider);
+    }
+    
+    public PositionProvider getSelectedItem() {
+    	return (PositionProvider) movingObjectsModel.getSelectedItem();
     }
 
 	public void clearViewCoordinates() {

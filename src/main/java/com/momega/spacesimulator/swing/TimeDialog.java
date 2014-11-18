@@ -21,7 +21,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
-import javax.swing.JTextField;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
@@ -59,7 +58,6 @@ public class TimeDialog extends JDialog {
     private final JProgressBar progressBar;
     private final DefaultWindow window;
 	private JButton closeButton;
-	private JTextField txtTime;
 
     /**
      * Constructor
@@ -90,7 +88,6 @@ public class TimeDialog extends JDialog {
 
         JLabel timeLabel = new JLabel("Wait until:");
         JLabel progressLabel = new JLabel("Progress until:");
-        JLabel lblTime = new JLabel("Current Time:");
 
         timeModel = new SpinnerDateModel();
         timeModel.setValue(model.getCalendar().getTime());
@@ -147,9 +144,6 @@ public class TimeDialog extends JDialog {
             }
         });
         buttonsPanel.add(closeButton);
-        
-        txtTime = new JTextField();
-        txtTime.setEnabled(false);
 
         JPanel quickTimeButtons = new JPanel(new GridLayout(1,4));
         JButton minusOneHour = new JButton("-1h");
@@ -192,19 +186,19 @@ public class TimeDialog extends JDialog {
         timePanel.add(spinner);
 
         progressBar = new JProgressBar();
+        progressBar.setStringPainted(true);
+        progressBar.setString(TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
 
         layout.setHorizontalGroup(
             layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(timeLabel)
                     .addComponent(progressLabel)
-                    .addComponent(lblTime)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(timePanel)
                     .addComponent(progressBar)
                     .addComponent(quickTimeButtons)
-                    .addComponent(txtTime)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(goButton)
@@ -228,10 +222,6 @@ public class TimeDialog extends JDialog {
                                 .addComponent(progressLabel)
                                 .addComponent(progressBar)
                                 .addComponent(cancelButton)
-                )
-                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTime)
-                    .addComponent(txtTime)
                 )
         );
 
@@ -284,7 +274,7 @@ public class TimeDialog extends JDialog {
             calendar.set(Calendar.SECOND, c.get(Calendar.SECOND));
 
             timestamp = TimeUtils.fromCalendar(calendar);
-            logger.info("Calendar = {}", calendar.getTime());
+            logger.debug("Calendar = {}", calendar.getTime());
             updateButtons();
         }
 
@@ -308,9 +298,6 @@ public class TimeDialog extends JDialog {
         }
 
         public void start() {
-            progressBar.setMinimum(ModelHolder.getModel().getTime().getValue().intValue());
-            progressBar.setMaximum(timestamp.getValue().intValue());
-
             worker = new TimeWorker(timestamp);
             worker.execute();
         }
@@ -322,6 +309,8 @@ public class TimeDialog extends JDialog {
 
         public TimeWorker(Timestamp endTime) {
             this.endTime = endTime;
+            progressBar.setMinimum(ModelHolder.getModel().getTime().getValue().intValue());
+            progressBar.setMaximum(endTime.getValue().intValue());
         }
         
         @Override
@@ -341,7 +330,7 @@ public class TimeDialog extends JDialog {
             if (!CollectionUtils.isEmpty(chunks)) {
                 Timestamp val = chunks.get(chunks.size()-1);
                 progressBar.setValue(val.getValue().intValue());
-                txtTime.setText(TimeUtils.timeAsString(val));
+                progressBar.setString(TimeUtils.timeAsString(val));
             }
         }
         

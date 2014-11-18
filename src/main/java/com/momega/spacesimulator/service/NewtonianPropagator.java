@@ -161,7 +161,7 @@ public class NewtonianPropagator implements Propagator {
 
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
         if (keplerianElements!=null && keplerianElements.getKeplerianOrbit().getCentralObject() != soiBody) {
-            historyPointService.changeSoi(spacecraft, keplerianElements.getKeplerianOrbit().getCentralObject(), soiBody);
+            historyPointService.changeSoi(spacecraft, newTimestamp, keplerianElements.getKeplerianOrbit().getCentralObject(), soiBody);
             logger.info("changing soi to {} for spacecraft {}", soiBody.getName(), spacecraft.getName());
         }
         

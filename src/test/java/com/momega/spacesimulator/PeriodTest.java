@@ -5,7 +5,6 @@ package com.momega.spacesimulator;
 
 import org.joda.time.DateTimeConstants;
 import org.joda.time.MutablePeriod;
-import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;

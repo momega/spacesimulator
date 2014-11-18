@@ -8,6 +8,7 @@ public class HistoryPoint extends NamedObject implements PositionProvider {
 
     private Vector3d position;
     private Timestamp timestamp;
+    private Spacecraft spacecraft;
 
     public Vector3d getPosition() {
         return position;
@@ -24,4 +25,12 @@ public class HistoryPoint extends NamedObject implements PositionProvider {
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
+    
+    public void setSpacecraft(Spacecraft spacecraft) {
+		this.spacecraft = spacecraft;
+	}
+    
+    public Spacecraft getSpacecraft() {
+		return spacecraft;
+	}
 }

@@ -18,7 +18,7 @@ public class NamedHistoryRenderer extends AbstractPositionProviderRenderer {
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-        for(HistoryPoint hp : spacecraft.getHistoryTrajectory().getNamedHistoryPoints()) {
+        for(HistoryPoint hp : spacecraft.getNamedHistoryPoints()) {
             renderPositionProvider(gl, hp);
         }
     }

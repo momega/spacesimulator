@@ -2,7 +2,6 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.PhysicalBody;
-import com.momega.spacesimulator.model.Spacecraft;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;

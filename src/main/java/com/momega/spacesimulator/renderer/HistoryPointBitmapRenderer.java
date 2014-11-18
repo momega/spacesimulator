@@ -22,7 +22,7 @@ public class HistoryPointBitmapRenderer extends PositionProvidersBitmapRenderer 
     @Override
     protected List<PositionProvider> getPositionProviders() {
         List<PositionProvider> list = new ArrayList<>();
-        list.addAll(spacecraft.getHistoryTrajectory().getNamedHistoryPoints());
+        list.addAll(spacecraft.getNamedHistoryPoints());
         return list;
     }
 }

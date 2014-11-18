@@ -27,9 +27,6 @@ public class MotionService {
     @Autowired
     private RotationService rotationService;
 
-    @Autowired
-    private HistoryPointService historyPointService;
-
     public Timestamp move(Timestamp time, BigDecimal warpFactor) {
         Timestamp newTimestamp = time.add(warpFactor);
         logger.debug("time={}", newTimestamp.getValue());
@@ -39,24 +36,9 @@ public class MotionService {
                     rotationService.rotate((RotatingObject) dp, newTimestamp);
                 }
                 trajectoryService.move(dp, newTimestamp);
-                if (dp instanceof Spacecraft) {
-                    Spacecraft spacecraft = (Spacecraft) dp;
-                    historyPointService.updateHistory(spacecraft);
-                }
             }
         }
         return newTimestamp;
     }
 
-    public void setTrajectoryService(TrajectoryService trajectoryService) {
-        this.trajectoryService = trajectoryService;
-    }
-
-    public void setRotationService(RotationService rotationService) {
-        this.rotationService = rotationService;
-    }
-
-    public void setHistoryPointService(HistoryPointService historyPointService) {
-        this.historyPointService = historyPointService;
-    }
 }

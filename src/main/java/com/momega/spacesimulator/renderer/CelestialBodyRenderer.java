@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.SphericalCoordinates;
 import com.momega.spacesimulator.model.Vector3d;
@@ -84,7 +83,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
     @Override
     protected void additionalDraw(GL2 gl) {
-        if (Preferences.getInstance().isDrawBeamsActivated() && ModelHolder.getModel().getSelectedObject() == celestialBody) {
+        if (Preferences.getInstance().isDrawBeamsActivated() && RendererModel.getInstance().getSelectedItem() == celestialBody) {
             GLUtils.drawBeansAndCircles(gl, 0, 0, celestialBody.getRadius() * 5, 18, 5, celestialBody.getTrajectory().getColor());
         }
         

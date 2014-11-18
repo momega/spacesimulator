@@ -8,6 +8,7 @@ import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.NewManeuverEvent;
+import com.momega.spacesimulator.service.HistoryPointService;
 import com.momega.spacesimulator.service.ManeuverService;
 import com.momega.spacesimulator.utils.TimeUtils;
 
@@ -34,11 +35,13 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
 	private final Spacecraft spacecraft;
 	private final ManeuverTableModel tableModel;
     private final ManeuverService maneuverService;
+    private final HistoryPointService historyPointService;
 
     public ManeuverPanel(final Spacecraft spacecraft) {
         super(new BorderLayout());
         this.spacecraft = spacecraft;
         maneuverService = Application.getInstance().getService(ManeuverService.class);
+        historyPointService = Application.getInstance().getService(HistoryPointService.class);
         tableModel = new ManeuverTableModel(copyManeuvers(spacecraft.getManeuvers()));
         final JTable table = new JTable(tableModel);
         table.setDefaultRenderer(Timestamp.class, new TimestampRenderer());
@@ -198,8 +201,8 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
         }
 
         protected Timestamp getStartTime() {
-            List<HistoryPoint> list = spacecraft.getHistoryTrajectory().getNamedHistoryPoints();
-            return list.get(0).getTimestamp();
+            HistoryPoint hp = historyPointService.getStartPoint(spacecraft);
+            return hp.getTimestamp();
         }
     }
 

@@ -73,9 +73,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         model.setWarpFactor(BigDecimal.ONE);
     }
 
-    protected void initCamera() {
+    protected void createCamera(PositionProvider positionProvider) {
         Camera s = new Camera();
-        s.setTargetObject(getModel().getSelectedObject());
+        s.setTargetObject(positionProvider);
         s.setDistance(100 * 1E6);
         s.setOppositeOrientation(Orientation.createUnit());
         model.setCamera(s);
@@ -93,6 +93,11 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * Creates all planets and bary centres
      */
     protected abstract void initPlanets();
+    
+    /**
+     * Creates the camera
+     */
+    protected abstract void initCamera();
 
     /**
      * Initializes the spacecraft instances
@@ -206,11 +211,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         spacecraft.setTrajectory(keplerianTrajectory);
         spacecraft.setMass(0d);
         spacecraft.setIndex(index);
-
-        HistoryTrajectory historyTrajectory = new HistoryTrajectory();
-        historyTrajectory.setType(TrajectoryType.HISTORY);
-        historyTrajectory.setColor(new double[]{1, 1, 1});
-        spacecraft.setHistoryTrajectory(historyTrajectory);
 
         historyPointService.start(spacecraft, model.getTime());
 
