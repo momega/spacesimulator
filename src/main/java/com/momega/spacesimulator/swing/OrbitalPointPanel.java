@@ -29,12 +29,14 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
     private final AttributesPanel attrPanel;
     private boolean visible;
 	private final AbstractOrbitalPoint orbitalPoint;
+	private final MovingObject movingObject;
     private final ManeuverService maneuverService;
     private final UserPointService userPointService;
 
     public OrbitalPointPanel(final AbstractOrbitalPoint point) {
         super(new BorderLayout(5, 5));
 		this.orbitalPoint = point;
+		this.movingObject = orbitalPoint.getKeplerianElements().getKeplerianOrbit().getCentralObject();
         this.maneuverService = Application.getInstance().getService(ManeuverService.class);
         this.userPointService = Application.getInstance().getService(UserPointService.class);
 
@@ -58,8 +60,8 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
             }
         });
         
-        if (point.getMovingObject() instanceof Spacecraft) {
-        	final Spacecraft spacecraft = (Spacecraft) point.getMovingObject();
+        if (movingObject instanceof Spacecraft) {
+        	final Spacecraft spacecraft = (Spacecraft) movingObject;
 	        JButton maneuverButton = new JButton("Maneuver At...");
 	        maneuverButton.setIcon(SwingUtils.createImageIcon("/images/vector_add.png"));
 	        maneuverButton.addActionListener(new ActionListener() {
@@ -76,8 +78,8 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 	        buttonsPanel.add(maneuverButton);
         }
         
-        if (point.getMovingObject() instanceof PhysicalBody) {
-        	final PhysicalBody physicalBody = (PhysicalBody) point.getMovingObject();
+        if (movingObject instanceof PhysicalBody) {
+        	final PhysicalBody physicalBody = (PhysicalBody) movingObject;
             if (point instanceof UserOrbitalPoint) {
                 JButton deleteButton = new JButton("Delete");
                 deleteButton.setIcon(SwingUtils.createImageIcon("/images/delete.png"));
@@ -117,7 +119,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 	                    Object newTheta = JOptionPane.showInputDialog(OrbitalPointPanel.this, "True Anomaly:", "True Anomaly Dialog", JOptionPane.PLAIN_MESSAGE, null, null, Math.toDegrees(orbitalPoint.getKeplerianElements().getTrueAnomaly()));
 	                    if (newTheta instanceof String && ((String) newTheta).length()>0) {
 	                        try {
-	                            userPointService.updateUserOrbitalPoint((UserOrbitalPoint) point, Math.toRadians(Double.valueOf((String) newTheta)));
+	                            userPointService.updateUserOrbitalPoint((UserOrbitalPoint) point, Math.toRadians(Double.valueOf((String) newTheta)), movingObject);
 	                        } catch (NumberFormatException nfe) {
 	                            JOptionPane.showMessageDialog(OrbitalPointPanel.this,
 	                                    "Incorrect angle",

@@ -5,27 +5,29 @@ package com.momega.spacesimulator.json;
 
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.KeplerianOrbit;
+import com.momega.spacesimulator.model.MovingObject;
 
 /**
  * @author martin
  *
  */
-public class KeplerianOrbitSerializer implements Serializer<KeplerianOrbit> {
+public class KeplerianOrbitSerializer extends AbstractSerializer<KeplerianOrbit> {
+	
+	public KeplerianOrbitSerializer() {
+		super(KeplerianOrbit.class);
+	}
+
+	private static final String CENTRAL_OBJECT = "centralObject";
 
 	@Override
 	public void write(JsonObject object, KeplerianOrbit value) {
-		object.addProperty("centralObject", value.getCentralObject().getName());
+		object.addProperty(CENTRAL_OBJECT, value.getCentralObject().getName());
 	}
 
 	@Override
 	public void read(JsonObject object, KeplerianOrbit value) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public Class<?> getClass(JsonObject object) {
-		return KeplerianOrbit.class;
+		MovingObject mo = getNamedObject(object, CENTRAL_OBJECT);
+		value.setCentralObject(mo);
 	}
 
 }

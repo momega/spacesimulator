@@ -25,8 +25,6 @@ public class ApsisService {
         apsis.setType(apsisType);
         apsis.setName(apsisType.getShortcut() + " of " + movingObject.getName());
         apsis.setVisible(movingObject instanceof Spacecraft);
-        //apsis.setVisible(true);
-        apsis.setMovingObject(movingObject);
 
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setKeplerianOrbit(movingObject.getKeplerianElements().getKeplerianOrbit());

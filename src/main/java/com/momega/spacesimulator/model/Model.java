@@ -13,10 +13,10 @@ public class Model {
 
     private Timestamp time;
     private BigDecimal warpFactor;
-    private Camera camera;
     protected final List<MovingObject> movingObjects = new ArrayList<>();
-    private SphereOfInfluence rootSoi;
     private boolean runningHeadless;
+    private SphereOfInfluence rootSoi;
+    private Camera camera;
 
     public Camera getCamera() {
         return camera;

@@ -108,7 +108,6 @@ public class TargetService {
         if (intersections.isEmpty()) {
             for(int i=0; i<angles.length; i++) {
                 OrbitIntersection intersection = new OrbitIntersection();
-                intersection.setMovingObject(spacecraft);
                 intersections.add(intersection);
                 KeplerianElements keplerianElements = new KeplerianElements();
                 intersection.setKeplerianElements(keplerianElements);

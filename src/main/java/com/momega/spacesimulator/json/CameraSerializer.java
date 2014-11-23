@@ -5,27 +5,29 @@ package com.momega.spacesimulator.json;
 
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.PositionProvider;
 
 /**
  * @author martin
  *
  */
-public class CameraSerializer implements Serializer<Camera> {
+public class CameraSerializer extends AbstractSerializer<Camera> {
+	
+	private static final String TARGET_OBJECT = "targetObject";
+
+	public CameraSerializer() {
+		super(Camera.class);
+	}
 
 	@Override
 	public void write(JsonObject object, Camera value) {
-		object.addProperty("targetObject", value.getTargetObject().getName());
+		object.addProperty(TARGET_OBJECT, value.getTargetObject().getName());
 	}
 
 	@Override
 	public void read(JsonObject object, Camera value) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public Class<?> getClass(JsonObject object) {
-		return Camera.class;
+		PositionProvider positionProvider = getPositionProvider(object, TARGET_OBJECT);
+		value.setTargetObject(positionProvider);
 	}
 
 }

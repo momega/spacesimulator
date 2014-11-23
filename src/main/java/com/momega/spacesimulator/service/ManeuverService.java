@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.service;
 
+import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.Maneuver;
 import com.momega.spacesimulator.model.ManeuverPoint;
 import com.momega.spacesimulator.model.PhysicalBody;
@@ -55,7 +56,11 @@ public class ManeuverService {
      */
     public ManeuverPoint createManeuverPoint(PhysicalBody spacecraft, Maneuver maneuver, Timestamp timestamp, boolean start) {
         ManeuverPoint m = new ManeuverPoint();
-        m.setMovingObject(spacecraft);
+        KeplerianElements keplerianElements = new KeplerianElements();
+        if (spacecraft.getKeplerianElements() != null) {
+        	keplerianElements.setKeplerianOrbit(spacecraft.getKeplerianElements().getKeplerianOrbit());
+        	//TODO: compute theta
+        }
         m.setKeplerianElements(spacecraft.getKeplerianElements());
         m.setTimestamp(timestamp);
         m.setVisible(true);

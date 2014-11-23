@@ -25,7 +25,6 @@ public class HistoryPointService {
         HistoryPoint hp = new HistoryPoint();
         hp.setPosition(spacecraft.getPosition());
         hp.setTimestamp(timestamp);
-        hp.setSpacecraft(spacecraft);
         hp.setName(name);
         return hp;
     }

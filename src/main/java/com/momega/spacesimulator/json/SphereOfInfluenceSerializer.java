@@ -4,32 +4,31 @@
 package com.momega.spacesimulator.json;
 
 import com.google.gson.JsonObject;
+import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.SphereOfInfluence;
 
 /**
  * @author martin
  *
  */
-public class SphereOfInfluenceSerializer implements Serializer<SphereOfInfluence> {
+public class SphereOfInfluenceSerializer extends AbstractSerializer<SphereOfInfluence> {
+	
+	private static final String BODY = "body";
 	
 	public SphereOfInfluenceSerializer() {
-		super();
+		super(SphereOfInfluence.class);
 	}
 
 	@Override
 	public void write(JsonObject object, SphereOfInfluence value) {
-		object.addProperty("body", value.getBody().getName());
+		object.addProperty(BODY, value.getBody().getName());
 	}
 
 	@Override
 	public void read(JsonObject object, SphereOfInfluence value) {
-		// TODO Auto-generated method stub
+		CelestialBody cb = getNamedObject(object, BODY);
+		value.setBody(cb);
 		
 	}	
-	
-	@Override
-	public Class<?> getClass(JsonObject object) {
-		return SphereOfInfluence.class;
-	}
 
 }

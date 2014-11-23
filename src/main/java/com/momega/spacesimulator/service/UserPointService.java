@@ -26,15 +26,16 @@ public class UserPointService {
     public void computeUserPoint(UserOrbitalPoint userOrbitalPoint, Timestamp newTimestamp) {
         KeplerianElements keplerianElements = userOrbitalPoint.getKeplerianElements();
 
-        KeplerianElements spacecraftKeplerianElements = userOrbitalPoint.getMovingObject().getKeplerianElements();
-        KeplerianOrbit keplerianOrbit = spacecraftKeplerianElements.getKeplerianOrbit();
+        MovingObject movingObject = userOrbitalPoint.getKeplerianElements().getKeplerianOrbit().getCentralObject();
+        KeplerianElements movingObjectKeplerianElements = movingObject.getKeplerianElements();
+        KeplerianOrbit keplerianOrbit = movingObjectKeplerianElements.getKeplerianOrbit();
         keplerianElements.setKeplerianOrbit(keplerianOrbit);
 
         double theta = keplerianElements.getTrueAnomaly();
         Vector3d position = keplerianElements.getCartesianPosition();
         userOrbitalPoint.setPosition(position);
 
-        Timestamp timestamp = userOrbitalPoint.getMovingObject().getKeplerianElements().timeToAngle(newTimestamp, theta, true);
+        Timestamp timestamp = movingObject.getKeplerianElements().timeToAngle(newTimestamp, theta, true);
         userOrbitalPoint.setTimestamp(timestamp);
     }
 
@@ -48,7 +49,6 @@ public class UserPointService {
     public UserOrbitalPoint createUserOrbitalPoint(PhysicalBody physicalBody, Vector3d modelCoordinates) {
         UserOrbitalPoint userPoint = new UserOrbitalPoint();
         userPoint.setPosition(modelCoordinates);
-        userPoint.setMovingObject(physicalBody);
         userPoint.setVisible(true);
 
         createKeplerianElementsByPosition(physicalBody, userPoint, modelCoordinates);
@@ -60,10 +60,9 @@ public class UserPointService {
     
     public UserOrbitalPoint createUserOrbitalPoint(PhysicalBody physicalBody, String name, double trueAnomaly) {
     	 UserOrbitalPoint userPoint = new UserOrbitalPoint();
-    	 userPoint.setMovingObject(physicalBody);
          userPoint.setVisible(true);
          userPoint.setName(name);
-         updateUserOrbitalPoint(userPoint, trueAnomaly);
+         updateUserOrbitalPoint(userPoint, trueAnomaly, physicalBody);
          Vector3d position = userPoint.getKeplerianElements().getKeplerianOrbit().getCartesianPosition(trueAnomaly);
          userPoint.setPosition(position);
          
@@ -77,21 +76,22 @@ public class UserPointService {
      * @param newPosition new position
      */
     public void updateUserOrbitalPoint(UserOrbitalPoint userOrbitalPoint, Vector3d newPosition) {
-        PhysicalBody spacecraft = (PhysicalBody) userOrbitalPoint.getMovingObject();
+        PhysicalBody physicalBody = (PhysicalBody) userOrbitalPoint.getKeplerianElements().getKeplerianOrbit().getCentralObject();
 
-        createKeplerianElementsByPosition(spacecraft, userOrbitalPoint, newPosition);
+        createKeplerianElementsByPosition(physicalBody, userOrbitalPoint, newPosition);
     }
 
     /**
      * updates the elements of the user orbital point
      * @param userOrbitalPoint the orbital point
      * @param trueAnomaly new true anomaly
+     * @param movingObject the moving object
      */
-    public void updateUserOrbitalPoint(UserOrbitalPoint userOrbitalPoint, Double trueAnomaly) {
+    public void updateUserOrbitalPoint(UserOrbitalPoint userOrbitalPoint, Double trueAnomaly, MovingObject movingObject) {
         Assert.notNull(trueAnomaly);
-        PhysicalBody spacecraft = (PhysicalBody) userOrbitalPoint.getMovingObject();
-        KeplerianOrbit keplerianOrbit = spacecraft.getKeplerianElements().getKeplerianOrbit();
-        createKeplerianElementsByOrbit(spacecraft, userOrbitalPoint, keplerianOrbit, trueAnomaly);
+        PhysicalBody physicalBody = (PhysicalBody) movingObject;
+        KeplerianOrbit keplerianOrbit = physicalBody.getKeplerianElements().getKeplerianOrbit();
+        createKeplerianElementsByOrbit(physicalBody, userOrbitalPoint, keplerianOrbit, trueAnomaly);
     }
 
     protected void createKeplerianElementsByPosition(PhysicalBody physicalBody, UserOrbitalPoint userPoint, Vector3d position) {

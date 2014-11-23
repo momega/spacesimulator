@@ -23,7 +23,7 @@ public class NamedObjectSerializer implements Serializer<NamedObject> {
 
 	@Override
 	public void read(JsonObject object, NamedObject value) {
-		//
+		NamedObjectCache.getInstance().add(value);
 	}
 	
 	@Override
