@@ -10,10 +10,10 @@ import java.util.List;
  */
 public class SphereOfInfluence {
 
-    private CelestialBody body;
+    private transient CelestialBody body;
     private double radius;
     private List<SphereOfInfluence> children = new ArrayList<>();
-    private SphereOfInfluence parent;
+    private transient SphereOfInfluence parent;
 
     public CelestialBody getBody() {
         return body;

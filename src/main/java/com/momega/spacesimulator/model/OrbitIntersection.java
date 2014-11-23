@@ -5,7 +5,7 @@ package com.momega.spacesimulator.model;
  */
 public class OrbitIntersection extends AbstractOrbitalPoint  {
 
-    private MovingObject targetObject;
+    private transient MovingObject targetObject;
 
     public MovingObject getTargetObject() {
         return targetObject;

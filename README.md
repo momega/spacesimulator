@@ -19,6 +19,8 @@ Features
 * 7 planets and their moon included in model
 * User defined points
 * Take a screenshot
+* Headless computations
+* Sphere of Influence 
 
 Screenshots
 ===========

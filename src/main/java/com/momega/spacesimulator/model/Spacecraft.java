@@ -13,10 +13,9 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
 
     private List<SpacecraftSubsystem> subsystems = new ArrayList<>();
     private List<Maneuver> maneuvers = new ArrayList<>();
-    private Maneuver currentManeuver;
+    private transient Maneuver currentManeuver;
     private Target target;
     private Vector3d thrust;
-    
     private List<HistoryPoint> namedHistoryPoints = new ArrayList<>();
 
     public List<HistoryPoint> getNamedHistoryPoints() {

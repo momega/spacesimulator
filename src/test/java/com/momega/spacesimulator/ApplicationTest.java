@@ -14,7 +14,7 @@ public class ApplicationTest {
         Application application = Application.getInstance();
         application.init(0);
         for(int i=0; i<86400; i++) {
-            Application.getInstance().getModelWorker().next(true);
+            application.next(false);
         }
         application.dispose();
     }

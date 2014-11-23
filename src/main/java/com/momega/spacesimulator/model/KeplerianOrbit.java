@@ -21,7 +21,7 @@ public class KeplerianOrbit {
 
     private static final Logger logger = LoggerFactory.getLogger(KeplerianOrbit.class);
 
-    private MovingObject centralObject;
+    private transient MovingObject centralObject;
     private double semimajorAxis; // (a)
     private double eccentricity; // epsilon
     private double argumentOfPeriapsis; // lowercase omega

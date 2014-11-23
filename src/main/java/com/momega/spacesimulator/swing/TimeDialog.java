@@ -316,7 +316,7 @@ public class TimeDialog extends JDialog {
         @Override
         protected Void doInBackground() throws Exception {
             while(ModelHolder.getModel().getTime().compareTo(endTime)<=0) {
-                Application.getInstance().getModelWorker().next(true);
+                Application.getInstance().next(true);
                 publish(ModelHolder.getModel().getTime());
                 if (Thread.interrupted()) {
                 	return null;

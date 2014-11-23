@@ -8,7 +8,7 @@ public class HistoryPoint extends NamedObject implements PositionProvider {
 
     private Vector3d position;
     private Timestamp timestamp;
-    private Spacecraft spacecraft;
+    private transient Spacecraft spacecraft;
 
     public Vector3d getPosition() {
         return position;

@@ -14,7 +14,7 @@ public abstract class AbstractOrbitalPoint extends NamedObject implements Positi
     private Timestamp timestamp;
     private KeplerianElements keplerianElements;
     private boolean visible;
-    private MovingObject movingObject;
+    private transient MovingObject movingObject;
 
     @Override
     public Vector3d getPosition() {

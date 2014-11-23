@@ -42,9 +42,9 @@ public class Application {
     public <T> T getService(Class<T> clazz) {
         return getApplicationContext().getBean(clazz);
     }
-
-    public ModelWorker getModelWorker() {
-        return modelWorker;
+    
+    public void next(boolean runningHeadless) {
+    	modelWorker.next(runningHeadless);
     }
 
     public Model init(long seconds) {

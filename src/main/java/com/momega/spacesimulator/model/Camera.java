@@ -8,7 +8,7 @@ package com.momega.spacesimulator.model;
 public class Camera {
 
     private Vector3d position;
-    private PositionProvider targetObject;
+    private transient PositionProvider targetObject;
     private Orientation oppositeOrientation;
     private double distance;
 

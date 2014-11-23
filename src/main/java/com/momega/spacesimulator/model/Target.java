@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class Target {
 
-    private CelestialBody targetBody;
+    private transient CelestialBody targetBody;
     private List<OrbitIntersection> orbitIntersections = new ArrayList<>();
     private transient Double angle = null;
     private KeplerianElements keplerianElements;
