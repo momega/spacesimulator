@@ -49,12 +49,13 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new UserPointController());
         controller.addController(new TargetController(window));
         controller.addController(new TakeScreenshotController());
-        controller.addController(new CameraController(model.getCamera()));
+        controller.addController(new CameraController());
         controller.addController(new TimeController(window));
         controller.addController(new PerspectiveController(mr));
         controller.addController(new ToolbarController());
         controller.addController(new PreferencesController());
         controller.addController(new InterplanetaryFlightController());
+        controller.addController(new LoadSaveController());
         window.openWindow(mr, controller);
     }
     
@@ -72,10 +73,19 @@ public class MainWindow extends DefaultWindow {
     	JMenuItem openItem = new JMenuItem("Open...");
     	openItem.setMnemonic(KeyEvent.VK_O);
     	openItem.setIcon(SwingUtils.createImageIcon("/images/page_go.png"));
+    	openItem.setActionCommand(LoadSaveController.LOAD_COMMAND);
+    	openItem.addActionListener(controller);
+    	
     	JMenuItem saveItem = new JMenuItem("Save");
+    	saveItem.setActionCommand(LoadSaveController.SAVE_COMMAND);
     	saveItem.setMnemonic(KeyEvent.VK_S);
+    	saveItem.addActionListener(controller);
     	saveItem.setIcon(SwingUtils.createImageIcon("/images/page_save.png"));
+    	
     	JMenuItem saveAsItem = new JMenuItem("Save As...");
+    	saveAsItem.setActionCommand(LoadSaveController.SAVE_AS_COMMAND);
+    	saveAsItem.addActionListener(controller);
+    	
         JMenuItem saveScreenshotItem = new JMenuItem("Save Screenshot");
         saveScreenshotItem.setActionCommand(TakeScreenshotController.COMMAND);
         saveScreenshotItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_DOWN_MASK));

@@ -1,21 +1,23 @@
 package com.momega.spacesimulator.opengl;
 
-import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.UserOrbitalPoint;
-import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.renderer.ModelRenderer;
-import com.momega.spacesimulator.renderer.PerspectiveRenderer;
-import com.momega.spacesimulator.renderer.RendererModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.awt.Point;
+import java.io.File;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
-import java.awt.*;
-import java.io.File;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.renderer.ModelRenderer;
+import com.momega.spacesimulator.renderer.RendererModel;
 
 /**
  * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
@@ -34,7 +36,6 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     public MainGLRenderer() {
         this.renderer = new ModelRenderer();
-        this.renderer.addRenderer(new PerspectiveRenderer(this));
     }
 
     @Override
@@ -64,6 +65,18 @@ public class MainGLRenderer extends AbstractGLRenderer {
         Point draggedPoint = RendererModel.getInstance().getDraggedPoint();
         if (userOrbitalPoint!=null && draggedPoint!=null) {
             RendererModel.getInstance().dragUserPoint(drawable);
+        }
+        
+        Model newModel = RendererModel.getInstance().getNewModel();
+        if (newModel != null) {
+        	ModelHolder.replaceModel(newModel);
+        	RendererModel.getInstance().setNewModel(null);
+        	renderer.clearAllRenderers();
+        	renderer.createRenderers();
+        	GL2 gl = drawable.getGL().getGL2();
+        	renderer.dispose(gl);
+        	renderer.init(gl);
+        	RendererModel.getInstance().replaceMovingObjectsModel();
         }
     }
 

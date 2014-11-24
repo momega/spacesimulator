@@ -11,7 +11,7 @@ import com.momega.spacesimulator.opengl.GLUtils;
  * Simple renderer of the spacecraft
  * Created by martin on 5/6/14.
  */
-public class SpacecraftRenderer extends CompositeRenderer {
+public class SpacecraftRenderer extends AbstractRenderer {
 
     private final double size = 1d;
     
@@ -21,12 +21,9 @@ public class SpacecraftRenderer extends CompositeRenderer {
 
     public SpacecraftRenderer(Spacecraft spacecraft) {
         this.spacecraft = spacecraft;
-
-        addRenderer(new SpacecraftBitmapRenderer(spacecraft));
     }
 
     public void draw(GLAutoDrawable drawable) {
-        super.draw(drawable);
         if (RendererModel.getInstance().isVisibleOnScreen(spacecraft)) {
             GL2 gl = drawable.getGL().getGL2();
             

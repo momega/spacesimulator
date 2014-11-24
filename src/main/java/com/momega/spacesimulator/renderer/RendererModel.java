@@ -17,6 +17,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
 import java.awt.*;
+import java.io.File;
 import java.util.*;
 import java.util.List;
 
@@ -41,21 +42,19 @@ public class RendererModel {
     private MovingObjectsModel movingObjectsModel;
 
     private final ManeuverService maneuverService;
-
     private final UserPointService userPointService;
-
     private final TargetService targetService;
     
     private boolean spacecraftVisible; 
     private boolean celestialVisible;
     private boolean historyPointsVisible;
     private boolean pointsVisible;
-
     private boolean takeScreenshot = false;
-
     private Point mouseCoordinates = null;
     private UserOrbitalPoint selectedUserOrbitalPoint;
     private Point draggedPoint;
+    private File modelFile;
+    private Model newModel;
 
     private RendererModel() {
         super();
@@ -281,6 +280,12 @@ public class RendererModel {
     	movingObjectsModel.setSelectedItem(positionProvider);
     }
     
+    public void replaceMovingObjectsModel() {
+    	movingObjectsModel.setSelectedItem(null);
+    	movingObjectsModel.replaceElements(selectMovingObjects());
+    	movingObjectsModel.setSelectedItem(ModelHolder.getModel().getCamera().getTargetObject());
+    }
+    
     public PositionProvider getSelectedItem() {
     	return (PositionProvider) movingObjectsModel.getSelectedItem();
     }
@@ -437,4 +442,20 @@ public class RendererModel {
     public Point getDraggedPoint() {
         return draggedPoint;
     }
+    
+    public File getModelFile() {
+		return modelFile;
+	}
+    
+    public void setModelFile(File modelFile) {
+		this.modelFile = modelFile;
+	}
+    
+    public void setNewModel(Model newModel) {
+		this.newModel = newModel;
+	}
+    
+    public Model getNewModel() {
+		return newModel;
+	}
 }

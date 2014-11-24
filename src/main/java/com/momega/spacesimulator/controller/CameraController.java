@@ -1,11 +1,13 @@
 package com.momega.spacesimulator.controller;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +22,7 @@ import java.util.List;
 /**
  * Created by martin on 5/8/14.
  */
-public class CameraController extends SimpleCameraController {
+public class CameraController extends AbstractCameraConroller {
 
     private static final Logger logger = LoggerFactory.getLogger(CameraController.class);
 
@@ -28,8 +30,8 @@ public class CameraController extends SimpleCameraController {
 
     private UserOrbitalPoint selectedUserOrbitalPoint = null;
 
-    public CameraController(Camera camera) {
-        super(camera);
+    public CameraController() {
+        super();
     }
 
     @Override
@@ -99,6 +101,11 @@ public class CameraController extends SimpleCameraController {
             }
         }
         super.changeDistance(factor);
+    }
+    
+    @Override
+    public Camera getCamera() {
+    	return ModelHolder.getModel().getCamera();
     }
 
 }

@@ -19,4 +19,9 @@ public abstract class AbstractObjectsModel<T> extends DefaultComboBoxModel<T> {
 			addElement(obj);
 		}
 	}
+	
+	public void replaceElements(List<T> list) {
+		removeAllElements();
+		addElements(list);
+	}
 }

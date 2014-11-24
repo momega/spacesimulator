@@ -148,7 +148,9 @@ public class TargetController extends AbstractController {
     		PositionProvider positionProvider = (PositionProvider) RendererModel.getInstance().getMovingObjectsModel().getSelectedItem();
     		if (positionProvider != null) {
 	    		ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(positionProvider);
-	    		select(viewCoordinates);
+	    		if (viewCoordinates != null) {
+	    			select(viewCoordinates);
+	    		}
     		}
     	} else if (DETAIL_POSITION_PROVIDER.equals(e.getActionCommand())) {
     		PositionProvider positionProvider = (PositionProvider) RendererModel.getInstance().getMovingObjectsModel().getSelectedItem();

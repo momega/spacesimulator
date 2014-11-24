@@ -16,7 +16,11 @@ public class CompositeRenderer implements Renderer {
     public void addRenderer(Renderer r) {
         renderers.add(r);
     }
-
+    
+    public void clearAllRenderers() {
+    	renderers.clear();
+    }
+    
     @Override
     public void init(GL2 gl) {
         for(Renderer r : renderers) {

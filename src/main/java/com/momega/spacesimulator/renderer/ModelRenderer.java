@@ -16,7 +16,11 @@ public class ModelRenderer extends CompositeRenderer {
 
     public ModelRenderer() {
         logger.info("initializing renderers");
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+        createRenderers();
+    }
+    
+    public void createRenderers() {
+    	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
             if (!TrajectoryType.STATIC.equals(dp.getTrajectory().getType())) {
                 addRenderer(new KeplerianTrajectoryRenderer(dp));
             }
@@ -50,8 +54,6 @@ public class ModelRenderer extends CompositeRenderer {
 
                 addRenderer(new NamedHistoryRenderer(spacecraft));
                 addRenderer(new HistoryPointBitmapRenderer(spacecraft));
-
-                //addRenderer(new TestingTextRenderer(spacecraft));
 
                 addRenderer(new SpacecraftOrbitPointsRenderer(spacecraft));
                 addRenderer(new OrbitIntersectionBitmapRenderer(spacecraft));

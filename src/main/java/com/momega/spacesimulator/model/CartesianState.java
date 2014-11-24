@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import java.math.BigDecimal;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -139,10 +141,18 @@ public class CartesianState {
         keplerianOrbit.setAscendingNode(OMEGA);
         keplerianOrbit.setArgumentOfPeriapsis(omega);
         keplerianElements.setTrueAnomaly(theta);
+        
+        double meanMotion;
+        if (keplerianOrbit.isHyperbolic()) {
+            meanMotion = Math.sqrt(-mi / (a * a * a));
+        } else {
+            meanMotion = Math.sqrt(mi / (a * a * a));
+        }
+        double period = 2* Math.PI / meanMotion;
+        keplerianOrbit.setPeriod(BigDecimal.valueOf(period));
 
         Timestamp TT = keplerianElements.timeToAngle(newTimestamp, 0.0, false);
         keplerianOrbit.setTimeOfPeriapsis(TT);
-
 
         return keplerianElements;
     }

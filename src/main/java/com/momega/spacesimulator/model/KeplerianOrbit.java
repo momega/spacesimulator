@@ -1,16 +1,15 @@
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
  * Keplerian orbit contains all elements which defines single orbit. There multi infinite positions
@@ -28,9 +27,9 @@ public class KeplerianOrbit {
     private double inclination; // i
     private double ascendingNode; // uppercase omega
     private Timestamp timeOfPeriapsis; // seconds
+    private BigDecimal period; // in seconds
 
     // computed elements
-    private transient BigDecimal period; // in seconds
     private transient Double meanMotion; // n
 
     /**
@@ -117,18 +116,7 @@ public class KeplerianOrbit {
 
     public Double getMeanMotion() {
         if (meanMotion == null) {
-            if (period != null) {
-                meanMotion = 2* Math.PI / period.doubleValue();
-            } else {
-                Assert.isInstanceOf(PhysicalBody.class, getCentralObject());
-                PhysicalBody body = (PhysicalBody) getCentralObject();
-                double mi = body.getMass() * MathUtils.G;
-                if (isHyperbolic()) {
-                    meanMotion = Math.sqrt(-mi / (getSemimajorAxis() * getSemimajorAxis() * getSemimajorAxis()));
-                } else {
-                    meanMotion = Math.sqrt(mi / (getSemimajorAxis() * getSemimajorAxis() * getSemimajorAxis()));
-                }
-            }
+        	meanMotion = 2* Math.PI / period.doubleValue();
         }
         return meanMotion;
     }
@@ -146,9 +134,6 @@ public class KeplerianOrbit {
      * @return the period in seconds
      */
     public BigDecimal getPeriod() {
-        if (period == null) {
-            period = BigDecimal.valueOf(2* Math.PI / getMeanMotion());
-        }
         return period;
     }
 

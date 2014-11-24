@@ -13,5 +13,9 @@ public final class ModelHolder {
     public static Model getModel() {
         return model;
     }
+    
+    public static void replaceModel(Model newModel) {
+    	model = newModel;
+    }
 
 }
