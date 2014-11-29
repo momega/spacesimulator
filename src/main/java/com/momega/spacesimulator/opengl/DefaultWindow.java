@@ -1,28 +1,33 @@
 package com.momega.spacesimulator.opengl;
 
-import com.jogamp.opengl.util.AnimatorBase;
-import com.jogamp.opengl.util.FPSAnimator;
-import com.momega.spacesimulator.controller.Controller;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.awt.GLCanvas;
+import javax.swing.JFrame;
 import javax.swing.JMenuBar;
-import javax.swing.*;
+import javax.swing.JPopupMenu;
+import javax.swing.JToolBar;
 
-import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.jogamp.opengl.util.AnimatorBase;
+import com.jogamp.opengl.util.FPSAnimator;
+import com.momega.spacesimulator.controller.Controller;
 
 /**
  * This abstract class provides basic OPENGL window, with the animator. It also registered the {@link AbstractGLRenderer}
  * and {@link com.momega.spacesimulator.controller.Controller}
  * Created by martin on 4/19/14.
  */
-public abstract class DefaultWindow {
+public abstract class DefaultWindow extends WindowAdapter {
 
     private static final int WINDOW_WIDTH = 1280;  // width of the drawable
     private static final int WINDOW_HEIGHT = 640; // height of the drawable
@@ -32,12 +37,10 @@ public abstract class DefaultWindow {
     private GLCanvas canvas;
     private AnimatorBase animator;
     private String title;
-    private final boolean exitQuestion;
     private JFrame frame;
 
-    protected DefaultWindow(String title, boolean exitQuestion) {
+    protected DefaultWindow(String title) {
         this.title = title;
-        this.exitQuestion = exitQuestion;
     }
 
     public void openWindow(final AbstractGLRenderer renderer, final Controller controller) {
@@ -95,8 +98,7 @@ public abstract class DefaultWindow {
                     frame.addWindowListener(new WindowAdapter() {
                         @Override
                         public void windowClosing(WindowEvent e) {
-                            logger.info("Closing window");
-                            stopAnimator();
+                        	DefaultWindow.this.windowClosing(controller);
                         }
                     });
 
@@ -117,6 +119,11 @@ public abstract class DefaultWindow {
 
         sleep(500);
         logger.info("main method finished");
+    }
+    
+    public void windowClosing(Controller controller) {
+    	logger.info("Closing window");
+    	stopAnimator();
     }
     
     protected abstract JMenuBar createMenuBar(Controller controller);
@@ -142,18 +149,12 @@ public abstract class DefaultWindow {
     public JFrame getFrame() {
 		return frame;
 	}
+    
+    public String getTitle() {
+		return title;
+	}
 
     public void stopAnimator() {
-    	if (exitQuestion) {
-	    	int option = JOptionPane.showConfirmDialog(
-	    		    frame,
-	    		    "Do you want to save the simulation before exit?", "Save the simulation?", JOptionPane.YES_NO_CANCEL_OPTION);
-	    	
-	    	if (option != JOptionPane.YES_OPTION) {
-	    		return;
-	    	}
-    	}
-    	
     	logger.info("Stopping animator thread");
         // Use a dedicate thread to run the stop() to ensure that the
         // animator stops before program exits.

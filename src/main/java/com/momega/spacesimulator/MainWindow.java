@@ -1,9 +1,41 @@
 package com.momega.spacesimulator;
 
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jogamp.newt.event.KeyEvent;
 import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.controller.*;
-import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.controller.CameraController;
+import com.momega.spacesimulator.controller.Controller;
+import com.momega.spacesimulator.controller.EventBusController;
+import com.momega.spacesimulator.controller.InterplanetaryFlightController;
+import com.momega.spacesimulator.controller.LoadController;
+import com.momega.spacesimulator.controller.PerspectiveController;
+import com.momega.spacesimulator.controller.PreferencesController;
+import com.momega.spacesimulator.controller.QuitController;
+import com.momega.spacesimulator.controller.SaveController;
+import com.momega.spacesimulator.controller.TakeScreenshotController;
+import com.momega.spacesimulator.controller.TargetController;
+import com.momega.spacesimulator.controller.TimeController;
+import com.momega.spacesimulator.controller.ToolbarController;
+import com.momega.spacesimulator.controller.UserPointController;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.MainGLRenderer;
@@ -11,14 +43,6 @@ import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.swing.Icons;
 import com.momega.spacesimulator.swing.MovingObjectListRenderer;
 import com.momega.spacesimulator.swing.SwingUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
-
-import java.awt.*;
-import java.awt.event.InputEvent;
 
 
 /**
@@ -30,15 +54,15 @@ public class MainWindow extends DefaultWindow {
 	private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
 	
     public MainWindow(String title) {
-        super(title, true);
+        super(title);
     }
 
     public static void main(String[] args) {
-        MainWindow window = new MainWindow("Space Simulator");
+        final MainWindow window = new MainWindow("Space Simulator");
         EventBusController controller = EventBusController.getInstance();
 
         Application application = Application.getInstance();
-        Model model = application.init(0);
+        application.init(0);
         
         MainGLRenderer mr = new MainGLRenderer();
         controller.addController(new QuitController(window));
@@ -54,6 +78,25 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new LoadController());
         controller.addController(new SaveController());
         window.openWindow(mr, controller);
+        
+        final RendererModel rendererModel = RendererModel.getInstance();
+        
+        rendererModel.addPropertyChangeListener(RendererModel.MODEL_FILE, new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				File file = (File) evt.getNewValue();
+				String title = window.getTitle();
+				if (file != null) {
+					title += " (" + file.getAbsolutePath() + ")";
+				}
+				window.getFrame().setTitle(title);
+			}
+		});
+    }
+    
+    @Override
+    public void windowClosing(Controller controller) {
+    	controller.actionPerformed(new ActionEvent(this, 0, QuitController.COMMAND));
     }
     
     @Override

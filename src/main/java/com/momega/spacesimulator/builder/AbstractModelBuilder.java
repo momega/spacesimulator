@@ -2,9 +2,6 @@ package com.momega.spacesimulator.builder;
 
 import java.math.BigDecimal;
 
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.service.ManeuverService;
-import com.momega.spacesimulator.service.TargetService;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
@@ -13,9 +10,31 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.KeplerianOrbit;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.Maneuver;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Orientation;
+import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.Ring;
+import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.SpacecraftSubsystem;
+import com.momega.spacesimulator.model.SphereOfInfluence;
+import com.momega.spacesimulator.model.Trajectory;
+import com.momega.spacesimulator.model.TrajectoryType;
+import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.service.HistoryPointService;
 import com.momega.spacesimulator.service.KeplerianPropagator;
+import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
@@ -28,7 +47,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModelBuilder.class);
 
-    protected Model model = ModelHolder.getModel();
+    protected Model model = new Model();
 
     private static final double UNIVERSE_SIZE = MathUtils.AU * 100; 
     
@@ -49,15 +68,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     private TargetService targetService;
 
     /**
-     * Returns newly created instance
-     * @return the instance of the model
-     */
-    public Model getModel() {
-        return model;
-    }
-
-    /**
-     * Initialize model
+     * Initialize model and  returns the instance
      */
     public final Model build() {
         initTime();
@@ -344,7 +355,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @return
      */
     public Maneuver addManeuver(Spacecraft spacecraft, String name, Double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
-        Maneuver maneuver = maneuverService.createManeuver(spacecraft, name, getModel().getTime(), startTime, duration, throttle, throttleAlpha, throttleDelta);
+        Maneuver maneuver = maneuverService.createManeuver(spacecraft, name, model.getTime(), startTime, duration, throttle, throttleAlpha, throttleDelta);
         spacecraft.getManeuvers().add(maneuver);
         return maneuver;
     }

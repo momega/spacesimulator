@@ -33,7 +33,7 @@ public class EventBusController extends AbstractController {
 	}
 
     private final List<Controller> controllers = new ArrayList<>();
-    private final Queue<EventObject> events = new LinkedList<>();
+    private final List<EventObject> events = new ArrayList<>();
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -144,15 +144,13 @@ public class EventBusController extends AbstractController {
     }
     
     public void dispatchDelayedEvents(GLAutoDrawable drawable) {
-    	EventObject event = events.poll();
-    	while(event != null) {
+    	while(!events.isEmpty()) {
+    		EventObject event = events.remove(0);
     		DelayedActionEvent delayed = new DelayedActionEvent(event.getSource(), drawable, event);
 	    	for(Controller controller : controllers) {
 	    		controller.delayedActionPeformed(delayed);
 	    	}
-	    	event = events.poll();
     	}
-    	
     }
     
     public void fireDelayedEvent(EventObject e) {

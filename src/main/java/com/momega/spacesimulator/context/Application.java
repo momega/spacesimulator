@@ -29,10 +29,12 @@ public class Application {
 
     private final ApplicationContext applicationContext;
     private final ModelWorker modelWorker;
+	private final ModelBuilder modelBuilder;
 
     private Application() {
         applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
         modelWorker = applicationContext.getBean(ModelWorker.class);
+        modelBuilder = applicationContext.getBean(ModelBuilder.class);
     }
 
     public ApplicationContext getApplicationContext() {
@@ -47,19 +49,18 @@ public class Application {
     	modelWorker.next(runningHeadless);
     }
 
-    public Model init(long seconds) {
-        ModelBuilder modelBuilder = applicationContext.getBean(ModelBuilder.class);
-        modelBuilder.build();
+    public void init(long seconds) {
+        Model model = modelBuilder.build();
+        ModelHolder.replaceModel(model);
 
-        logger.info("time = {}", TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
-        Timestamp showTime = ModelHolder.getModel().getTime().add(BigDecimal.valueOf(seconds));
+        logger.info("time = {}", TimeUtils.timeAsString(model.getTime()));
+        Timestamp showTime = model.getTime().add(BigDecimal.valueOf(seconds));
         logger.info("show time = {}", TimeUtils.timeAsString(showTime));
-        while(ModelHolder.getModel().getTime().compareTo(showTime)<=0) {
+        while(model.getTime().compareTo(showTime)<=0) {
         	modelWorker.next(true);
         }
         
         logger.info("model data built");
-        return ModelHolder.getModel();
     }
 
     public void dispose() {

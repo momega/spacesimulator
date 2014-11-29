@@ -17,9 +17,10 @@ public class EmptyModelBuilder extends AbstractModelBuilder {
 	@Override
 	protected void initPlanets() {
 		empty = new BaryCentre();
-        updateDynamicalPoint(empty, "Center", 0, 0, 1, 0, null, null);
+        updateDynamicalPoint(empty, "", 0, 0, 1, 0, null, null);
         setCentralPoint(empty);
         createTrajectory(empty, new double[] {1, 1, 1});
+        addMovingObject(empty);
 	}
 
 	@Override

@@ -13,6 +13,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.context.Application;
@@ -26,6 +28,8 @@ import com.momega.spacesimulator.service.ModelSerializer;
  *
  */
 public class SaveController extends AbstractController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SaveController.class);
 	
 	public static final String SAVE_COMMAND = "save";
 	public static final String SAVE_AS_COMMAND = "save_as";
@@ -68,6 +72,7 @@ public class SaveController extends AbstractController {
 	}
 	
 	public void saveFile(File file) {
+		logger.info("file = {}", file);
 		FileWriter fileWriter = null;
 		Assert.notNull(file);
 		try {

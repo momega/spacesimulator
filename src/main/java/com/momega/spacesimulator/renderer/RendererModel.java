@@ -1,6 +1,8 @@
 package com.momega.spacesimulator.renderer;
 
 import java.awt.Point;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,7 +51,9 @@ import com.momega.spacesimulator.swing.MovingObjectsModel;
  */
 public class RendererModel {
 
-    private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
+	public static final String MODEL_FILE = "modelFile";
+
+	private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
 
     public final static int MIN_TARGET_SIZE = 9;
     
@@ -77,6 +81,7 @@ public class RendererModel {
     private boolean reloadModelRequested;
 
 	private UserOrbitalPoint selectedUserOrbitalPoint;
+	private PropertyChangeSupport propertyChangeSupport;
 
     private RendererModel() {
         super();
@@ -93,6 +98,8 @@ public class RendererModel {
 		fileChooser = new JFileChooser();
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Space Simulator Data (.json)", "json"));
 		fileChooser.setFileFilter(fileChooser.getChoosableFileFilters()[1]);
+		
+		this.propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
     public static RendererModel getInstance() {
@@ -449,7 +456,9 @@ public class RendererModel {
 	}
     
     public void setModelFile(File modelFile) {
+		File oldFile = this.modelFile;
 		this.modelFile = modelFile;
+		firePropertyChange(MODEL_FILE, oldFile, this.modelFile);
 	}
 	
 	public JFileChooser getFileChooser() {
@@ -463,5 +472,17 @@ public class RendererModel {
 	public void setReloadModelRequested(boolean reloadModelRequested) {
 		this.reloadModelRequested = reloadModelRequested;
 	}
+	
+	public void addPropertyChangeListener(String propertyName, final PropertyChangeListener listener) {
+		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
+	}
+
+	public void removePropertyChangeListener(String propertyName, final PropertyChangeListener listener) {
+		propertyChangeSupport.removePropertyChangeListener(propertyName, listener);
+	}
+
+	protected void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
+		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+	}	
 
 }

@@ -20,7 +20,7 @@ import com.momega.spacesimulator.renderer.DefaultCameraPositionRenderer;
 public class TestingWindow extends DefaultWindow {
 
     public TestingWindow(String title) {
-        super(title, false);
+        super(title);
     }
 
     public static void main(String[] args) {
