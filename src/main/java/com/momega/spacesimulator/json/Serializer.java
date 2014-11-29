@@ -16,4 +16,6 @@ public interface Serializer<T> {
 	void read(JsonObject object, T value);
 	
 	Class<?> getClass(JsonObject object);
+	
+	Class<?> getSuperClass(JsonObject object);
 }

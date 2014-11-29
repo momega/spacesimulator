@@ -1,25 +1,47 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.service.ManeuverService;
-import com.momega.spacesimulator.service.TargetService;
-import com.momega.spacesimulator.service.UserPointService;
-import com.momega.spacesimulator.swing.MovingObjectsModel;
+import java.awt.Point;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-
-import java.awt.*;
-import java.io.File;
-import java.util.*;
-import java.util.List;
+import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.AbstractOrbitalPoint;
+import com.momega.spacesimulator.model.BaryCentre;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.ManeuverPoint;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.OrbitIntersection;
+import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.TargetService;
+import com.momega.spacesimulator.service.UserPointService;
+import com.momega.spacesimulator.swing.MovingObjectsModel;
 
 /**
  * The renderer model
@@ -49,12 +71,12 @@ public class RendererModel {
     private boolean celestialVisible;
     private boolean historyPointsVisible;
     private boolean pointsVisible;
-    private boolean takeScreenshot = false;
-    private Point mouseCoordinates = null;
-    private UserOrbitalPoint selectedUserOrbitalPoint;
-    private Point draggedPoint;
+    
     private File modelFile;
-    private Model newModel;
+    private final JFileChooser fileChooser;
+    private boolean reloadModelRequested;
+
+	private UserOrbitalPoint selectedUserOrbitalPoint;
 
     private RendererModel() {
         super();
@@ -68,6 +90,9 @@ public class RendererModel {
         targetService = Application.getInstance().getService(TargetService.class);
 		movingObjectsModel = new MovingObjectsModel(selectMovingObjects());
 		movingObjectsModel.setSelectedItem(ModelHolder.getModel().getCamera().getTargetObject());
+		fileChooser = new JFileChooser();
+		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Space Simulator Data (.json)", "json"));
+		fileChooser.setFileFilter(fileChooser.getChoosableFileFilters()[1]);
     }
 
     public static RendererModel getInstance() {
@@ -373,14 +398,6 @@ public class RendererModel {
     	return result;
     }
 
-    public boolean isTakeScreenshot() {
-        return takeScreenshot;
-    }
-
-    public void setTakeScreenshot(boolean takeScreenshot) {
-        this.takeScreenshot = takeScreenshot;
-    }
-
     protected <T extends PositionProvider> List<T> sortNamedObjects(List<T> list) {
         Collections.sort(list, new Comparator<T>() {
 			@Override
@@ -389,14 +406,6 @@ public class RendererModel {
 			}
         });
         return list;
-    }
-
-    public void setMouseCoordinates(Point mouseCoordinates) {
-        this.mouseCoordinates = mouseCoordinates;
-    }
-
-    public Point getMouseCoordinates() {
-        return mouseCoordinates;
     }
 
     public void createUserPoint(GLAutoDrawable drawable, Point point) {
@@ -415,7 +424,7 @@ public class RendererModel {
         }
     }
 
-    public void dragUserPoint(GLAutoDrawable drawable) {
+    public void dragUserPoint(GLAutoDrawable drawable, UserOrbitalPoint userOrbitalPoint, Point draggedPoint) {
         GL2 gl = drawable.getGL().getGL2();
         Map<Integer, ScreenCoordinates> screenCoordinatesMap = GLUtils.getStencilPosition(gl, draggedPoint, RendererModel.MIN_TARGET_SIZE);
         if (screenCoordinatesMap.size()==1) { // only one object is selected
@@ -423,7 +432,7 @@ public class RendererModel {
             Vector3d modelCoordinates = GLUtils.getModelCoordinates(gl, screenCoordinates);
 
             logger.info("dragged model coordinates = {}", modelCoordinates.asArray());
-            userPointService.updateUserOrbitalPoint(selectedUserOrbitalPoint, modelCoordinates);
+            userPointService.updateUserOrbitalPoint(userOrbitalPoint, modelCoordinates);
         }
     }
 
@@ -434,14 +443,6 @@ public class RendererModel {
     public UserOrbitalPoint getSelectedUserOrbitalPoint() {
         return selectedUserOrbitalPoint;
     }
-
-    public void setDraggedPoint(Point draggedPoint) {
-        this.draggedPoint = draggedPoint;
-    }
-
-    public Point getDraggedPoint() {
-        return draggedPoint;
-    }
     
     public File getModelFile() {
 		return modelFile;
@@ -450,12 +451,17 @@ public class RendererModel {
     public void setModelFile(File modelFile) {
 		this.modelFile = modelFile;
 	}
-    
-    public void setNewModel(Model newModel) {
-		this.newModel = newModel;
+	
+	public JFileChooser getFileChooser() {
+		return fileChooser;
 	}
-    
-    public Model getNewModel() {
-		return newModel;
+
+	public boolean isReloadModelRequested() {
+		return reloadModelRequested;
 	}
+	
+	public void setReloadModelRequested(boolean reloadModelRequested) {
+		this.reloadModelRequested = reloadModelRequested;
+	}
+
 }

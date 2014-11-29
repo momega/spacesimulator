@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.json;
 
+import org.springframework.util.Assert;
+
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.KeplerianOrbit;
 import com.momega.spacesimulator.model.MovingObject;
@@ -27,6 +29,7 @@ public class KeplerianOrbitSerializer extends AbstractSerializer<KeplerianOrbit>
 	@Override
 	public void read(JsonObject object, KeplerianOrbit value) {
 		MovingObject mo = getNamedObject(object, CENTRAL_OBJECT);
+		Assert.notNull(mo);
 		value.setCentralObject(mo);
 	}
 

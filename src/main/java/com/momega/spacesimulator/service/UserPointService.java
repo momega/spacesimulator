@@ -24,18 +24,17 @@ public class UserPointService {
     }
 
     public void computeUserPoint(UserOrbitalPoint userOrbitalPoint, Timestamp newTimestamp) {
-        KeplerianElements keplerianElements = userOrbitalPoint.getKeplerianElements();
+    	KeplerianElements keplerianElements = userOrbitalPoint.getKeplerianElements();
 
-        MovingObject movingObject = userOrbitalPoint.getKeplerianElements().getKeplerianOrbit().getCentralObject();
-        KeplerianElements movingObjectKeplerianElements = movingObject.getKeplerianElements();
-        KeplerianOrbit keplerianOrbit = movingObjectKeplerianElements.getKeplerianOrbit();
+        KeplerianElements spacecraftKeplerianElements = userOrbitalPoint.getMovingObject().getKeplerianElements();
+        KeplerianOrbit keplerianOrbit = spacecraftKeplerianElements.getKeplerianOrbit();
         keplerianElements.setKeplerianOrbit(keplerianOrbit);
 
         double theta = keplerianElements.getTrueAnomaly();
         Vector3d position = keplerianElements.getCartesianPosition();
         userOrbitalPoint.setPosition(position);
 
-        Timestamp timestamp = movingObject.getKeplerianElements().timeToAngle(newTimestamp, theta, true);
+        Timestamp timestamp = userOrbitalPoint.getMovingObject().getKeplerianElements().timeToAngle(newTimestamp, theta, true);
         userOrbitalPoint.setTimestamp(timestamp);
     }
 
@@ -50,6 +49,7 @@ public class UserPointService {
         UserOrbitalPoint userPoint = new UserOrbitalPoint();
         userPoint.setPosition(modelCoordinates);
         userPoint.setVisible(true);
+        userPoint.setMovingObject(physicalBody);
 
         createKeplerianElementsByPosition(physicalBody, userPoint, modelCoordinates);
         userPoint.setName("User Point");
@@ -76,7 +76,7 @@ public class UserPointService {
      * @param newPosition new position
      */
     public void updateUserOrbitalPoint(UserOrbitalPoint userOrbitalPoint, Vector3d newPosition) {
-        PhysicalBody physicalBody = (PhysicalBody) userOrbitalPoint.getKeplerianElements().getKeplerianOrbit().getCentralObject();
+        PhysicalBody physicalBody = (PhysicalBody) userOrbitalPoint.getMovingObject();
 
         createKeplerianElementsByPosition(physicalBody, userOrbitalPoint, newPosition);
     }

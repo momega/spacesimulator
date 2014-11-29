@@ -35,13 +35,9 @@ public class MainWindow extends DefaultWindow {
 
     public static void main(String[] args) {
         MainWindow window = new MainWindow("Space Simulator");
-        EventBusController controller = new EventBusController();
+        EventBusController controller = EventBusController.getInstance();
 
         Application application = Application.getInstance();
-        
-        //Model model = application.init(builder, 293037 - 600);
-        //Model model = application.init(builder, 5910 * 60);
-        //Model model = application.init(builder, 190 * 60);
         Model model = application.init(0);
         
         MainGLRenderer mr = new MainGLRenderer();
@@ -55,7 +51,8 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new ToolbarController());
         controller.addController(new PreferencesController());
         controller.addController(new InterplanetaryFlightController());
-        controller.addController(new LoadSaveController());
+        controller.addController(new LoadController());
+        controller.addController(new SaveController());
         window.openWindow(mr, controller);
     }
     
@@ -73,17 +70,17 @@ public class MainWindow extends DefaultWindow {
     	JMenuItem openItem = new JMenuItem("Open...");
     	openItem.setMnemonic(KeyEvent.VK_O);
     	openItem.setIcon(SwingUtils.createImageIcon("/images/page_go.png"));
-    	openItem.setActionCommand(LoadSaveController.LOAD_COMMAND);
+    	openItem.setActionCommand(LoadController.LOAD_COMMAND);
     	openItem.addActionListener(controller);
     	
     	JMenuItem saveItem = new JMenuItem("Save");
-    	saveItem.setActionCommand(LoadSaveController.SAVE_COMMAND);
+    	saveItem.setActionCommand(SaveController.SAVE_COMMAND);
     	saveItem.setMnemonic(KeyEvent.VK_S);
     	saveItem.addActionListener(controller);
     	saveItem.setIcon(SwingUtils.createImageIcon("/images/page_save.png"));
     	
     	JMenuItem saveAsItem = new JMenuItem("Save As...");
-    	saveAsItem.setActionCommand(LoadSaveController.SAVE_AS_COMMAND);
+    	saveAsItem.setActionCommand(SaveController.SAVE_AS_COMMAND);
     	saveAsItem.addActionListener(controller);
     	
         JMenuItem saveScreenshotItem = new JMenuItem("Save Screenshot");

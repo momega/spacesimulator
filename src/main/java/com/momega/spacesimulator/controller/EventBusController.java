@@ -6,7 +6,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
+import java.util.EventObject;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
+import javax.media.opengl.GLAutoDrawable;
+
+import com.momega.spacesimulator.renderer.DelayedActionEvent;
 
 /**
  * The implementation of the controller that passes all method calls to the registered specific/detail controller.
@@ -14,8 +21,19 @@ import java.util.List;
  * Created by martin on 4/19/14.
  */
 public class EventBusController extends AbstractController {
+	
+	private static EventBusController instance = new EventBusController();
+	
+	public static EventBusController getInstance() {
+		return instance;
+	}
+	
+	private EventBusController() {
+		super();
+	}
 
     private final List<Controller> controllers = new ArrayList<>();
+    private final Queue<EventObject> events = new LinkedList<>();
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -123,6 +141,22 @@ public class EventBusController extends AbstractController {
     	for(Controller controller : controllers) {
     		controller.actionPerformed(e);
     	}
+    }
+    
+    public void dispatchDelayedEvents(GLAutoDrawable drawable) {
+    	EventObject event = events.poll();
+    	while(event != null) {
+    		DelayedActionEvent delayed = new DelayedActionEvent(event.getSource(), drawable, event);
+	    	for(Controller controller : controllers) {
+	    		controller.delayedActionPeformed(delayed);
+	    	}
+	    	event = events.poll();
+    	}
+    	
+    }
+    
+    public void fireDelayedEvent(EventObject e) {
+    	events.add(e);
     }
 
     public void addController(Controller controller) {

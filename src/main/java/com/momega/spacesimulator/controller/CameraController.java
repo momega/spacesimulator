@@ -5,6 +5,7 @@ import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.renderer.DelayedActionEvent;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
 
@@ -18,6 +19,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.media.opengl.GLAutoDrawable;
 
 /**
  * Created by martin on 5/8/14.
@@ -37,7 +40,7 @@ public class CameraController extends AbstractCameraConroller {
     @Override
     public void mouseDragged(MouseEvent e) {
         if ((e.getModifiers() & InputEvent.BUTTON1_MASK)>0) {
-            Point position = GLUtils.getPosition(e);
+        	Point position = GLUtils.getPosition(e);
             final java.util.List<ViewCoordinates> viewCoordinatesList = RendererModel.getInstance().findViewCoordinates(position);
             List<UserOrbitalPoint> points = new ArrayList<>();
             for (ViewCoordinates viewCoordinates : viewCoordinatesList) {
@@ -50,25 +53,35 @@ public class CameraController extends AbstractCameraConroller {
                 selectedUserOrbitalPoint = points.get(0);
                 logger.info("selected user orbital point = {}", selectedUserOrbitalPoint);
                 RendererModel.getInstance().setSelectedUserOrbitalPoint(selectedUserOrbitalPoint);
-                RendererModel.getInstance().setDraggedPoint(position);
-                return;
             }
 
             if (selectedUserOrbitalPoint != null) {
-                logger.info("dragging = {}", position);
-                RendererModel.getInstance().setDraggedPoint(position);
+            	fireDelayedAction(e);
                 return;
             }
         }
 
         super.mouseDragged(e);
     }
+    
+    @Override
+    public void delayedActionPeformed(DelayedActionEvent delayed) {
+    	if (delayed.getEvent() instanceof MouseEvent) {
+	    	MouseEvent e = (MouseEvent) delayed.getEvent();
+	    	Point position = GLUtils.getPosition(e);
+	    	GLAutoDrawable drawable = delayed.getDrawable();
+	    	logger.info("dragging = {}", position);
+	    	
+	        if (selectedUserOrbitalPoint!=null && position!=null) {
+	            RendererModel.getInstance().dragUserPoint(drawable, selectedUserOrbitalPoint, position);
+	        }
+    	}
+    }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         super.mouseReleased(e);
         selectedUserOrbitalPoint = null;
-        RendererModel.getInstance().setDraggedPoint(null);
         RendererModel.getInstance().setSelectedUserOrbitalPoint(null);
     }
 

@@ -1,8 +1,5 @@
 package com.momega.spacesimulator.opengl;
 
-import java.awt.Point;
-import java.io.File;
-
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
@@ -12,9 +9,8 @@ import org.slf4j.LoggerFactory;
 
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.controller.EventBusController;
 import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
@@ -48,35 +44,15 @@ public class MainGLRenderer extends AbstractGLRenderer {
     @Override
     protected void draw(GLAutoDrawable drawable) {
         renderer.draw(drawable);
-
-        if (RendererModel.getInstance().isTakeScreenshot()) {
-            File dir = new File(System.getProperty("user.home"));
-            GLUtils.saveFrameAsPng(drawable, dir);
-            RendererModel.getInstance().setTakeScreenshot(false);
-        }
-
-        Point position =  RendererModel.getInstance().getMouseCoordinates();
-        if (position != null) {
-            RendererModel.getInstance().createUserPoint(drawable, position);
-            RendererModel.getInstance().setMouseCoordinates(null);
-        }
-
-        UserOrbitalPoint userOrbitalPoint = RendererModel.getInstance().getSelectedUserOrbitalPoint();
-        Point draggedPoint = RendererModel.getInstance().getDraggedPoint();
-        if (userOrbitalPoint!=null && draggedPoint!=null) {
-            RendererModel.getInstance().dragUserPoint(drawable);
-        }
+        EventBusController.getInstance().dispatchDelayedEvents(drawable);
         
-        Model newModel = RendererModel.getInstance().getNewModel();
-        if (newModel != null) {
-        	ModelHolder.replaceModel(newModel);
-        	RendererModel.getInstance().setNewModel(null);
+        if (RendererModel.getInstance().isReloadModelRequested()) {
+	    	GL2 gl = drawable.getGL().getGL2();
         	renderer.clearAllRenderers();
-        	renderer.createRenderers();
-        	GL2 gl = drawable.getGL().getGL2();
-        	renderer.dispose(gl);
-        	renderer.init(gl);
-        	RendererModel.getInstance().replaceMovingObjectsModel();
+	    	renderer.createRenderers();
+	    	renderer.dispose(gl);
+	    	renderer.init(gl);
+	    	RendererModel.getInstance().setReloadModelRequested(false);
         }
     }
 

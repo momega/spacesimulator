@@ -7,7 +7,10 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 
+import javax.media.opengl.GLAutoDrawable;
+
 import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.renderer.DelayedActionEvent;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.swing.NewUserPointDialog;
 import com.momega.spacesimulator.swing.SwingUtils;
@@ -22,9 +25,8 @@ public class UserPointController extends AbstractController {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		Point position = GLUtils.getPosition(e);
 		if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()>1) {
-            RendererModel.getInstance().setMouseCoordinates(position);
+            fireDelayedAction(e);
         }
 	}
 	
@@ -33,6 +35,18 @@ public class UserPointController extends AbstractController {
 		if (NEW_USER_POINT.equals(e.getActionCommand())) {
 			NewUserPointDialog dialog = new NewUserPointDialog();
 			SwingUtils.openDialog(dialog);
+		}
+	}
+	
+	@Override
+	public void delayedActionPeformed(DelayedActionEvent delayed) {
+		if (delayed.getEvent() instanceof MouseEvent) {
+			MouseEvent e = (MouseEvent) delayed.getEvent();
+			if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount()>1) {
+				GLAutoDrawable drawable = delayed.getDrawable();
+				Point position = GLUtils.getPosition(e);
+				RendererModel.getInstance().createUserPoint(drawable, position);
+			}
 		}
 	}
 

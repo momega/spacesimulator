@@ -145,11 +145,11 @@ public abstract class DefaultWindow {
 
     public void stopAnimator() {
     	if (exitQuestion) {
-	    	int n = JOptionPane.showConfirmDialog(
+	    	int option = JOptionPane.showConfirmDialog(
 	    		    frame,
-	    		    "Exit Application?", "Confirm Exit", JOptionPane.YES_NO_OPTION);
+	    		    "Do you want to save the simulation before exit?", "Save the simulation?", JOptionPane.YES_NO_CANCEL_OPTION);
 	    	
-	    	if (n != JOptionPane.YES_OPTION) {
+	    	if (option != JOptionPane.YES_OPTION) {
 	    		return;
 	    	}
     	}

@@ -19,7 +19,7 @@ public class SimpleWindow extends DefaultWindow {
 
     public static void main(String[] args) {
         SimpleWindow window = new SimpleWindow("Test Window");
-        EventBusController controller = new EventBusController();
+        EventBusController controller = EventBusController.getInstance();
 
         controller.addController(new QuitController(window));
         SimpleGLRenderer r = new SimpleGLRenderer();

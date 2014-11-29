@@ -20,6 +20,7 @@ import com.momega.spacesimulator.json.KeplerianOrbitSerializer;
 import com.momega.spacesimulator.json.NamedObjectCache;
 import com.momega.spacesimulator.json.NamedObjectSerializer;
 import com.momega.spacesimulator.json.OrbitIntersectionSerializer;
+import com.momega.spacesimulator.json.PhysicalBodySerializer;
 import com.momega.spacesimulator.json.SphereOfInfluenceSerializer;
 import com.momega.spacesimulator.json.TargetSerializer;
 import com.momega.spacesimulator.model.Camera;
@@ -27,6 +28,7 @@ import com.momega.spacesimulator.model.KeplerianOrbit;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.NamedObject;
 import com.momega.spacesimulator.model.OrbitIntersection;
+import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.SphereOfInfluence;
 import com.momega.spacesimulator.model.Target;
 
@@ -66,6 +68,7 @@ public class ModelSerializer implements InitializingBean {
         delegatingTypeAdaptorFactory.registerSerializer(Target.class, new TargetSerializer());
         delegatingTypeAdaptorFactory.registerSerializer(Camera.class, new CameraSerializer());
         delegatingTypeAdaptorFactory.registerSerializer(NamedObject.class, new NamedObjectSerializer());
+        delegatingTypeAdaptorFactory.registerSerializer(PhysicalBody.class, new PhysicalBodySerializer());
         
         this.gson = new GsonBuilder()
 	        .excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT)

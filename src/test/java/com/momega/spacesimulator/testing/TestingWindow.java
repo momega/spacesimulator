@@ -25,7 +25,7 @@ public class TestingWindow extends DefaultWindow {
 
     public static void main(String[] args) {
         TestingWindow window = new TestingWindow("Test Window");
-        EventBusController controller = new EventBusController();
+        EventBusController controller = EventBusController.getInstance();
         
         Camera camera = new Camera();
         camera.setPosition(Vector3d.ZERO);

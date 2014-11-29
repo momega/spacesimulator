@@ -1,6 +1,9 @@
 package com.momega.spacesimulator.controller;
 
 import java.awt.event.*;
+import java.util.EventObject;
+
+import com.momega.spacesimulator.renderer.DelayedActionEvent;
 
 /**
  * The default empty implementation of the controller
@@ -86,6 +89,14 @@ public abstract class AbstractController implements Controller {
     @Override
     public void actionPerformed(ActionEvent e) {
     	// do nothing
+    }
+    
+    public void delayedActionPeformed(DelayedActionEvent e) {
+    	// do nothing
+    }
+    
+    protected void fireDelayedAction(EventObject event) {
+    	EventBusController.getInstance().fireDelayedEvent(event);
     }
 
 }

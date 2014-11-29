@@ -36,5 +36,10 @@ public class NamedObjectSerializer implements Serializer<NamedObject> {
 			throw new IllegalStateException(e);
 		}
 	}
+	
+	@Override
+	public Class<?> getSuperClass(JsonObject object) {
+		return NamedObject.class;
+	}
 
 }

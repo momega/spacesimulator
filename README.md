@@ -6,7 +6,7 @@ and spacecraft(s).
 
 The planets are moving based on Keplerian law (simplified elliptical) trajectory.
 
-The spacecraft(s) are moving based on the Newtonian trajectory. The gravitation of all the planets
+The position and velocity of spacecraft(s) are computed based on Newtonian gravitational law. The gravitation of all the planets
 influences the trajectory of the spacecrafts.
 
 Features
@@ -20,7 +20,8 @@ Features
 * User defined points
 * Take a screenshot
 * Headless computations
-* Sphere of Influence 
+* Sphere of Influence
+* Load and save models
 
 Screenshots
 ===========
@@ -30,6 +31,8 @@ Screenshots
 ![High eccentricity orbit](/images/spacecraft.png "High eccentricity orbit")
 
 ![Near the Moon](/images/moon.png "Near the Moon")
+
+![Leaving Earth Orbit](/images/leavingearth.png "Leaving Earth Orbit")
 
 ![Arriving to Mars](/images/mars1.png "Arriving to Mars")
 

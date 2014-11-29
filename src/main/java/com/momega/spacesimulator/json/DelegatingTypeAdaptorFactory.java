@@ -29,6 +29,9 @@ public class DelegatingTypeAdaptorFactory implements TypeAdapterFactory {
 		final List<Serializer<T>> list = new ArrayList<>();
 		for(Map.Entry<Class<?>, Serializer<?>> entry : serializers.entrySet()) {
 			Class<?> clazz = entry.getKey();
+			if (rawType.isAssignableFrom(clazz)) {
+				list.add((Serializer<T>) entry.getValue());
+			}
 			if (clazz.isAssignableFrom(rawType)) {
 				list.add((Serializer<T>) entry.getValue());
 			}
@@ -82,7 +85,9 @@ public class DelegatingTypeAdaptorFactory implements TypeAdapterFactory {
 			    }
 			    
 			    for(Serializer<T> serializer : list) {
-			    	serializer.read(jsonObject, value);
+			    	if (serializer.getSuperClass(jsonObject).isAssignableFrom(value.getClass())) {
+			    		serializer.read(jsonObject, value);
+			    	}
 			    }
 				return value;
 			}
