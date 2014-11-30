@@ -29,14 +29,12 @@ public class OrbitIntersectionSerializer extends AbstractSerializer<OrbitInterse
 	public void read(JsonObject object, OrbitIntersection value) {
 		OrbitIntersection orbitIntersection = (OrbitIntersection) value;
 		MovingObject to = getNamedObject(object, TARGET_OBJECT);
-		if (to != null) {
-			orbitIntersection.setTargetObject(to);
-		}
+		orbitIntersection.setTargetObject(to);
 	}	
 	
 	@Override
 	public Class<?> getClass(JsonObject object) {
-		return OrbitIntersection.class;
+		return null;
 	}
 
 }
