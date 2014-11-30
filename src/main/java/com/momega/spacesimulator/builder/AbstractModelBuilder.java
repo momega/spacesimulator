@@ -51,7 +51,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     private static final double UNIVERSE_SIZE = MathUtils.AU * 100; 
     
-    private static final int PHYSICAL_BODY_INDEX = 10;
+    private static final int MOVING_OBJECTS_START_INDEX = 10;
     
     private int lastIndex = 0;
     
@@ -241,6 +241,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     private void updateDynamicalPoint(MovingObject dp, String name, double mass, double rotationPeriod, double radius, String wiki, String icon) {
         dp.setName(name);
+       	dp.setIndex(MOVING_OBJECTS_START_INDEX + lastIndex);
         if (dp.getCartesianState() == null) {
             dp.setCartesianState(new CartesianState());
         }
@@ -248,7 +249,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
             PhysicalBody body = (PhysicalBody) dp;
             body.setMass(mass * 1E24);
             body.setOrientation(Orientation.createUnit());
-           	body.setIndex(PHYSICAL_BODY_INDEX + lastIndex);
            	lastIndex++;
         }
         if (dp instanceof RotatingObject) {

@@ -32,7 +32,6 @@ import com.momega.spacesimulator.model.ManeuverPoint;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.OrbitIntersection;
-import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.RotatingObject;
@@ -160,10 +159,7 @@ public class RendererModel {
             if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
                 result.add(keplerianTrajectory.getApoapsis());
                 result.add(keplerianTrajectory.getPeriapsis());
-            }
-            
-            if (dp instanceof PhysicalBody) {
-            	MovingObject body = (MovingObject) dp;
+                MovingObject body = (MovingObject) dp;
             	for(UserOrbitalPoint userOrbitalPoint : body.getUserOrbitalPoints()) {
                     result.add(userOrbitalPoint);
                 }

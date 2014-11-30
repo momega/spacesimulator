@@ -5,7 +5,7 @@ package com.momega.spacesimulator.model;
  * Physical body in space. It is the {@link com.momega.spacesimulator.model.MovingObject} with the mass and the given orientation.
  * Created by martin on 4/27/14.
  */
-public class PhysicalBody extends MovingObject {
+public abstract class PhysicalBody extends MovingObject {
 
     private double mass;
     private Orientation orientation;

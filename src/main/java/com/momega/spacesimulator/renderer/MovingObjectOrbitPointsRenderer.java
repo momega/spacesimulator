@@ -8,17 +8,17 @@ import com.momega.spacesimulator.model.UserOrbitalPoint;
 /**
  * Created by martin on 9/6/14.
  */
-public class PhysicalBodyOrbitPointsRenderer extends AbstractOrbitalPositionProviderRenderer {
+public class MovingObjectOrbitPointsRenderer extends AbstractOrbitalPositionProviderRenderer {
 
-    private final MovingObject physicalBody;
+    private final MovingObject movingObject;
 
-    public PhysicalBodyOrbitPointsRenderer(MovingObject physicalBody) {
-        this.physicalBody = physicalBody;
+    public MovingObjectOrbitPointsRenderer(MovingObject movingObject) {
+        this.movingObject = movingObject;
     }
 
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
-        for(UserOrbitalPoint orbitalPoint : physicalBody.getUserOrbitalPoints()) {
+        for(UserOrbitalPoint orbitalPoint : movingObject.getUserOrbitalPoints()) {
             if (orbitalPoint == RendererModel.getInstance().getSelectedUserOrbitalPoint()) {
                 setColor(255,255,0);
             }

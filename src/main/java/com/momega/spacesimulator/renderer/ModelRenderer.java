@@ -24,18 +24,15 @@ public class ModelRenderer extends CompositeRenderer {
             if (!TrajectoryType.STATIC.equals(dp.getTrajectory().getType())) {
                 addRenderer(new KeplerianTrajectoryRenderer(dp));
             }
-            if (dp instanceof PhysicalBody) {
-                addRenderer(new MovingObjectRenderer(dp));
-                addRenderer(new ApsidesRenderer(dp));
-                addRenderer(new UserOrbitalPointBitmapRenderer((MovingObject) dp));
-                addRenderer(new PhysicalBodyOrbitPointsRenderer((MovingObject) dp));
-            }
+            addRenderer(new UserOrbitalPointBitmapRenderer((MovingObject) dp));
+            addRenderer(new MovingObjectOrbitPointsRenderer((MovingObject) dp));
             if (dp instanceof BaryCentre) {
             	addRenderer(new MovingObjectRenderer(dp));
                 addRenderer(new ApsidesRenderer(dp));
             }
             if (dp instanceof CelestialBody) {
             	addRenderer(new MovingObjectRenderer(dp));
+                addRenderer(new ApsidesRenderer(dp));
                 addRenderer(new CelestialBodyRenderer((CelestialBody) dp, true, true));
                 if (dp instanceof Planet) {
                     Planet p = (Planet) dp;

@@ -5,7 +5,7 @@ package com.momega.spacesimulator.model;
  * is the typical subclass of the rotation object.
  * Created by martin on 5/25/14.
  */
-public class RotatingObject extends PhysicalBody {
+public abstract class RotatingObject extends PhysicalBody {
 
     private double rotationPeriod; // rotation period in seconds
     private double radius;

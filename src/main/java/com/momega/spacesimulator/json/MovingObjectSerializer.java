@@ -12,7 +12,8 @@ import com.momega.spacesimulator.model.UserOrbitalPoint;
  *
  */
 public class MovingObjectSerializer extends AbstractSerializer<MovingObject> {
-
+	
+	private int fixIndex = 20;
 
 	public MovingObjectSerializer() {
 		super(MovingObject.class);
@@ -28,6 +29,11 @@ public class MovingObjectSerializer extends AbstractSerializer<MovingObject> {
 		// relink orbital points
 		for(UserOrbitalPoint userOrbitalPoint : value.getUserOrbitalPoints()) {
 			userOrbitalPoint.setMovingObject(value);
+		}
+		
+		// fix 
+		if (value.getIndex()==null) {
+			value.setIndex(Integer.valueOf(fixIndex++));
 		}
 	}
 	
