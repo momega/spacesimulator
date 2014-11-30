@@ -56,7 +56,6 @@ public class TimeDialog extends JDialog {
     private final JButton cancelButton;
     private final SpinnerDateModel timeModel;
     private final JProgressBar progressBar;
-    private final DefaultWindow window;
 	private JButton closeButton;
 
     /**
@@ -66,7 +65,6 @@ public class TimeDialog extends JDialog {
      */
     public TimeDialog(final DefaultWindow window, Timestamp initTime) {
         super();
-        this.window = window;
         setTitle("Time");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModalityType(ModalityType.APPLICATION_MODAL);

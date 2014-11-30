@@ -3,7 +3,7 @@ package com.momega.spacesimulator.service;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.Maneuver;
 import com.momega.spacesimulator.model.ManeuverPoint;
-import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
 
@@ -54,7 +54,7 @@ public class ManeuverService {
      * @param start indicates whether it is start or end of the maneuver
      * @return new instance of the maneuver point
      */
-    public ManeuverPoint createManeuverPoint(PhysicalBody spacecraft, Maneuver maneuver, Timestamp timestamp, boolean start) {
+    public ManeuverPoint createManeuverPoint(MovingObject spacecraft, Maneuver maneuver, Timestamp timestamp, boolean start) {
         ManeuverPoint m = new ManeuverPoint();
         KeplerianElements keplerianElements = new KeplerianElements();
         if (spacecraft.getKeplerianElements() != null) {
@@ -69,7 +69,7 @@ public class ManeuverService {
         return m;
     }
 
-    public Maneuver createManeuver(PhysicalBody spacecraft, String name, Timestamp initTime, double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
+    public Maneuver createManeuver(MovingObject spacecraft, String name, Timestamp initTime, double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
         Maneuver maneuver = new Maneuver();
         maneuver.setName(name);
 

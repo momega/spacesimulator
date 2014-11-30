@@ -25,7 +25,6 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
@@ -44,7 +43,7 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 	private SpacecraftObjectModel spacecraftObjectModel;
 	private PlanetsObjectModel planetObjectModel;
 	private JFormattedTextField txtTransferA;
-	private PhysicalBody selectedSpacecraft;
+	private MovingObject selectedSpacecraft;
 	private MovingObject sourceBody; // could be also earth-moon center
 	private MovingObject targetPlanet;
 	private JFormattedTextField txtEccentricity;
@@ -90,13 +89,13 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				Object[] objs = e.getItemSelectable().getSelectedObjects();
-				PhysicalBody spacecraft = (PhysicalBody) objs[0];
+				MovingObject spacecraft = (MovingObject) objs[0];
 				selectedSpacecraft = spacecraft; 
 				calculateSemimajorTargetTrajectory();
 			}
 		});
         spacecraftBox.setModel(spacecraftObjectModel);
-        selectedSpacecraft = (PhysicalBody) spacecraftObjectModel.getSelectedItem();
+        selectedSpacecraft = (MovingObject) spacecraftObjectModel.getSelectedItem();
         spacecraftBox.setRenderer(new MovingObjectListRenderer());
         spacecraftBox.setMaximumSize(new Dimension(300, 100));
         

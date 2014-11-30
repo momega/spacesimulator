@@ -17,8 +17,7 @@ import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
 import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.model.PhysicalBody;
-import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.service.UserPointService;
 
 /**
@@ -30,7 +29,7 @@ public class NewUserPointDialog extends DefaultDialog {
 	private static final long serialVersionUID = 4801020330282477441L;
 	
 	private final UserPointService userPointService;
-	private SpacecraftObjectModel spacecraftObjectModel;
+	private MovingObjectsObjectModel movingObjectsObjectModel;
 
 	private JTextField txtName;
 	private JTextField txtTrueAnomaly;
@@ -42,7 +41,7 @@ public class NewUserPointDialog extends DefaultDialog {
 	
 	@Override
 	protected JPanel createMainPanel() {
-		spacecraftObjectModel = new SpacecraftObjectModel();
+		movingObjectsObjectModel = new MovingObjectsObjectModel();
 		 
         JPanel mainPanel = new JPanel();
         GroupLayout layout = new GroupLayout(mainPanel);
@@ -52,7 +51,7 @@ public class NewUserPointDialog extends DefaultDialog {
         layout.setAutoCreateContainerGaps(true);
         
         JLabel lblName = new JLabel("Name:", SwingConstants.RIGHT);
-        JLabel lblSpacecraft = new JLabel("Spacecraft:", SwingConstants.RIGHT);
+        JLabel lblSpacecraft = new JLabel("Physical Body:", SwingConstants.RIGHT);
         JLabel lblTrueAnomaly = new JLabel("True Anomaly:", SwingConstants.RIGHT);
         txtName = new JTextField("User Point");
         txtName.addFocusListener(new FocusTextListener(txtName));
@@ -61,8 +60,8 @@ public class NewUserPointDialog extends DefaultDialog {
         txtTrueAnomaly = new JFormattedTextField(formatter);
         txtTrueAnomaly.setText("0.0");
         txtTrueAnomaly.addFocusListener(new FocusTextListener(txtTrueAnomaly));
-        JComboBox<Spacecraft> spacecraftBox = new JComboBox<Spacecraft>();
-        spacecraftBox.setModel(spacecraftObjectModel);
+        JComboBox<MovingObject> spacecraftBox = new JComboBox<MovingObject>();
+        spacecraftBox.setModel(movingObjectsObjectModel);
         spacecraftBox.setRenderer(new MovingObjectListRenderer());
         spacecraftBox.setMaximumSize(new Dimension(300, 100));
         
@@ -100,11 +99,11 @@ public class NewUserPointDialog extends DefaultDialog {
 	
 	@Override
 	protected boolean okPressed() {
-		PhysicalBody spacecraft = (PhysicalBody) spacecraftObjectModel.getSelectedItem();
+		MovingObject movingObject = (MovingObject) movingObjectsObjectModel.getSelectedItem();
 		try {
 			double theta = Double.parseDouble(txtTrueAnomaly.getText());
 			String name = txtName.getText();
-			userPointService.createUserOrbitalPoint(spacecraft, name, Math.toRadians(theta));
+			userPointService.createUserOrbitalPoint(movingObject, name, Math.toRadians(theta));
 			return true;
 		} catch (NumberFormatException nfe) {
 			JOptionPane.showMessageDialog(NewUserPointDialog.this,

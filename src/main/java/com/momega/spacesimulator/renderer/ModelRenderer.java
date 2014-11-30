@@ -27,8 +27,8 @@ public class ModelRenderer extends CompositeRenderer {
             if (dp instanceof PhysicalBody) {
                 addRenderer(new MovingObjectRenderer(dp));
                 addRenderer(new ApsidesRenderer(dp));
-                addRenderer(new UserOrbitalPointBitmapRenderer((PhysicalBody) dp));
-                addRenderer(new PhysicalBodyOrbitPointsRenderer((PhysicalBody) dp));
+                addRenderer(new UserOrbitalPointBitmapRenderer((MovingObject) dp));
+                addRenderer(new PhysicalBodyOrbitPointsRenderer((MovingObject) dp));
             }
             if (dp instanceof BaryCentre) {
             	addRenderer(new MovingObjectRenderer(dp));

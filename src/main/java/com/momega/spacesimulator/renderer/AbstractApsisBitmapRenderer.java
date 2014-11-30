@@ -1,7 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.model.Apsis;
-import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.PositionProvider;
 
 import javax.swing.*;
@@ -14,16 +14,16 @@ import java.util.List;
  */
 public abstract class AbstractApsisBitmapRenderer extends PositionProvidersBitmapRenderer {
 
-    private final PhysicalBody spacecraft;
+    private final MovingObject spacecraft;
 
-    protected AbstractApsisBitmapRenderer(PhysicalBody spacecraft, ImageIcon imageIcon) {
+    protected AbstractApsisBitmapRenderer(MovingObject spacecraft, ImageIcon imageIcon) {
         super(imageIcon);
         this.spacecraft = spacecraft;
     }
 
     protected abstract Apsis getApsis();
 
-    public PhysicalBody getSpacecraft() {
+    public MovingObject getSpacecraft() {
         return spacecraft;
     }
 

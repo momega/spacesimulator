@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The implementation of the moving object. The moving object has the defined velocity and a trajectory which can compute new position and velocity.
  * The moving object also has a name to distinguish the objects.
@@ -12,6 +15,8 @@ public abstract class MovingObject extends NamedObject implements PositionProvid
     private KeplerianElements keplerianElements;
     private KeplerianTrajectory trajectory;
     private Timestamp timestamp;
+	protected List<UserOrbitalPoint> userOrbitalPoints = new ArrayList<>();
+	protected Integer index;
 
     public CartesianState getCartesianState() {
         return cartesianState;
@@ -61,6 +66,23 @@ public abstract class MovingObject extends NamedObject implements PositionProvid
     public boolean isStatic() {
     	return getTrajectory().getType()==TrajectoryType.STATIC;
     }
+    
+
+	public List<UserOrbitalPoint> getUserOrbitalPoints() {
+	    return userOrbitalPoints;
+	}
+
+	public void setUserOrbitalPoints(List<UserOrbitalPoint> userOrbitalPoints) {
+	    this.userOrbitalPoints = userOrbitalPoints;
+	}
+
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
+	}    
 
 }
 

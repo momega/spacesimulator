@@ -43,7 +43,7 @@ import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.service.ManeuverService;
 import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.service.UserPointService;
-import com.momega.spacesimulator.swing.MovingObjectsModel;
+import com.momega.spacesimulator.swing.PositionProvidersModel;
 
 /**
  * The renderer model
@@ -65,7 +65,7 @@ public class RendererModel {
 
     private final java.util.List<ModelChangeListener> modelChangeListeners = new ArrayList<>();
     
-    private MovingObjectsModel movingObjectsModel;
+    private PositionProvidersModel movingObjectsModel;
 
     private final ManeuverService maneuverService;
     private final UserPointService userPointService;
@@ -93,7 +93,7 @@ public class RendererModel {
         maneuverService = Application.getInstance().getService(ManeuverService.class);
         userPointService = Application.getInstance().getService(UserPointService.class);
         targetService = Application.getInstance().getService(TargetService.class);
-		movingObjectsModel = new MovingObjectsModel(selectMovingObjects());
+		movingObjectsModel = new PositionProvidersModel(selectPositionProviders());
 		movingObjectsModel.setSelectedItem(ModelHolder.getModel().getCamera().getTargetObject());
 		fileChooser = new JFileChooser();
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Space Simulator Data (.json)", "json"));
@@ -124,12 +124,30 @@ public class RendererModel {
     	return result;
     }
     
+    public List<Planet> findAllPhysicalBodies() {
+    	List<Planet> result = new ArrayList<>();
+    	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+    		if (dp instanceof Planet) {
+    			result.add((Planet) dp);
+    		}
+    	}
+    	return result;
+    }
+    
     public List<Planet> findAllPlanets() {
     	List<Planet> result = new ArrayList<>();
     	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
     		if (dp instanceof Planet) {
     			result.add((Planet) dp);
     		}
+    	}
+    	return result;
+    }
+    
+    public List<MovingObject> findAllMovingObjects() {
+    	List<MovingObject> result = new ArrayList<>();
+    	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+   			result.add(dp);
     	}
     	return result;
     }
@@ -145,7 +163,7 @@ public class RendererModel {
             }
             
             if (dp instanceof PhysicalBody) {
-            	PhysicalBody body = (PhysicalBody) dp;
+            	MovingObject body = (MovingObject) dp;
             	for(UserOrbitalPoint userOrbitalPoint : body.getUserOrbitalPoints()) {
                     result.add(userOrbitalPoint);
                 }
@@ -256,14 +274,12 @@ public class RendererModel {
         return result;
     }
     
-    public PhysicalBody findPhysicalBodyByIndex(int index) {
+    public MovingObject findMovingObjectByIndex(int index) {
     	Assert.isTrue(index>0);
     	for(MovingObject movingObject : ModelHolder.getModel().getMovingObjects()) {
-            if (movingObject instanceof PhysicalBody) {
-                PhysicalBody body = (PhysicalBody) movingObject;
-                if (body.getIndex()==index) {
-                	return body;
-                }
+            MovingObject body = (MovingObject) movingObject;
+            if (body.getIndex()==index) {
+            	return body;
             }
     	}
         return null;
@@ -314,7 +330,7 @@ public class RendererModel {
     
     public void replaceMovingObjectsModel() {
     	movingObjectsModel.setSelectedItem(null);
-    	movingObjectsModel.replaceElements(selectMovingObjects());
+    	movingObjectsModel.replaceElements(selectPositionProviders());
     	movingObjectsModel.setSelectedItem(ModelHolder.getModel().getCamera().getTargetObject());
     }
     
@@ -358,7 +374,7 @@ public class RendererModel {
 		this.celestialVisible = celestialVisible;
 	}
     
-    public MovingObjectsModel getMovingObjectsModel() {
+    public PositionProvidersModel getMovingObjectsModel() {
 		return movingObjectsModel;
 	}
 	
@@ -381,7 +397,7 @@ public class RendererModel {
         return list;
     }
     
-    public List<PositionProvider> selectMovingObjects() {
+    public List<PositionProvider> selectPositionProviders() {
     	List<PositionProvider> list = findAllPositionProviders();
     	List<PositionProvider> result = new ArrayList<>();
     	for(PositionProvider positionProvider : list) {
@@ -425,7 +441,7 @@ public class RendererModel {
             Vector3d modelCoordinates = GLUtils.getModelCoordinates(gl, screenCoordinates);
             logger.info("model coordinates = {}", modelCoordinates.asArray());
 
-            PhysicalBody physicalBody = RendererModel.getInstance().findPhysicalBodyByIndex(entry.getKey().intValue());
+            MovingObject physicalBody = RendererModel.getInstance().findMovingObjectByIndex(entry.getKey().intValue());
             UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
             userPointService.createUserOrbitalPoint(physicalBody, modelCoordinates);
         }

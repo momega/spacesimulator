@@ -11,11 +11,11 @@ import com.momega.spacesimulator.model.PositionProvider;
  * @author martin
  *
  */
-public class MovingObjectsModel extends AbstractObjectsModel<PositionProvider> {
+public class PositionProvidersModel extends AbstractObjectsModel<PositionProvider> {
 
 	private static final long serialVersionUID = -613911908814211900L;
 	
-	public MovingObjectsModel(List<PositionProvider> list) {
+	public PositionProvidersModel(List<PositionProvider> list) {
 		super(list);
 	}
 

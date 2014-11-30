@@ -2,7 +2,7 @@ package com.momega.spacesimulator.renderer;
 
 import javax.media.opengl.GL2;
 
-import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
 
 /**
@@ -10,9 +10,9 @@ import com.momega.spacesimulator.model.UserOrbitalPoint;
  */
 public class PhysicalBodyOrbitPointsRenderer extends AbstractOrbitalPositionProviderRenderer {
 
-    private final PhysicalBody physicalBody;
+    private final MovingObject physicalBody;
 
-    public PhysicalBodyOrbitPointsRenderer(PhysicalBody physicalBody) {
+    public PhysicalBodyOrbitPointsRenderer(MovingObject physicalBody) {
         this.physicalBody = physicalBody;
     }
 

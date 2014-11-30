@@ -4,27 +4,27 @@
 package com.momega.spacesimulator.json;
 
 import com.google.gson.JsonObject;
-import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
 
 /**
  * @author martin
  *
  */
-public class PhysicalBodySerializer extends AbstractSerializer<PhysicalBody> {
+public class MovingObjectSerializer extends AbstractSerializer<MovingObject> {
 
 
-	public PhysicalBodySerializer() {
-		super(PhysicalBody.class);
+	public MovingObjectSerializer() {
+		super(MovingObject.class);
 	}
 
 	@Override
-	public void write(JsonObject object, PhysicalBody value) {
+	public void write(JsonObject object, MovingObject value) {
 		// do nothing
 	}
 
 	@Override
-	public void read(JsonObject object, PhysicalBody value) {
+	public void read(JsonObject object, MovingObject value) {
 		// relink orbital points
 		for(UserOrbitalPoint userOrbitalPoint : value.getUserOrbitalPoints()) {
 			userOrbitalPoint.setMovingObject(value);

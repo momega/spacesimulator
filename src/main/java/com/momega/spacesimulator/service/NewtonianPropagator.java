@@ -17,7 +17,6 @@ import com.momega.spacesimulator.model.KeplerianTrajectory;
 import com.momega.spacesimulator.model.ManeuverPoint;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Orientation;
-import com.momega.spacesimulator.model.PhysicalBody;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SphereOfInfluence;
 import com.momega.spacesimulator.model.Target;
@@ -130,7 +129,7 @@ public class NewtonianPropagator implements Propagator {
      * Computes apsides for the spacecraft trajectory
      * @param spacecraft the spacecraft
      */
-    protected void computeApsides(PhysicalBody spacecraft) {
+    protected void computeApsides(MovingObject spacecraft) {
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
 
         // TODO: fix for eccentricity near 1

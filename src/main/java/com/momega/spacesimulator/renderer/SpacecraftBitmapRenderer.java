@@ -3,7 +3,7 @@ package com.momega.spacesimulator.renderer;
 import java.util.Collections;
 import java.util.List;
 
-import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.swing.SwingUtils;
@@ -13,7 +13,7 @@ import com.momega.spacesimulator.swing.SwingUtils;
  */
 public class SpacecraftBitmapRenderer extends PositionProvidersBitmapRenderer {
 
-    private final PhysicalBody spacecraft;
+    private final MovingObject spacecraft;
 
     public SpacecraftBitmapRenderer(Spacecraft spacecraft) {
         super(SwingUtils.createImageIcon(spacecraft.getIcon()));

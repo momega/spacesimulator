@@ -36,10 +36,7 @@ public class KeplerianPropagator implements Propagator {
         if (!ModelHolder.getModel().isRunningHeadless()) {
 	        apsisService.updatePeriapsis(movingObject);
 	        apsisService.updateApoapsis(movingObject);
-	        
-	        if (movingObject instanceof PhysicalBody) {
-	        	userPointService.computeUserPoints((PhysicalBody) movingObject, newTimestamp);
-	        }
+        	userPointService.computeUserPoints((MovingObject) movingObject, newTimestamp);
         }
     }
 

@@ -5,13 +5,13 @@ package com.momega.spacesimulator.model;
  */
 public class UserOrbitalPoint extends AbstractOrbitalPoint {
 	
-	private transient PhysicalBody movingObject;
+	private transient MovingObject movingObject;
 	
-	public PhysicalBody getMovingObject() {
+	public MovingObject getMovingObject() {
 		return movingObject;
 	}
 	
-	public void setMovingObject(PhysicalBody movingObject) {
+	public void setMovingObject(MovingObject movingObject) {
 		this.movingObject = movingObject;
 	}
 }

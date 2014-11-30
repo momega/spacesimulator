@@ -17,8 +17,8 @@ public class UserPointService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserPointService.class);
     
-    public void computeUserPoints(PhysicalBody physicalBody, Timestamp newTimestamp) {
-        for(UserOrbitalPoint userOrbitalPoint : physicalBody.getUserOrbitalPoints()) {
+    public void computeUserPoints(MovingObject movingObject, Timestamp newTimestamp) {
+        for(UserOrbitalPoint userOrbitalPoint : movingObject.getUserOrbitalPoints()) {
             computeUserPoint(userOrbitalPoint, newTimestamp);
         }
     }
@@ -40,33 +40,34 @@ public class UserPointService {
 
     /**
      * Creates the user orbital point
-     * @param physicalBody the {@link com.momega.spacesimulator.model.PhysicalBody}
+     * @param movingObject the {@link com.momega.spacesimulator.model.PhysicalBody}
      * @param modelCoordinates the model coordinates
      * @return new instance of the {@link com.momega.spacesimulator.model.UserOrbitalPoint}. The point is registered
      * to the physicalbody
      */
-    public UserOrbitalPoint createUserOrbitalPoint(PhysicalBody physicalBody, Vector3d modelCoordinates) {
+    public UserOrbitalPoint createUserOrbitalPoint(MovingObject movingObject, Vector3d modelCoordinates) {
         UserOrbitalPoint userPoint = new UserOrbitalPoint();
         userPoint.setPosition(modelCoordinates);
         userPoint.setVisible(true);
-        userPoint.setMovingObject(physicalBody);
+        userPoint.setMovingObject(movingObject);
 
-        createKeplerianElementsByPosition(physicalBody, userPoint, modelCoordinates);
+        createKeplerianElementsByPosition(movingObject, userPoint, modelCoordinates);
         userPoint.setName("User Point");
-        physicalBody.getUserOrbitalPoints().add(userPoint);
+        movingObject.getUserOrbitalPoints().add(userPoint);
 
         return userPoint;
     }
     
-    public UserOrbitalPoint createUserOrbitalPoint(PhysicalBody physicalBody, String name, double trueAnomaly) {
+    public UserOrbitalPoint createUserOrbitalPoint(MovingObject movingObject, String name, double trueAnomaly) {
     	 UserOrbitalPoint userPoint = new UserOrbitalPoint();
          userPoint.setVisible(true);
          userPoint.setName(name);
-         updateUserOrbitalPoint(userPoint, trueAnomaly, physicalBody);
+         userPoint.setMovingObject(movingObject);
+         updateUserOrbitalPoint(userPoint, trueAnomaly, movingObject);
          Vector3d position = userPoint.getKeplerianElements().getKeplerianOrbit().getCartesianPosition(trueAnomaly);
          userPoint.setPosition(position);
          
-         physicalBody.getUserOrbitalPoints().add(userPoint);
+         movingObject.getUserOrbitalPoints().add(userPoint);
          return userPoint;
     }
 
@@ -76,9 +77,9 @@ public class UserPointService {
      * @param newPosition new position
      */
     public void updateUserOrbitalPoint(UserOrbitalPoint userOrbitalPoint, Vector3d newPosition) {
-        PhysicalBody physicalBody = (PhysicalBody) userOrbitalPoint.getMovingObject();
+        MovingObject movingObject = (MovingObject) userOrbitalPoint.getMovingObject();
 
-        createKeplerianElementsByPosition(physicalBody, userOrbitalPoint, newPosition);
+        createKeplerianElementsByPosition(movingObject, userOrbitalPoint, newPosition);
     }
 
     /**
@@ -89,13 +90,12 @@ public class UserPointService {
      */
     public void updateUserOrbitalPoint(UserOrbitalPoint userOrbitalPoint, Double trueAnomaly, MovingObject movingObject) {
         Assert.notNull(trueAnomaly);
-        PhysicalBody physicalBody = (PhysicalBody) movingObject;
-        KeplerianOrbit keplerianOrbit = physicalBody.getKeplerianElements().getKeplerianOrbit();
-        createKeplerianElementsByOrbit(physicalBody, userOrbitalPoint, keplerianOrbit, trueAnomaly);
+        KeplerianOrbit keplerianOrbit = movingObject.getKeplerianElements().getKeplerianOrbit();
+        createKeplerianElementsByOrbit(movingObject, userOrbitalPoint, keplerianOrbit, trueAnomaly);
     }
 
-    protected void createKeplerianElementsByPosition(PhysicalBody physicalBody, UserOrbitalPoint userPoint, Vector3d position) {
-        KeplerianOrbit keplerianOrbit = physicalBody.getKeplerianElements().getKeplerianOrbit();
+    protected void createKeplerianElementsByPosition(MovingObject movingObject, UserOrbitalPoint userPoint, Vector3d position) {
+        KeplerianOrbit keplerianOrbit = movingObject.getKeplerianElements().getKeplerianOrbit();
         logger.debug("orbit = {}", keplerianOrbit.toString());
         Vector3d v = position.subtract(keplerianOrbit.getCentralObject().getPosition());
         v = VectorUtils.transform(keplerianOrbit, v);
@@ -103,25 +103,25 @@ public class UserPointService {
         double theta = Math.atan2(v.getY(), v.getX());
 
         logger.info("theta = {}", Math.toDegrees(theta));
-        createKeplerianElementsByOrbit(physicalBody, userPoint, keplerianOrbit, theta);
+        createKeplerianElementsByOrbit(movingObject, userPoint, keplerianOrbit, theta);
     }
 
-    protected void createKeplerianElementsByOrbit(PhysicalBody physicalBody, UserOrbitalPoint userPoint, KeplerianOrbit keplerianOrbit, double trueAnomaly) {
-        Assert.notNull(physicalBody);
+    protected void createKeplerianElementsByOrbit(MovingObject movingObject, UserOrbitalPoint userPoint, KeplerianOrbit keplerianOrbit, double trueAnomaly) {
+        Assert.notNull(movingObject);
         Assert.notNull(userPoint);
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setTrueAnomaly(trueAnomaly);
         keplerianElements.setKeplerianOrbit(keplerianOrbit);
         userPoint.setKeplerianElements(keplerianElements);
-        userPoint.setTimestamp(physicalBody.getKeplerianElements().timeToAngle(ModelHolder.getModel().getTime(), trueAnomaly, true));
+        userPoint.setTimestamp(movingObject.getKeplerianElements().timeToAngle(ModelHolder.getModel().getTime(), trueAnomaly, true));
     }
 
     /**
      * Deletes the user defined point
-     * @param physicalBody the physical body the point belong
+     * @param movingObject the moving object the point belong
      * @param point the given point
      */
-    public void deleteUserPoint(PhysicalBody physicalBody, UserOrbitalPoint point) {
-        physicalBody.getUserOrbitalPoints().remove(point);
+    public void deleteUserPoint(MovingObject movingObject, UserOrbitalPoint point) {
+        movingObject.getUserOrbitalPoints().remove(point);
     }
 }

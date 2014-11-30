@@ -202,7 +202,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param velocity the initial velocity
      * @return new instance of the satellite
      */
-    public Spacecraft createSpacecraft(PhysicalBody centralPoint, String name, Vector3d position, Vector3d velocity, int index) {
+    public Spacecraft createSpacecraft(MovingObject centralPoint, String name, Vector3d position, Vector3d velocity, int index) {
         Spacecraft spacecraft = new Spacecraft();
         spacecraft.setName(name);
 

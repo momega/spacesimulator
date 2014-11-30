@@ -46,7 +46,7 @@ public class TargetService {
         return target;
     }
 
-    public Double computePlanesAngle(PhysicalBody spacecraft, CelestialBody targetBody) {
+    public Double computePlanesAngle(MovingObject spacecraft, CelestialBody targetBody) {
         if (targetBody == null) {
             return null;
         }

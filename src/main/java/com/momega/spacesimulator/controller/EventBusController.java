@@ -7,9 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import javax.media.opengl.GLAutoDrawable;
 

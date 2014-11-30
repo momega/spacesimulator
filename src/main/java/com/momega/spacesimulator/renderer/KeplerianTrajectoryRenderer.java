@@ -24,7 +24,7 @@ public class KeplerianTrajectoryRenderer extends AbstractKeplerianTrajectoryRend
             gl.glPushMatrix();
 
             if (movingObject instanceof PhysicalBody) {
-            	PhysicalBody spacecraft  = (PhysicalBody) movingObject;
+            	MovingObject spacecraft  = (MovingObject) movingObject;
                 gl.glEnable(GL2.GL_STENCIL_TEST);
                 gl.glStencilOp(GL2.GL_KEEP, GL2.GL_KEEP, GL2.GL_REPLACE);
 

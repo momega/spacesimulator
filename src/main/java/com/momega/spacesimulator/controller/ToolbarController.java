@@ -10,7 +10,7 @@ import javax.swing.JToggleButton;
 
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.swing.MovingObjectsModel;
+import com.momega.spacesimulator.swing.PositionProvidersModel;
 
 /**
  * @author martin
@@ -64,8 +64,8 @@ public class ToolbarController extends AbstractController {
 	}
 
 	protected void updateSelectableMovingObjects() {
-		List<PositionProvider> newItems = RendererModel.getInstance().selectMovingObjects();
-		MovingObjectsModel movingObjectsModel = RendererModel.getInstance().getMovingObjectsModel();
+		List<PositionProvider> newItems = RendererModel.getInstance().selectPositionProviders();
+		PositionProvidersModel movingObjectsModel = RendererModel.getInstance().getMovingObjectsModel();
     	movingObjectsModel.removeAllElements();
     	movingObjectsModel.addElements(newItems);	
 	}

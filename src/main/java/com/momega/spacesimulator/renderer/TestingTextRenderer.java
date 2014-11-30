@@ -2,7 +2,7 @@ package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
@@ -21,9 +21,9 @@ import java.awt.geom.Rectangle2D;
  */
 public class TestingTextRenderer extends AbstractText3dRenderer {
 
-    private final PhysicalBody spacecraft;
+    private final MovingObject spacecraft;
 
-    public TestingTextRenderer(PhysicalBody spacecraft) {
+    public TestingTextRenderer(MovingObject spacecraft) {
         this.spacecraft = spacecraft;
     }
 
