@@ -65,6 +65,7 @@ public class ManeuverService {
         m.setTimestamp(timestamp);
         m.setVisible(true);
         m.setStart(start);
+        m.setMovingObject(spacecraft);
         m.setName((start ? "Start" : "End") + " of " + maneuver.getName());
         return m;
     }

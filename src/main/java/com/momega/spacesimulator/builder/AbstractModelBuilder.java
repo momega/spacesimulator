@@ -242,27 +242,29 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     private void updateDynamicalPoint(MovingObject dp, String name, double mass, double rotationPeriod, double radius, String wiki, String icon) {
         dp.setName(name);
        	dp.setIndex(MOVING_OBJECTS_START_INDEX + lastIndex);
-        if (dp.getCartesianState() == null) {
+       	lastIndex++;
+
+       	if (dp.getCartesianState() == null) {
             dp.setCartesianState(new CartesianState());
         }
+       	
         if (dp instanceof PhysicalBody) {
             PhysicalBody body = (PhysicalBody) dp;
             body.setMass(mass * 1E24);
             body.setOrientation(Orientation.createUnit());
-           	lastIndex++;
-        }
-        if (dp instanceof RotatingObject) {
-            RotatingObject ro = (RotatingObject) dp;
-            ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
-            ro.setRadius(radius * 1E6);
-        }
-        if (dp instanceof CelestialBody) {
-            CelestialBody cb = (CelestialBody) dp;
-            cb.setWiki(wiki);
-            if (icon == null) {
-                cb.setIcon("/images/celestial.png");
-            } else {
-                cb.setIcon(icon);
+            if (dp instanceof RotatingObject) {
+                RotatingObject ro = (RotatingObject) dp;
+                ro.setRotationPeriod(rotationPeriod * DateTimeConstants.SECONDS_PER_DAY);
+                ro.setRadius(radius * 1E6);
+                if (dp instanceof CelestialBody) {
+                    CelestialBody cb = (CelestialBody) dp;
+                    cb.setWiki(wiki);
+                    if (icon == null) {
+                        cb.setIcon("/images/celestial.png");
+                    } else {
+                        cb.setIcon(icon);
+                    }
+                }
             }
         }
     }

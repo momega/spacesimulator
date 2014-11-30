@@ -114,6 +114,7 @@ public class TargetService {
                 intersection.setName(spacecraft.getName() +"/" + targetBody.getName() + " Intersection " + i);
                 intersection.setTargetObject(targetBody);
                 intersection.setVisible(true);
+                intersection.setMovingObject(spacecraft);
             }
         }
 

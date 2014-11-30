@@ -437,9 +437,9 @@ public class RendererModel {
             Vector3d modelCoordinates = GLUtils.getModelCoordinates(gl, screenCoordinates);
             logger.info("model coordinates = {}", modelCoordinates.asArray());
 
-            MovingObject physicalBody = RendererModel.getInstance().findMovingObjectByIndex(entry.getKey().intValue());
+            MovingObject movingObject = RendererModel.getInstance().findMovingObjectByIndex(entry.getKey().intValue());
             UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
-            userPointService.createUserOrbitalPoint(physicalBody, modelCoordinates);
+            userPointService.createUserOrbitalPoint(movingObject, modelCoordinates);
         }
     }
 

@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.momega.spacesimulator.builder.EmptyModelBuilder;
 import com.momega.spacesimulator.builder.ModelBuilder;
+import com.momega.spacesimulator.builder.TwoSpacecraftsModelBuilder;
 
 /**
  * The application configuration. It instantiates all the services
@@ -17,7 +18,7 @@ public class AppConfig {
 	
 	@Bean
 	public ModelBuilder createModelBuilder() {
-		return new EmptyModelBuilder();
+		return new TwoSpacecraftsModelBuilder();
 	}
 
     @Bean

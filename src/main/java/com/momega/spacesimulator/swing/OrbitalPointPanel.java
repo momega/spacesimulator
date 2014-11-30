@@ -36,7 +36,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
     public OrbitalPointPanel(final AbstractOrbitalPoint point) {
         super(new BorderLayout(5, 5));
 		this.orbitalPoint = point;
-		this.movingObject = orbitalPoint.getKeplerianElements().getKeplerianOrbit().getCentralObject();
+		this.movingObject = orbitalPoint.getMovingObject();
         this.maneuverService = Application.getInstance().getService(ManeuverService.class);
         this.userPointService = Application.getInstance().getService(UserPointService.class);
 
@@ -78,61 +78,57 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 	        buttonsPanel.add(maneuverButton);
         }
         
-        if (movingObject instanceof PhysicalBody) {
-        	final MovingObject physicalBody = (MovingObject) movingObject;
-            if (point instanceof UserOrbitalPoint) {
-                JButton deleteButton = new JButton("Delete");
-                deleteButton.setIcon(SwingUtils.createImageIcon("/images/delete.png"));
-                deleteButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        userPointService.deleteUserPoint(physicalBody, (UserOrbitalPoint) point);
-                        DetailDialogHolder.getInstance().hideDialog(point);
-                    }
-                });
-                buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-                buttonsPanel.add(deleteButton);
-            }
-
-            JButton nameButton = new JButton("Rename...");
-            nameButton.setIcon(SwingUtils.createImageIcon("/images/textfield_rename.png"));
-            nameButton.addActionListener(new ActionListener() {
+        if (orbitalPoint instanceof UserOrbitalPoint) {
+            JButton deleteButton = new JButton("Delete");
+            deleteButton.setIcon(SwingUtils.createImageIcon("/images/delete.png"));
+            deleteButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    Object newName = JOptionPane.showInputDialog(OrbitalPointPanel.this, "Rename:", "Rename Dialog", JOptionPane.PLAIN_MESSAGE, null, null, orbitalPoint.getName());
-                    if (newName instanceof String && ((String) newName).length()>0) {
-                        orbitalPoint.setName((String)newName);
+                    userPointService.deleteUserPoint(movingObject, (UserOrbitalPoint) point);
+                    DetailDialogHolder.getInstance().hideDialog(point);
+                }
+            });
+            buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+            buttonsPanel.add(deleteButton);
+        }
+
+        JButton nameButton = new JButton("Rename...");
+        nameButton.setIcon(SwingUtils.createImageIcon("/images/textfield_rename.png"));
+        nameButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Object newName = JOptionPane.showInputDialog(OrbitalPointPanel.this, "Rename:", "Rename Dialog", JOptionPane.PLAIN_MESSAGE, null, null, orbitalPoint.getName());
+                if (newName instanceof String && ((String) newName).length()>0) {
+                    orbitalPoint.setName((String)newName);
+                }
+            }
+        });
+
+        buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+        buttonsPanel.add(nameButton);
+            
+        if (point instanceof UserOrbitalPoint) {
+            JButton thetaButton = new JButton("True Anomaly...");
+            thetaButton.setIcon(SwingUtils.createImageIcon("/images/pencil.png"));
+            thetaButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    Object newTheta = JOptionPane.showInputDialog(OrbitalPointPanel.this, "True Anomaly:", "True Anomaly Dialog", JOptionPane.PLAIN_MESSAGE, null, null, Math.toDegrees(orbitalPoint.getKeplerianElements().getTrueAnomaly()));
+                    if (newTheta instanceof String && ((String) newTheta).length()>0) {
+                        try {
+                            userPointService.updateUserOrbitalPoint((UserOrbitalPoint) point, Math.toRadians(Double.valueOf((String) newTheta)), movingObject);
+                        } catch (NumberFormatException nfe) {
+                            JOptionPane.showMessageDialog(OrbitalPointPanel.this,
+                                    "Incorrect angle",
+                                    "Update True Anomaly Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
             });
 
             buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-            buttonsPanel.add(nameButton);
-            
-            if (point instanceof UserOrbitalPoint) {
-
-	            JButton thetaButton = new JButton("True Anomaly...");
-	            thetaButton.setIcon(SwingUtils.createImageIcon("/images/pencil.png"));
-	            thetaButton.addActionListener(new ActionListener() {
-	                @Override
-	                public void actionPerformed(ActionEvent e) {
-	                    Object newTheta = JOptionPane.showInputDialog(OrbitalPointPanel.this, "True Anomaly:", "True Anomaly Dialog", JOptionPane.PLAIN_MESSAGE, null, null, Math.toDegrees(orbitalPoint.getKeplerianElements().getTrueAnomaly()));
-	                    if (newTheta instanceof String && ((String) newTheta).length()>0) {
-	                        try {
-	                            userPointService.updateUserOrbitalPoint((UserOrbitalPoint) point, Math.toRadians(Double.valueOf((String) newTheta)), movingObject);
-	                        } catch (NumberFormatException nfe) {
-	                            JOptionPane.showMessageDialog(OrbitalPointPanel.this,
-	                                    "Incorrect angle",
-	                                    "Update True Anomaly Error",
-	                                    JOptionPane.ERROR_MESSAGE);
-	                        }
-	                    }
-	                }
-	            });
-	
-	            buttonsPanel.add(Box.createRigidArea(new Dimension(0, 5)));
-	            buttonsPanel.add(thetaButton);
-            }
+            buttonsPanel.add(thetaButton);
         }
 
         add(attrPanel, BorderLayout.CENTER);
