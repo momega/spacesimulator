@@ -6,31 +6,20 @@ package com.momega.spacesimulator.service;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.momega.spacesimulator.json.CameraSerializer;
 import com.momega.spacesimulator.json.DelegatingTypeAdaptorFactory;
-import com.momega.spacesimulator.json.KeplerianOrbitSerializer;
 import com.momega.spacesimulator.json.NamedObjectCache;
-import com.momega.spacesimulator.json.NamedObjectSerializer;
-import com.momega.spacesimulator.json.OrbitIntersectionSerializer;
-import com.momega.spacesimulator.json.MovingObjectSerializer;
-import com.momega.spacesimulator.json.SphereOfInfluenceSerializer;
-import com.momega.spacesimulator.json.TargetSerializer;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.KeplerianOrbit;
+import com.momega.spacesimulator.json.Serializer;
 import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.NamedObject;
-import com.momega.spacesimulator.model.OrbitIntersection;
-import com.momega.spacesimulator.model.PhysicalBody;
-import com.momega.spacesimulator.model.SphereOfInfluence;
-import com.momega.spacesimulator.model.Target;
 
 /**
  * @author martin
@@ -40,6 +29,9 @@ import com.momega.spacesimulator.model.Target;
 public class ModelSerializer implements InitializingBean {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ModelSerializer.class);
+	
+	@Autowired
+	private List<Serializer<?>> serializers;
 	
 	private Gson gson;
 
@@ -62,13 +54,9 @@ public class ModelSerializer implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		DelegatingTypeAdaptorFactory delegatingTypeAdaptorFactory = new DelegatingTypeAdaptorFactory();
-        delegatingTypeAdaptorFactory.registerSerializer(OrbitIntersection.class, new OrbitIntersectionSerializer());
-        delegatingTypeAdaptorFactory.registerSerializer(KeplerianOrbit.class, new KeplerianOrbitSerializer());
-        delegatingTypeAdaptorFactory.registerSerializer(SphereOfInfluence.class, new SphereOfInfluenceSerializer());
-        delegatingTypeAdaptorFactory.registerSerializer(Target.class, new TargetSerializer());
-        delegatingTypeAdaptorFactory.registerSerializer(Camera.class, new CameraSerializer());
-        delegatingTypeAdaptorFactory.registerSerializer(NamedObject.class, new NamedObjectSerializer());
-        delegatingTypeAdaptorFactory.registerSerializer(PhysicalBody.class, new MovingObjectSerializer());
+		for(Serializer<?> serializer : serializers) {
+			delegatingTypeAdaptorFactory.registerSerializer(serializer.getSuperClass(), serializer);
+		}
         
         this.gson = new GsonBuilder()
 	        .excludeFieldsWithModifiers(Modifier.STATIC, Modifier.TRANSIENT)

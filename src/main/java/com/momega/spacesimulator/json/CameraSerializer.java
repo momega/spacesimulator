@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.json;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.Camera;
 import com.momega.spacesimulator.model.PositionProvider;
@@ -11,6 +13,7 @@ import com.momega.spacesimulator.model.PositionProvider;
  * @author martin
  *
  */
+@Component
 public class CameraSerializer extends AbstractSerializer<Camera> {
 	
 	private static final String TARGET_OBJECT = "targetObject";

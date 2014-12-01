@@ -3,6 +3,7 @@
  */
 package com.momega.spacesimulator.json;
 
+import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.google.gson.JsonObject;
@@ -13,6 +14,7 @@ import com.momega.spacesimulator.model.MovingObject;
  * @author martin
  *
  */
+@Component
 public class KeplerianOrbitSerializer extends AbstractSerializer<KeplerianOrbit> {
 	
 	public KeplerianOrbitSerializer() {

@@ -13,7 +13,7 @@ public abstract class AbstractSerializer<T> implements Serializer<T> {
 	}
 	
 	@Override
-	public Class<?> getSuperClass(JsonObject object) {
+	public Class<?> getSuperClass() {
 		return clazz;
 	}
 	

@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.json;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.OrbitIntersection;
@@ -11,6 +13,7 @@ import com.momega.spacesimulator.model.OrbitIntersection;
  * @author martin
  *
  */
+@Component
 public class OrbitIntersectionSerializer extends AbstractSerializer<OrbitIntersection> {
 	
 	private static final String TARGET_OBJECT = "targetObject";

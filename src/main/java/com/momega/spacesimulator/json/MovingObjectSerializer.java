@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.json;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
@@ -11,9 +13,8 @@ import com.momega.spacesimulator.model.UserOrbitalPoint;
  * @author martin
  *
  */
+@Component
 public class MovingObjectSerializer extends AbstractSerializer<MovingObject> {
-	
-	private int fixIndex = 20;
 
 	public MovingObjectSerializer() {
 		super(MovingObject.class);
@@ -29,11 +30,6 @@ public class MovingObjectSerializer extends AbstractSerializer<MovingObject> {
 		// relink orbital points
 		for(UserOrbitalPoint userOrbitalPoint : value.getUserOrbitalPoints()) {
 			userOrbitalPoint.setMovingObject(value);
-		}
-		
-		// fix 
-		if (value.getIndex()==null) {
-			value.setIndex(Integer.valueOf(fixIndex++));
 		}
 	}
 	

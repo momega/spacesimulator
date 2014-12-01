@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.json;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.AbstractOrbitalPoint;
 import com.momega.spacesimulator.model.MovingObject;
@@ -11,6 +13,7 @@ import com.momega.spacesimulator.model.MovingObject;
  * @author martin
  *
  */
+@Component
 public class OrbitalPointSerializer extends AbstractSerializer<AbstractOrbitalPoint> {
 	
 	private static final String TYPE = "type$";

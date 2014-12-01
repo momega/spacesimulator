@@ -85,7 +85,7 @@ public class DelegatingTypeAdaptorFactory implements TypeAdapterFactory {
 			    }
 			    
 			    for(Serializer<T> serializer : list) {
-			    	if (serializer.getSuperClass(jsonObject).isAssignableFrom(value.getClass())) {
+			    	if (serializer.getSuperClass().isAssignableFrom(value.getClass())) {
 			    		serializer.read(jsonObject, value);
 			    	}
 			    }

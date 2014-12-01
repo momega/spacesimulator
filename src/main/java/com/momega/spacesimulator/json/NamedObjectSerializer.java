@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.json;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.NamedObject;
 
@@ -10,6 +12,7 @@ import com.momega.spacesimulator.model.NamedObject;
  * @author martin
  *
  */
+@Component
 public class NamedObjectSerializer implements Serializer<NamedObject> {
 	
 	public static final String TYPE = "type$";
@@ -38,7 +41,7 @@ public class NamedObjectSerializer implements Serializer<NamedObject> {
 	}
 	
 	@Override
-	public Class<?> getSuperClass(JsonObject object) {
+	public Class<?> getSuperClass() {
 		return NamedObject.class;
 	}
 

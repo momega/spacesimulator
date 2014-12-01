@@ -17,5 +17,5 @@ public interface Serializer<T> {
 	
 	Class<?> getClass(JsonObject object);
 	
-	Class<?> getSuperClass(JsonObject object);
+	Class<?> getSuperClass();
 }

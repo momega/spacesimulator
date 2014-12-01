@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.json;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.SphereOfInfluence;
@@ -11,6 +13,7 @@ import com.momega.spacesimulator.model.SphereOfInfluence;
  * @author martin
  *
  */
+@Component
 public class SphereOfInfluenceSerializer extends AbstractSerializer<SphereOfInfluence> {
 	
 	private static final String BODY = "body";

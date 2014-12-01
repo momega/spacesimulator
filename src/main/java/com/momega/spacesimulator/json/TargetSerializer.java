@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.json;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Target;
@@ -11,6 +13,7 @@ import com.momega.spacesimulator.model.Target;
  * @author martin
  *
  */
+@Component
 public class TargetSerializer extends AbstractSerializer<Target> {
 	
 	private static final String TARGET_OBJECT = "targetObject";
