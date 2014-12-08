@@ -2,9 +2,6 @@ package com.momega.spacesimulator.model;
 
 import java.math.BigDecimal;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.momega.spacesimulator.utils.MathUtils;
 
 /**
@@ -12,7 +9,6 @@ import com.momega.spacesimulator.utils.MathUtils;
  */
 public class CartesianState {
 
-    private static final Logger logger = LoggerFactory.getLogger(CartesianState.class);
     private final static double MINOR_ERROR = Math.pow(10, -12);
 
     private Vector3d position;
@@ -75,8 +71,6 @@ public class CartesianState {
         Vector3d eVector = velocity.cross(hVector).scale(1/mi).subtract(position.normalize());
         double e = eVector.length();
 
-        logger.debug("e = {}", e);
-
         double a = h*h / (1- e*e) / mi;
 
         double OMEGA = 0d;
@@ -128,8 +122,6 @@ public class CartesianState {
                 }
             }
         }
-
-        logger.debug("theta = {}, inclination = {}", theta, i);
 
         KeplerianElements keplerianElements = new KeplerianElements();
         KeplerianOrbit keplerianOrbit = new KeplerianOrbit();

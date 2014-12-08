@@ -55,7 +55,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         Vector3d position = KeplerianOrbit.getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(8200d).negate();
-        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity, 1);
+        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity, 1, new double[] {1, 1, 0});
 
         Propulsion propulsion = new Propulsion();
         propulsion.setMass(29000);

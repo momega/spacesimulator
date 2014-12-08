@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.math3.util.FastMath;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
@@ -17,8 +15,6 @@ import com.momega.spacesimulator.utils.TimeUtils;
  * Created by martin on 10/12/14.
  */
 public class KeplerianOrbit {
-
-    private static final Logger logger = LoggerFactory.getLogger(KeplerianOrbit.class);
 
     private transient MovingObject centralObject;
     private double semimajorAxis; // (a)
@@ -33,8 +29,8 @@ public class KeplerianOrbit {
     private transient Double meanMotion; // n
 
     /**
-     * Semimajor axis in meters of the orbit
-     * @return the semimajor axis
+     * Semi-major axis in meters of the orbit
+     * @return the semi-major axis
      */
     public double getSemimajorAxis() {
         return this.semimajorAxis;
@@ -196,7 +192,6 @@ public class KeplerianOrbit {
         		result.add(angle);
         	}
         }
-        logger.debug("lineIntersection result = {}", result);
         return result.toArray(new Double[result.size()]);
     }
 

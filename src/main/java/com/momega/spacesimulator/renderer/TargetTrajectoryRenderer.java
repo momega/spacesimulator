@@ -20,18 +20,20 @@ public class TargetTrajectoryRenderer extends AbstractKeplerianTrajectoryRendere
 
     @Override
     public void draw(GLAutoDrawable drawable) {
-        if (RendererModel.getInstance().isVisibleOnScreen(spacecraft)) {
-            Target target = spacecraft.getTarget();
-            KeplerianElements keplerianElements = target.getKeplerianElements();
-            if (keplerianElements != null) {
-                GL2 gl = drawable.getGL().getGL2();
-                gl.glPushMatrix();
-
-                drawTrajectory(gl, keplerianElements);
-
-                gl.glPopMatrix();
-            }
-        }
+    	if (Preferences.getInstance().isDrawTargetTrajectory()) {
+	        if (RendererModel.getInstance().isVisibleOnScreen(spacecraft)) {
+	            Target target = spacecraft.getTarget();
+	            KeplerianElements keplerianElements = target.getKeplerianElements();
+	            if (keplerianElements != null) {
+	                GL2 gl = drawable.getGL().getGL2();
+	                gl.glPushMatrix();
+	
+	                drawTrajectory(gl, keplerianElements);
+	
+	                gl.glPopMatrix();
+	            }
+	        }
+    	}
     }
 
     @Override

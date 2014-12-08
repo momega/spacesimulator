@@ -31,6 +31,7 @@ import com.momega.spacesimulator.controller.PerspectiveController;
 import com.momega.spacesimulator.controller.PreferencesController;
 import com.momega.spacesimulator.controller.QuitController;
 import com.momega.spacesimulator.controller.SaveController;
+import com.momega.spacesimulator.controller.SpacecraftController;
 import com.momega.spacesimulator.controller.TakeScreenshotController;
 import com.momega.spacesimulator.controller.TargetController;
 import com.momega.spacesimulator.controller.TimeController;
@@ -77,6 +78,7 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new InterplanetaryFlightController());
         controller.addController(new LoadController());
         controller.addController(new SaveController());
+        controller.addController(new SpacecraftController());
         window.openWindow(mr, controller);
         
         final RendererModel rendererModel = RendererModel.getInstance();
@@ -158,6 +160,9 @@ public class MainWindow extends DefaultWindow {
     	JMenuItem findItem = new JMenuItem("Find...");
     	JMenuItem newSpacecraftItem = new JMenuItem("New Spacecraft...");
         newSpacecraftItem.setIcon(Icons.ADD_SPACECRAFT);
+        newSpacecraftItem.setActionCommand(SpacecraftController.NEW_SPACECRAFT);
+        newSpacecraftItem.addActionListener(controller);
+        
         JMenuItem deleteSpacecraftItem = new JMenuItem("Delete Spacecraft...");
         deleteSpacecraftItem.setIcon(Icons.DELETE_SPACECRAFT);
     	JMenuItem newPointItem = new JMenuItem("New Point...");

@@ -3,8 +3,6 @@
  */
 package com.momega.spacesimulator.swing;
 
-import java.util.List;
-
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.renderer.RendererModel;
 
@@ -18,10 +16,6 @@ public class MovingObjectsObjectModel extends AbstractObjectsModel<MovingObject>
 
 	public MovingObjectsObjectModel() {
 		super(RendererModel.getInstance().findAllMovingObjects());
-	}
-
-	public MovingObjectsObjectModel(List<MovingObject> list) {
-		super(list);
 	}
 
 }

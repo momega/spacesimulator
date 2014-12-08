@@ -26,7 +26,7 @@ public class TwoSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
         Vector3d position = KeplerianOrbit.getCartesianPosition(500 * 1E3 + earth.getRadius(), 0, 0, Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(8200d).negate();
-        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 2", position, velocity, 2);
+        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 2", position, velocity, 2, new double[] {1, 1, 0});
 
         Propulsion propulsion = new Propulsion();
         propulsion.setMass(29000);

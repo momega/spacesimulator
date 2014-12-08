@@ -2,9 +2,6 @@ package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.utils.MathUtils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * The class holding keplerian elements of the trajectory
  * Created by martin on 4/21/14.
@@ -12,7 +9,6 @@ import org.slf4j.LoggerFactory;
 public class KeplerianElements {
 
     private final static double MINOR_ERROR = Math.pow(10, -12);
-    private static final Logger logger = LoggerFactory.getLogger(KeplerianElements.class);
 
     private KeplerianOrbit keplerianOrbit;
     private double trueAnomaly; // theta
@@ -244,7 +240,6 @@ public class KeplerianElements {
         double HA = MathUtils.asinh(sinH);
     	//double cosHA = (eccentricity + Math.cos(theta))/(1 + eccentricity*Math.cos(theta));
     	//double HA = MathUtils.acosh(cosHA);
-        logger.debug("HA = {}", HA);
         return HA;
     }
     /**

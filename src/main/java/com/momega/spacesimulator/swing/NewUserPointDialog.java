@@ -51,7 +51,7 @@ public class NewUserPointDialog extends DefaultDialog {
         layout.setAutoCreateContainerGaps(true);
         
         JLabel lblName = new JLabel("Name:", SwingConstants.RIGHT);
-        JLabel lblSpacecraft = new JLabel("Physical Body:", SwingConstants.RIGHT);
+        JLabel lblSpacecraft = new JLabel("Moving Body:", SwingConstants.RIGHT);
         JLabel lblTrueAnomaly = new JLabel("True Anomaly:", SwingConstants.RIGHT);
         txtName = new JTextField("User Point");
         txtName.addFocusListener(new FocusTextListener(txtName));
@@ -60,10 +60,10 @@ public class NewUserPointDialog extends DefaultDialog {
         txtTrueAnomaly = new JFormattedTextField(formatter);
         txtTrueAnomaly.setText("0.0");
         txtTrueAnomaly.addFocusListener(new FocusTextListener(txtTrueAnomaly));
-        JComboBox<MovingObject> spacecraftBox = new JComboBox<MovingObject>();
-        spacecraftBox.setModel(movingObjectsObjectModel);
-        spacecraftBox.setRenderer(new MovingObjectListRenderer());
-        spacecraftBox.setMaximumSize(new Dimension(300, 100));
+        JComboBox<MovingObject> movingBodyBox = new JComboBox<MovingObject>();
+        movingBodyBox.setModel(movingObjectsObjectModel);
+        movingBodyBox.setRenderer(new MovingObjectListRenderer());
+        movingBodyBox.setMaximumSize(new Dimension(300, 100));
         
         layout.setVerticalGroup(
                 layout.createSequentialGroup()
@@ -73,7 +73,7 @@ public class NewUserPointDialog extends DefaultDialog {
                     )
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(lblSpacecraft)
-                        .addComponent(spacecraftBox)
+                        .addComponent(movingBodyBox)
                     )
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(lblTrueAnomaly)
@@ -90,7 +90,7 @@ public class NewUserPointDialog extends DefaultDialog {
                     )
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     	.addComponent(txtName)
-                        .addComponent(spacecraftBox)
+                        .addComponent(movingBodyBox)
                         .addComponent(txtTrueAnomaly)
                     )
             );

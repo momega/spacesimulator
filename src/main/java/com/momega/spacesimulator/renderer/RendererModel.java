@@ -495,6 +495,17 @@ public class RendererModel {
 
 	protected void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
 		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
+	}
+
+	public List<Integer> getAvailableIndexes() {
+		List<Integer> result = new ArrayList<>();
+		for(int i=1; i<=9; i++) {
+			result.add(Integer.valueOf(i));
+		}
+		for(MovingObject mo : ModelHolder.getModel().getMovingObjects()) {
+			result.remove(mo.getIndex());
+		}
+		return result;
 	}	
 
 }

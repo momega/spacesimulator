@@ -34,6 +34,7 @@ import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.service.HistoryPointService;
 import com.momega.spacesimulator.service.KeplerianPropagator;
 import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.SpacecraftService;
 import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
@@ -67,6 +68,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     @Autowired
     private TargetService targetService;
 
+    @Autowired
+    private SpacecraftService spacecraftService;
+    
     /**
      * Initialize model and  returns the instance
      */
@@ -195,36 +199,16 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     /**
      * Creates the satellite
-     * @param centralPoint the initial dynamical point, the satellite is orbiting. It is also used for transforming coordinates (position and velocity)
+     * @param centralPoint the initial celestial body, the satellite is orbiting. It is also used for transforming coordinates (position and velocity)
      *                     to the central body of the system
      * @param name the name of the satellite
      * @param position the position of the satellite
      * @param velocity the initial velocity
      * @return new instance of the satellite
      */
-    public Spacecraft createSpacecraft(MovingObject centralPoint, String name, Vector3d position, Vector3d velocity, int index) {
-        Spacecraft spacecraft = new Spacecraft();
-        spacecraft.setName(name);
-
-        CartesianState cartesianState = new CartesianState();
-        cartesianState.setPosition(position);
-        cartesianState.setVelocity(velocity);
-
-        if (centralPoint != getCentralObject()) {
-            cartesianState = VectorUtils.transformCoordinateSystem(centralPoint, getCentralObject(), cartesianState);
-        }
-
-        spacecraft.setCartesianState(cartesianState);
-        spacecraft.setOrientation(Orientation.createUnit());
-        KeplerianTrajectory keplerianTrajectory = new KeplerianTrajectory();
-        keplerianTrajectory.setColor(new double[]{1, 1, 0});
-        keplerianTrajectory.setType(TrajectoryType.NEWTONIAN);
-        spacecraft.setTrajectory(keplerianTrajectory);
-        spacecraft.setMass(0d);
-        spacecraft.setIndex(index);
-
-        historyPointService.start(spacecraft, model.getTime());
-
+    public Spacecraft createSpacecraft(CelestialBody centralPoint, String name, Vector3d position, Vector3d velocity, int index, double[] color) {
+    	MovingObject centralBody = getCentralObject();
+        Spacecraft spacecraft = spacecraftService.createSpacecraft(centralPoint, centralBody, name, position, velocity, index, model.getTime(), color);
         return spacecraft;
     }
 

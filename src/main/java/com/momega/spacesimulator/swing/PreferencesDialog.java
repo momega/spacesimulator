@@ -16,6 +16,7 @@ public class PreferencesDialog extends DefaultDialog {
 	private static final long serialVersionUID = -1915023260172641370L;
 	private JCheckBox chkBeams;
     private JCheckBox chkSpacecraftAxis;
+    private JCheckBox chkTargetTrajectory;
 
     public PreferencesDialog() {
         super("Preferences...");
@@ -25,6 +26,7 @@ public class PreferencesDialog extends DefaultDialog {
     protected boolean okPressed() {
         Preferences.getInstance().setDrawBeamsActivated(chkBeams.isSelected());
         Preferences.getInstance().setDrawSpacecraftAxisActivated(chkSpacecraftAxis.isSelected());
+        Preferences.getInstance().setDrawTargetTrajectory(chkTargetTrajectory.isSelected());
         return true;
     }
     
@@ -40,6 +42,11 @@ public class PreferencesDialog extends DefaultDialog {
         chkSpacecraftAxis = new JCheckBox("Show spacecraft orientation axis");
         mainPanel.add(chkSpacecraftAxis);
         chkSpacecraftAxis.setSelected(Preferences.getInstance().isDrawSpacecraftAxisActivated());
+        
+        chkTargetTrajectory = new JCheckBox("Show estimated trajectory to given target");
+        mainPanel.add(chkTargetTrajectory);
+        chkTargetTrajectory.setSelected(Preferences.getInstance().isDrawTargetTrajectory());
+        
         return mainPanel;
     }
 }
