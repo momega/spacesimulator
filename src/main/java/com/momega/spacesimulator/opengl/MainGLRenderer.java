@@ -74,12 +74,12 @@ public class MainGLRenderer extends AbstractGLRenderer {
         if (z < znear) {
             znear = z;
             setReshape();
-            logger.info("new z-near = {}", znear);
+            logger.debug("new z-near = {}", znear);
         }
         if (z > znear) {
             znear = z;
             setReshape();
-            logger.info("new z-near = {}", znear);
+            logger.debug("new z-near = {}", znear);
         }
     }
 

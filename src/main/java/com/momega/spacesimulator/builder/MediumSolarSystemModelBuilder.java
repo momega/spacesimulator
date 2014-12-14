@@ -42,6 +42,14 @@ public class MediumSolarSystemModelBuilder extends SimpleSolarSystemModelBuilder
         SphereOfInfluence marsSoi = addPlanetToSoiTree(mars, sunSoi);
         addPlanetToSoiTree(phobos, marsSoi);
         addPlanetToSoiTree(deimos, marsSoi);
+
+        CelestialBody venus = new Planet();
+        updateDynamicalPoint(venus, "Venus", 4.8685, 243.0185, 6.0518, 272.76, 67.16, 160.20, "Venus_(planet)", "/images/venus.png");
+        createKeplerianElements(venus, sun, 108208d * 1E6, 0.0067, 54.6820, 224.699, 2456681.501144, 3.3945, 76.6408);
+        createTrajectory(venus, "#FF9933");
+        venus.setTextureFileName("venus.jpg");
+        
+        addMovingObject(venus);        
 	}
 
 }

@@ -11,7 +11,7 @@ import com.momega.spacesimulator.utils.TimeUtils;
 /**
  * Created by martin on 10/19/14.
  */
-public class TwoSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
+public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
 	
 	protected void initTime() {
         model.setTime(TimeUtils.fromDateTime(new DateTime(2016, 2, 22, 10, 0, DateTimeZone.UTC)));

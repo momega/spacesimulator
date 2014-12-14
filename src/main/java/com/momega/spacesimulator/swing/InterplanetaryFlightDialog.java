@@ -43,7 +43,7 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 	private SpacecraftObjectModel spacecraftObjectModel;
 	private PlanetsObjectModel planetObjectModel;
 	private JFormattedTextField txtTransferA;
-	private MovingObject selectedSpacecraft;
+	private Spacecraft selectedSpacecraft;
 	private MovingObject sourceBody; // could be also earth-moon center
 	private MovingObject targetPlanet;
 	private JFormattedTextField txtEccentricity;
@@ -59,6 +59,10 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 	private MovingObject targetBody;
 	private JFormattedTextField txtAngle;
 	private JFormattedTextField txtCurrentAngle;
+
+	private JFormattedTextField txtAngleDiff;
+
+	private double angle;
 
 	public InterplanetaryFlightDialog() {
 		 super("Interplanetary Flight");
@@ -83,19 +87,20 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
         JLabel lblTof = new JLabel("Time of flight:", SwingConstants.RIGHT);
         JLabel lblAngle = new JLabel("Phase angle:", SwingConstants.RIGHT);
         JLabel lblCurrentAngle = new JLabel("Current angle:", SwingConstants.RIGHT);
+        JLabel lblAngleDiff = new JLabel("Angle Difference:", SwingConstants.RIGHT);
         
         JComboBox<Spacecraft> spacecraftBox = new JComboBox<Spacecraft>();
         spacecraftBox.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				Object[] objs = e.getItemSelectable().getSelectedObjects();
-				MovingObject spacecraft = (MovingObject) objs[0];
+				Spacecraft spacecraft = (Spacecraft) objs[0];
 				selectedSpacecraft = spacecraft; 
 				calculateSemimajorTargetTrajectory();
 			}
 		});
         spacecraftBox.setModel(spacecraftObjectModel);
-        selectedSpacecraft = (MovingObject) spacecraftObjectModel.getSelectedItem();
+        selectedSpacecraft = (Spacecraft) spacecraftObjectModel.getSelectedItem();
         spacecraftBox.setRenderer(new MovingObjectListRenderer());
         spacecraftBox.setMaximumSize(new Dimension(300, 100));
         
@@ -104,15 +109,11 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
         planetsBox.setRenderer(new MovingObjectListRenderer());
         planetsBox.setMaximumSize(new Dimension(300, 100));
         targetPlanet = (Planet) planetObjectModel.getSelectedItem();
-        planetsBox.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent e) {
-				Object[] objs = e.getItemSelectable().getSelectedObjects();
-				Planet planet = (Planet) objs[0];
-				targetPlanet = planet;
-				calculateSemimajorTargetTrajectory();
-			}
-		});
+        
+        if (selectedSpacecraft.getTarget()!=null) {
+        	targetPlanet = selectedSpacecraft.getTarget().getTargetBody();
+        	planetObjectModel.setSelectedItem(targetPlanet);
+        }
         
         rootBody = ModelHolder.getModel().getRootSoi().getBody();
         
@@ -140,6 +141,10 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
         txtCurrentAngle = new JFormattedTextField(formatter);
         txtCurrentAngle.setText("0.0");
         txtCurrentAngle.setEnabled(false);
+        
+        txtAngleDiff = new JFormattedTextField(formatter);
+        txtAngleDiff.setText("0.0");
+        txtAngleDiff.setEnabled(false);
         
         JButton btnCalculate = new JButton("Calculate");
         btnCalculate.setIcon(SwingUtils.createImageIcon("/images/calculator.png"));
@@ -185,6 +190,10 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
                         .addComponent(lblCurrentAngle)
                         .addComponent(txtCurrentAngle)
                     )
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(lblAngleDiff)
+                        .addComponent(txtAngleDiff)
+                    )
             );
         
         layout.setHorizontalGroup(
@@ -198,6 +207,7 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
                         .addComponent(lblTof)
                         .addComponent(lblAngle)
                         .addComponent(lblCurrentAngle)
+                        .addComponent(lblAngleDiff)
                     )
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     	.addComponent(spacecraftBox)
@@ -208,6 +218,7 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
                         .addComponent(txtTof)
                         .addComponent(txtAngle)
                         .addComponent(txtCurrentAngle)
+                        .addComponent(txtAngleDiff)
                     )
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     	.addComponent(btnCalculate)
@@ -221,6 +232,16 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
                 RendererModel.getInstance().removeModelChangeListener(InterplanetaryFlightDialog.this);
             }
         });
+        
+        planetsBox.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				Object[] objs = e.getItemSelectable().getSelectedObjects();
+				Planet planet = (Planet) objs[0];
+				targetPlanet = planet;
+				calculateSemimajorTargetTrajectory();
+			}
+		});
         
         calculateSemimajorTargetTrajectory();
         
@@ -255,7 +276,7 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 		txtTof.setText(String.format("%3.6f", tof/60/60/24));
 		
 		double omega = 2*Math.PI/targetBody.getKeplerianElements().getKeplerianOrbit().getPeriod().doubleValue();
-		double angle = theta - omega * tof;
+		angle = theta - omega * tof;
 		
 		txtAngle.setText(String.format("%3.6f", Math.toDegrees(angle)));
 	}
@@ -280,6 +301,9 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 	protected void calculateCurrentAngle() {
 		double currentAngle = selectedSpacecraft.getPosition().angle(targetPlanet.getPosition());
 		txtCurrentAngle.setText(String.format("%3.6f", Math.toDegrees(currentAngle)));
+		
+		double angleDiff =  angle - currentAngle;
+		txtAngleDiff.setText(String.format("%3.6f", Math.toDegrees(angleDiff)));
 	}
 
 	@Override

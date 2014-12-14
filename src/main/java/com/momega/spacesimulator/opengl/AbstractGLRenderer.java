@@ -87,7 +87,7 @@ public abstract class AbstractGLRenderer implements GLEventListener {
      */
     protected final void reshapeRequired(GLAutoDrawable drawable) {
         if (reshape) {
-            logger.info("reshape required manually");
+            logger.debug("reshape required manually");
             reshape(drawable, 0, 0, drawable.getSurfaceWidth(), drawable.getSurfaceHeight());
             reshape = false;
         }
@@ -145,7 +145,7 @@ public abstract class AbstractGLRenderer implements GLEventListener {
      * redraw the stencil area.
      */
     public final void reshape(GLAutoDrawable drawable, int x, int y, int width, int height) {
-        logger.info("reshape called {}x{}", width, height);
+        logger.debug("reshape called {}x{}", width, height);
         GL2 gl = drawable.getGL().getGL2();  // get the OpenGL 2 graphics context
 
         if (height == 0) {
@@ -160,7 +160,7 @@ public abstract class AbstractGLRenderer implements GLEventListener {
         setPerspective(gl, aspect);
         gl.glMatrixMode(GL_MODELVIEW);
         gl.glLoadIdentity(); // reset
-        logger.info("reshape called done");
+        logger.debug("reshape called done");
     }
     
     public void setReshape() {

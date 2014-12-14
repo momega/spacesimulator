@@ -108,7 +108,7 @@ public class CameraController extends AbstractCameraConroller {
     public void changeDistance(double factor) {
         if (getCamera().getTargetObject() instanceof PositionProvider) {
             ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(getCamera().getTargetObject());
-            logger.info("view radius = {}", viewCoordinates.getRadius());
+            logger.debug("view radius = {}", viewCoordinates.getRadius());
             if (viewCoordinates.getRadius() * 2 > this.height && factor<1) {
                 return;
             }

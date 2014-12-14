@@ -19,7 +19,7 @@ import com.momega.spacesimulator.model.Camera;
  */
 public abstract class AbstractCameraConroller extends AbstractController {
 
-	private static final Logger logger = LoggerFactory.getLogger(SimpleCameraController.class);
+	private static final Logger logger = LoggerFactory.getLogger(AbstractCameraConroller.class);
 	
 	private Point mouseLast;
 	
@@ -61,7 +61,7 @@ public abstract class AbstractCameraConroller extends AbstractController {
     
     public void changeDistance(double factor) {
         double newDistance = getCamera().getDistance() * factor;
-        logger.info("new distance of the camera = {}", newDistance);
+        logger.debug("new distance of the camera = {}", newDistance);
         getCamera().setDistance(newDistance);
     }
     

@@ -14,12 +14,6 @@ public class SolarSystemModelBuilder extends MediumSolarSystemModelBuilder {
     public void initPlanets() {
         super.initPlanets();
 
-        CelestialBody venus = new Planet();
-        updateDynamicalPoint(venus, "Venus", 4.8685, 243.0185, 6.0518, 272.76, 67.16, 160.20, "Venus_(planet)", null);
-        createKeplerianElements(venus, sun, 108208d * 1E6, 0.0067, 54.6820, 224.699, 2456681.501144, 3.3945, 76.6408);
-        createTrajectory(venus, "#FF9933");
-        venus.setTextureFileName("venus.jpg");
-
         CelestialBody mercury = new Planet();
         updateDynamicalPoint(mercury, "Mercury", 0.3302, 58.646, 2.4397, 281.01, 61.45, 329.5469, "Mercury_(planet)", null);
         createKeplerianElements(mercury, sun, 57909.05d * 1E6, 0.20563, 29.124, 87.96890, 2456780.448693044949, 7.0, 48.313);
@@ -32,7 +26,6 @@ public class SolarSystemModelBuilder extends MediumSolarSystemModelBuilder {
         createTrajectory(jupiter, new double[]{1,0.65,0.0});
         jupiter.setTextureFileName("jupiter.jpg");
 
-        addMovingObject(venus);
         addMovingObject(mercury);
         addMovingObject(jupiter);
 

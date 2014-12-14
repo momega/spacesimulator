@@ -38,9 +38,10 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 	private final CelestialBodyModel model;
 	private Spacecraft spacecraft;
 	private final Target target = new Target();
-    private final JTextField angleLabelValue;
+    private final JTextField txtAngle;
+    private final JTextField txtDistance;
     private final TargetService targetService;
-    private boolean updatingAngle = true;
+    private boolean updating = true;
 
 	public SpacecraftPanel(final Spacecraft spacecraft) {
 		super(new BorderLayout(5, 5));
@@ -51,7 +52,7 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
         this.target.setAngle(this.spacecraft.getTarget() == null ? null : this.spacecraft.getTarget().getAngle());
 		attrPanel = new AttributesPanel(spacecraft, LABELS, FIELDS);
 
-		JPanel targetPanel = new JPanel(new GridLayout(2, 2, 5, 5));
+		JPanel targetPanel = new JPanel(new GridLayout(3, 2, 5, 5));
 
 		JLabel targetLabel = new JLabel("Target:", JLabel.TRAILING);
 		targetPanel.add(targetLabel);
@@ -63,13 +64,21 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 		targetBox.setModel(model);
 		targetPanel.add(targetBox);
 
-        JLabel angleLabel = new JLabel("Angle:", JLabel.TRAILING);
-        targetPanel.add(angleLabel);
-        angleLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        JLabel lblAngle = new JLabel("Angle:", JLabel.TRAILING);
+        targetPanel.add(lblAngle);
+        lblAngle.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-        angleLabelValue = new JTextField();
-        angleLabelValue.setEditable(false);
-        targetPanel.add(angleLabelValue);
+        txtAngle = new JTextField();
+        txtAngle.setEditable(false);
+        targetPanel.add(txtAngle);
+        
+        JLabel lblDistance = new JLabel("Distance:", JLabel.TRAILING);
+        targetPanel.add(lblDistance);
+        lblDistance.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+        txtDistance = new JTextField();
+        txtDistance.setEditable(false);
+        targetPanel.add(txtDistance);
 
         targetBox.addActionListener(new ActionListener() {
             @Override
@@ -80,36 +89,41 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
                     ViewCoordinates viewCoordinates = RendererModel.getInstance().findByName((String) model.getSelectedItem());
                     target.setTargetBody((viewCoordinates == null) ? null : (CelestialBody) viewCoordinates.getObject());
 
-                    updatingAngle = false;
-                    Double angle = targetService.computePlanesAngle(spacecraft, (CelestialBody) viewCoordinates.getObject());
-                    target.setAngle(angle);
+                    updating = false;
+                    targetService.computeTargetParameters(spacecraft, (CelestialBody) viewCoordinates.getObject(), target);
 
-                    updateAngle();
+                    updateTargetParameters();
                 }
             }
         });
 
-        updateAngle();
+        updateTargetParameters();
 
 		add(attrPanel, BorderLayout.CENTER);
 		add(targetPanel, BorderLayout.PAGE_END);
 	}
 
-    protected void updateAngle() {
+    protected void updateTargetParameters() {
         if (this.target.getAngle()!=null) {
-            angleLabelValue.setText(String.format("%6.2f°", Math.toDegrees(this.target.getAngle())));
+            txtAngle.setText(String.format("%6.2f°", Math.toDegrees(this.target.getAngle())));
         } else {
-            angleLabelValue.setText("");
+            txtAngle.setText("");
         }
+        if (this.target.getDistance()!=null) {
+            txtDistance.setText(String.format("%6.2f 10^3km", this.target.getDistance()/1E6));
+        } else {
+        	txtDistance.setText("");
+        }
+        
     }
 
 	@Override
 	public void updateView(ModelChangeEvent event) {
 		attrPanel.updateView(event);
-
-        if (updatingAngle) {
+        if (updating) {
             target.setAngle(spacecraft.getTarget()==null ? null : spacecraft.getTarget().getAngle());
-            updateAngle();
+            target.setDistance(spacecraft.getTarget()==null ? null : spacecraft.getTarget().getDistance());
+            updateTargetParameters();
         }
 	}
 

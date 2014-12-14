@@ -46,20 +46,21 @@ public class TargetService {
         return target;
     }
 
-    public Double computePlanesAngle(MovingObject spacecraft, CelestialBody targetBody) {
+    public void computeTargetParameters(MovingObject spacecraft, CelestialBody targetBody, Target target) {
         if (targetBody == null) {
-            return null;
+            return;
         }
         
         if (targetBody.isStatic()) {
-        	return null;
+        	return;
         }
 
         Plane spacecraftPlane = createOrbitalPlane(spacecraft);
         Plane targetBodyPlane = createOrbitalPlane(targetBody);
 
         double angle = spacecraftPlane.angleBetween(targetBodyPlane);
-        return Double.valueOf(angle);
+        target.setAngle(Double.valueOf(angle));
+        target.setDistance(spacecraft.getPosition().subtract(targetBody.getPosition()).length());
     }
 
     /**
@@ -78,11 +79,15 @@ public class TargetService {
         
         if (targetBodyPlane == null) {
         	target.setOrbitIntersections(new ArrayList<OrbitIntersection>());
+        	target.setAngle(null);
+        	target.setDistance(null);
         	return;
         }
 
         double angle = spacecraftPlane.angleBetween(targetBodyPlane);
         target.setAngle(angle);
+        target.setDistance(spacecraft.getPosition().subtract(targetBody.getPosition()).length());
+        
         logger.debug("planesAngle = {}", Math.toDegrees(angle));
 
         KeplerianOrbit orbit = spacecraft.getKeplerianElements().getKeplerianOrbit();

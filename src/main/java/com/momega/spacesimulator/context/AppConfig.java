@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import com.momega.spacesimulator.builder.ModelBuilder;
-import com.momega.spacesimulator.builder.TwoSpacecraftsModelBuilder;
+import com.momega.spacesimulator.builder.VenusSpacecraftModelBuilder;
 
 /**
  * The application configuration. It instantiates all the services
@@ -17,7 +17,7 @@ public class AppConfig {
 	
 	@Bean
 	public ModelBuilder createModelBuilder() {
-		return new TwoSpacecraftsModelBuilder();
+		return new VenusSpacecraftModelBuilder();
 	}
 
     @Bean

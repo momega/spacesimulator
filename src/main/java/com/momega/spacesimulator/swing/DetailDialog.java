@@ -111,7 +111,7 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
                 RendererModel.getInstance().removeModelChangeListener(DetailDialog.this);
             }
         });
-        setPreferredSize(new Dimension(600, 400));
+        setPreferredSize(new Dimension(640, 400));
         pack();
 
         RendererModel.getInstance().addModelChangeListener(this);

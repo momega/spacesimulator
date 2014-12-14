@@ -80,7 +80,9 @@ public class Vector3d {
     	if(cosAlpha > 1) {
             cosAlpha = 1;
         }
-    	return Math.acos(cosAlpha);
+    	double result = Math.acos(cosAlpha);
+    	double sign = Math.signum(this.cross(vector).z);
+    	return result*sign;
     }
 
     public double lengthSquared() {
