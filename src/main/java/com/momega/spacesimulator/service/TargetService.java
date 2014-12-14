@@ -107,6 +107,10 @@ public class TargetService {
         intersectionLine = new Line(intersectionLinePoint, intersectionLineVector);
         intersectionLine = intersectionLine.move(new Vector3d(orbit.getSemimajorAxis() * orbit.getEccentricity(), 0, 0));
         Double[] angles = orbit.lineIntersection(intersectionLine);
+        
+        if (target.getOrbitIntersections().size() != angles.length ) {
+        	target.getOrbitIntersections().clear();
+        }
 
         // create intersection, if there are not
         List<OrbitIntersection> intersections = target.getOrbitIntersections();
@@ -122,19 +126,21 @@ public class TargetService {
                 intersection.setMovingObject(spacecraft);
             }
         }
+        
+        
 
         // update orbital intersection
         for(int i=0; i<intersections.size(); i++) {
-            double eha = angles[i];
-            double theta = KeplerianElements.solveTheta(eha, orbit.getEccentricity());
+            double eta = angles[i];
+            double theta = KeplerianElements.solveTheta(eta, orbit.getEccentricity());
             OrbitIntersection intersection = intersections.get(i);
             KeplerianElements keplerianElements = intersection.getKeplerianElements();
             keplerianElements.setKeplerianOrbit(orbit);
             keplerianElements.setTrueAnomaly(theta);
             if (orbit.isHyperbolic()) {
-            	keplerianElements.setHyperbolicAnomaly(eha);
+            	keplerianElements.setHyperbolicAnomaly(eta);
             } else {
-            	keplerianElements.setEccentricAnomaly(eha);
+            	keplerianElements.setEccentricAnomaly(eta);
             }
             Vector3d vector = orbit.getCartesianPosition(theta);
 
