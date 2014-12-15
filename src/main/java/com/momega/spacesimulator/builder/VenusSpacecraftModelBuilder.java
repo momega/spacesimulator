@@ -16,7 +16,7 @@ import com.momega.spacesimulator.utils.TimeUtils;
 public class VenusSpacecraftModelBuilder extends MediumSolarSystemModelBuilder {
 
 	protected void initTime() {
-        model.setTime(TimeUtils.fromDateTime(new DateTime(2015, 6, 6, 14, 0, DateTimeZone.UTC)));
+        model.setTime(TimeUtils.fromDateTime(new DateTime(2015, 5, 4, 13, 0, DateTimeZone.UTC)));
         model.setWarpFactor(BigDecimal.ONE);
     }
 
@@ -45,11 +45,14 @@ public class VenusSpacecraftModelBuilder extends MediumSolarSystemModelBuilder {
         addSpacecraftSubsystem(spacecraft, habitableModule);
         
         addManeuver(spacecraft, "V1", 0* 60d, 900d, 1d, 0, Math.toRadians(-90));
-        addManeuver(spacecraft, "V2", 85 * 60d, 700d, 1d, 0, Math.toRadians(-90));
-        addManeuver(spacecraft, "V3", 277 * 60d, 1200, 1d, 0, Math.toRadians(0));
-        addManeuver(spacecraft, "V4", 422 * 60d, 1400, 1d, 0, Math.toRadians(0));
-        addManeuver(spacecraft, "V5", 881 * 60d, 1040, 1d, 0, Math.toRadians(0));
-        addManeuver(spacecraft, "V6", 9319*60d, 525, 1d, 0, Math.toRadians(90));
+        addManeuver(spacecraft, "V2", 17 * 60d, 900, 1d, 0, Math.toRadians(0));
+        addManeuver(spacecraft, "V3", 130 * 60d, 1100, 1d, 0, Math.toRadians(0));
+        addManeuver(spacecraft, "V4", 339 * 60d, 1575, 1d, 0, Math.toRadians(0));
+        addManeuver(spacecraft, "V5", 59510 * 60d, 680, 1d, 0, Math.toRadians(90));
+
+        //addManeuver(spacecraft, "V4", 1830 * 60d, 900, 1d, 0, Math.toRadians(0));
+        //addManeuver(spacecraft, "V5", 881 * 60d, 1040, 1d, 0, Math.toRadians(0));
+        //addManeuver(spacecraft, "V6", 9319*60d, 525, 1d, 0, Math.toRadians(90));
 
         setTarget(spacecraft, venus);
 

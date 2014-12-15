@@ -54,13 +54,13 @@ public class HistoryPointService {
     public void endManeuver(Spacecraft spacecraft, Maneuver maneuver) {
     	HistoryPoint hp = createHistoryPoint(spacecraft, maneuver.getEndTime(), "End of " + maneuver.getName());
         spacecraft.getNamedHistoryPoints().add(hp);
-        logger.info("end = {} ", TimeUtils.timeAsString(hp.getTimestamp()));
+        logger.info("end maneuver {} = {} ", maneuver.getName(), TimeUtils.timeAsString(hp.getTimestamp()));
     }
 
     public void startManeuver(Spacecraft spacecraft, Maneuver maneuver) {
         HistoryPoint hp = createHistoryPoint(spacecraft, maneuver.getStartTime(), "Start of " + maneuver.getName());
         spacecraft.getNamedHistoryPoints().add(hp);
-        logger.info("start = {} ", TimeUtils.timeAsString(hp.getTimestamp()));
+        logger.info("start maneuver {} = {} ", maneuver.getName(), TimeUtils.timeAsString(hp.getTimestamp()));
     }
     
     public HistoryPoint getStartPoint(Spacecraft spacecraft) {
