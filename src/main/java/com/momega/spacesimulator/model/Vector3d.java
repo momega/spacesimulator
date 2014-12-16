@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import org.apache.commons.math3.util.FastMath;
+
 import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
@@ -72,7 +74,7 @@ public class Vector3d {
     }
 
     public double length() {
-        return Math.sqrt(x * x + y * y + z * z);    // note that the squared length has been put inline for efficiency
+        return FastMath.sqrt(x * x + y * y + z * z);    // note that the squared length has been put inline for efficiency
     }
     
     public double angle(Vector3d vector) {
@@ -80,7 +82,7 @@ public class Vector3d {
     	if(cosAlpha > 1) {
             cosAlpha = 1;
         }
-    	double result = Math.acos(cosAlpha);
+    	double result = FastMath.acos(cosAlpha);
     	double sign = Math.signum(this.cross(vector).z);
     	return result*sign;
     }

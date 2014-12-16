@@ -42,6 +42,11 @@ Screenshots
 
 ![Orbit around Mars](/images/mars3.png "Orbit around Mars")
 
+![Maneuver at Periapsis](/images/venus.png "Orbiting Venus")
+
+![Orbit around Mars](/images/arrivetovenus.png "Approaching Venus")
+
+
 Build
 =====
 

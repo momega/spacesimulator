@@ -14,13 +14,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.DefaultListModel;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
@@ -38,6 +42,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.utils.TimeUtils;
@@ -57,6 +62,8 @@ public class TimeDialog extends JDialog {
     private final SpinnerDateModel timeModel;
     private final JProgressBar progressBar;
 	private JButton closeButton;
+	private JList<HistoryPoint> historyEvents;
+	private DefaultListModel<HistoryPoint> eventModel;
 
     /**
      * Constructor
@@ -86,6 +93,7 @@ public class TimeDialog extends JDialog {
 
         JLabel timeLabel = new JLabel("Wait until:");
         JLabel progressLabel = new JLabel("Progress until:");
+        JLabel lblEvents = new JLabel("Events:");
 
         timeModel = new SpinnerDateModel();
         timeModel.setValue(model.getCalendar().getTime());
@@ -107,6 +115,12 @@ public class TimeDialog extends JDialog {
         
         closeButton = new JButton("Close");
         closeButton.setIcon(SwingUtils.createImageIcon("/images/accept.png"));
+        
+        eventModel = new DefaultListModel<>();
+        historyEvents = new JList<>(eventModel);
+        historyEvents.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane listScroller = new JScrollPane(historyEvents);
+        listScroller.setPreferredSize(new Dimension(250, 100));
         
         goButton.addActionListener(new ActionListener() {
             @Override
@@ -192,11 +206,13 @@ public class TimeDialog extends JDialog {
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(timeLabel)
                     .addComponent(progressLabel)
+                    .addComponent(lblEvents)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(timePanel)
                     .addComponent(progressBar)
                     .addComponent(quickTimeButtons)
+                    .addComponent(listScroller)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(goButton)
@@ -208,18 +224,22 @@ public class TimeDialog extends JDialog {
         layout.setVerticalGroup(
             layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(timeLabel)
-                                .addComponent(timePanel)
-                                .addComponent(goButton)
+                    .addComponent(timeLabel)
+                    .addComponent(timePanel)
+                    .addComponent(goButton)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(quickTimeButtons)
                     .addComponent(closeButton)
                 )
                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(progressLabel)
-                                .addComponent(progressBar)
-                                .addComponent(cancelButton)
+                    .addComponent(progressLabel)
+                    .addComponent(progressBar)
+                    .addComponent(cancelButton)
+                )
+                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+    				.addComponent(lblEvents)
+                    .addComponent(listScroller)
                 )
         );
 

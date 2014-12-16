@@ -119,9 +119,9 @@ public class KeplerianOrbit {
 
     public double getSemiminorAxis() {
         if (isHyperbolic()) {
-            return getSemimajorAxis() * Math.sqrt(getEccentricity() * getEccentricity() -1);
+            return getSemimajorAxis() * FastMath.sqrt(getEccentricity() * getEccentricity() -1);
         } else {
-            return getSemimajorAxis() * Math.sqrt(1 - getEccentricity() * getEccentricity());
+            return getSemimajorAxis() * FastMath.sqrt(1 - getEccentricity() * getEccentricity());
         }
     }
 

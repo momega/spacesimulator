@@ -39,8 +39,10 @@ public class LoadController extends AbstractController {
 	public void actionPerformed(ActionEvent e) {
 		if (LOAD_COMMAND.equals(e.getActionCommand())) {
 			File file = selectLoadFile();
-			RendererModel.getInstance().setModelFile(file);
-			fireDelayedAction(e);
+			if (file !=null) {
+				RendererModel.getInstance().setModelFile(file);
+				fireDelayedAction(e);
+			}
 		}
 	}
 	

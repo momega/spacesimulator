@@ -49,9 +49,6 @@ public class ModelRenderer extends CompositeRenderer {
                 addRenderer(new ApoapsisBitmapRenderer(spacecraft));
                 addRenderer(new PeriapsisBitmapRenderer(spacecraft));
 
-                addRenderer(new NamedHistoryRenderer(spacecraft));
-                addRenderer(new HistoryPointBitmapRenderer(spacecraft));
-
                 addRenderer(new SpacecraftOrbitPointsRenderer(spacecraft));
                 addRenderer(new OrbitIntersectionBitmapRenderer(spacecraft));
                 addRenderer(new StartManeuverBitmapRenderer(spacecraft));

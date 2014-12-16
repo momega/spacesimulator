@@ -21,6 +21,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
+import org.apache.commons.math3.util.FastMath;
+
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.KeplerianElements;
@@ -270,7 +272,7 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 		double theta = Math.acos((atx/rB*(1-e*e)-1)/e);
 		double E = KeplerianElements.solveEA(e, theta);
 		double mi = MathUtils.G * rootBody.getMass();
-		double tof = (E - e* Math.sin(E)) * Math.sqrt(atx*atx*atx / mi);
+		double tof = (E - e* Math.sin(E)) * FastMath.sqrt(atx*atx*atx / mi);
 		txtEccentricity.setText(String.format("%3.6f", e));
 		txtTheta.setText(String.format("%3.6f", Math.toDegrees(theta)));
 		txtTof.setText(String.format("%3.6f", tof/60/60/24));

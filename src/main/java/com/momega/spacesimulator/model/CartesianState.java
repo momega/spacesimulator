@@ -2,6 +2,8 @@ package com.momega.spacesimulator.model;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.math3.util.FastMath;
+
 import com.momega.spacesimulator.utils.MathUtils;
 
 /**
@@ -136,9 +138,9 @@ public class CartesianState {
         
         double meanMotion;
         if (keplerianOrbit.isHyperbolic()) {
-            meanMotion = Math.sqrt(-mi / (a * a * a));
+            meanMotion = FastMath.sqrt(-mi / (a * a * a));
         } else {
-            meanMotion = Math.sqrt(mi / (a * a * a));
+            meanMotion = FastMath.sqrt(mi / (a * a * a));
         }
         double period = 2* Math.PI / meanMotion;
         keplerianOrbit.setPeriod(BigDecimal.valueOf(period));

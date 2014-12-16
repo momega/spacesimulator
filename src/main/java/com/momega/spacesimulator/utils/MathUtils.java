@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.utils;
 
+import org.apache.commons.math3.util.FastMath;
+
 /**
  * Set of mathematical helper functions
  *
@@ -23,7 +25,7 @@ public class MathUtils {
     public static final double G0 = 9.80665d;
     
     public static double fmod(double numer, double denom) {
-        double z = Math.floor(numer / denom);
+        double z = FastMath.floor(numer / denom);
         numer = numer - z * denom;
         return numer;
     }
@@ -37,14 +39,6 @@ public class MathUtils {
         return fmod(angle, 2 * Math.PI);
     }
 
-    public static double asinh(double x) {
-        return Math.log(x + Math.sqrt(x*x + 1.0));
-    }
-    
-    public static double acosh(double x) { 
-    	return Math.log(x + Math.sqrt(x*x - 1.0)); 
-    }
-    
     public static double[] solveQuadraticFunction(double a, double b, double c) {
     	double D = b*b - 4*a*c;
     	if (D<0) {
@@ -52,7 +46,7 @@ public class MathUtils {
     	} else if (D == 0) {
     		return new double[] { -b / 2 / a };
     	} else {
-    		return new double[] { (-b - Math.sqrt(D)) / 2 / a, (-b + Math.sqrt(D)) / 2 / a };
+    		return new double[] { (-b - FastMath.sqrt(D)) / 2 / a, (-b + FastMath.sqrt(D)) / 2 / a };
     	}
     }
 

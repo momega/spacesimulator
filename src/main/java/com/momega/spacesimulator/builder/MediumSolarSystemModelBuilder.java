@@ -50,6 +50,8 @@ public class MediumSolarSystemModelBuilder extends SimpleSolarSystemModelBuilder
         venus.setTextureFileName("venus.jpg");
         
         addMovingObject(venus);        
+        
+        addPlanetToSoiTree(venus, sunSoi);
 	}
 
 }

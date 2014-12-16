@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import org.apache.commons.math3.util.FastMath;
+
 import com.momega.spacesimulator.utils.MathUtils;
 
 /**
@@ -153,8 +155,8 @@ public class KeplerianElements {
     }
 
     private static double solveThetaFromHA(double HA, double eccentricity) {
-        double param = Math.sqrt((eccentricity + 1) / (eccentricity -1));
-        double theta = 2 * Math.atan(param * Math.tanh(HA / 2));
+        double param = FastMath.sqrt((eccentricity + 1) / (eccentricity -1));
+        double theta = 2 * FastMath.atan(param * Math.tanh(HA / 2));
         if (theta < 0) {
             theta = Math.PI * 2 + theta;
         }
@@ -182,15 +184,15 @@ public class KeplerianElements {
         );
 
         Vector3d Q = new Vector3d(
-                -Math.sin(omega) * Math.cos(OMEGA) - Math.cos(omega) * Math.cos(i) * Math.sin(OMEGA),
-                -Math.sin(omega) * Math.sin(OMEGA) + Math.cos(omega) * Math.cos(i) * Math.cos(OMEGA),
-                Math.cos(omega) * Math.sin(i)
+                -FastMath.sin(omega) * FastMath.cos(OMEGA) - FastMath.cos(omega) * FastMath.cos(i) * FastMath.sin(OMEGA),
+                -FastMath.sin(omega) * FastMath.sin(OMEGA) + FastMath.cos(omega) * FastMath.cos(i) * FastMath.cos(OMEGA),
+                FastMath.cos(omega) * FastMath.sin(i)
         );
 
-        Vector3d r = P.scale(a * (Math.cos(E) - e)).scaleAdd(a * Math.sqrt(1 - e * e) * Math.sin(E), Q);
+        Vector3d r = P.scale(a * (FastMath.cos(E) - e)).scaleAdd(a * FastMath.sqrt(1 - e * e) * FastMath.sin(E), Q);
 
-        double derE = n / (1 - e * Math.cos(E));
-        Vector3d v = P.scale(-a * Math.sin(E) * derE).scaleAdd(a * Math.sqrt(1 - e * e) * Math.cos(E) * derE, Q);
+        double derE = n / (1 - e * FastMath.cos(E));
+        Vector3d v = P.scale(-a * FastMath.sin(E) * derE).scaleAdd(a * FastMath.sqrt(1 - e * e) * FastMath.cos(E) * derE, Q);
 
         CartesianState cartesianState = new CartesianState();
         cartesianState.setPosition(r);
@@ -206,12 +208,12 @@ public class KeplerianElements {
         double targetM, initM;
         if (!getKeplerianOrbit().isHyperbolic()) {
             double targetE = solveEA(e, targetTheta);
-            targetM = targetE - e * Math.sin(targetE);
+            targetM = targetE - e * FastMath.sin(targetE);
             initM = getEccentricAnomaly() - e * Math.sin(getEccentricAnomaly());
         } else {
             double targetE = solveHA(e, targetTheta);
-            targetM = e * Math.sinh(targetE) - targetE;
-            initM = e* Math.sinh(getHyperbolicAnomaly()) - getHyperbolicAnomaly();
+            targetM = e * FastMath.sinh(targetE) - targetE;
+            initM = e* FastMath.sinh(getHyperbolicAnomaly()) - getHyperbolicAnomaly();
         }
 
         double diffM = (targetM - initM);
@@ -231,13 +233,13 @@ public class KeplerianElements {
     }
 
     public static double solveEA(double eccentricity, double theta) {
-        double param = Math.sqrt((1+eccentricity)/(1-eccentricity));
-        return 2 * Math.atan(Math.tan(theta/2) / param);
+        double param = FastMath.sqrt((1+eccentricity)/(1-eccentricity));
+        return 2 * FastMath.atan(FastMath.tan(theta/2) / param);
     }
 
     private static double solveHA(double eccentricity, double theta) {
-        double sinH = (Math.sin(theta) * Math.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
-        double HA = MathUtils.asinh(sinH);
+        double sinH = (FastMath.sin(theta) * FastMath.sqrt(eccentricity*eccentricity -1)) / (1 + eccentricity * Math.cos(theta));
+        double HA = FastMath.asinh(sinH);
     	//double cosHA = (eccentricity + Math.cos(theta))/(1 + eccentricity*Math.cos(theta));
     	//double HA = MathUtils.acosh(cosHA);
         return HA;
