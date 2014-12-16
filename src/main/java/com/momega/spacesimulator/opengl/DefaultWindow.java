@@ -83,6 +83,8 @@ public abstract class DefaultWindow extends WindowAdapter {
                     }
                     frame.add(canvas, BorderLayout.CENTER);
                     frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+                    
+                    createStatusBar(controller, frame);
 
                     canvas.addGLEventListener(renderer);
 
@@ -109,6 +111,8 @@ public abstract class DefaultWindow extends WindowAdapter {
                     canvas.addComponentListener(controller);
 
                     JPopupMenu.setDefaultLightWeightPopupEnabled(false);
+                    
+                    
                 }
 				
             });
@@ -121,7 +125,11 @@ public abstract class DefaultWindow extends WindowAdapter {
         logger.info("main method finished");
     }
     
-    public void windowClosing(Controller controller) {
+    protected void createStatusBar(Controller controller, JFrame frame) {
+		// do nothing
+	}
+
+	public void windowClosing(Controller controller) {
     	logger.info("Closing window");
     	stopAnimator();
     }

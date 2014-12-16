@@ -1,5 +1,6 @@
 package com.momega.spacesimulator;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -8,14 +9,20 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+import javax.swing.border.BevelBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,6 +47,8 @@ import com.momega.spacesimulator.controller.UserPointController;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.MainGLRenderer;
+import com.momega.spacesimulator.renderer.ModelChangeEvent;
+import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.swing.Icons;
 import com.momega.spacesimulator.swing.MovingObjectListRenderer;
@@ -200,6 +209,25 @@ public class MainWindow extends DefaultWindow {
     	logger.info("menubar created");
     	
     	return menuBar;
+    }
+    
+    @Override
+    protected void createStatusBar(Controller controller, JFrame frame) {
+    	JPanel statusPanel = new JPanel();
+    	statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
+    	frame.add(statusPanel, BorderLayout.SOUTH);
+    	statusPanel.setPreferredSize(new Dimension(frame.getWidth(), 16));
+    	statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
+    	JLabel statusLabel = new JLabel("");
+    	statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+    	statusPanel.add(statusLabel);
+    	
+//    	RendererModel.getInstance().addModelChangeListener(new ModelChangeListener() {
+//			@Override
+//			public void modelChanged(ModelChangeEvent event) {
+//				
+//			}
+//		});
     }
     
     @Override
