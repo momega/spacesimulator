@@ -1,17 +1,26 @@
 package com.momega.spacesimulator.swing;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Collections;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.model.AbstractOrbitalPoint;
+import com.momega.spacesimulator.model.Maneuver;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.NewManeuverEvent;
 import com.momega.spacesimulator.service.ManeuverService;
@@ -69,8 +78,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 				public void actionPerformed(ActionEvent e) {
 					Maneuver maneuver = maneuverService.createManeuver(spacecraft, "Maneuver At " + point.getName(), point.getTimestamp(), 0d, 0d, 1.0, 0, Math.PI/2);
 					NewManeuverEvent event = new NewManeuverEvent(ModelHolder.getModel(), maneuver, spacecraft);
-					
-					DetailDialogHolder.getInstance().showDialog(spacecraft, Collections.<ModelChangeEvent>singletonList(event));
+					DetailDialogHolder.getInstance().showDialog(spacecraft, event);
 				}
 			});
 

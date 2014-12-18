@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.builder;
 
-import java.math.BigDecimal;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -17,7 +15,6 @@ public class VenusSpacecraftModelBuilder extends MediumSolarSystemModelBuilder {
 
 	protected void initTime() {
         model.setTime(TimeUtils.fromDateTime(new DateTime(2015, 5, 17, 13, 0, DateTimeZone.UTC)));
-        model.setWarpFactor(BigDecimal.ONE);
     }
 
     @Override

@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -51,6 +52,7 @@ import com.momega.spacesimulator.swing.PositionProvidersModel;
 public class RendererModel {
 
 	public static final String MODEL_FILE = "modelFile";
+	public static final String WARP_FACTOR = "warpFactor";
 
 	private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
 
@@ -82,6 +84,8 @@ public class RendererModel {
 	private UserOrbitalPoint selectedUserOrbitalPoint;
 	private PropertyChangeSupport propertyChangeSupport;
 
+	private BigDecimal warpFactor = BigDecimal.ONE;
+
     private RendererModel() {
         super();
         
@@ -97,7 +101,6 @@ public class RendererModel {
 		fileChooser = new JFileChooser();
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Space Simulator Data (.json)", "json"));
 		fileChooser.setFileFilter(fileChooser.getChoosableFileFilters()[1]);
-		
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
@@ -226,7 +229,11 @@ public class RendererModel {
     public void modelChanged() {
         Model model = ModelHolder.getModel();
         ModelChangeEvent event = new ModelChangeEvent(model);
-        for(ModelChangeListener listener : modelChangeListeners) {
+        fireModelEvent(event);
+    }
+    
+    public void fireModelEvent(ModelChangeEvent event) {
+    	for(ModelChangeListener listener : modelChangeListeners) {
             listener.modelChanged(event);
         }
     }
@@ -496,7 +503,11 @@ public class RendererModel {
 	protected void firePropertyChange(final String propertyName, final Object oldValue, final Object newValue) {
 		propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
 	}
-
+	
+	public void initPropertyChange(final String propertyName, final Object newValue) {
+		firePropertyChange(propertyName, null, newValue);
+	}
+	
 	public List<Integer> getAvailableIndexes() {
 		List<Integer> result = new ArrayList<>();
 		for(int i=1; i<=9; i++) {
@@ -508,4 +519,15 @@ public class RendererModel {
 		return result;
 	}	
 
+
+    public void setWarpFactor(BigDecimal warpFactor) {
+    	BigDecimal oldValue = this.warpFactor;
+        this.warpFactor = warpFactor;
+        firePropertyChange(WARP_FACTOR, oldValue, warpFactor);
+    }
+
+    public BigDecimal getWarpFactor() {
+        return warpFactor;
+    }
+	
 }

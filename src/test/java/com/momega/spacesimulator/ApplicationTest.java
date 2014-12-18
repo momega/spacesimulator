@@ -1,5 +1,7 @@
 package com.momega.spacesimulator;
 
+import java.math.BigDecimal;
+
 import org.junit.Test;
 
 import com.momega.spacesimulator.context.Application;
@@ -14,7 +16,7 @@ public class ApplicationTest {
         Application application = Application.getInstance();
         application.init(0);
         for(int i=0; i<86400; i++) {
-            application.next(false);
+            application.next(false, BigDecimal.ONE);
         }
         application.dispose();
     }

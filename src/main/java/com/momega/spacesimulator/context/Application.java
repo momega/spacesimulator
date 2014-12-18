@@ -45,8 +45,8 @@ public class Application {
         return getApplicationContext().getBean(clazz);
     }
     
-    public void next(boolean runningHeadless) {
-    	modelWorker.next(runningHeadless);
+    public void next(boolean runningHeadless, BigDecimal warpFactor) {
+    	modelWorker.next(runningHeadless, warpFactor);
     }
 
     public void init(long seconds) {
@@ -57,7 +57,7 @@ public class Application {
         Timestamp showTime = model.getTime().add(BigDecimal.valueOf(seconds));
         logger.info("show time = {}", TimeUtils.timeAsString(showTime));
         while(model.getTime().compareTo(showTime)<=0) {
-        	modelWorker.next(true);
+        	modelWorker.next(true, BigDecimal.ONE);
         }
         
         logger.info("model data built");

@@ -63,7 +63,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     @Override
     protected void computeScene() {
-        Application.getInstance().next(false);
+        Application.getInstance().next(false, RendererModel.getInstance().getWarpFactor());
 
 //        // TODO: place this into the method
 //        double x = drawable.getWidth();

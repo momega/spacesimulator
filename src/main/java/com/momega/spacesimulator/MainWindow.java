@@ -5,11 +5,13 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.math.BigDecimal;
 
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -17,12 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
-import javax.swing.SwingConstants;
-import javax.swing.border.BevelBorder;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,15 +43,19 @@ import com.momega.spacesimulator.controller.TargetController;
 import com.momega.spacesimulator.controller.TimeController;
 import com.momega.spacesimulator.controller.ToolbarController;
 import com.momega.spacesimulator.controller.UserPointController;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.MainGLRenderer;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.StatusBarEvent;
 import com.momega.spacesimulator.swing.Icons;
+import com.momega.spacesimulator.swing.JStatusBar;
 import com.momega.spacesimulator.swing.MovingObjectListRenderer;
 import com.momega.spacesimulator.swing.SwingUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
 
 
 /**
@@ -212,22 +215,53 @@ public class MainWindow extends DefaultWindow {
     }
     
     @Override
-    protected void createStatusBar(Controller controller, JFrame frame) {
-    	JPanel statusPanel = new JPanel();
-    	statusPanel.setBorder(new BevelBorder(BevelBorder.LOWERED));
-    	frame.add(statusPanel, BorderLayout.SOUTH);
-    	statusPanel.setPreferredSize(new Dimension(frame.getWidth(), 16));
-    	statusPanel.setLayout(new BoxLayout(statusPanel, BoxLayout.X_AXIS));
-    	JLabel statusLabel = new JLabel("");
-    	statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
-    	statusPanel.add(statusLabel);
+    protected void createStatusBar(final Controller controller, JFrame frame) {
+    	JStatusBar statusPanel = new JStatusBar();
+        final JLabel statusLabel = new JLabel("The simulator has started.");
+        statusPanel.setLeftComponent(statusLabel);
+ 
+        final JLabel timeLabel = new JLabel();
+        timeLabel.setHorizontalAlignment(JLabel.CENTER);
+        statusPanel.addRightComponent(timeLabel);
+ 
+        final JLabel warpLabel = new JLabel();
+        warpLabel.setHorizontalAlignment(JLabel.CENTER);
+        statusPanel.addRightComponent(warpLabel);
+        
+    	RendererModel.getInstance().addModelChangeListener(new ModelChangeListener() {
+			@Override
+			public void modelChanged(ModelChangeEvent event) {
+				if (event instanceof StatusBarEvent) {
+					StatusBarEvent e = (StatusBarEvent) event;
+					statusLabel.setText(e.getMessage());
+				} else if (event instanceof ModelChangeEvent) {
+					Model m = event.getModel();
+					timeLabel.setText(TimeUtils.timeAsString(m.getTime()));
+				}
+			}
+		});
     	
-//    	RendererModel.getInstance().addModelChangeListener(new ModelChangeListener() {
-//			@Override
-//			public void modelChanged(ModelChangeEvent event) {
-//				
-//			}
-//		});
+    	RendererModel.getInstance().addPropertyChangeListener(RendererModel.WARP_FACTOR, new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				BigDecimal warpFactor = (BigDecimal) evt.getNewValue();
+				String w = String.format("%3.5f", warpFactor);
+				warpLabel.setText(w);
+			}
+		});
+    	RendererModel.getInstance().initPropertyChange(RendererModel.WARP_FACTOR, RendererModel.getInstance().getWarpFactor());
+    	
+    	timeLabel.addMouseListener(new MouseAdapter() {
+    		@Override
+    		public void mouseClicked(MouseEvent e) {
+    			if (e.getClickCount()>1) {
+    				ActionEvent event = new ActionEvent(timeLabel, e.getID(), TimeController.TIME_DIALOG);
+    				controller.actionPerformed(event);
+    			}
+    		}
+		});
+    	
+    	frame.add(statusPanel, BorderLayout.SOUTH);
     }
     
     @Override

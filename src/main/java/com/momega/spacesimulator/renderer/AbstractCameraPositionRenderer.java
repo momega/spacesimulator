@@ -17,9 +17,6 @@ public abstract class AbstractCameraPositionRenderer extends AbstractTextRendere
 		super();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.momega.spacesimulator.renderer.AbstractTextRenderer#renderTexts(javax.media.opengl.GL2, int, int)
-	 */
 	@Override
 	protected void renderTexts(GL2 gl, int width, int height) {
 		setColor(255, 255, 255);

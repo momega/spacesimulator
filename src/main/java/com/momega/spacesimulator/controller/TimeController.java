@@ -5,8 +5,8 @@ import java.awt.event.KeyEvent;
 import java.math.BigDecimal;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.opengl.DefaultWindow;
+import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.swing.SwingUtils;
 import com.momega.spacesimulator.swing.TimeDialog;
 
@@ -69,21 +69,19 @@ public class TimeController extends AbstractController {
     }
 
     private void pauseOrStart() {
-        Model model = ModelHolder.getModel();
-        BigDecimal warpFactor = model.getWarpFactor();
+        BigDecimal warpFactor = RendererModel.getInstance().getWarpFactor();
         if (!warpFactor.equals(BigDecimal.ZERO)) {
             warpFactor = BigDecimal.ZERO;
         } else {
             warpFactor = BigDecimal.ONE;
         }
-        model.setWarpFactor(warpFactor);
+        RendererModel.getInstance().setWarpFactor(warpFactor);
     }
 
     public void changeWarpFactor(double ratio) {
-        Model model = ModelHolder.getModel();
-        BigDecimal warpFactor = model.getWarpFactor();
+        BigDecimal warpFactor = RendererModel.getInstance().getWarpFactor();
         warpFactor = warpFactor.multiply(BigDecimal.valueOf(ratio));
-        model.setWarpFactor(warpFactor);
+        RendererModel.getInstance().setWarpFactor(warpFactor);
     }
 
 }

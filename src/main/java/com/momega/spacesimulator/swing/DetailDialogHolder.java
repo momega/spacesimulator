@@ -3,9 +3,7 @@
  */
 package com.momega.spacesimulator.swing;
 
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.SwingUtilities;
@@ -53,18 +51,18 @@ public class DetailDialogHolder {
 	}
 
 	public void showDialog(PositionProvider positionProvider) {
-		showDialog(positionProvider, Collections.<ModelChangeEvent>emptyList());
+		showDialog(positionProvider, null);
 	}
 
-    public void showDialog(PositionProvider positionProvider, final List<ModelChangeEvent> events) {
+    public void showDialog(PositionProvider positionProvider,final  ModelChangeEvent postEvent) {
         final DetailDialog dialog = getDialog(positionProvider);
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 dialog.setVisible(true);
                 RendererModel.getInstance().addModelChangeListener(dialog);
-                for(ModelChangeEvent event : events) {
-                    dialog.modelChanged(event);
+                if (postEvent != null) {
+                	RendererModel.getInstance().fireModelEvent(postEvent);
                 }
             }
         });

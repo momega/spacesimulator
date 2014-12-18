@@ -21,6 +21,7 @@ import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.renderer.DelayedActionEvent;
 import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.StatusBarEvent;
 import com.momega.spacesimulator.service.ModelSerializer;
 
 /**
@@ -82,10 +83,9 @@ public class SaveController extends AbstractController {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					JOptionPane.showMessageDialog(null,
-						    "Model successfuly saved.",
-						    "Save",
-						    JOptionPane.INFORMATION_MESSAGE);
+					StatusBarEvent event = new StatusBarEvent(ModelHolder.getModel(), "Model successfully saved.");
+					RendererModel.getInstance().fireModelEvent(event);
+
 				}
 			});
 		} catch (final IOException ioe) {

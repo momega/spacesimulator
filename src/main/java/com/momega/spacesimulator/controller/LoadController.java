@@ -19,6 +19,7 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.renderer.DelayedActionEvent;
 import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.StatusBarEvent;
 import com.momega.spacesimulator.service.ModelSerializer;
 
 /**
@@ -69,10 +70,8 @@ public class LoadController extends AbstractController {
 			SwingUtilities.invokeLater(new Runnable() {
 				@Override
 				public void run() {
-					JOptionPane.showMessageDialog(null,
-						    "Model successfuly loaded.",
-						    "Save",
-						    JOptionPane.INFORMATION_MESSAGE);
+					StatusBarEvent event = new StatusBarEvent(ModelHolder.getModel(), "Model successfully loaded.");
+					RendererModel.getInstance().fireModelEvent(event);
 				}
 			});
 		} catch (final IOException ioe) {

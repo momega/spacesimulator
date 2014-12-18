@@ -35,7 +35,7 @@ public class KeplerianElements {
      * @return HA
      */
     public Double getHyperbolicAnomaly() {
-        if (hyperbolicAnomaly == null) {
+        if (hyperbolicAnomaly == null && getKeplerianOrbit().isHyperbolic()) {
             hyperbolicAnomaly = solveHA(keplerianOrbit.getEccentricity(), trueAnomaly);
         }
         return hyperbolicAnomaly;
@@ -50,7 +50,7 @@ public class KeplerianElements {
      * @return EA
      */
     public Double getEccentricAnomaly() {
-        if (eccentricAnomaly == null) {
+        if (eccentricAnomaly == null && !getKeplerianOrbit().isHyperbolic()) {
             eccentricAnomaly = solveEA(keplerianOrbit.getEccentricity(), trueAnomaly);
         }
         return eccentricAnomaly;
@@ -86,11 +86,13 @@ public class KeplerianElements {
             double HA = solveHyperbolicAnomaly(keplerianOrbit, meanAnomaly);
             theta = solveTheta(HA, keplerianOrbit.getEccentricity());
             keplerianElements.setHyperbolicAnomaly(HA);
+            keplerianElements.setEccentricAnomaly(null);
         } else {
             meanAnomaly = MathUtils.normalizeAngle(meanAnomaly);
             double EA = solveEccentricAnomaly(keplerianOrbit, meanAnomaly);
             theta = solveTheta(EA, keplerianOrbit.getEccentricity());
             keplerianElements.setEccentricAnomaly(EA);
+            keplerianElements.setHyperbolicAnomaly(null);
         }
         keplerianElements.setTrueAnomaly(theta);
         return keplerianElements;
@@ -209,11 +211,15 @@ public class KeplerianElements {
         if (!getKeplerianOrbit().isHyperbolic()) {
             double targetE = solveEA(e, targetTheta);
             targetM = targetE - e * FastMath.sin(targetE);
-            initM = getEccentricAnomaly() - e * Math.sin(getEccentricAnomaly());
+            initM = getEccentricAnomaly() - e * FastMath.sin(getEccentricAnomaly());
         } else {
             double targetE = solveHA(e, targetTheta);
             targetM = e * FastMath.sinh(targetE) - targetE;
             initM = e* FastMath.sinh(getHyperbolicAnomaly()) - getHyperbolicAnomaly();
+        }
+        
+        if (Double.isNaN(initM)) {
+        	System.out.println("OOOO");
         }
 
         double diffM = (targetM - initM);

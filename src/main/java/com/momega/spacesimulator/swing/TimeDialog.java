@@ -26,6 +26,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.ListSelectionModel;
 import javax.swing.SpinnerDateModel;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
@@ -45,6 +46,9 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.opengl.DefaultWindow;
+import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.service.HistoryPointListener;
+import com.momega.spacesimulator.service.HistoryPointService;
 import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
@@ -118,6 +122,7 @@ public class TimeDialog extends JDialog {
         
         eventModel = new DefaultListModel<>();
         historyEvents = new JList<>(eventModel);
+        historyEvents.setCellRenderer(new HistoryPointListRenderer());
         historyEvents.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane listScroller = new JScrollPane(historyEvents);
         listScroller.setPreferredSize(new Dimension(250, 100));
@@ -249,13 +254,29 @@ public class TimeDialog extends JDialog {
         window.pauseAnimator();
         logger.info("Animation paused");
         
+        final HistoryPointService historyPointService = Application.getInstance().getService(HistoryPointService.class);
+        final HistoryPointListener historyPointListener = new HistoryPointListener() {
+			@Override
+			public void historyPointCreated(final HistoryPoint historyPoint) {
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						eventModel.addElement(historyPoint);
+					}
+				});
+			}
+		};
+
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosed(WindowEvent e) {
             	logger.info("resume animator");
+            	historyPointService.removedHistoryPointListener(historyPointListener);
                 window.resumeAnimator();
             }
         });
+        
+        historyPointService.addHistoryPointListener(historyPointListener);
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
@@ -333,8 +354,9 @@ public class TimeDialog extends JDialog {
         
         @Override
         protected Void doInBackground() throws Exception {
+        	BigDecimal warpFactor = RendererModel.getInstance().getWarpFactor();
             while(ModelHolder.getModel().getTime().compareTo(endTime)<=0) {
-                Application.getInstance().next(true);
+                Application.getInstance().next(true, warpFactor);
                 publish(ModelHolder.getModel().getTime());
                 if (Thread.interrupted()) {
                 	return null;

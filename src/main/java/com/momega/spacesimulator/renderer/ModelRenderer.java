@@ -26,12 +26,11 @@ public class ModelRenderer extends CompositeRenderer {
             }
             addRenderer(new UserOrbitalPointBitmapRenderer((MovingObject) dp));
             addRenderer(new MovingObjectOrbitPointsRenderer((MovingObject) dp));
+            addRenderer(new MovingObjectRenderer(dp));
             if (dp instanceof BaryCentre) {
-            	addRenderer(new MovingObjectRenderer(dp));
                 addRenderer(new ApsidesRenderer(dp));
             }
             if (dp instanceof CelestialBody) {
-            	addRenderer(new MovingObjectRenderer(dp));
                 addRenderer(new ApsidesRenderer(dp));
                 addRenderer(new CelestialBodyRenderer((CelestialBody) dp, true, true));
                 if (dp instanceof Planet) {
@@ -58,9 +57,7 @@ public class ModelRenderer extends CompositeRenderer {
             }
         }
 
-        addRenderer(new ModelCameraPositionRenderer());
-        addRenderer(new BackgroundRenderer());
-        addRenderer(new TimeRenderer());
+        //addRenderer(new BackgroundRenderer());
     }
 
 }

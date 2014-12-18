@@ -1,11 +1,14 @@
 package com.momega.spacesimulator.builder;
 
-import java.math.BigDecimal;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
-import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.HabitableModule;
+import com.momega.spacesimulator.model.KeplerianOrbit;
+import com.momega.spacesimulator.model.Propulsion;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
@@ -15,7 +18,6 @@ public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
 	
 	protected void initTime() {
         model.setTime(TimeUtils.fromDateTime(new DateTime(2016, 2, 22, 10, 0, DateTimeZone.UTC)));
-        model.setWarpFactor(BigDecimal.ONE);
     }
 
     @Override

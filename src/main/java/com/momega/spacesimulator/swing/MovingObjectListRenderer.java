@@ -3,68 +3,53 @@
  */
 package com.momega.spacesimulator.swing;
 
-import java.awt.Component;
+import javax.swing.ImageIcon;
 
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.ListCellRenderer;
-
-import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.model.Apsis;
+import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.IconProvider;
+import com.momega.spacesimulator.model.ManeuverPoint;
+import com.momega.spacesimulator.model.OrbitIntersection;
+import com.momega.spacesimulator.model.PositionProvider;
 
 /**
  * @author martin
  *
  */
-public class MovingObjectListRenderer extends JLabel implements ListCellRenderer<PositionProvider> {
+public class MovingObjectListRenderer extends AbstractObjectListRenderer<PositionProvider> {
 
 	private static final long serialVersionUID = 4386011486432427947L;
 	
 	public MovingObjectListRenderer() {
 		setOpaque(true);
 	}
-
-	public Component getListCellRendererComponent(JList<? extends PositionProvider> list, PositionProvider value,
-			int index, boolean isSelected, boolean cellHasFocus) {
-		// Get the selected index. (The index param isn't
-		// always valid, so just use the value.)
-		//int selectedIndex = ((Integer) value).intValue();
-
-		if (isSelected) {
-			setBackground(list.getSelectionBackground());
-			setForeground(list.getSelectionForeground());
-		} else {
-			setBackground(list.getBackground());
-			setForeground(list.getForeground());
-		}
-
-		if (value != null) {
-			String name = value.getName();
-			setText(name);
-		} else {
-			setText(" ");
-		}
-		
+	
+	@Override
+	protected String getText(PositionProvider value) {
+		return value.getName();
+	}
+	
+	@Override
+	protected ImageIcon getIcon(PositionProvider value) {
+		ImageIcon icon = null;
 		if (value instanceof IconProvider) {
 			IconProvider iconProvider = (IconProvider) value;
-			setIcon(SwingUtils.createImageIcon(iconProvider.getIcon()));
+			icon = SwingUtils.createImageIcon(iconProvider.getIcon());
 		} else if (value instanceof Apsis) {
-			setIcon(Icons.APSIS_POINT);
+			icon = Icons.APSIS_POINT;
 		} else if (value instanceof OrbitIntersection) {
-			setIcon(Icons.INTERSECTION_POINT);
+			icon = Icons.INTERSECTION_POINT;
 		} else if (value instanceof HistoryPoint) {
-			setIcon(Icons.HISTORY_POINT);
+			icon = Icons.HISTORY_POINT;
         } else if (value instanceof ManeuverPoint) {
             ManeuverPoint mp = (ManeuverPoint) value;
             if (mp.isStart()) {
-                setIcon(Icons.START_MANEUVER_POINT);
+            	icon = Icons.START_MANEUVER_POINT;
             } else {
-                setIcon(Icons.END_MANEUVER_POINT);
+            	icon = Icons.END_MANEUVER_POINT;
             }
-		} else {
-			setIcon(null);
-		}
-
-		return this;
+		}	
+		return icon;
 	}
 
 }

@@ -5,6 +5,7 @@ package com.momega.spacesimulator;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.math.BigDecimal;
 
 import junit.framework.Assert;
 
@@ -26,7 +27,7 @@ public class SaveTest {
 		Application application = Application.getInstance();
         application.init(0);
         for(int i=0; i<1000; i++)
-        	application.next(false);
+        	application.next(false,  BigDecimal.ONE);
         
         ModelSerializer serializer = Application.getInstance().getService(ModelSerializer.class);
         StringWriter writer = new StringWriter();

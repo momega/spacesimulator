@@ -85,7 +85,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     protected void initTime() {
         model.setTime(TimeUtils.fromDateTime(new DateTime(2014, 9, 23, 12, 0, DateTimeZone.UTC)));
-        model.setWarpFactor(BigDecimal.ONE);
     }
 
     protected void createCamera(PositionProvider positionProvider) {

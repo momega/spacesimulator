@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,35 +21,42 @@ import com.momega.spacesimulator.utils.TimeUtils;
 public class HistoryPointService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HistoryPointService.class);
+	
+	protected List<HistoryPointListener> listeners = new ArrayList<>(); 
 
-    public HistoryPoint createHistoryPoint(Spacecraft spacecraft, Timestamp timestamp, String name) {
+    protected HistoryPoint createHistoryPoint(Spacecraft spacecraft, Timestamp timestamp, String name) {
         HistoryPoint hp = new HistoryPoint();
         hp.setPosition(spacecraft.getPosition());
         hp.setTimestamp(timestamp);
         hp.setName(name);
+        for(HistoryPointListener listener : listeners) {
+        	listener.historyPointCreated(hp);
+        }
         return hp;
     }
     
-    public HistoryPoint start(Spacecraft spacecraft, Timestamp timestamp) {
+    public void addHistoryPointListener(HistoryPointListener listener) {
+    	listeners.add(listener);
+    }
+    
+    public void removedHistoryPointListener(HistoryPointListener listener) {
+    	listeners.remove(listener);
+    }
+    
+    public void start(Spacecraft spacecraft, Timestamp timestamp) {
     	HistoryPoint hp = createHistoryPoint(spacecraft, timestamp, "Start of " + spacecraft.getName());
         spacecraft.getNamedHistoryPoints().add(hp);
-        return hp;
     }
     
     public void changeSoi(Spacecraft spacecraft, Timestamp timestamp, MovingObject oldSoi, MovingObject newSoi) {
     	if (oldSoi == null) {
-    		return; // this happens when the soi is not initialized
+    		return; // this happens when the SOI is not initialized
     	}
     	
     	HistoryPoint hp = createHistoryPoint(spacecraft, timestamp, "Change SOI "+ oldSoi.getName() + "->" + newSoi.getName());
     	spacecraft.getNamedHistoryPoints().add(hp);
 
-        // TODO: clear related user orbital points
     	spacecraft.getUserOrbitalPoints().clear();
-
-    	HistoryPoint startPoint = getStartPoint(spacecraft);
-    	logger.info("time = {}", hp.getTimestamp().subtract(startPoint.getTimestamp()));
-    	
     }
 
     public void endManeuver(Spacecraft spacecraft, Maneuver maneuver) {

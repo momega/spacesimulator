@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import java.util.List;
 public class Model {
 
     private Timestamp time;
-    private BigDecimal warpFactor;
     protected final List<MovingObject> movingObjects = new ArrayList<>();
     private boolean runningHeadless;
     private SphereOfInfluence rootSoi;
@@ -36,14 +34,6 @@ public class Model {
 
     public void setTime(Timestamp time) {
         this.time = time;
-    }
-
-    public void setWarpFactor(BigDecimal warpFactor) {
-        this.warpFactor = warpFactor;
-    }
-
-    public BigDecimal getWarpFactor() {
-        return warpFactor;
     }
 
     /**
