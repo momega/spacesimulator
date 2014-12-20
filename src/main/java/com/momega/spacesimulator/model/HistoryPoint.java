@@ -5,10 +5,11 @@ package com.momega.spacesimulator.model;
  * History point contains one timestamp of the trajectory of the spacecraft
  * Created by martin on 8/13/14.
  */
-public class HistoryPoint extends NamedObject implements PositionProvider {
+public class HistoryPoint extends NamedObject implements PositionProvider, IconProvider {
 
     private Vector3d position;
     private Timestamp timestamp;
+    private HistoryPointOrigin origin;
 
     public Vector3d getPosition() {
         return position;
@@ -25,5 +26,18 @@ public class HistoryPoint extends NamedObject implements PositionProvider {
     public void setTimestamp(Timestamp timestamp) {
         this.timestamp = timestamp;
     }
+    
+    public HistoryPointOrigin getOrigin() {
+		return origin;
+	}
+    
+    public void setOrigin(HistoryPointOrigin origin) {
+		this.origin = origin;
+	}
+
+	@Override
+	public String getIcon() {
+		return origin.getIcon();
+	}
 
 }

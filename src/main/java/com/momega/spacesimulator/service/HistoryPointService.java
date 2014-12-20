@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.HistoryPointOrigin;
 import com.momega.spacesimulator.model.Maneuver;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Spacecraft;
@@ -24,10 +25,11 @@ public class HistoryPointService {
 	
 	protected List<HistoryPointListener> listeners = new ArrayList<>(); 
 
-    protected HistoryPoint createHistoryPoint(Spacecraft spacecraft, Timestamp timestamp, String name) {
+    protected HistoryPoint createHistoryPoint(Spacecraft spacecraft, Timestamp timestamp, String name, HistoryPointOrigin origin) {
         HistoryPoint hp = new HistoryPoint();
         hp.setPosition(spacecraft.getPosition());
         hp.setTimestamp(timestamp);
+        hp.setOrigin(origin);
         hp.setName(name);
         for(HistoryPointListener listener : listeners) {
         	listener.historyPointCreated(hp);
@@ -44,7 +46,7 @@ public class HistoryPointService {
     }
     
     public void start(Spacecraft spacecraft, Timestamp timestamp) {
-    	HistoryPoint hp = createHistoryPoint(spacecraft, timestamp, "Start of " + spacecraft.getName());
+    	HistoryPoint hp = createHistoryPoint(spacecraft, timestamp, "Start of " + spacecraft.getName(), HistoryPointOrigin.START);
         spacecraft.getNamedHistoryPoints().add(hp);
     }
     
@@ -53,20 +55,20 @@ public class HistoryPointService {
     		return; // this happens when the SOI is not initialized
     	}
     	
-    	HistoryPoint hp = createHistoryPoint(spacecraft, timestamp, "Change SOI "+ oldSoi.getName() + "->" + newSoi.getName());
+    	HistoryPoint hp = createHistoryPoint(spacecraft, timestamp, "Change SOI "+ oldSoi.getName() + "->" + newSoi.getName(), HistoryPointOrigin.CHANGE_SPHERE_OF_INFLUENCE);
     	spacecraft.getNamedHistoryPoints().add(hp);
 
     	spacecraft.getUserOrbitalPoints().clear();
     }
 
     public void endManeuver(Spacecraft spacecraft, Maneuver maneuver) {
-    	HistoryPoint hp = createHistoryPoint(spacecraft, maneuver.getEndTime(), "End of " + maneuver.getName());
+    	HistoryPoint hp = createHistoryPoint(spacecraft, maneuver.getEndTime(), "End of " + maneuver.getName(), HistoryPointOrigin.END_MANEUVER);
         spacecraft.getNamedHistoryPoints().add(hp);
         logger.info("end maneuver {} = {} ", maneuver.getName(), TimeUtils.timeAsString(hp.getTimestamp()));
     }
 
     public void startManeuver(Spacecraft spacecraft, Maneuver maneuver) {
-        HistoryPoint hp = createHistoryPoint(spacecraft, maneuver.getStartTime(), "Start of " + maneuver.getName());
+        HistoryPoint hp = createHistoryPoint(spacecraft, maneuver.getStartTime(), "Start of " + maneuver.getName(), HistoryPointOrigin.START_MANEUVER);
         spacecraft.getNamedHistoryPoints().add(hp);
         logger.info("start maneuver {} = {} ", maneuver.getName(), TimeUtils.timeAsString(hp.getTimestamp()));
     }

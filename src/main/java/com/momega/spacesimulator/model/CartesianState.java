@@ -66,7 +66,7 @@ public class CartesianState {
         Vector3d hVector = getAngularMomentum();
 
         double h = hVector.length();
-        double i = Math.acos(hVector.getZ() / h);
+        double i = FastMath.acos(hVector.getZ() / h);
 
         double mi = soiBody.getMass() * MathUtils.G;
 
@@ -82,24 +82,31 @@ public class CartesianState {
         if (i > MINOR_ERROR) {
             Vector3d nVector = new Vector3d(0, 0, 1).cross(hVector);
             double n = nVector.length();
-            OMEGA = Math.acos(nVector.getX() / n);
+            OMEGA = FastMath.acos(nVector.getX() / n);
             if (nVector.getY() < 0) {
                 OMEGA = 2 * Math.PI - OMEGA;
             }
 
             if (e>MINOR_ERROR) {
-                omega = Math.acos(nVector.dot(eVector) / n / e);
+                omega = FastMath.acos(nVector.dot(eVector) / n / e);
                 if (eVector.getZ() < 0) {
                     omega = 2 * Math.PI - omega;
                 }
 
-                theta = Math.acos(eVector.dot(position) / e / position.length());
+                double thetaCos = eVector.dot(position) / position.length() / e;
+                if (thetaCos<-1) {
+                	thetaCos = -1;
+                } else if (thetaCos > 1) {
+                	thetaCos = 1;
+                }
+                theta = FastMath.acos(thetaCos);
+                
                 if (position.dot(velocity) <0) {
                     theta = 2* Math.PI - theta;
                 }
 
             } else {
-                theta = Math.acos(nVector.dot(position) / n / position.length());
+                theta = FastMath.acos(nVector.dot(position) / n / position.length());
                 if (position.getZ()<0) {
                     theta = 2* Math.PI - theta;
                 }
@@ -107,18 +114,18 @@ public class CartesianState {
 
         } else {
             if (e>MINOR_ERROR) {
-                omega = Math.acos(eVector.getX() / e);
+                omega = FastMath.acos(eVector.getX() / e);
                 if (eVector.getY() < 0) {
                     omega = 2 * Math.PI - omega;
                 }
 
-                theta = Math.acos(eVector.dot(position) / e / position.length());
+                theta = FastMath.acos(eVector.dot(position) / e / position.length());
                 if (position.dot(velocity) <0) {
                     theta = 2* Math.PI - theta;
                 }
 
             } else {
-                theta = Math.acos(position.getX() / position.length());
+                theta = FastMath.acos(position.getX() / position.length());
                 if (position.getY() <0) {
                     theta = 2* Math.PI - theta;
                 }

@@ -17,13 +17,13 @@ public class HistoryPointListRenderer extends AbstractObjectListRenderer<History
 	private static final long serialVersionUID = 5306016626001617675L;
 
 	@Override
-	protected String getText(HistoryPoint hp) {
+	public String getText(HistoryPoint hp) {
 		return hp.getName() + ", " + TimeUtils.timeAsString(hp.getTimestamp());
 	}
 
 	@Override
-	protected ImageIcon getIcon(HistoryPoint value) {
-		return Icons.HISTORY_POINT;
+	public ImageIcon getIcon(HistoryPoint value) {
+		return SwingUtils.createImageIcon(value.getIcon());
 	}
 
 }

@@ -22,7 +22,7 @@ public abstract class AbstractObjectListRenderer<T> extends JLabel implements Li
 		setOpaque(true);
 	}
 
-	public Component getListCellRendererComponent(JList<? extends T> list, T value, 	int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<? extends T> list, T value, int index, boolean isSelected, boolean cellHasFocus) {
 		// Get the selected index. (The index param isn't
 		// always valid, so just use the value.)
 		//int selectedIndex = ((Integer) value).intValue();

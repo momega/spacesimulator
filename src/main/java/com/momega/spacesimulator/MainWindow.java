@@ -12,6 +12,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.math.BigDecimal;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -43,6 +44,7 @@ import com.momega.spacesimulator.controller.TargetController;
 import com.momega.spacesimulator.controller.TimeController;
 import com.momega.spacesimulator.controller.ToolbarController;
 import com.momega.spacesimulator.controller.UserPointController;
+import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.DefaultWindow;
@@ -51,6 +53,9 @@ import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.ModelChangeListener;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.StatusBarEvent;
+import com.momega.spacesimulator.service.HistoryPointListener;
+import com.momega.spacesimulator.service.HistoryPointService;
+import com.momega.spacesimulator.swing.HistoryPointListRenderer;
 import com.momega.spacesimulator.swing.Icons;
 import com.momega.spacesimulator.swing.JStatusBar;
 import com.momega.spacesimulator.swing.MovingObjectListRenderer;
@@ -238,6 +243,18 @@ public class MainWindow extends DefaultWindow {
 					Model m = event.getModel();
 					timeLabel.setText(TimeUtils.timeAsString(m.getTime()));
 				}
+			}
+		});
+    	
+    	HistoryPointService historyPointService = Application.getInstance().getService(HistoryPointService.class);
+    	final HistoryPointListRenderer historyPointListRenderer = new HistoryPointListRenderer();
+    	historyPointService.addHistoryPointListener(new HistoryPointListener() {
+			@Override
+			public void historyPointCreated(HistoryPoint historyPoint) {
+				String message = historyPointListRenderer.getText(historyPoint);
+				statusLabel.setText(message);
+				ImageIcon icon = historyPointListRenderer.getIcon(historyPoint);
+				statusLabel.setIcon(icon);
 			}
 		});
     	

@@ -74,7 +74,7 @@ public class Vector3d {
     }
 
     public double length() {
-        return FastMath.sqrt(x * x + y * y + z * z);    // note that the squared length has been put inline for efficiency
+        return Math.sqrt(x * x + y * y + z * z);    // note that the squared length has been put inline for efficiency
     }
     
     public double angle(Vector3d vector) {
