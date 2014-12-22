@@ -170,7 +170,7 @@ public class MainWindow extends DefaultWindow {
     	
     	JMenu projectMenu = new JMenu("Project");
     	JMenuItem timeItem = new JMenuItem("Time...");
-    	timeItem.setIcon(SwingUtils.createImageIcon("/images/time.png"));
+    	timeItem.setIcon(Icons.TIME);
         timeItem.addActionListener(controller);
         timeItem.setActionCommand(TimeController.TIME_DIALOG);
 
@@ -228,6 +228,7 @@ public class MainWindow extends DefaultWindow {
         final JLabel timeLabel = new JLabel();
         timeLabel.setHorizontalAlignment(JLabel.CENTER);
         statusPanel.addRightComponent(timeLabel);
+        timeLabel.setIcon(Icons.TIME);
  
         final JLabel warpLabel = new JLabel();
         warpLabel.setHorizontalAlignment(JLabel.CENTER);

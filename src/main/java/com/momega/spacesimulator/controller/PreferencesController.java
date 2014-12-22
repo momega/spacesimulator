@@ -2,9 +2,7 @@ package com.momega.spacesimulator.controller;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JDialog;
-
-import com.momega.spacesimulator.swing.PreferencesDialog;
+import com.momega.spacesimulator.swing.PreferencesPanel;
 import com.momega.spacesimulator.swing.SwingUtils;
 
 /**
@@ -17,8 +15,8 @@ public class PreferencesController extends AbstractController {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (COMMAND.equals(e.getActionCommand())) {
-            final JDialog dialog = new PreferencesDialog();
-            SwingUtils.openDialog(dialog);
+            final PreferencesPanel panel = new PreferencesPanel();
+            SwingUtils.openDialog(panel.creatDialog("Preferences..."));
         }
     }
 }

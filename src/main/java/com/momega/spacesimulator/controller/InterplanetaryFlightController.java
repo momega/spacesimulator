@@ -5,7 +5,8 @@ package com.momega.spacesimulator.controller;
 
 import java.awt.event.ActionEvent;
 
-import com.momega.spacesimulator.swing.InterplanetaryFlightDialog;
+import com.momega.spacesimulator.swing.DefaultDialog;
+import com.momega.spacesimulator.swing.InterplanetaryFlightPanel;
 import com.momega.spacesimulator.swing.SwingUtils;
 
 /**
@@ -19,7 +20,8 @@ public class InterplanetaryFlightController extends AbstractController {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (INTERPLANETARY_FLIGHT.equals(e.getActionCommand())) {
-			InterplanetaryFlightDialog dialog = new InterplanetaryFlightDialog();
+			InterplanetaryFlightPanel panel = new InterplanetaryFlightPanel();
+			DefaultDialog dialog = panel.creatDialog("Interplanetary Flight");
 			SwingUtils.openDialog(dialog);
 		}
 	}

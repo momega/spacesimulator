@@ -5,7 +5,7 @@ package com.momega.spacesimulator.controller;
 
 import java.awt.event.ActionEvent;
 
-import com.momega.spacesimulator.swing.CreateSpacecraftDialog;
+import com.momega.spacesimulator.swing.CreateSpacecraftPanel;
 import com.momega.spacesimulator.swing.SwingUtils;
 
 /**
@@ -19,8 +19,8 @@ public class SpacecraftController extends AbstractController {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (NEW_SPACECRAFT.equals(e.getActionCommand())) {
-			CreateSpacecraftDialog dialog = new CreateSpacecraftDialog();
-			SwingUtils.openDialog(dialog);
+			CreateSpacecraftPanel panel = new CreateSpacecraftPanel();
+			SwingUtils.openDialog(panel.creatDialog("Create Spacecrat"));
 		}		
 	}
 

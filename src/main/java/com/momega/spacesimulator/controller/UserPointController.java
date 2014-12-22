@@ -12,7 +12,7 @@ import javax.media.opengl.GLAutoDrawable;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.renderer.DelayedActionEvent;
 import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.swing.NewUserPointDialog;
+import com.momega.spacesimulator.swing.NewUserPointPanel;
 import com.momega.spacesimulator.swing.SwingUtils;
 
 /**
@@ -33,8 +33,8 @@ public class UserPointController extends AbstractController {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (NEW_USER_POINT.equals(e.getActionCommand())) {
-			NewUserPointDialog dialog = new NewUserPointDialog();
-			SwingUtils.openDialog(dialog);
+			NewUserPointPanel panel = new NewUserPointPanel();
+			SwingUtils.openDialog(panel.creatDialog("New User Point..."));
 		}
 	}
 	

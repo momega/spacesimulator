@@ -8,6 +8,5 @@ package com.momega.spacesimulator.model;
 public enum TrajectoryType {
     KEPLERIAN,
     NEWTONIAN,
-    STATIC,
-    HISTORY
+    STATIC
 }

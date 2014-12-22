@@ -11,7 +11,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
@@ -24,7 +23,7 @@ import com.momega.spacesimulator.service.UserPointService;
  * @author martin
  *
  */
-public class NewUserPointDialog extends DefaultDialog {
+public class NewUserPointPanel extends AbstractDefaultPanel {
 
 	private static final long serialVersionUID = 4801020330282477441L;
 	
@@ -34,18 +33,12 @@ public class NewUserPointDialog extends DefaultDialog {
 	private JTextField txtName;
 	private JTextField txtTrueAnomaly;
 
-	public NewUserPointDialog() {
-		super("New User Point");
+	public NewUserPointPanel() {
 		userPointService = Application.getInstance().getService(UserPointService.class);
-	}
-	
-	@Override
-	protected JPanel createMainPanel() {
 		movingObjectsObjectModel = new MovingObjectsObjectModel();
 		 
-        JPanel mainPanel = new JPanel();
-        GroupLayout layout = new GroupLayout(mainPanel);
-        mainPanel.setLayout(layout);
+        GroupLayout layout = new GroupLayout(this);
+        setLayout(layout);
         
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
@@ -94,11 +87,10 @@ public class NewUserPointDialog extends DefaultDialog {
                         .addComponent(txtTrueAnomaly)
                     )
             );
-        return mainPanel;
 	}
 	
 	@Override
-	protected boolean okPressed() {
+	public boolean okPressed() {
 		MovingObject movingObject = (MovingObject) movingObjectsObjectModel.getSelectedItem();
 		try {
 			double theta = Double.parseDouble(txtTrueAnomaly.getText());
@@ -106,7 +98,7 @@ public class NewUserPointDialog extends DefaultDialog {
 			userPointService.createUserOrbitalPoint(movingObject, name, Math.toRadians(theta));
 			return true;
 		} catch (NumberFormatException nfe) {
-			JOptionPane.showMessageDialog(NewUserPointDialog.this,
+			JOptionPane.showMessageDialog(NewUserPointPanel.this,
                     "Incorrect angle",
                     "Update True Anomaly Error",
                     JOptionPane.ERROR_MESSAGE);

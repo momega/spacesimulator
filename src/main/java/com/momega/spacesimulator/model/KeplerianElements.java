@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 import org.apache.commons.math3.util.FastMath;
+import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.utils.MathUtils;
 
@@ -74,6 +75,14 @@ public class KeplerianElements {
         this.hyperbolicAnomaly = null;
     }
 
+    /**
+     * Computes the keplerian elements of the given keplerian orbit and the given timestamp. The method
+     * is used for Keplerian propagator to compute current position and velocity of the celestial bodies
+     * such as planets.
+     * @param keplerianOrbit
+     * @param timestamp
+     * @return returns new instance of keplerian elements
+     */
     public static KeplerianElements fromTimestamp(KeplerianOrbit keplerianOrbit, Timestamp timestamp) {
         double dt = timestamp.subtract(keplerianOrbit.getTimeOfPeriapsis()).doubleValue();
         double meanAnomaly = keplerianOrbit.getMeanMotion() * dt;   // mean anomaly
@@ -99,7 +108,7 @@ public class KeplerianElements {
     }
 
     /**
-     * Computers the eccentric anomaly from mean anonaly. It is the solution of the kepler equations.
+     * Computes the eccentric anomaly from mean anomaly. It is the solution of the Kepler equations.
      * <code>
      *     M = E - e * sin(E)
      * </code>
@@ -119,6 +128,16 @@ public class KeplerianElements {
         return E;
     }
 
+    /**
+     * Computes the hyperbolic anomaly from mean anomaly. It is the solution of the Kepler equations of the 
+     * hyperbolic trajctory.
+     * <code>
+     * 		M = e * sinh(H) - H
+     * </code>
+     * @param keplerianOrbit the keplerian orbit
+     * @param M
+     * @return
+     */
     public static double solveHyperbolicAnomaly(KeplerianOrbit keplerianOrbit, double M) {
         double eccentricity = keplerianOrbit.getEccentricity();
         double H = M;
@@ -205,7 +224,15 @@ public class KeplerianElements {
         return cartesianState;
     }
 
+    /**
+     * Computes the timestamp when the {@link MovingObject} get to given true anomaly 
+     * @param timestamp the current timestamp
+     * @param targetTheta the target true anomaly
+     * @param future
+     * @return
+     */
     public Timestamp timeToAngle(Timestamp timestamp, double targetTheta, boolean future) {
+    	Assert.isTrue(!Double.isNaN(targetTheta), "true anomaly is invalid");
         double e = getKeplerianOrbit().getEccentricity();
         double targetM, initM;
         if (!getKeplerianOrbit().isHyperbolic()) {
@@ -217,11 +244,7 @@ public class KeplerianElements {
             targetM = e * FastMath.sinh(targetE) - targetE;
             initM = e* FastMath.sinh(getHyperbolicAnomaly()) - getHyperbolicAnomaly();
         }
-        
-        if (Double.isNaN(initM)) {
-        	System.out.println("OOOO");
-        }
-
+ 
         double diffM = (targetM - initM);
         Double n = keplerianOrbit.getMeanMotion();
         if (n== null || Double.isNaN(n) || Double.isInfinite(n)) {

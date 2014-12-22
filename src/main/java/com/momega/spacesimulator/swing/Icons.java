@@ -21,5 +21,6 @@ public final class Icons {
     public static final ImageIcon START_MANEUVER_POINT = SwingUtils.createImageIcon(HistoryPointOrigin.START_MANEUVER.getIcon());
     public static final ImageIcon USER_POINT = SwingUtils.createImageIcon("/images/Letter-U-icon.png");
     public static final ImageIcon FRAME_ICON = SwingUtils.createImageIcon("/images_64/spacecraft-icon.png");
+	public static final ImageIcon TIME = SwingUtils.createImageIcon("/images/time.png");
     
 }

@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 
@@ -17,7 +16,6 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
@@ -38,7 +36,7 @@ import com.momega.spacesimulator.utils.MathUtils;
  * @author martin
  *
  */
-public class InterplanetaryFlightDialog extends DefaultDialog implements ModelChangeListener {
+public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements ModelChangeListener {
 
 	private static final long serialVersionUID = -6729550892556811416L;
 	
@@ -66,18 +64,12 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 
 	private double angle;
 
-	public InterplanetaryFlightDialog() {
-		 super("Interplanetary Flight");
-	}
-	
-	@Override
-    protected JPanel createMainPanel() {
+	public InterplanetaryFlightPanel() {
 		spacecraftObjectModel = new SpacecraftObjectModel();
 		planetObjectModel = new PlanetsObjectModel();
 		
-    	JPanel mainPanel = new JPanel();
-    	GroupLayout layout = new GroupLayout(mainPanel);
-    	mainPanel.setLayout(layout);
+    	GroupLayout layout = new GroupLayout(this);
+    	setLayout(layout);
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
         
@@ -228,12 +220,6 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
             );
         
         RendererModel.getInstance().addModelChangeListener(this);
-        addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                RendererModel.getInstance().removeModelChangeListener(InterplanetaryFlightDialog.this);
-            }
-        });
         
         planetsBox.addItemListener(new ItemListener() {
 			@Override
@@ -246,8 +232,11 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 		});
         
         calculateSemimajorTargetTrajectory();
-        
-    	return mainPanel;
+	}
+	
+	@Override
+	public void windowClosed(WindowEvent e) {
+		RendererModel.getInstance().removeModelChangeListener(this);
 	}
 	
 	protected void calculateSemimajorTargetTrajectory() {
@@ -293,11 +282,6 @@ public class InterplanetaryFlightDialog extends DefaultDialog implements ModelCh
 			m = m.getOrbitingBody();
 		}
 		return m;
-	}
-	
-	@Override
-	protected boolean okPressed() {
-		return true;
 	}
 	
 	protected void calculateCurrentAngle() {
