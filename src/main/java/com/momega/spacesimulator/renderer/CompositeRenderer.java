@@ -2,6 +2,7 @@ package com.momega.spacesimulator.renderer;
 
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class CompositeRenderer implements Renderer {
             r.init(gl);
         }
     }
-
+    
     @Override
     public void draw(GLAutoDrawable drawable) {
         for(Renderer r : renderers) {

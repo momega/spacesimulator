@@ -29,6 +29,14 @@ public class MathUtils {
         numer = numer - z * denom;
         return numer;
     }
+    
+    
+    public static Double toDegrees(Double rad) {
+    	if (rad == null) {
+    		return null;
+    	}
+    	return Math.toDegrees(rad);
+    }    
 
     /**
      * Normalize angle between 0..2pi

@@ -5,6 +5,7 @@ package com.momega.spacesimulator.swing;
 
 import javax.swing.GroupLayout;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
@@ -14,28 +15,16 @@ import com.momega.spacesimulator.model.HabitableModule;
  * @author martin
  *
  */
-public class HabitatPanel extends AbstractDefaultPanel {
+public class HabitatPanel extends AbstractSubsystemPanel {
 
 	private static final long serialVersionUID = -4564423147390723318L;
+	private JTextField txtCrew;
 
 	public HabitatPanel(final HabitableModule habitat) {
-    	GroupLayout layout = new GroupLayout(this);
-    	setLayout(layout);
-        layout.setAutoCreateGaps(true);
-        layout.setAutoCreateContainerGaps(true);
-        
-        JLabel lblName = new JLabel("Name:", SwingConstants.RIGHT);
-        JTextField txtName = new JTextField(25);
-        txtName.setText(habitat.getName());
-        txtName.addFocusListener(new FocusTextListener(txtName));
-        
-        JLabel lblMass = new JLabel("Mass:", SwingConstants.RIGHT);
-        JTextField txtMass = new JTextField(25);
-        txtMass.setText(String.valueOf(habitat.getMass()));
-        txtMass.addFocusListener(new FocusTextListener(txtMass));
+		super(habitat);
         
         JLabel lblCrew = new JLabel("Crew:", SwingConstants.RIGHT);
-        JTextField txtCrew = new JTextField(25);
+        txtCrew = new JTextField(25);
         txtCrew.setText(String.valueOf(habitat.getCrewCapacity()));
         txtCrew.addFocusListener(new FocusTextListener(txtCrew));
         
@@ -68,6 +57,29 @@ public class HabitatPanel extends AbstractDefaultPanel {
                         .addComponent(txtCrew)
                     )
             );
+	}
+	
+	@Override
+	public HabitableModule getSubsystem() {
+		return (HabitableModule) super.getSubsystem();
+	}
+	
+	@Override
+	public boolean okPressed() {
+		boolean result = super.okPressed();
+		if (!result) {
+			return result;
+		}
+		try {
+			getSubsystem().setCrewCapacity(Integer.valueOf(txtCrew.getText()));
+			return true;
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this,
+                    "Crew Capacity Value is invalid",
+                    "Create Spacecraft Subsystem Error",
+                    JOptionPane.ERROR_MESSAGE);
+		}
+		return false;
 	}
 
 }

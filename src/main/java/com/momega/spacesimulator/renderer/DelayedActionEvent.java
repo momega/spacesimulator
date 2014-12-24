@@ -15,15 +15,20 @@ public class DelayedActionEvent extends EventObject {
 
 	private static final long serialVersionUID = -4627106640344108422L;
 	private GLAutoDrawable drawable;
-	private EventObject event;
+	private final EventObject event;
+	private final Object[] objects;
 	
 	/**
 	 * 
 	 */
-	public DelayedActionEvent(Object source, GLAutoDrawable drawable, EventObject event) {
+	public DelayedActionEvent(Object source, EventObject event, Object...objects) {
 		super(source);
-		this.drawable = drawable;
 		this.event = event;
+		this.objects = objects;
+	}
+
+	public Object[] getObjects() {
+		return objects;
 	}
 	
 	public GLAutoDrawable getDrawable() {
@@ -32,6 +37,10 @@ public class DelayedActionEvent extends EventObject {
 	
 	public EventObject getEvent() {
 		return event;
+	}
+	
+	public void setDrawable(GLAutoDrawable drawable) {
+		this.drawable = drawable;
 	}
 
 }

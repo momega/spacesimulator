@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.builder;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -203,23 +204,14 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param name the name of the satellite
      * @param position the position of the satellite
      * @param velocity the initial velocity
+     * @param subsystems list of the subsystems
      * @return new instance of the satellite
      */
-    public Spacecraft createSpacecraft(CelestialBody centralPoint, String name, Vector3d position, Vector3d velocity, int index, double[] color) {
+    public Spacecraft createSpacecraft(CelestialBody centralPoint, String name, Vector3d position, Vector3d velocity, int index, double[] color, List<SpacecraftSubsystem> subsystems) {
     	MovingObject centralBody = getCentralObject();
-        Spacecraft spacecraft = spacecraftService.createSpacecraft(centralPoint, centralBody, name, position, velocity, index, model.getTime(), color);
+        Spacecraft spacecraft = spacecraftService.createSpacecraft(centralPoint, centralBody, name, position, velocity, index, model.getTime(), color, subsystems);
+        addMovingObject(spacecraft);
         return spacecraft;
-    }
-
-    /**
-     * Adds the subsystem to the spacecraft
-     * @param spacecraft the spacecraft
-     * @param subsystem the instance of the subsystem
-     */
-    public void addSpacecraftSubsystem(Spacecraft spacecraft, SpacecraftSubsystem subsystem) {
-        Assert.notNull(subsystem);
-        spacecraft.getSubsystems().add(subsystem);
-        spacecraft.setMass(spacecraft.getMass() + subsystem.getMass());
     }
 
     private void updateDynamicalPoint(MovingObject dp, String name, double mass, double rotationPeriod, double radius, String wiki, String icon) {

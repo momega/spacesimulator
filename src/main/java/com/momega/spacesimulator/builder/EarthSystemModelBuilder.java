@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.momega.spacesimulator.model.*;
 
 /**
@@ -42,8 +45,10 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         Orientation o = new Orientation(Vector3d.ONE_Y, Vector3d.ONE_Z);
         o.lookUp(Math.toRadians(-23.75d));
         Vector3d velocity = o.getN().scale(9000d);
-        MovingObject spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity, 1, new double[] {1, 1, 0});
-        addMovingObject(spacecraft);
+        
+        List<SpacecraftSubsystem> subsystems = new ArrayList<>();
+        
+        MovingObject spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity, 1, new double[] {1, 1, 0}, subsystems);
 
 //        Vector3d position = VectorUtils.fromSphericalCoordinates(200 * 1E3 + earth.getRadius(), Math.PI/2, 0);
 //        Vector3d velocity = new Vector3d(0, 10000d, 0);

@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 
@@ -8,6 +11,7 @@ import com.momega.spacesimulator.model.HabitableModule;
 import com.momega.spacesimulator.model.KeplerianOrbit;
 import com.momega.spacesimulator.model.Propulsion;
 import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.SpacecraftSubsystem;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.TimeUtils;
 
@@ -28,7 +32,7 @@ public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
         Vector3d position = KeplerianOrbit.getCartesianPosition(500 * 1E3 + earth.getRadius(), 0, 0, Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(8200d).negate();
-        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 2", position, velocity, 2, new double[] {1, 1, 0});
+        List<SpacecraftSubsystem> subsystems = new ArrayList<>();
 
         Propulsion propulsion = new Propulsion();
         propulsion.setMass(29000);
@@ -36,14 +40,16 @@ public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
         propulsion.setMassFlow(5);
         propulsion.setSpecificImpulse(311);
         propulsion.setName("Main Engine");
-        addSpacecraftSubsystem(spacecraft, propulsion);
+        subsystems.add(propulsion);
 
         HabitableModule habitableModule = new HabitableModule();
         habitableModule.setCrewCapacity(1);
         habitableModule.setMass(1000);
         habitableModule.setName("Habitat");
-        addSpacecraftSubsystem(spacecraft, habitableModule);
+        subsystems.add(habitableModule);
 
+        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 2", position, velocity, 2, new double[] {1, 1, 0}, subsystems);
+        
         addManeuver(spacecraft, "M5", 0 * 60d, 1100d, 1d, 0, Math.toRadians(-90));
         addManeuver(spacecraft, "M6", 82 * 60d, 1200d, 1d, 0, Math.toRadians(-90));
         addManeuver(spacecraft, "M7", 107.5 * 60d, 2654d, 1d, 0, Math.toRadians(0));
@@ -54,8 +60,6 @@ public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
         addManeuver(spacecraft, "M12", 310495 * 60d, 500, 1d, Math.toRadians(180), Math.toRadians(0));
 
         setTarget(spacecraft, mars);
-
-        addMovingObject(spacecraft);
 
     }
 }

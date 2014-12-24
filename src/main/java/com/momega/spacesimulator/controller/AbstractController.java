@@ -95,8 +95,9 @@ public abstract class AbstractController implements Controller {
     	// do nothing
     }
     
-    protected void fireDelayedAction(EventObject event) {
-    	EventBusController.getInstance().fireDelayedEvent(event);
+    protected void fireDelayedAction(EventObject event, Object... objects) {
+		DelayedActionEvent delayed = new DelayedActionEvent(event.getSource(), event, objects);
+    	EventBusController.getInstance().fireDelayedEvent(delayed);
     }
 
 }

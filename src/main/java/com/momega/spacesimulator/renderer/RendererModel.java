@@ -85,6 +85,8 @@ public class RendererModel {
 	private PropertyChangeSupport propertyChangeSupport;
 
 	private BigDecimal warpFactor = BigDecimal.ONE;
+	
+	private Spacecraft newSpacecraft = null;
 
     private RendererModel() {
         super();
@@ -126,11 +128,11 @@ public class RendererModel {
     	return result;
     }
     
-    public List<Planet> findAllPhysicalBodies() {
-    	List<Planet> result = new ArrayList<>();
+    public List<CelestialBody> findAllCelestialBodies() {
+    	List<CelestialBody> result = new ArrayList<>();
     	for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
-    		if (dp instanceof Planet) {
-    			result.add((Planet) dp);
+    		if (dp instanceof CelestialBody) {
+    			result.add((CelestialBody) dp);
     		}
     	}
     	return result;
@@ -529,5 +531,13 @@ public class RendererModel {
     public BigDecimal getWarpFactor() {
         return warpFactor;
     }
+    
+    public void setNewSpacecraft(Spacecraft newSpacecraft) {
+		this.newSpacecraft = newSpacecraft;
+	}
+    
+    public Spacecraft getNewSpacecraft() {
+		return newSpacecraft;
+	}
 	
 }

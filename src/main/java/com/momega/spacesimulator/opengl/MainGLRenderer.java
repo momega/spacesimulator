@@ -11,8 +11,10 @@ import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.controller.EventBusController;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelRenderer;
+import com.momega.spacesimulator.renderer.MovingObjectCompositeRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
 
 /**
@@ -54,11 +56,58 @@ public class MainGLRenderer extends AbstractGLRenderer {
 	    	renderer.init(gl);
 	    	RendererModel.getInstance().setReloadModelRequested(false);
         }
+        
+        if (RendererModel.getInstance().getNewSpacecraft()!=null) {
+        	Spacecraft spacecraft = RendererModel.getInstance().getNewSpacecraft();
+        	RendererModel.getInstance().replaceMovingObjectsModel();
+        	GL2 gl = drawable.getGL().getGL2();
+        	MovingObjectCompositeRenderer movingObjectCompositeRenderer = new MovingObjectCompositeRenderer(spacecraft);
+        	movingObjectCompositeRenderer.init(gl);
+        	renderer.addRenderer(movingObjectCompositeRenderer);
+        	RendererModel.getInstance().setNewSpacecraft(null);
+        }
     }
 
     @Override
     public void dispose(GL2 gl) {
         renderer.dispose(gl);
+    }
+    
+    protected void computeView(GLAutoDrawable drawable) {
+    	RendererModel.getInstance().clearViewCoordinates();
+        RendererModel.getInstance().updateViewData(drawable);
+        RendererModel.getInstance().modelChanged();
+    }
+
+    @Override
+    public void setCamera() {
+        Camera camera = ModelHolder.getModel().getCamera();
+        Vector3d p = camera.getPosition();
+        logger.debug("Camera Position = {}", p.asArray());
+
+        Vector3d n = camera.getOppositeOrientation().getN().negate();
+
+        glu.gluLookAt(p.getX(), p.getY(), p.getZ(),
+                p.getX() + n.getX() * 1E8,
+                p.getY() + n.getY() * 1E8,
+                p.getZ() + n.getZ() * 1E8,
+                camera.getOppositeOrientation().getV().getX(),
+                camera.getOppositeOrientation().getV().getY(),
+                camera.getOppositeOrientation().getV().getZ());
+    }
+
+    protected void setPerspective(GL2 gl, double aspect) {
+        glu.gluPerspective(RendererModel.FOVY, aspect, znear, UNIVERSE_RADIUS);
+    }
+
+    public double getZnear() {
+        return znear;
+    }
+
+    public void changeZnear(double factor) {
+        znear *= factor;
+        logger.info("change z near: {}",znear);
+        setReshape();
     }
 
     @Override
@@ -133,41 +182,5 @@ public class MainGLRenderer extends AbstractGLRenderer {
 //        return znear;
 //    }
 
-    protected void computeView(GLAutoDrawable drawable) {
-    	RendererModel.getInstance().clearViewCoordinates();
-        RendererModel.getInstance().updateViewData(drawable);
-        RendererModel.getInstance().modelChanged();
-    }
-
-    @Override
-    public void setCamera() {
-        Camera camera = ModelHolder.getModel().getCamera();
-        Vector3d p = camera.getPosition();
-        logger.debug("Camera Position = {}", p.asArray());
-
-        Vector3d n = camera.getOppositeOrientation().getN().negate();
-
-        glu.gluLookAt(p.getX(), p.getY(), p.getZ(),
-                p.getX() + n.getX() * 1E8,
-                p.getY() + n.getY() * 1E8,
-                p.getZ() + n.getZ() * 1E8,
-                camera.getOppositeOrientation().getV().getX(),
-                camera.getOppositeOrientation().getV().getY(),
-                camera.getOppositeOrientation().getV().getZ());
-    }
-
-    protected void setPerspective(GL2 gl, double aspect) {
-        glu.gluPerspective(RendererModel.FOVY, aspect, znear, UNIVERSE_RADIUS);
-    }
-
-    public double getZnear() {
-        return znear;
-    }
-
-    public void changeZnear(double factor) {
-        znear *= factor;
-        logger.info("change z near: {}",znear);
-        setReshape();
-    }
 
 }

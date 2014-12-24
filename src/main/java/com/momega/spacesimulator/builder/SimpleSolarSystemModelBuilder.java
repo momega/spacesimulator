@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.builder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.momega.spacesimulator.model.*;
 
 /**
@@ -55,21 +58,25 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         Vector3d position = KeplerianOrbit.getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(8200d).negate();
-        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity, 1, new double[] {1, 1, 0});
-
+        
+        List<SpacecraftSubsystem> subsystems = new ArrayList<>();
         Propulsion propulsion = new Propulsion();
         propulsion.setMass(29000);
         propulsion.setFuel(28000);
         propulsion.setMassFlow(5);
         propulsion.setSpecificImpulse(311);
         propulsion.setName("Main Engine");
-        addSpacecraftSubsystem(spacecraft, propulsion);
+        subsystems.add(propulsion);
 
         HabitableModule habitableModule = new HabitableModule();
         habitableModule.setCrewCapacity(1);
         habitableModule.setMass(1000);
         habitableModule.setName("Habitat");
-        addSpacecraftSubsystem(spacecraft, habitableModule);
+        subsystems.add(habitableModule);
+        
+        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity, 1, new double[] {1, 1, 0}, subsystems);
+
+
 
         addManeuver(spacecraft, "M1", 20 * 60d, 2600d, 1d, 0, Math.toRadians(90));
         addManeuver(spacecraft, "M2", 130 * 60d, 950d, 1d, 0, Math.toRadians(90));
@@ -79,8 +86,6 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         addManeuver(spacecraft, "M6", 5910 * 60d, 205, 1d, Math.toRadians(180), Math.toRadians(0));
 
         setTarget(spacecraft, moon);
-
-        addMovingObject(spacecraft);
     }
     
     @Override

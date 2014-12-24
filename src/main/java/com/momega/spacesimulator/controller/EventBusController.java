@@ -6,7 +6,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
-import java.util.EventObject;
 import java.util.List;
 
 import javax.media.opengl.GLAutoDrawable;
@@ -31,7 +30,7 @@ public class EventBusController extends AbstractController {
 	}
 
     private final List<Controller> controllers = new ArrayList<>();
-    private final List<EventObject> events = new ArrayList<>();
+    private final List<DelayedActionEvent> events = new ArrayList<>();
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -143,16 +142,16 @@ public class EventBusController extends AbstractController {
     
     public void dispatchDelayedEvents(GLAutoDrawable drawable) {
     	while(!events.isEmpty()) {
-    		EventObject event = events.remove(0);
-    		DelayedActionEvent delayed = new DelayedActionEvent(event.getSource(), drawable, event);
+    		DelayedActionEvent delayed = events.remove(0);
+    		delayed.setDrawable(drawable);
 	    	for(Controller controller : controllers) {
 	    		controller.delayedActionPeformed(delayed);
 	    	}
     	}
     }
     
-    public void fireDelayedEvent(EventObject e) {
-    	events.add(e);
+    public void fireDelayedEvent(DelayedActionEvent event) {
+    	events.add(event);
     }
 
     public void addController(Controller controller) {

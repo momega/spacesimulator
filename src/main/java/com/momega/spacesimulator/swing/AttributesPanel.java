@@ -3,6 +3,7 @@ package com.momega.spacesimulator.swing;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
+import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 
 import org.springframework.expression.EvaluationContext;
@@ -87,6 +88,7 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
             StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
             evaluationContext.setVariable("obj", object);
             evaluationContext.registerFunction("toDegrees", Math.class.getDeclaredMethod("toDegrees", double.class));
+            evaluationContext.registerFunction("toDegrees2", MathUtils.class.getDeclaredMethod("toDegrees", Double.class));
             evaluationContext.registerFunction("timeAsString", TimeUtils.class.getDeclaredMethod("timeAsString", Timestamp.class));
             evaluationContext.registerFunction("periodAsString", TimeUtils.class.getDeclaredMethod("periodAsString", double.class));
             evaluationContext.registerFunction("eta", TimeUtils.class.getDeclaredMethod("getETA", PositionProvider.class));
