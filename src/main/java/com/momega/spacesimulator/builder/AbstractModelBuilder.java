@@ -29,6 +29,7 @@ import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SpacecraftSubsystem;
 import com.momega.spacesimulator.model.SphereOfInfluence;
+import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.model.Trajectory;
 import com.momega.spacesimulator.model.TrajectoryType;
 import com.momega.spacesimulator.model.Vector3d;
@@ -86,6 +87,10 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     protected void initTime() {
         model.setTime(TimeUtils.fromDateTime(new DateTime(2014, 9, 23, 12, 0, DateTimeZone.UTC)));
+    }
+    
+    protected Timestamp getTime() {
+    	return model.getTime();
     }
 
     protected void createCamera(PositionProvider positionProvider) {

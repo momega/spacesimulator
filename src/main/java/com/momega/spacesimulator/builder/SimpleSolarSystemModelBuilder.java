@@ -54,7 +54,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
     public void initSpacecrafts() {
         CelestialBody earth = (CelestialBody) findMovingObject("Earth");
         CelestialBody moon = (CelestialBody) findMovingObject("Moon");
-
+        
         Vector3d position = KeplerianOrbit.getCartesianPosition(200 * 1E3 + earth.getRadius(), Math.PI / 2, Math.toRadians(23.439291), Math.PI, 2d);
         Vector3d top = earth.getOrientation().getV();
         Vector3d velocity = position.normalize().cross(top).scale(8200d).negate();
@@ -75,8 +75,6 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         subsystems.add(habitableModule);
         
         Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 1", position, velocity, 1, new double[] {1, 1, 0}, subsystems);
-
-
 
         addManeuver(spacecraft, "M1", 20 * 60d, 2600d, 1d, 0, Math.toRadians(90));
         addManeuver(spacecraft, "M2", 130 * 60d, 950d, 1d, 0, Math.toRadians(90));

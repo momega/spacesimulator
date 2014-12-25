@@ -4,15 +4,9 @@
 package com.momega.spacesimulator.controller;
 
 import java.awt.event.ActionEvent;
-import java.util.List;
 
-import javax.swing.JOptionPane;
-
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.swing.CreateSpacecraftPanel;
 import com.momega.spacesimulator.swing.DeleteSpacecraftPanel;
-import com.momega.spacesimulator.swing.Icons;
 import com.momega.spacesimulator.swing.SwingUtils;
 
 /**

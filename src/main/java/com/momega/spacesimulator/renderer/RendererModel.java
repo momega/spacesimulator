@@ -84,7 +84,7 @@ public class RendererModel {
 	private UserOrbitalPoint selectedUserOrbitalPoint;
 	private PropertyChangeSupport propertyChangeSupport;
 
-	private BigDecimal warpFactor = BigDecimal.ONE;
+	private BigDecimal warpFactor = BigDecimal.valueOf(0.1);
 	
 	private Spacecraft newSpacecraft = null;
 	private Spacecraft deleteSpacecraft = null;
