@@ -25,5 +25,18 @@ public class ModelRenderer extends CompositeRenderer {
     		addRenderer(renderer);
         }
     }
+    
+    public Renderer deleteMovingObject(MovingObject mo) {
+    	for(Renderer renderer : getRenderers()) {
+    		if (renderer instanceof MovingObjectCompositeRenderer) {
+    			MovingObjectCompositeRenderer mocr = (MovingObjectCompositeRenderer) renderer;
+    			if (mo == mocr.getMovingObject()) {
+    				removeRenderer(mocr);
+    				return mocr;
+    			}
+    		}
+    	}
+    	return null;
+    }
 
 }

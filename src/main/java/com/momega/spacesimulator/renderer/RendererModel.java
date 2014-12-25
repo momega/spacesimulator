@@ -87,6 +87,7 @@ public class RendererModel {
 	private BigDecimal warpFactor = BigDecimal.ONE;
 	
 	private Spacecraft newSpacecraft = null;
+	private Spacecraft deleteSpacecraft = null;
 
     private RendererModel() {
         super();
@@ -538,6 +539,14 @@ public class RendererModel {
     
     public Spacecraft getNewSpacecraft() {
 		return newSpacecraft;
+	}
+    
+    public void setDeleteSpacecraft(Spacecraft deleteSpacecraft) {
+		this.deleteSpacecraft = deleteSpacecraft;
+	}
+    
+    public Spacecraft getDeleteSpacecraft() {
+		return deleteSpacecraft;
 	}
 	
 }

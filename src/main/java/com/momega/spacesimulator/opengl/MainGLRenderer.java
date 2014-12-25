@@ -66,6 +66,10 @@ public class MainGLRenderer extends AbstractGLRenderer {
         	renderer.addRenderer(movingObjectCompositeRenderer);
         	RendererModel.getInstance().setNewSpacecraft(null);
         }
+        
+        if (RendererModel.getInstance().getDeleteSpacecraft()!=null) {
+        	RendererModel.getInstance().setDeleteSpacecraft(null);
+        }
     }
 
     @Override

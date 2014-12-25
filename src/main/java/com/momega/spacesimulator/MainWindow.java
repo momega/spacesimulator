@@ -182,6 +182,9 @@ public class MainWindow extends DefaultWindow {
         
         JMenuItem deleteSpacecraftItem = new JMenuItem("Delete Spacecraft...");
         deleteSpacecraftItem.setIcon(Icons.DELETE_SPACECRAFT);
+        deleteSpacecraftItem.setActionCommand(SpacecraftController.DELETE_SPACECRAFT);
+        deleteSpacecraftItem.addActionListener(controller);
+        
     	JMenuItem newPointItem = new JMenuItem("New Point...");
     	newPointItem.setActionCommand(UserPointController.NEW_USER_POINT);
     	newPointItem.addActionListener(controller);

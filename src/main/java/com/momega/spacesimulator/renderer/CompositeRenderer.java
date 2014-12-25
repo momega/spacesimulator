@@ -18,6 +18,10 @@ public class CompositeRenderer implements Renderer {
         renderers.add(r);
     }
     
+    public void removeRenderer(Renderer r) {
+    	renderers.remove(r);
+    }
+    
     public void clearAllRenderers() {
     	renderers.clear();
     }
@@ -42,4 +46,8 @@ public class CompositeRenderer implements Renderer {
             r.dispose(gl);
         }
     }
+    
+    public List<Renderer> getRenderers() {
+		return renderers;
+	}
 }

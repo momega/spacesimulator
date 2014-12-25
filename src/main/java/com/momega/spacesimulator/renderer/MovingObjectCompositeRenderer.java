@@ -64,6 +64,10 @@ public class MovingObjectCompositeRenderer extends CompositeRenderer {
             addRenderer(new TargetTrajectoryRenderer(spacecraft));
         }
         return list;
-    }	
+    }
+    
+    public MovingObject getMovingObject() {
+		return movingObject;
+	}
 
 }
