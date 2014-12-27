@@ -5,6 +5,7 @@ import java.awt.GridLayout;
 import javax.swing.JCheckBox;
 
 import com.momega.spacesimulator.renderer.Preferences;
+import com.momega.spacesimulator.renderer.RendererModel;
 
 /**
  * The dialog of the preferences
@@ -16,6 +17,7 @@ public class PreferencesPanel extends AbstractDefaultPanel {
 	private JCheckBox chkBeams;
     private JCheckBox chkSpacecraftAxis;
     private JCheckBox chkTargetTrajectory;
+    private JCheckBox chkCelestialBodyAxis;
 
     public PreferencesPanel() {
         setLayout(new GridLayout(7,1));
@@ -31,6 +33,10 @@ public class PreferencesPanel extends AbstractDefaultPanel {
         chkTargetTrajectory = new JCheckBox("Show estimated trajectory to given target");
         add(chkTargetTrajectory);
         chkTargetTrajectory.setSelected(Preferences.getInstance().isDrawTargetTrajectory());
+
+        chkCelestialBodyAxis = new JCheckBox("Show axis for celestial bodies");
+        add(chkCelestialBodyAxis);
+        chkCelestialBodyAxis.setSelected(Preferences.getInstance().isDrawCelestialBodyAxis());
     }
     
     @Override
@@ -38,6 +44,8 @@ public class PreferencesPanel extends AbstractDefaultPanel {
         Preferences.getInstance().setDrawBeamsActivated(chkBeams.isSelected());
         Preferences.getInstance().setDrawSpacecraftAxisActivated(chkSpacecraftAxis.isSelected());
         Preferences.getInstance().setDrawTargetTrajectory(chkTargetTrajectory.isSelected());
+        Preferences.getInstance().setDrawCelestialBodyAxis(chkCelestialBodyAxis.isSelected());
+        RendererModel.getInstance().setReloadModelRequested(true);
         return true;
     }
         

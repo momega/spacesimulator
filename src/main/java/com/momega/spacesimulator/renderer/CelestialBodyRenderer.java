@@ -21,18 +21,16 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
     private final CelestialBody celestialBody;
 	private final boolean drawPlanet;
-	private final boolean drawAxis;
 
-    public CelestialBodyRenderer(CelestialBody celestialBody, boolean drawPlanet, boolean drawAxis) {
+    public CelestialBodyRenderer(CelestialBody celestialBody, boolean drawPlanet) {
         this.celestialBody = celestialBody;
 		this.drawPlanet = drawPlanet;
-		this.drawAxis = drawAxis;
     }
 
     @Override
     protected void loadTexture(GL2 gl) {
         loadTexture(gl, celestialBody.getTextureFileName());
-        logger.info("texture object is created {}", celestialBody.getTextureFileName());
+        logger.info("texture object {} is created for {}", celestialBody.getTextureFileName(), celestialBody.getName());
     }
 
     @Override
@@ -59,7 +57,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     		super.prepareObject(gl);
     	}
 
-    	if (drawAxis) {
+    	if (Preferences.getInstance().isDrawCelestialBodyAxis()) {
 	       double rad = celestialBody.getRadius() * 1.2;
 	       GLUtils.drawAxis(gl, 1.0d, rad);
     	}

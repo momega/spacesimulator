@@ -14,4 +14,6 @@ public interface Renderer {
     void draw(GLAutoDrawable drawable);
 
     void dispose(GL2 gl);
+
+    void reload(GL2 gl);
 }

@@ -17,6 +17,8 @@ import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.MovingObjectCompositeRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
 
+import java.io.File;
+
 /**
  * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
  * for all my OPENGL implementation
@@ -68,7 +70,27 @@ public class MainGLRenderer extends AbstractGLRenderer {
         }
         
         if (RendererModel.getInstance().getDeleteSpacecraft()!=null) {
+            Spacecraft spacecraft = RendererModel.getInstance().getDeleteSpacecraft();
+            GL2 gl = drawable.getGL().getGL2();
+            MovingObjectCompositeRenderer movingObjectCompositeRenderer = renderer.deleteMovingObject(spacecraft);
+            movingObjectCompositeRenderer.dispose(gl);
+            movingObjectCompositeRenderer = new MovingObjectCompositeRenderer(spacecraft);
+            movingObjectCompositeRenderer.init(gl);
+            renderer.addRenderer(movingObjectCompositeRenderer);
         	RendererModel.getInstance().setDeleteSpacecraft(null);
+        }
+
+        if (RendererModel.getInstance().isReloadRenderersRequired()) {
+            GL2 gl = drawable.getGL().getGL2();
+            renderer.reload(gl);
+            RendererModel.getInstance().setReloadRenderersRequired(false);
+        }
+
+        if (RendererModel.getInstance().isTakeScreenshotRequired()) {
+            logger.info("take screenshot now");
+            File dir = new File(System.getProperty("user.home"));
+            GLUtils.saveFrameAsPng(drawable, dir);
+            RendererModel.getInstance().setTakeScreenshotRequired(false);
         }
     }
 

@@ -22,6 +22,12 @@ public abstract class AbstractTextureRenderer extends AbstractRenderer {
 
     protected abstract void loadTexture(GL2 gl);
 
+    @Override
+    public void reload(GL2 gl) {
+        dispose(gl);
+        init(gl);
+    }
+
     public void dispose(GL2 gl) {
         gl.glDeleteLists(this.listIndex, 1);
         if (texture != null) {

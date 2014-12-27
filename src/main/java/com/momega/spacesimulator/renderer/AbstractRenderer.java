@@ -16,4 +16,9 @@ public abstract class AbstractRenderer implements Renderer {
     public void dispose(GL2 gl) {
         // do nothing
     }
+
+    @Override
+    public void reload(GL2 gl) {
+        // do nothing
+    }
 }

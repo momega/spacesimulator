@@ -41,9 +41,16 @@ public class CompositeRenderer implements Renderer {
     }
 
     @Override
-    public void dispose(GL2 gl) {
+     public void dispose(GL2 gl) {
         for(Renderer r : renderers) {
             r.dispose(gl);
+        }
+    }
+
+    @Override
+    public void reload(GL2 gl) {
+        for(Renderer r : renderers) {
+            r.reload(gl);
         }
     }
     

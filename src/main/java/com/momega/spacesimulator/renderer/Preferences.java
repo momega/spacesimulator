@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.renderer;
 
 /**
+ * Set of the preferences for the application.
  * Created by martin on 11/5/14.
  */
 public class Preferences {
@@ -8,6 +9,7 @@ public class Preferences {
     private boolean drawBeamsActivated = false;
     private boolean drawSpacecraftAxisActivated = false;
     private boolean drawTargetTrajectory = false;
+    private boolean drawCelestialBodyAxis = false;
 
     private static Preferences instance = new Preferences();
 
@@ -38,4 +40,12 @@ public class Preferences {
     public boolean isDrawTargetTrajectory() {
 		return drawTargetTrajectory;
 	}
+
+    public void setDrawCelestialBodyAxis(boolean drawCelestialBodyAxis) {
+        this.drawCelestialBodyAxis = drawCelestialBodyAxis;
+    }
+
+    public boolean isDrawCelestialBodyAxis() {
+        return drawCelestialBodyAxis;
+    }
 }

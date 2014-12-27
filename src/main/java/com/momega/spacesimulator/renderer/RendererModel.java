@@ -88,6 +88,8 @@ public class RendererModel {
 	
 	private Spacecraft newSpacecraft = null;
 	private Spacecraft deleteSpacecraft = null;
+    private boolean reloadRenderersRequired = false;
+    private boolean takeScreenshotRequired = false;
 
     private RendererModel() {
         super();
@@ -548,5 +550,20 @@ public class RendererModel {
     public Spacecraft getDeleteSpacecraft() {
 		return deleteSpacecraft;
 	}
-	
+
+    public boolean isReloadRenderersRequired() {
+        return reloadRenderersRequired;
+    }
+
+    public void setReloadRenderersRequired(boolean reloadRenderersRequired) {
+        this.reloadRenderersRequired = reloadRenderersRequired;
+    }
+
+    public boolean isTakeScreenshotRequired() {
+        return takeScreenshotRequired;
+    }
+
+    public void setTakeScreenshotRequired(boolean takeScreenshotRequired) {
+        this.takeScreenshotRequired = takeScreenshotRequired;
+    }
 }

@@ -15,6 +15,7 @@ import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.TrajectoryType;
 
 /**
+ * The composite renderer which prepares all the renderers for the single moving object
  * @author martin
  *
  */
@@ -32,15 +33,15 @@ public class MovingObjectCompositeRenderer extends CompositeRenderer {
     	if (!TrajectoryType.STATIC.equals(mo.getTrajectory().getType())) {
             addRenderer(new KeplerianTrajectoryRenderer(mo));
         }
-        addRenderer(new UserOrbitalPointBitmapRenderer((MovingObject) mo));
-        addRenderer(new MovingObjectOrbitPointsRenderer((MovingObject) mo));
+        addRenderer(new UserOrbitalPointBitmapRenderer(mo));
+        addRenderer(new MovingObjectOrbitPointsRenderer(mo));
         addRenderer(new MovingObjectRenderer(mo));
         if (mo instanceof BaryCentre) {
             addRenderer(new ApsidesRenderer(mo));
         }
         if (mo instanceof CelestialBody) {
             addRenderer(new ApsidesRenderer(mo));
-            addRenderer(new CelestialBodyRenderer((CelestialBody) mo, true, true));
+            addRenderer(new CelestialBodyRenderer((CelestialBody) mo, true));
             if (mo instanceof Planet) {
                 Planet p = (Planet) mo;
                 for(Ring ring : p.getRings()) {
