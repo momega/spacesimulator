@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.opengl;
 
+import java.awt.Point;
+import java.io.File;
+
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
@@ -7,17 +10,17 @@ import javax.media.opengl.glu.GLU;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.momega.spacesimulator.MainWindow;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.controller.EventBusController;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.MovingObjectCompositeRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
-
-import java.io.File;
+import com.momega.spacesimulator.renderer.StatusBarEvent;
 
 /**
  * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
@@ -33,9 +36,11 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     private GLU glu;
     public double znear = 100;
+	private MainWindow window;
 
-    public MainGLRenderer() {
-        this.renderer = new ModelRenderer();
+    public MainGLRenderer(MainWindow window) {
+        this.window = window;
+		this.renderer = new ModelRenderer();
     }
 
     @Override
@@ -48,16 +53,6 @@ public class MainGLRenderer extends AbstractGLRenderer {
     @Override
     protected void draw(GLAutoDrawable drawable) {
         renderer.draw(drawable);
-        EventBusController.getInstance().dispatchDelayedEvents(drawable);
-        
-        if (RendererModel.getInstance().isReloadModelRequested()) {
-	    	GL2 gl = drawable.getGL().getGL2();
-        	renderer.clearAllRenderers();
-	    	renderer.createRenderers();
-	    	renderer.dispose(gl);
-	    	renderer.init(gl);
-	    	RendererModel.getInstance().setReloadModelRequested(false);
-        }
         
         if (RendererModel.getInstance().getNewSpacecraft()!=null) {
         	Spacecraft spacecraft = RendererModel.getInstance().getNewSpacecraft();
@@ -89,8 +84,47 @@ public class MainGLRenderer extends AbstractGLRenderer {
         if (RendererModel.getInstance().isTakeScreenshotRequired()) {
             logger.info("take screenshot now");
             File dir = new File(System.getProperty("user.home"));
-            GLUtils.saveFrameAsPng(drawable, dir);
+            File file = GLUtils.saveFrameAsPng(drawable, dir);
             RendererModel.getInstance().setTakeScreenshotRequired(false);
+            RendererModel.getInstance().fireModelEvent(new StatusBarEvent(ModelHolder.getModel(), "Screenshot taken as file:" + file.getAbsolutePath()));
+        }
+        
+        if (RendererModel.getInstance().getNewUserPointPosition()!=null) {
+        	Point position = RendererModel.getInstance().getNewUserPointPosition();
+        	RendererModel.getInstance().createUserPoint(drawable, position);
+        	RendererModel.getInstance().setNewUserPointPosition(null);
+        }
+        
+        if (RendererModel.getInstance().getSaveFileRequested()!=null) {
+        	File file = RendererModel.getInstance().getSaveFileRequested();
+        	RendererModel.getInstance().saveFile(file);
+        	RendererModel.getInstance().setSaveFileRequested(null);
+        }
+        
+        if (RendererModel.getInstance().getLoadFileRequested()!=null) {
+        	File file = RendererModel.getInstance().getLoadFileRequested();
+			Model model = RendererModel.getInstance().loadFile(file);
+			ModelHolder.replaceModel(model);
+	    	RendererModel.getInstance().replaceMovingObjectsModel();
+	    	
+	    	GL2 gl = drawable.getGL().getGL2();
+        	renderer.clearAllRenderers();
+	    	renderer.createRenderers();
+	    	renderer.dispose(gl);
+	    	renderer.init(gl);
+	    	
+        	RendererModel.getInstance().setLoadFileRequested(null);
+        }
+        
+        if (RendererModel.getInstance().getDragUserPointPosition()!=null) {
+        	Point position = RendererModel.getInstance().getDragUserPointPosition();
+        	RendererModel.getInstance().dragUserPoint(drawable, position);
+        	RendererModel.getInstance().setDragUserPointPosition(null);
+        }
+        
+        if (RendererModel.getInstance().isQuitRequested()) {
+        	window.stopAnimator();
+        	RendererModel.getInstance().setQuitRequested(false);
         }
     }
 

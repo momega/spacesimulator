@@ -8,10 +8,6 @@ import java.awt.event.MouseWheelEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GLAutoDrawable;
-
-import com.momega.spacesimulator.renderer.DelayedActionEvent;
-
 /**
  * The implementation of the controller that passes all method calls to the registered specific/detail controller.
  *
@@ -19,18 +15,11 @@ import com.momega.spacesimulator.renderer.DelayedActionEvent;
  */
 public class EventBusController extends AbstractController {
 	
-	private static EventBusController instance = new EventBusController();
-	
-	public static EventBusController getInstance() {
-		return instance;
-	}
-	
-	private EventBusController() {
+	public EventBusController() {
 		super();
 	}
 
     private final List<Controller> controllers = new ArrayList<>();
-    private final List<DelayedActionEvent> events = new ArrayList<>();
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -138,20 +127,6 @@ public class EventBusController extends AbstractController {
     	for(Controller controller : controllers) {
     		controller.actionPerformed(e);
     	}
-    }
-    
-    public void dispatchDelayedEvents(GLAutoDrawable drawable) {
-    	while(!events.isEmpty()) {
-    		DelayedActionEvent delayed = events.remove(0);
-    		delayed.setDrawable(drawable);
-	    	for(Controller controller : controllers) {
-	    		controller.delayedActionPeformed(delayed);
-	    	}
-    	}
-    }
-    
-    public void fireDelayedEvent(DelayedActionEvent event) {
-    	events.add(event);
     }
 
     public void addController(Controller controller) {

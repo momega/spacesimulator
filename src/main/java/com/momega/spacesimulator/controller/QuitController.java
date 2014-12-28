@@ -1,15 +1,15 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.opengl.DefaultWindow;
-import com.momega.spacesimulator.renderer.DelayedActionEvent;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JOptionPane;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.momega.spacesimulator.opengl.DefaultWindow;
+import com.momega.spacesimulator.renderer.RendererModel;
 
 /**
  * The controller handles the escape key to close the window
@@ -33,25 +33,15 @@ public class QuitController extends AbstractController {
     	}
     }
     
-    @Override
-    public void delayedActionPeformed(DelayedActionEvent e) {
-    	if (e.getEvent() instanceof ActionEvent) {
-    		ActionEvent actionEvent = (ActionEvent) e.getEvent();
-    		if (COMMAND.equals(actionEvent.getActionCommand())) {
-    			window.stopAnimator();
-    		}
-    	}
-    }
-    
     protected void closeWindow() {
     	int option = JOptionPane.showConfirmDialog(
     		    window.getFrame(),
     		    "Do you want to save the simulation before exit?", "Save the simulation?", JOptionPane.YES_NO_CANCEL_OPTION);
     	if (option == JOptionPane.YES_OPTION) {
-    		EventBusController.getInstance().actionPerformed(new ActionEvent(this, 0, SaveController.SAVE_COMMAND));
+    		RendererModel.getInstance().doSave(false);
     	}
     	if (option == JOptionPane.YES_OPTION || option == JOptionPane.NO_OPTION) {
-    		fireDelayedAction(new ActionEvent(this, 0, QuitController.COMMAND));
+    		RendererModel.getInstance().setQuitRequested(true);
     	}
     }
 

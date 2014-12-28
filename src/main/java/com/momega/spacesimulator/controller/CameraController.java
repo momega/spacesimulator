@@ -1,18 +1,6 @@
 package com.momega.spacesimulator.controller;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.model.UserOrbitalPoint;
-import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.renderer.DelayedActionEvent;
-import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.renderer.ViewCoordinates;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.awt.*;
+import java.awt.Point;
 import java.awt.event.ComponentEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -20,7 +8,16 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.media.opengl.GLAutoDrawable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
+import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.renderer.ViewCoordinates;
 
 /**
  * Created by martin on 5/8/14.
@@ -56,26 +53,12 @@ public class CameraController extends AbstractCameraConroller {
             }
 
             if (selectedUserOrbitalPoint != null) {
-            	fireDelayedAction(e);
+            	RendererModel.getInstance().setDragUserPointPosition(position);
                 return;
             }
         }
 
         super.mouseDragged(e);
-    }
-    
-    @Override
-    public void delayedActionPeformed(DelayedActionEvent delayed) {
-    	if (delayed.getEvent() instanceof MouseEvent) {
-	    	MouseEvent e = (MouseEvent) delayed.getEvent();
-	    	Point position = GLUtils.getPosition(e);
-	    	GLAutoDrawable drawable = delayed.getDrawable();
-	    	logger.info("dragging = {}", position);
-	    	
-	        if (selectedUserOrbitalPoint!=null && position!=null) {
-	            RendererModel.getInstance().dragUserPoint(drawable, selectedUserOrbitalPoint, position);
-	        }
-    	}
     }
 
     @Override

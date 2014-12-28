@@ -445,13 +445,14 @@ public class GLUtils {
      * of {@link com.momega.spacesimulator.opengl.AbstractGLRenderer#display(javax.media.opengl.GLAutoDrawable)}
      * @param drawable the drawable
      * @param directory the directory where the output file will be stores
+     * @return the output file name
      */
-    public static void saveFrameAsPng( GLAutoDrawable drawable, File directory )
+    public static File saveFrameAsPng( GLAutoDrawable drawable, File directory )
     {
         File outputFile = new File( directory, String.valueOf(System.nanoTime()) + ".png" );
         // Do not overwrite existing image file.
         if( outputFile.exists() ) {
-            return;
+            return null;
         }
 
         logger.info("screenshot taken to {}", outputFile.getName());
@@ -461,6 +462,7 @@ public class GLUtils {
         if(screenshot.readPixels(gl, false)) {
             screenshot.write(outputFile);
         }
+        return outputFile;
     }
 
 }

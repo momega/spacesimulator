@@ -21,7 +21,7 @@ public class MediumSolarSystemModelBuilder extends SimpleSolarSystemModelBuilder
         updateDynamicalPoint(mars, "Mars", 0.64185, 1.02595, 3.3895, 317.68143, 52.88650, 176.630, "Mars_(planet)", "/images/mars.png");
         createKeplerianElements(mars, sun, 227939.1d * 1E6, 0.093315, 286.537, 686.9363, 2457003.918154194020, 1.84844, 49.5147);
         createTrajectory(mars, new double[]{1, 0, 0});
-        mars.setTextureFileName("mars.jpg");
+        mars.setTextureFileName("mars_hi.jpg");
         
         addMovingObject(mars);
         

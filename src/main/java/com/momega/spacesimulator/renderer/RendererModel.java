@@ -4,6 +4,9 @@ import java.awt.Point;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,8 +18,11 @@ import java.util.Map;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -41,6 +47,7 @@ import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.ModelSerializer;
 import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.service.UserPointService;
 import com.momega.spacesimulator.swing.PositionProvidersModel;
@@ -79,7 +86,6 @@ public class RendererModel {
     
     private File modelFile;
     private final JFileChooser fileChooser;
-    private boolean reloadModelRequested;
 
 	private UserOrbitalPoint selectedUserOrbitalPoint;
 	private PropertyChangeSupport propertyChangeSupport;
@@ -90,6 +96,13 @@ public class RendererModel {
 	private Spacecraft deleteSpacecraft = null;
     private boolean reloadRenderersRequired = false;
     private boolean takeScreenshotRequired = false;
+    private Point newUserPointPosition = null;
+    private Point dragUserPointPosition = null;
+    private File saveFileRequested = null;
+    private File loadFileRequested = null;
+    private boolean quitRequested = false;
+    
+    private final ModelSerializer modelSerializer; 
 
     private RendererModel() {
         super();
@@ -106,6 +119,8 @@ public class RendererModel {
 		fileChooser = new JFileChooser();
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Space Simulator Data (.json)", "json"));
 		fileChooser.setFileFilter(fileChooser.getChoosableFileFilters()[1]);
+		modelSerializer = Application.getInstance().getService(ModelSerializer.class);
+		
 		this.propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
@@ -455,8 +470,9 @@ public class RendererModel {
         }
     }
 
-    public void dragUserPoint(GLAutoDrawable drawable, UserOrbitalPoint userOrbitalPoint, Point draggedPoint) {
+    public void dragUserPoint(GLAutoDrawable drawable, Point draggedPoint) {
         GL2 gl = drawable.getGL().getGL2();
+        UserOrbitalPoint userOrbitalPoint = getSelectedUserOrbitalPoint();
         Map<Integer, ScreenCoordinates> screenCoordinatesMap = GLUtils.getStencilPosition(gl, draggedPoint, RendererModel.MIN_TARGET_SIZE);
         if (screenCoordinatesMap.size()==1) { // only one object is selected
             ScreenCoordinates screenCoordinates = screenCoordinatesMap.values().iterator().next();
@@ -489,14 +505,6 @@ public class RendererModel {
 		return fileChooser;
 	}
 
-	public boolean isReloadModelRequested() {
-		return reloadModelRequested;
-	}
-	
-	public void setReloadModelRequested(boolean reloadModelRequested) {
-		this.reloadModelRequested = reloadModelRequested;
-	}
-	
 	public void addPropertyChangeListener(String propertyName, final PropertyChangeListener listener) {
 		propertyChangeSupport.addPropertyChangeListener(propertyName, listener);
 	}
@@ -566,4 +574,132 @@ public class RendererModel {
     public void setTakeScreenshotRequired(boolean takeScreenshotRequired) {
         this.takeScreenshotRequired = takeScreenshotRequired;
     }
+    
+    public void setNewUserPointPosition(Point newUserPointPosition) {
+		this.newUserPointPosition = newUserPointPosition;
+	}
+    
+    public Point getNewUserPointPosition() {
+		return newUserPointPosition;
+	}
+    
+    public void setSaveFileRequested(File saveFileRequested) {
+		this.saveFileRequested = saveFileRequested;
+}
+    
+    public File getSaveFileRequested() {
+		return saveFileRequested;
+	}
+    
+    public File getLoadFileRequested() {
+		return loadFileRequested;
+	}
+    
+    public void setLoadFileRequested(File loadFileRequested) {
+		this.loadFileRequested = loadFileRequested;
+	}
+    
+    public void setDragUserPointPosition(Point dragUserPointPosition) {
+		this.dragUserPointPosition = dragUserPointPosition;
+	}
+    
+    public Point getDragUserPointPosition() {
+		return dragUserPointPosition;
+	}
+    
+    public void setQuitRequested(boolean quitRequested) {
+		this.quitRequested = quitRequested;
+	}
+    
+    public boolean isQuitRequested() {
+		return quitRequested;
+	}
+    
+    public void doSave(boolean saveAs) {
+    	File file = null;
+    	if (!saveAs) {
+    		file = getModelFile();
+    	}
+		if (file == null) {
+			file = selectSaveFile(file);
+		}
+		if (file != null) {
+			setSaveFileRequested(file);
+		}
+    }
+    
+    public void saveFile(File file) {
+		logger.info("file = {}", file);
+		FileWriter fileWriter = null;
+		Assert.notNull(file);
+		try {
+			fileWriter = new FileWriter(file);
+			modelSerializer.save(ModelHolder.getModel(), fileWriter);
+			fileWriter.flush();
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					StatusBarEvent event = new StatusBarEvent(ModelHolder.getModel(), "Model successfully saved.");
+					RendererModel.getInstance().fireModelEvent(event);
+
+				}
+			});
+			setModelFile(file);
+		} catch (final IOException ioe) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					JOptionPane.showMessageDialog(null,
+						    ioe.getMessage(),
+						    "Save Error",
+						    JOptionPane.ERROR_MESSAGE);
+				}
+			});
+		} finally {
+			IOUtils.closeQuietly(fileWriter);
+		}
+	}	 
+    
+	public Model loadFile(File file) {
+		FileReader fileReader = null;
+		Model model = null;
+		try {
+			fileReader = new FileReader(file);
+			model = modelSerializer.load(fileReader);
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					StatusBarEvent event = new StatusBarEvent(ModelHolder.getModel(), "Model successfully loaded.");
+					RendererModel.getInstance().fireModelEvent(event);
+				}
+			});
+			setModelFile(file);
+		} catch (final IOException ioe) {
+			SwingUtilities.invokeLater(new Runnable() {
+				@Override
+				public void run() {
+					JOptionPane.showMessageDialog(null,
+						    ioe.getMessage(),
+						    "Load Error",
+						    JOptionPane.ERROR_MESSAGE);
+				}
+			});
+		} finally {
+			IOUtils.closeQuietly(fileReader);
+		}
+		return model;
+	}
+	
+	public File selectSaveFile(File file) {
+		JFileChooser fileChooser = RendererModel.getInstance().getFileChooser();
+		fileChooser.setDialogTitle("Save Dialog...");
+		fileChooser.setSelectedFile(file);
+		if (fileChooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION) {
+			file = fileChooser.getSelectedFile();
+			return file;
+		}
+		return null;
+	}	
+	
+	
 }

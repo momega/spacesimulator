@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import com.momega.spacesimulator.builder.EarthSystemModelBuilder;
+import com.momega.spacesimulator.builder.MarsSpacecraftsModelBuilder;
 import com.momega.spacesimulator.builder.ModelBuilder;
 
 /**
@@ -17,7 +17,7 @@ public class AppConfig {
 	
 	@Bean
 	public ModelBuilder createModelBuilder() {
-		return new EarthSystemModelBuilder();
+		return new MarsSpacecraftsModelBuilder();
 	}
 
     @Bean

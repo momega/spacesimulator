@@ -46,6 +46,7 @@ Screenshots
 
 ![Orbit around Mars](/images/arrivetovenus.png "Approaching Venus")
 
+![Hi-resolution Earth](/images/earth_hi.png "Hi-resolution Earth")
 
 Build
 =====

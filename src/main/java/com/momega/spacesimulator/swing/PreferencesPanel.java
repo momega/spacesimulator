@@ -45,7 +45,7 @@ public class PreferencesPanel extends AbstractDefaultPanel {
         Preferences.getInstance().setDrawSpacecraftAxisActivated(chkSpacecraftAxis.isSelected());
         Preferences.getInstance().setDrawTargetTrajectory(chkTargetTrajectory.isSelected());
         Preferences.getInstance().setDrawCelestialBodyAxis(chkCelestialBodyAxis.isSelected());
-        RendererModel.getInstance().setReloadModelRequested(true);
+        RendererModel.getInstance().setReloadRenderersRequired(true);
         return true;
     }
         

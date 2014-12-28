@@ -77,12 +77,12 @@ public class MainWindow extends DefaultWindow {
 
     public static void main(String[] args) {
         final MainWindow window = new MainWindow("Space Simulator");
-        EventBusController controller = EventBusController.getInstance();
+        EventBusController controller = new EventBusController();
 
         Application application = Application.getInstance();
         application.init(0);
         
-        MainGLRenderer mr = new MainGLRenderer();
+        MainGLRenderer mr = new MainGLRenderer(window);
         controller.addController(new QuitController(window));
         controller.addController(new UserPointController());
         controller.addController(new TargetController(window));
