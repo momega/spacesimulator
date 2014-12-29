@@ -29,6 +29,9 @@ public class SpacecraftOrbitPointsRenderer extends AbstractOrbitalPositionProvid
         for(OrbitIntersection intersection : targetService.getOrbitIntersections(spacecraft)) {
         	renderPositionProvider(gl, intersection);
         }
+        for(TargetClosestPoint closestPoint : targetService.getTargetClosestPoints(spacecraft)) {
+            renderPositionProvider(gl, closestPoint);
+        }
         List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime());
         for(ManeuverPoint maneuverPoint : maneuverPoints) {
             renderPositionProvider(gl, maneuverPoint);

@@ -104,10 +104,10 @@ public class TimeUtils {
         return calendar;
     }
 
-    public static double getDuration(TimeInterval timeInterval) {
-        double s = timeInterval.getStartTime().getValue().doubleValue();
-        double e = timeInterval.getEndTime().getValue().doubleValue();
-        return e-s;
+    public static BigDecimal getDuration(TimeInterval timeInterval) {
+        BigDecimal s = timeInterval.getStartTime().getValue();
+        BigDecimal e = timeInterval.getEndTime().getValue();
+        return e.subtract(s);
     }
 
     public static boolean isTimestampInInterval(Timestamp timestamp, TimeInterval interval) {
@@ -140,7 +140,11 @@ public class TimeUtils {
         return UTC_FORMATTER.print(TimeUtils.toDateTime(timestamp));
     }
     
-    public static String periodAsString(double period) {
+    public static String periodAsString(PositionProvider positionProvider) {
+        double period = getETA(positionProvider);
+        if (period>DateTimeConstants.SECONDS_PER_DAY) {
+            return timeAsString(positionProvider.getTimestamp());
+        }
     	long duration = Double.valueOf(period * DateTimeConstants.MILLIS_PER_SECOND).longValue();
     	Period p = new Period(duration);
     	return periodFormatter.print(p);
@@ -149,10 +153,11 @@ public class TimeUtils {
     /**
      * Returns ETA time in seconds between current time and planned time of the orbital point
      * @return the ETA in seconds
+     * @positionProvider position provider
      */
-    public static double getETA(PositionProvider orbitalPoint) {
+    private static double getETA(PositionProvider positionProvider) {
         Timestamp current = ModelHolder.getModel().getTime();
-        Timestamp future = orbitalPoint.getTimestamp();
+        Timestamp future = positionProvider.getTimestamp();
         return future.subtract(current).doubleValue();
     }
 

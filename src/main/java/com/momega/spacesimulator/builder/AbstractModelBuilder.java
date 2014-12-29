@@ -52,8 +52,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     protected Model model = new Model();
 
-    private static final double UNIVERSE_SIZE = MathUtils.AU * 100; 
-    
     private static final int MOVING_OBJECTS_START_INDEX = 10;
     
     private int lastIndex = 0;
@@ -352,7 +350,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         if (parentSoi == null) {
             SphereOfInfluence soi = new SphereOfInfluence();
             soi.setBody(celestialBody);
-            soi.setRadius(UNIVERSE_SIZE);
+            soi.setRadius(MathUtils.UNIVERSE_SIZE);
             model.setRootSoi(soi);
             return soi;
         } else {

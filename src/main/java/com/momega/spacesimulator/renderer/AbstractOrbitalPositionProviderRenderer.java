@@ -27,8 +27,7 @@ public abstract class AbstractOrbitalPositionProviderRenderer extends AbstractPo
             if (GLUtils.checkDepth(gl, viewCoordinates)) {
                 Point size = getTextSize(orbitalPositionProvider.getName());
                 drawString(orbitalPositionProvider.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
-                double eta = TimeUtils.getETA(orbitalPositionProvider);
-                String etaTime = TimeUtils.periodAsString(eta);
+                String etaTime = TimeUtils.periodAsString(orbitalPositionProvider);
                 size = getTextSize(etaTime);
                 drawString(etaTime, viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 26);
             }

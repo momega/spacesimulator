@@ -32,8 +32,8 @@ import com.momega.spacesimulator.service.UserPointService;
 public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
 
 	private static final long serialVersionUID = 548843069264668277L;
-	private static final String[] LABELS = {"Name", "True Anomaly", "Position X", "Position Y", "Position Z", "Timestamp", "ETA", "Altitude"};
-    private static final String[] FIELDS = {"#obj.name", "#toDegrees(#obj.keplerianElements.trueAnomaly)", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)", "#periodAsString(#eta(#obj))", "#obj.keplerianElements.getAltitude()"};
+	private static final String[] LABELS = {"Name", "True Anomaly", "Position X", "Position Y", "Position Z", "Timestamp", "ETA/Time", "Altitude"};
+    private static final String[] FIELDS = {"#obj.name", "#toDegrees(#obj.keplerianElements.trueAnomaly)", "#obj.position.x", "#obj.position.y", "#obj.position.z", "#timeAsString(#obj.timestamp)", "#periodAsString(#obj)", "#obj.keplerianElements.getAltitude()"};
 
     private final AttributesPanel attrPanel;
     private boolean visible;

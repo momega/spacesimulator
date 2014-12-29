@@ -69,7 +69,7 @@ public class NewtonianPropagator implements Propagator {
         computePrediction(spacecraft, newTimestamp);
         if (!ModelHolder.getModel().isRunningHeadless()) {
 	        computeApsides(spacecraft);
-	        computeIntersections(spacecraft, newTimestamp);
+	        computeTargetPoints(spacecraft, newTimestamp);
 	        computeManeuvers(spacecraft, newTimestamp);
 	        computeUserPoints(spacecraft, newTimestamp);
         }
@@ -94,7 +94,7 @@ public class NewtonianPropagator implements Propagator {
         maneuverPoint.setKeplerianElements(keplerianElements);
     }
 
-    protected void computeIntersections(Spacecraft spacecraft, Timestamp newTimestamp) {
+    protected void computeTargetPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
     	// if there is no target
     	if (spacecraft.getTarget() == null) {
     		return;
@@ -114,10 +114,12 @@ public class NewtonianPropagator implements Propagator {
     	}
     	
     	if (target.getTargetBody().isStatic()) {
-    		targetService.clear(spacecraft);
-    	} else {
-    		targetService.computerOrbitIntersection(spacecraft, newTimestamp);
-    	}
+            targetService.clear(spacecraft); // TODO: make no sense to compute such a thing, really?
+            return;
+        }
+
+   		targetService.computeOrbitIntersection(spacecraft, newTimestamp);
+        targetService.computeClosestPoint(spacecraft, newTimestamp);
 
         // compute trajectory relative to the target body
         CartesianState cartesianState = spacecraft.getCartesianState().subtract(target.getTargetBody().getCartesianState());

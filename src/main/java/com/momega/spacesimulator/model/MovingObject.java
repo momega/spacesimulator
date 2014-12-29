@@ -1,5 +1,10 @@
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.utils.MathUtils;
+import org.apache.commons.math3.util.FastMath;
+import org.springframework.util.Assert;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,7 +87,7 @@ public abstract class MovingObject extends NamedObject implements PositionProvid
 
 	public void setIndex(Integer index) {
 		this.index = index;
-	}    
+	}
 
 }
 

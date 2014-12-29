@@ -28,6 +28,7 @@ public class Target {
     public List<OrbitIntersection> getOrbitIntersections() {
         return orbitIntersections;
     }
+    public TargetClosestPoint closestPoint;
 
     public void setOrbitIntersections(List<OrbitIntersection> orbitIntersections) {
         this.orbitIntersections = orbitIntersections;
@@ -49,11 +50,23 @@ public class Target {
 		return distance;
 	}
 
+    /**
+     * Contains the trajectory relative to target object, based on the relative position and velocity to the target
+     * @return the keplerian elements
+     */
     public KeplerianElements getKeplerianElements() {
         return keplerianElements;
     }
 
     public void setKeplerianElements(KeplerianElements keplerianElements) {
         this.keplerianElements = keplerianElements;
+    }
+
+    public void setClosestPoint(TargetClosestPoint closestPoint) {
+        this.closestPoint = closestPoint;
+    }
+
+    public TargetClosestPoint getClosestPoint() {
+        return closestPoint;
     }
 }

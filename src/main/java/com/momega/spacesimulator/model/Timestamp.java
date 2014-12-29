@@ -26,6 +26,10 @@ public class Timestamp implements Comparable<Timestamp> {
         return newTime(getValue().add(delta));
     }
 
+    public Timestamp subtract(BigDecimal delta) {
+        return add(delta.negate());
+    }
+
     public BigDecimal subtract(Timestamp v) {
         return getValue().subtract(v.getValue());
     }
@@ -40,5 +44,9 @@ public class Timestamp implements Comparable<Timestamp> {
 	public int compareTo(Timestamp o) {
 		return value.compareTo(o.getValue());
 	}
+
+    public boolean after(Timestamp o) {
+        return (compareTo(o) >0);
+    }
 
 }

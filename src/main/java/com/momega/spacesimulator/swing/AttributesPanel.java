@@ -90,8 +90,7 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
             evaluationContext.registerFunction("toDegrees", Math.class.getDeclaredMethod("toDegrees", double.class));
             evaluationContext.registerFunction("toDegrees2", MathUtils.class.getDeclaredMethod("toDegrees", Double.class));
             evaluationContext.registerFunction("timeAsString", TimeUtils.class.getDeclaredMethod("timeAsString", Timestamp.class));
-            evaluationContext.registerFunction("periodAsString", TimeUtils.class.getDeclaredMethod("periodAsString", double.class));
-            evaluationContext.registerFunction("eta", TimeUtils.class.getDeclaredMethod("getETA", PositionProvider.class));
+            evaluationContext.registerFunction("periodAsString", TimeUtils.class.getDeclaredMethod("periodAsString", PositionProvider.class));
             return evaluationContext;
         } catch (NoSuchMethodException nsme) {
             throw new IllegalArgumentException(nsme);

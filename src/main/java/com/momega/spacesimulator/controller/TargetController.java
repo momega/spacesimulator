@@ -159,7 +159,6 @@ public class TargetController extends AbstractController {
     }
 
     protected void showTimeDialog(PositionProvider positionProvider) {
-        // TODO: How to forward events
         final TimeDialog timeDialog = new TimeDialog(window, positionProvider.getTimestamp());
         SwingUtils.openDialog(timeDialog);
     }

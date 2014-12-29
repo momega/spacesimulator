@@ -1,9 +1,12 @@
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.utils.TimeUtils;
 import org.apache.commons.math3.util.FastMath;
 import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.utils.MathUtils;
+
+import java.math.BigDecimal;
 
 /**
  * The class holding keplerian elements of the trajectory
@@ -225,6 +228,15 @@ public class KeplerianElements {
     }
 
     /**
+     * Gets the position in Cartesian state based on the keplerian elements with given angle theta. So it means the position
+     * is defined by the keplerian elements except the angle theta.
+     * @return the 3d vector
+     */
+    public Vector3d getCartesianPosition() {
+        return keplerianOrbit.getCartesianPosition(getTrueAnomaly());
+    }
+
+    /**
      * Computes the timestamp when the {@link MovingObject} get to given true anomaly 
      * @param timestamp the current timestamp
      * @param targetTheta the target true anomaly
@@ -274,14 +286,7 @@ public class KeplerianElements {
         return HA;
     }
     
-    /**
-     * Gets the position in Cartesian state based on the keplerian elements with given angle theta. So it means the position
-     * is defined by the keplerian elements except the angle theta.
-     * @return the 3d vector
-     */
-    public Vector3d getCartesianPosition() {
-    	return keplerianOrbit.getCartesianPosition(getTrueAnomaly());
-    }
+
 
     public double getAltitude() {
         double e = getKeplerianOrbit().getEccentricity();

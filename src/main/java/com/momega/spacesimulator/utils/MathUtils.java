@@ -13,6 +13,7 @@ public class MathUtils {
      * Astronomical unit
      */
     public static final double AU = 149597870700d;
+    public static final double UNIVERSE_SIZE = AU * 100;
 
     /**
      * Gravitational constant

@@ -5,10 +5,12 @@ import com.momega.spacesimulator.utils.VectorUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +22,9 @@ import java.util.List;
 public class TargetService {
 
     private static final Logger logger = LoggerFactory.getLogger(TargetService.class);
+
+    @Autowired
+    private SphereOfInfluenceService sphereOfInfluenceService;
 
     /**
      * Creates the target
@@ -68,7 +73,7 @@ public class TargetService {
      * @param spacecraft
      * @param newTimestamp
      */
-    public void computerOrbitIntersection(Spacecraft spacecraft, Timestamp newTimestamp) {
+    public void computeOrbitIntersection(Spacecraft spacecraft, Timestamp newTimestamp) {
         Target target = spacecraft.getTarget();
         Assert.notNull(target);
         CelestialBody targetBody = target.getTargetBody();
@@ -156,6 +161,13 @@ public class TargetService {
         return Collections.emptyList();
     }
 
+    public List<TargetClosestPoint> getTargetClosestPoints(Spacecraft spacecraft) {
+        if (spacecraft.getTarget() != null && spacecraft.getTarget().getClosestPoint()!=null) {
+            return Collections.singletonList(spacecraft.getTarget().getClosestPoint());
+        }
+        return Collections.emptyList();
+    }
+
     protected Plane createOrbitalPlane(MovingObject movingObject) {
         CartesianState relative = VectorUtils.relativeCartesianState(movingObject);
         Vector3d normal = relative.getAngularMomentum();
@@ -168,6 +180,27 @@ public class TargetService {
         if (target != null) {
             target.getOrbitIntersections().clear();
             target.setKeplerianElements(null);
+            target.setClosestPoint(null);
         }
+    }
+
+    public void computeClosestPoint(Spacecraft spacecraft, Timestamp newTimestamp) {
+        Target target = spacecraft.getTarget();
+        Assert.notNull(target);
+        Assert.notNull(target.getTargetBody());
+
+        CelestialBody parent = sphereOfInfluenceService.findParentBody(spacecraft.getTarget().getTargetBody());
+        if (spacecraft.getKeplerianElements().getKeplerianOrbit().getCentralObject() != parent) {
+            target.setClosestPoint(null);
+            return; // do nothing we are not within the same sphere of influence
+        }
+
+        if (spacecraft.getKeplerianElements().getKeplerianOrbit().isHyperbolic()) {
+            logger.info("hyperbolic");
+        }
+
+        TargetClosestPoint closestPoint = spacecraft.findClosestPoint(target.getTargetBody(), newTimestamp);
+        target.setClosestPoint(closestPoint);
+
     }
 }

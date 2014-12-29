@@ -59,6 +59,7 @@ public class MovingObjectCompositeRenderer extends CompositeRenderer {
 
             addRenderer(new SpacecraftOrbitPointsRenderer(spacecraft));
             addRenderer(new OrbitIntersectionBitmapRenderer(spacecraft));
+            addRenderer(new ClosestPointBitmapRenderer(spacecraft));
             addRenderer(new StartManeuverBitmapRenderer(spacecraft));
             addRenderer(new EndManeuverBitmapRenderer(spacecraft));
 

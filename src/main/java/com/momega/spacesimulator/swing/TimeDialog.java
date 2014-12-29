@@ -262,6 +262,7 @@ public class TimeDialog extends JDialog {
 					@Override
 					public void run() {
 						eventModel.addElement(historyPoint);
+                        historyEvents.ensureIndexIsVisible(eventModel.getSize()-1);
 					}
 				});
 			}

@@ -22,6 +22,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.momega.spacesimulator.model.*;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,22 +30,6 @@ import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.AbstractOrbitalPoint;
-import com.momega.spacesimulator.model.BaryCentre;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.HistoryPoint;
-import com.momega.spacesimulator.model.KeplerianTrajectory;
-import com.momega.spacesimulator.model.ManeuverPoint;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.OrbitIntersection;
-import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.model.RotatingObject;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.UserOrbitalPoint;
-import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.service.ManeuverService;
 import com.momega.spacesimulator.service.ModelSerializer;
@@ -199,7 +184,9 @@ public class RendererModel {
                 for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
                     result.add(maneuverPoint);
                 }
-                
+                for(TargetClosestPoint closestPoint : targetService.getTargetClosestPoints(spacecraft)) {
+                    result.add(closestPoint);
+                }
             }
         }
     	return result;
@@ -243,7 +230,7 @@ public class RendererModel {
         }
 
         viewCoordinates.setObject(positionProvider);
-        RendererModel.getInstance().addViewCoordinates(viewCoordinates);
+        addViewCoordinates(viewCoordinates);
     }    
 
     public void modelChanged() {
