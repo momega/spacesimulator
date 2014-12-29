@@ -26,8 +26,7 @@ public class SubsystemObjectListRenderer extends AbstractObjectListRenderer<Spac
 	
 	@Override
 	protected ImageIcon getIcon(SpacecraftSubsystem value) {
-		ImageIcon icon = null;
-		return icon;
+		return null;
 	}
 
 }

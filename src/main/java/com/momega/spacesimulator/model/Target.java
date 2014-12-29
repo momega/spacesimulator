@@ -16,6 +16,7 @@ public class Target {
     private transient Double angle = null;
     private transient Double distance = null;
     private KeplerianElements keplerianElements;
+    private TargetClosestPoint closestPoint;
 
     public CelestialBody getTargetBody() {
         return targetBody;
@@ -28,7 +29,6 @@ public class Target {
     public List<OrbitIntersection> getOrbitIntersections() {
         return orbitIntersections;
     }
-    public TargetClosestPoint closestPoint;
 
     public void setOrbitIntersections(List<OrbitIntersection> orbitIntersections) {
         this.orbitIntersections = orbitIntersections;

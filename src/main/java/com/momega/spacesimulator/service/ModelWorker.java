@@ -1,19 +1,20 @@
-package com.momega.spacesimulator.context;
+package com.momega.spacesimulator.service;
 
 import java.math.BigDecimal;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.service.CameraService;
-import com.momega.spacesimulator.service.MotionService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by martin on 10/5/14.
  */
+@Component
 public class ModelWorker {
 
     private static final Logger logger = LoggerFactory.getLogger(ModelWorker.class);

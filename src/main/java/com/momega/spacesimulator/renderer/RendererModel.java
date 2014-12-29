@@ -45,6 +45,7 @@ public class RendererModel {
 
 	public static final String MODEL_FILE = "modelFile";
 	public static final String WARP_FACTOR = "warpFactor";
+    public static final String FPS = "fps";
 
 	private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
 
@@ -87,7 +88,8 @@ public class RendererModel {
     private File loadFileRequested = null;
     private boolean quitRequested = false;
     
-    private final ModelSerializer modelSerializer; 
+    private final ModelSerializer modelSerializer;
+    private float fps = 0.0f;
 
     private RendererModel() {
         super();
@@ -167,8 +169,7 @@ public class RendererModel {
             if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
                 result.add(keplerianTrajectory.getApoapsis());
                 result.add(keplerianTrajectory.getPeriapsis());
-                MovingObject body = (MovingObject) dp;
-            	for(UserOrbitalPoint userOrbitalPoint : body.getUserOrbitalPoints()) {
+            	for(UserOrbitalPoint userOrbitalPoint : dp.getUserOrbitalPoints()) {
                     result.add(userOrbitalPoint);
                 }
             }
@@ -286,8 +287,7 @@ public class RendererModel {
     
     public MovingObject findMovingObjectByIndex(int index) {
     	Assert.isTrue(index>0);
-    	for(MovingObject movingObject : ModelHolder.getModel().getMovingObjects()) {
-            MovingObject body = (MovingObject) movingObject;
+    	for(MovingObject body : ModelHolder.getModel().getMovingObjects()) {
             if (body.getIndex()==index) {
             	return body;
             }
@@ -295,14 +295,14 @@ public class RendererModel {
         return null;
     }
     
-    public ViewCoordinates findByName(String name) {
+    public PositionProvider findByName(String name) {
         if (name == null) {
             return null;
         }
         for (Map.Entry<PositionProvider, ViewCoordinates> entry : viewData.entrySet()) {
             ViewCoordinates viewCoordinates = entry.getValue();
             if (name.equals(viewCoordinates.getObject().getName())) {
-                return viewCoordinates;
+                return viewCoordinates.getObject();
             }
         }
         return null;
@@ -608,7 +608,7 @@ public class RendererModel {
     		file = getModelFile();
     	}
 		if (file == null) {
-			file = selectSaveFile(file);
+			file = selectSaveFile();
 		}
 		if (file != null) {
 			setSaveFileRequested(file);
@@ -677,16 +677,22 @@ public class RendererModel {
 		return model;
 	}
 	
-	public File selectSaveFile(File file) {
+	public File selectSaveFile() {
 		JFileChooser fileChooser = RendererModel.getInstance().getFileChooser();
 		fileChooser.setDialogTitle("Save Dialog...");
-		fileChooser.setSelectedFile(file);
 		if (fileChooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION) {
-			file = fileChooser.getSelectedFile();
-			return file;
+			return fileChooser.getSelectedFile();
 		}
 		return null;
-	}	
-	
-	
+	}
+
+    public float getFps() {
+        return this.fps;
+    }
+
+    public void setFps(float fps) {
+        float old = this.fps;
+        this.fps = fps;
+        firePropertyChange(FPS, old, this.fps);
+    }
 }

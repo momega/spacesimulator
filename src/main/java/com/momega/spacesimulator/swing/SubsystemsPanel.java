@@ -32,7 +32,7 @@ public class SubsystemsPanel extends JPanel implements UpdatablePanel {
         JPanel comboBoxPane = new JPanel(); //use FlowLayout
         cards = new JPanel(new CardLayout());
         List<String> names = addAllSubsystems(cards);
-        JComboBox<String> cb = new JComboBox<String>(names.toArray(new String[names.size()]));
+        JComboBox<String> cb = new JComboBox<>(names.toArray(new String[names.size()]));
         cb.setEditable(false);
 
         cb.addItemListener(new ItemListener() {
@@ -93,7 +93,7 @@ public class SubsystemsPanel extends JPanel implements UpdatablePanel {
     @Override
     public void updateView(ModelChangeEvent event) {
         for (Component comp : cards.getComponents()) {
-            if (comp.isVisible() == true) {
+            if (comp.isVisible()) {
                 AttributesPanel card = (AttributesPanel) comp;
                 card.updateView(event);
             }

@@ -110,9 +110,9 @@ public class TargetController extends AbstractController {
                             null,
                             possibilities,
                             null);
-                    ViewCoordinates vc = RendererModel.getInstance().findByName(selectedName);
-                    if (vc != null) {
-                        showDialog(vc.getObject());
+                    PositionProvider obj = RendererModel.getInstance().findByName(selectedName);
+                    if (obj != null) {
+                        showDialog(obj);
                     }
                 }
             });

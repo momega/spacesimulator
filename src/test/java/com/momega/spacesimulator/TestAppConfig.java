@@ -1,4 +1,4 @@
-package com.momega.spacesimulator.context;
+package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.builder.MediumSolarSystemModelBuilder;
 import com.momega.spacesimulator.builder.ModelBuilder;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = {"com.momega.spacesimulator.service", "com.momega.spacesimulator.json"})
-public class AppConfig {
+public class TestAppConfig {
 	
 	@Bean
 	public ModelBuilder createModelBuilder() {

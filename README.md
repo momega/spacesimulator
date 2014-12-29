@@ -48,6 +48,8 @@ Screenshots
 
 ![Hi-resolution Earth](/images/earth_hi.png "Hi-resolution Earth")
 
+![All type of the points](/images/allpoints.png "All types of the points")
+
 Build
 =====
 

@@ -34,7 +34,7 @@ public final class SwingUtils {
 	
 	/**
 	 * Opens Swing dialog
-	 * @param dialog
+	 * @param dialog the dialog to open
 	 */
 	public static void openDialog(final JDialog dialog) {
 		SwingUtilities.invokeLater(new Runnable() {

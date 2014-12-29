@@ -66,6 +66,7 @@ public abstract class DefaultWindow extends WindowAdapter {
 
                     // Create a animator that drives canvas' display() at the specified FPS.
                     animator = new FPSAnimator(canvas, FPS, true);
+                    animator.setUpdateFPSFrames(100, null);
 
                     frame = new JFrame(title);
                     JMenuBar menuBar = createMenuBar(controller);
@@ -146,10 +147,6 @@ public abstract class DefaultWindow extends WindowAdapter {
         animator.pause();
     }
 
-    public boolean isPaused() {
-        return animator.isPaused();
-    }
-
     public void resumeAnimator() {
         animator.resume();
     }
@@ -178,10 +175,6 @@ public abstract class DefaultWindow extends WindowAdapter {
                 System.exit(0);
             }
         }.start();
-    }
-
-    public GLCanvas getCanvas() {
-        return canvas;
     }
 
     public void sleep(int timeout) {

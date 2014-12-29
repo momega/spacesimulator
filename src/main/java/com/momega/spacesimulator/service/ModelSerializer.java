@@ -32,12 +32,16 @@ public class ModelSerializer implements InitializingBean {
 	
 	@Autowired
 	private List<Serializer<?>> serializers;
+
+	@Autowired
+	private SoiMapCache soiMapCache;
 	
 	private Gson gson;
 
 	/**
 	 * Saves the model 
-	 * @param model
+	 * @param model the model to serialize
+	 * @param writer any writer
 	 */
 	public void save(Model model, Writer writer) {
 		 gson.toJson(model, writer);
@@ -46,6 +50,7 @@ public class ModelSerializer implements InitializingBean {
 	
 	public Model load(Reader reader) {
 		NamedObjectCache.getInstance().clear();
+		soiMapCache.clear();
 		Model model = gson.fromJson(reader, Model.class);
 		logger.info("model deserialized");
 		return model;

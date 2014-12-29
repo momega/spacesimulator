@@ -29,7 +29,7 @@ public class SubsystemObjectModel extends DefaultListModel<SpacecraftSubsystem> 
 	}
 	
 	public List<SpacecraftSubsystem> values() {
-		List<SpacecraftSubsystem> list = new ArrayList<SpacecraftSubsystem>();
+		List<SpacecraftSubsystem> list = new ArrayList<>();
 		for(Object obj : toArray()) {
 			list.add((SpacecraftSubsystem) obj);
 		}

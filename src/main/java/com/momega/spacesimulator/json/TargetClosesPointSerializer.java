@@ -3,32 +3,31 @@
  */
 package com.momega.spacesimulator.json;
 
-import org.springframework.stereotype.Component;
-
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.OrbitIntersection;
+import com.momega.spacesimulator.model.TargetClosestPoint;
+import org.springframework.stereotype.Component;
 
 /**
  * @author martin
  *
  */
 @Component
-public class OrbitIntersectionSerializer extends AbstractSerializer<OrbitIntersection> {
-	
+public class TargetClosesPointSerializer extends AbstractSerializer<TargetClosestPoint> {
+
 	private static final String TARGET_OBJECT = "targetObject";
-	
-	public OrbitIntersectionSerializer() {
-		super(OrbitIntersection.class);
+
+	public TargetClosesPointSerializer() {
+		super(TargetClosestPoint.class);
 	}
 
 	@Override
-	public void write(JsonObject object, OrbitIntersection value) {
+	public void write(JsonObject object, TargetClosestPoint value) {
 		object.addProperty(TARGET_OBJECT, value.getTargetObject().getName());
 	}
 
 	@Override
-	public void read(JsonObject object, OrbitIntersection value) {
+	public void read(JsonObject object, TargetClosestPoint value) {
 		MovingObject to = getNamedObject(object, TARGET_OBJECT);
 		value.setTargetObject(to);
 	}	

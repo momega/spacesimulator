@@ -126,6 +126,8 @@ public class MainGLRenderer extends AbstractGLRenderer {
         	window.stopAnimator();
         	RendererModel.getInstance().setQuitRequested(false);
         }
+
+        RendererModel.getInstance().setFps(drawable.getAnimator().getLastFPS());
     }
 
     @Override

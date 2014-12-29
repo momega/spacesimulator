@@ -31,6 +31,9 @@ public class SpacecraftSerializer extends AbstractSerializer<Spacecraft> {
 			for(OrbitIntersection oi : target.getOrbitIntersections()) {
 				oi.setMovingObject(value);
 			}
+			if (target.getClosestPoint()!=null) {
+				target.getClosestPoint().setMovingObject(value);
+			}
 		}
 	}
 	

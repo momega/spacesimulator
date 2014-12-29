@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Target;
 import com.momega.spacesimulator.service.TargetService;
 import org.slf4j.Logger;
@@ -21,7 +22,6 @@ import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.renderer.ViewCoordinates;
 
 /**
  * @author martin
@@ -58,7 +58,7 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 		targetPanel.add(targetLabel);
 		targetLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
-		JComboBox<String> targetBox = new JComboBox<String>();
+		JComboBox<String> targetBox = new JComboBox<>();
 		model = new CelestialBodyModel();
 		model.setSelection(target.getTargetBody());
 		targetBox.setModel(model);
@@ -86,11 +86,11 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
                 if (model.getSelectedItem() != null) {
                     String cb = (String) model.getSelectedItem();
                     logger.info("target object {}", cb);
-                    ViewCoordinates viewCoordinates = RendererModel.getInstance().findByName((String) model.getSelectedItem());
-                    target.setTargetBody((viewCoordinates == null) ? null : (CelestialBody) viewCoordinates.getObject());
+                    PositionProvider positionProvider = RendererModel.getInstance().findByName((String) model.getSelectedItem());
+                    target.setTargetBody((CelestialBody) positionProvider);
 
                     updating = false;
-                    targetService.computeTargetParameters(spacecraft, (CelestialBody) viewCoordinates.getObject(), target);
+                    targetService.computeTargetParameters(spacecraft, (CelestialBody) positionProvider, target);
 
                     updateTargetParameters();
                 }

@@ -85,8 +85,7 @@ public class TimeDialog extends JDialog {
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
-        Timestamp timestamp = initTime;
-        model = new DateTimeModel(TimeUtils.toCalendar(timestamp));
+        model = new DateTimeModel(TimeUtils.toCalendar(initTime));
 
         dateModel = new UtilCalendarModel(model.getCalendar());
         JDatePicker picker = JDateComponentFactory.createJDatePicker(dateModel);
@@ -138,8 +137,6 @@ public class TimeDialog extends JDialog {
                     closeButton.setEnabled(false);
                 } catch (Exception ex) {
                     logger.error("time worker thread failed", ex);
-                } finally {
-
                 }
             }
         });

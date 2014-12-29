@@ -1,22 +1,11 @@
 package com.momega.spacesimulator.context;
 
-import com.momega.spacesimulator.builder.ModelBuilder;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.utils.TimeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
-import java.math.BigDecimal;
-
 /**
+ * The instance of the class is the singleton holding the main application instances such as spring application
+ * context or model walker.
  * Created by martin on 6/18/14.
  */
-public class Application {
-
-    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+public class Application extends DefaultApplication {
 
     private static Application instance = null;
 
@@ -27,44 +16,8 @@ public class Application {
         return instance;
     }
 
-    private final ApplicationContext applicationContext;
-    private final ModelWorker modelWorker;
-	private final ModelBuilder modelBuilder;
-
     private Application() {
-        applicationContext = new AnnotationConfigApplicationContext(AppConfig.class);
-        modelWorker = applicationContext.getBean(ModelWorker.class);
-        modelBuilder = applicationContext.getBean(ModelBuilder.class);
-    }
-
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-    public <T> T getService(Class<T> clazz) {
-        return getApplicationContext().getBean(clazz);
-    }
-    
-    public void next(boolean runningHeadless, BigDecimal warpFactor) {
-    	modelWorker.next(runningHeadless, warpFactor);
-    }
-
-    public void init(long seconds) {
-        Model model = modelBuilder.build();
-        ModelHolder.replaceModel(model);
-
-        logger.info("time = {}", TimeUtils.timeAsString(model.getTime()));
-        Timestamp showTime = model.getTime().add(BigDecimal.valueOf(seconds));
-        logger.info("show time = {}", TimeUtils.timeAsString(showTime));
-        while(model.getTime().compareTo(showTime)<=0) {
-        	modelWorker.next(true, BigDecimal.ONE);
-        }
-        
-        logger.info("model data built");
-    }
-
-    public void dispose() {
-        logger.info("dispose time = {}",  TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
+        super(AppConfig.class);
     }
 
 }

@@ -25,14 +25,12 @@ public abstract class AbstractSerializer<T> implements Serializer<T> {
 	@SuppressWarnings("unchecked")
 	protected <M extends NamedObject> M getNamedObject(JsonObject object, String fieldName) {
 		String centralObject = object.getAsJsonPrimitive(fieldName).getAsString();
-		M result = (M) NamedObjectCache.getInstance().get(centralObject);
-		return result;
+		return (M) NamedObjectCache.getInstance().get(centralObject);
 	}
-	
+
 	protected PositionProvider getPositionProvider(JsonObject object, String fieldName) {
 		String centralObject = object.getAsJsonPrimitive(fieldName).getAsString();
-		PositionProvider positionProvider = (PositionProvider) NamedObjectCache.getInstance().get(centralObject);
-		return positionProvider;
+		return (PositionProvider) NamedObjectCache.getInstance().get(centralObject);
 	}
 
 }

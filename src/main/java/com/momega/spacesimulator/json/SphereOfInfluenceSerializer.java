@@ -17,7 +17,7 @@ import com.momega.spacesimulator.model.SphereOfInfluence;
 public class SphereOfInfluenceSerializer extends AbstractSerializer<SphereOfInfluence> {
 	
 	private static final String BODY = "body";
-	
+
 	public SphereOfInfluenceSerializer() {
 		super(SphereOfInfluence.class);
 	}
@@ -31,7 +31,15 @@ public class SphereOfInfluenceSerializer extends AbstractSerializer<SphereOfInfl
 	public void read(JsonObject object, SphereOfInfluence value) {
 		CelestialBody cb = getNamedObject(object, BODY);
 		value.setBody(cb);
-		
-	}	
+
+		fixParent(value, value.getParent());
+	}
+
+	protected void fixParent(SphereOfInfluence current, SphereOfInfluence parent) {
+		current.setParent(parent);
+		for(SphereOfInfluence child : current.getChildren()) {
+			fixParent(child, current);
+		}
+	}
 
 }

@@ -236,6 +236,10 @@ public class MainWindow extends DefaultWindow {
         final JLabel warpLabel = new JLabel();
         warpLabel.setHorizontalAlignment(JLabel.CENTER);
         statusPanel.addRightComponent(warpLabel);
+
+		final JLabel fpsLabel = new JLabel();
+		fpsLabel.setHorizontalAlignment(JLabel.CENTER);
+		statusPanel.addRightComponent(fpsLabel);
         
     	RendererModel.getInstance().addModelChangeListener(new ModelChangeListener() {
 			@Override
@@ -243,7 +247,7 @@ public class MainWindow extends DefaultWindow {
 				if (event instanceof StatusBarEvent) {
 					StatusBarEvent e = (StatusBarEvent) event;
 					statusLabel.setText(e.getMessage());
-				} else if (event instanceof ModelChangeEvent) {
+				} else {
 					Model m = event.getModel();
 					timeLabel.setText(TimeUtils.timeAsString(m.getTime()));
 				}
@@ -281,6 +285,14 @@ public class MainWindow extends DefaultWindow {
     			}
     		}
 		});
+
+		RendererModel.getInstance().addPropertyChangeListener(RendererModel.FPS, new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				String w = String.format("%4.2f FPS", (float)evt.getNewValue());
+				fpsLabel.setText(w);
+			}
+		});
     	
     	frame.add(statusPanel, BorderLayout.SOUTH);
     }
@@ -306,7 +318,7 @@ public class MainWindow extends DefaultWindow {
     	warpUp.setActionCommand(TimeController.WARP_FASTER);
     	warpUp.addActionListener(controller);
     	
-    	JComboBox<PositionProvider> movingObjectsBox = new JComboBox<PositionProvider>();
+    	JComboBox<PositionProvider> movingObjectsBox = new JComboBox<>();
     	movingObjectsBox.setModel(RendererModel.getInstance().getMovingObjectsModel());
     	movingObjectsBox.setRenderer(new MovingObjectListRenderer());
     	movingObjectsBox.setMaximumSize(new Dimension(300, 100));
