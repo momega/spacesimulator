@@ -1,10 +1,9 @@
 package com.momega.spacesimulator;
 
-import java.math.BigDecimal;
-
+import com.momega.spacesimulator.context.DefaultApplication;
 import org.junit.Test;
 
-import com.momega.spacesimulator.context.Application;
+import java.math.BigDecimal;
 
 /**
  * Created by martin on 6/19/14.
@@ -13,9 +12,9 @@ public class ApplicationTest {
 
     @Test
     public void runTest() {
-        Application application = Application.getInstance();
+        DefaultApplication application = new DefaultApplication(TestAppConfig.class);
         application.init(0);
-        for(int i=0; i<86400; i++) {
+        for(int i=0; i<10000; i++) {
             application.next(false, BigDecimal.ONE);
         }
         application.dispose();
