@@ -3,10 +3,11 @@
  */
 package com.momega.spacesimulator.swing;
 
-import java.util.List;
-
+import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.service.ModelService;
+
+import java.util.List;
 
 /**
  * @author martin
@@ -15,7 +16,7 @@ import com.momega.spacesimulator.renderer.RendererModel;
 public class PlanetsObjectModel extends AbstractObjectsModel<Planet> {
 	
 	public PlanetsObjectModel() {
-		super(RendererModel.getInstance().findAllPlanets());
+		super(Application.getInstance().getService(ModelService.class).findAllPlanets());
 	}
 
 	public PlanetsObjectModel(List<Planet> list) {

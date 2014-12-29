@@ -42,7 +42,4 @@ public class TrajectoryService {
         }
     }
 
-    public void setPropagators(List<Propagator> propagators) {
-        this.propagators = propagators;
-    }
 }

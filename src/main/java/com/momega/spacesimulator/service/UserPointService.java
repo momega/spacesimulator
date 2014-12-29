@@ -57,18 +57,19 @@ public class UserPointService {
 
         return userPoint;
     }
-    
+
     public UserOrbitalPoint createUserOrbitalPoint(MovingObject movingObject, String name, double trueAnomaly) {
-    	 UserOrbitalPoint userPoint = new UserOrbitalPoint();
-         userPoint.setVisible(true);
-         userPoint.setName(name);
-         userPoint.setMovingObject(movingObject);
-         updateUserOrbitalPoint(userPoint, trueAnomaly, movingObject);
-         Vector3d position = userPoint.getKeplerianElements().getKeplerianOrbit().getCartesianPosition(trueAnomaly);
-         userPoint.setPosition(position);
-         
-         movingObject.getUserOrbitalPoints().add(userPoint);
-         return userPoint;
+        UserOrbitalPoint userPoint = new UserOrbitalPoint();
+        userPoint.setVisible(true);
+        userPoint.setName(name);
+        userPoint.setMovingObject(movingObject);
+        updateUserOrbitalPoint(userPoint, trueAnomaly, movingObject);
+        Vector3d position = userPoint.getKeplerianElements().getKeplerianOrbit().getCartesianPosition(trueAnomaly);
+        userPoint.setPosition(position);
+        logger.info("User point '{}' created", name);
+
+        movingObject.getUserOrbitalPoints().add(userPoint);
+        return userPoint;
     }
 
     /**

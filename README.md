@@ -13,15 +13,16 @@ Features
 ========
 
 * Orbital maneuvers with fuel consumption
-* Display planes intersections of the spacecraft and target celestial body
+* Display closes point and planes intersections of the spacecraft and target celestial body
 * Time warp
 * Display popup dialogs with detail information about all objects
 * 7 planets and their moon included in model
-* User defined points
+* User defined points for on the spacecraft and planets trajectory
 * Take a screenshot
 * Headless computations
 * Sphere of Influence
 * Load and save models
+* Interplanetary planner
 
 Screenshots
 ===========
