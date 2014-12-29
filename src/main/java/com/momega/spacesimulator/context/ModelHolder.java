@@ -8,13 +8,13 @@ import com.momega.spacesimulator.model.Model;
  */
 public final class ModelHolder {
 
-    private static Model model = new Model();
+    private static Model model = null;
 
     public static Model getModel() {
         return model;
     }
     
-    public static void replaceModel(Model newModel) {
+    public static void setModel(Model newModel) {
     	model = newModel;
     }
 

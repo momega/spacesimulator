@@ -1,8 +1,10 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.MathUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,6 +13,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class GravityModel implements ForceModel {
+
+    @Autowired
+    private ModelService modelService;
 
     /**
      * Computes the total gravitational force (acceleration) from all celestial bodies in the system on the point defined
@@ -21,13 +26,10 @@ public class GravityModel implements ForceModel {
     public Vector3d getAcceleration(Spacecraft spacecraft, double dt) {
         Vector3d position = spacecraft.getPosition();
         Vector3d a = Vector3d.ZERO;
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
-            if (dp instanceof CelestialBody) {
-                CelestialBody celestialBody = (CelestialBody) dp;
-                Vector3d r = celestialBody.getCartesianState().getPosition().subtract(position);
-                double dist3 = r.lengthSquared() * r.length();
-                a = a.scaleAdd(MathUtils.G * celestialBody.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
-            }
+        for(CelestialBody celestialBody : modelService.findAllCelestialBodies()) {
+            Vector3d r = celestialBody.getCartesianState().getPosition().subtract(position);
+            double dist3 = r.lengthSquared() * r.length();
+            a = a.scaleAdd(MathUtils.G * celestialBody.getMass() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3
         }
         return a;
     }

@@ -143,7 +143,7 @@ public class GLUtils {
         gl.glEnd();
     }
 
-    public static void drawBeansAndCircles(GL2 gl, double cx, double cy, double r, int num_beams, int num_circles, double[] color) {
+    public static void drawBeansAndCircles(GL2 gl, double r, int num_beams, int num_circles, double[] color) {
     	gl.glColor3dv(color, 0);
         double circleDistance = r / num_circles;
         for (int i = 1; i <= num_circles; i++) {
@@ -276,7 +276,7 @@ public class GLUtils {
 
         logger.info("position x,y = {},{}", center.x, center.y);
         int half = size / 2;
-        IntBuffer stencilBuffer = IntBuffer.allocate(1 * size * size);
+        IntBuffer stencilBuffer = IntBuffer.allocate(size * size);
         gl.glReadPixels(center.x - half, center.y - half, size, size, GL2.GL_STENCIL_INDEX, GL2.GL_UNSIGNED_INT, stencilBuffer);
 
         Map<Integer, ScreenCoordinates> result = new HashMap<>();
@@ -412,7 +412,7 @@ public class GLUtils {
     }
 
     /**
-     * Rotat open gl context based on the following 3 axis (Z,X,Z)
+     * Rotate open gl context based on the following 3 axis (Z,X,Z)
      * @param gl
      * @param angles
      */
@@ -447,8 +447,7 @@ public class GLUtils {
      * @param directory the directory where the output file will be stores
      * @return the output file name
      */
-    public static File saveFrameAsPng( GLAutoDrawable drawable, File directory )
-    {
+    public static File saveFrameAsPng( GLAutoDrawable drawable, File directory ) {
         File outputFile = new File( directory, String.valueOf(System.nanoTime()) + ".png" );
         // Do not overwrite existing image file.
         if( outputFile.exists() ) {

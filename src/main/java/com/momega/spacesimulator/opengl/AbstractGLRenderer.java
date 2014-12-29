@@ -59,20 +59,28 @@ public abstract class AbstractGLRenderer implements GLEventListener {
         GL2 gl = drawable.getGL().getGL2();
         gl.glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT); // clear color and depth buffers
 
-        // computers the scene
-        computeScene();
+        if (isModelRead()) {
+            // computers the scene
+            computeScene();
 
-        // prepare
-        gl.glLoadIdentity();
-        setCamera();
+            // prepare
+            gl.glLoadIdentity();
+            setCamera();
 
-        // computes the view object
-        computeView(drawable);
+            // computes the view object
+            computeView(drawable);
+
+        }
 
         // draw all objects
         draw(drawable);
     }
-    
+
+    protected boolean isModelRead() {
+        return true;
+    }
+
+
     /**
      * Prepares projection data.
      * @param drawable The canvas

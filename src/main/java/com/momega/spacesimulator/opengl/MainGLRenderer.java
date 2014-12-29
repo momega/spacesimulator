@@ -29,7 +29,7 @@ import com.momega.spacesimulator.renderer.StatusBarEvent;
  */
 public class MainGLRenderer extends AbstractGLRenderer {
 
-    public final static double UNIVERSE_RADIUS = 1E19;
+    public final static double UNIVERSE_RADIUS = 1E16;
     private static final Logger logger = LoggerFactory.getLogger(MainGLRenderer.class);
 
     private final ModelRenderer renderer;
@@ -48,6 +48,11 @@ public class MainGLRenderer extends AbstractGLRenderer {
         GL2 gl = drawable.getGL().getGL2();
         glu = new GLU();
         renderer.init(gl);
+    }
+
+    @Override
+    protected boolean isModelRead() {
+        return (ModelHolder.getModel() !=null);
     }
 
     @Override
@@ -104,7 +109,8 @@ public class MainGLRenderer extends AbstractGLRenderer {
         if (RendererModel.getInstance().getLoadFileRequested()!=null) {
         	File file = RendererModel.getInstance().getLoadFileRequested();
 			Model model = RendererModel.getInstance().loadFile(file);
-			ModelHolder.replaceModel(model);
+			ModelHolder.setModel(model);
+            RendererModel.getInstance().setModelReady(true);
 	    	RendererModel.getInstance().replaceMovingObjectsModel();
 	    	
 	    	GL2 gl = drawable.getGL().getGL2();
@@ -176,11 +182,11 @@ public class MainGLRenderer extends AbstractGLRenderer {
     protected void computeScene() {
         Application.getInstance().next(false, RendererModel.getInstance().getWarpFactor());
 
-//        // TODO: place this into the method
-//        double x = drawable.getWidth();
-//        double y = drawable.getHeight();
-//        double aratio = Math.sqrt(x * x + y * y) / y;
-        double z =  ModelHolder.getModel().getCamera().getDistance();
+        //        // TODO: place this into the method
+        //        double x = drawable.getWidth();
+        //        double y = drawable.getHeight();
+        //        double aratio = Math.sqrt(x * x + y * y) / y;
+        double z = ModelHolder.getModel().getCamera().getDistance();
         z = z / 10.0d;
         if (z < znear) {
             znear = z;

@@ -3,6 +3,7 @@ package com.momega.spacesimulator.context;
 import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.service.ModelWorker;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
@@ -44,11 +45,11 @@ public class DefaultApplication {
     public void init(long seconds) {
         ModelBuilder modelBuilder = applicationContext.getBean(ModelBuilder.class);
         Model model = modelBuilder.build();
-        ModelHolder.replaceModel(model);
+        ModelHolder.setModel(model);
+        RendererModel.getInstance().setModelReady(true);
 
         logger.info("time = {}", TimeUtils.timeAsString(model.getTime()));
         Timestamp showTime = model.getTime().add(BigDecimal.valueOf(seconds));
-        logger.info("show time = {}", TimeUtils.timeAsString(showTime));
         while(model.getTime().compareTo(showTime)<=0) {
             modelWorker.next(true, BigDecimal.ONE);
         }

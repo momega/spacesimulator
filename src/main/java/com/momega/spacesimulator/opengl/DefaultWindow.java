@@ -31,7 +31,7 @@ public abstract class DefaultWindow extends WindowAdapter {
 
     private static final int WINDOW_WIDTH = 1280;  // width of the drawable
     private static final int WINDOW_HEIGHT = 640; // height of the drawable
-    private static final int FPS = 20; // animator's target frames per second
+    private static final int FPS = 30; // animator's target frames per second
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultWindow.class);
     private GLCanvas canvas;
@@ -112,8 +112,6 @@ public abstract class DefaultWindow extends WindowAdapter {
                     canvas.addComponentListener(controller);
 
                     JPopupMenu.setDefaultLightWeightPopupEnabled(false);
-                    
-                    
                 }
 				
             });
@@ -125,7 +123,11 @@ public abstract class DefaultWindow extends WindowAdapter {
         sleep(500);
         logger.info("main method finished");
     }
-    
+
+    public GLCanvas getCanvas() {
+        return canvas;
+    }
+
     protected void createStatusBar(Controller controller, JFrame frame) {
 		// do nothing
 	}

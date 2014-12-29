@@ -29,6 +29,9 @@ public class ModelService {
      */
     public List<MovingObject> findAllMovingObjects() {
         List<MovingObject> result = new ArrayList<>();
+        if (ModelHolder.getModel() == null) {
+            return result;
+        }
         for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
             result.add(dp);
         }
@@ -42,7 +45,7 @@ public class ModelService {
      */
     public List<PositionProvider> findAllPositionProviders() {
         List<PositionProvider> result = new ArrayList<>();
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+        for(MovingObject dp : findAllMovingObjects()) {
             result.add(dp);
             KeplerianTrajectory keplerianTrajectory = dp.getTrajectory();
             if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
@@ -79,7 +82,7 @@ public class ModelService {
      */
     public MovingObject findMovingObjectByIndex(int index) {
         Assert.isTrue(index > 0);
-        for(MovingObject body : ModelHolder.getModel().getMovingObjects()) {
+        for(MovingObject body : findAllMovingObjects()) {
             if (body.getIndex()==index) {
                 return body;
             }
@@ -93,7 +96,7 @@ public class ModelService {
      */
     public List<CelestialBody> findAllCelestialBodies() {
         List<CelestialBody> result = new ArrayList<>();
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+        for(MovingObject dp : findAllMovingObjects()) {
             if (dp instanceof CelestialBody) {
                 result.add((CelestialBody) dp);
             }
@@ -108,7 +111,7 @@ public class ModelService {
      */
     public List<CelestialBody> findCelestialBodies(boolean onlyMoving) {
         List<CelestialBody> list = new ArrayList<>();
-        for (MovingObject mo : ModelHolder.getModel().getMovingObjects()) {
+        for (MovingObject mo : findAllMovingObjects()) {
             if (mo instanceof CelestialBody) {
                 CelestialBody cb = (CelestialBody) mo;
                 if (!onlyMoving || !cb.isStatic()) {
@@ -136,7 +139,7 @@ public class ModelService {
      */
     public List<Planet> findAllPlanets() {
         List<Planet> result = new ArrayList<>();
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+        for(MovingObject dp : findAllMovingObjects()) {
             if (dp instanceof Planet) {
                 result.add((Planet) dp);
             }
@@ -146,7 +149,7 @@ public class ModelService {
 
     public List<Spacecraft> findAllSpacecrafs() {
         List<Spacecraft> result = new ArrayList<>();
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+        for(MovingObject dp : findAllMovingObjects()) {
             if (dp instanceof Spacecraft) {
                 result.add((Spacecraft) dp);
             }

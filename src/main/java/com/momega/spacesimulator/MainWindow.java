@@ -111,6 +111,7 @@ public class MainWindow extends DefaultWindow {
 				window.getFrame().setTitle(title);
 			}
 		});
+
     }
     
     @Override
@@ -135,17 +136,17 @@ public class MainWindow extends DefaultWindow {
     	openItem.setActionCommand(LoadController.LOAD_COMMAND);
     	openItem.addActionListener(controller);
     	
-    	JMenuItem saveItem = new JMenuItem("Save");
+    	final JMenuItem saveItem = new JMenuItem("Save");
     	saveItem.setActionCommand(SaveController.SAVE_COMMAND);
     	saveItem.setMnemonic(KeyEvent.VK_S);
     	saveItem.addActionListener(controller);
     	saveItem.setIcon(SwingUtils.createImageIcon("/images/page_save.png"));
     	
-    	JMenuItem saveAsItem = new JMenuItem("Save As...");
+    	final JMenuItem saveAsItem = new JMenuItem("Save As...");
     	saveAsItem.setActionCommand(SaveController.SAVE_AS_COMMAND);
     	saveAsItem.addActionListener(controller);
     	
-        JMenuItem saveScreenshotItem = new JMenuItem("Save Screenshot");
+        final JMenuItem saveScreenshotItem = new JMenuItem("Save Screenshot");
         saveScreenshotItem.setActionCommand(TakeScreenshotController.COMMAND);
         saveScreenshotItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_DOWN_MASK));
         saveScreenshotItem.addActionListener(controller);
@@ -168,7 +169,7 @@ public class MainWindow extends DefaultWindow {
     	fileMenu.addSeparator();
     	fileMenu.add(exitItem);
     	
-    	JMenu projectMenu = new JMenu("Project");
+    	final JMenu projectMenu = new JMenu("Project");
     	JMenuItem timeItem = new JMenuItem("Time...");
     	timeItem.setIcon(Icons.TIME);
         timeItem.addActionListener(controller);
@@ -218,7 +219,20 @@ public class MainWindow extends DefaultWindow {
     	menuBar.add(helpMenu);
     	
     	logger.info("menubar created");
-    	
+
+		RendererModel.getInstance().addPropertyChangeListener(RendererModel.MODEL_READY, new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				boolean modelReady = (boolean) evt.getNewValue();
+				saveAsItem.setEnabled(modelReady);
+				saveItem.setEnabled(modelReady);
+				projectMenu.setEnabled(modelReady);
+				saveScreenshotItem.setEnabled(modelReady);
+				getCanvas().setVisible(modelReady);
+			}
+		});
+		RendererModel.getInstance().initPropertyChange(RendererModel.MODEL_READY, RendererModel.getInstance().isModelReady());
+
     	return menuBar;
     }
     
@@ -283,7 +297,7 @@ public class MainWindow extends DefaultWindow {
     				ActionEvent event = new ActionEvent(timeLabel, e.getID(), TimeController.TIME_DIALOG);
     				controller.actionPerformed(event);
     			}
-    		}
+  	  		}
 		});
 
 		RendererModel.getInstance().addPropertyChangeListener(RendererModel.FPS, new PropertyChangeListener() {

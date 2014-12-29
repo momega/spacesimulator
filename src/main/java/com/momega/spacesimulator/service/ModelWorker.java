@@ -32,6 +32,9 @@ public class ModelWorker {
      */
     public void next(boolean runningHeadless, BigDecimal warpFactor) {
         Model model = ModelHolder.getModel();
+        if (model == null) {
+            return;
+        }
         model.setRunningHeadless(runningHeadless);
         Timestamp t = motionService.move(model.getTime(), warpFactor);
         model.setTime(t);

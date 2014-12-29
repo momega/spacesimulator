@@ -1,12 +1,8 @@
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.utils.TimeUtils;
+import com.momega.spacesimulator.utils.MathUtils;
 import org.apache.commons.math3.util.FastMath;
 import org.springframework.util.Assert;
-
-import com.momega.spacesimulator.utils.MathUtils;
-
-import java.math.BigDecimal;
 
 /**
  * The class holding keplerian elements of the trajectory
@@ -93,20 +89,17 @@ public class KeplerianElements {
         KeplerianElements keplerianElements = new KeplerianElements();
         keplerianElements.setKeplerianOrbit(keplerianOrbit);
 
-        double theta;
         if (keplerianOrbit.isHyperbolic()) {
             double HA = solveHyperbolicAnomaly(keplerianOrbit, meanAnomaly);
-            theta = solveTheta(HA, keplerianOrbit.getEccentricity());
             keplerianElements.setHyperbolicAnomaly(HA);
             keplerianElements.setEccentricAnomaly(null);
         } else {
             meanAnomaly = MathUtils.normalizeAngle(meanAnomaly);
             double EA = solveEccentricAnomaly(keplerianOrbit, meanAnomaly);
-            theta = solveTheta(EA, keplerianOrbit.getEccentricity());
             keplerianElements.setEccentricAnomaly(EA);
             keplerianElements.setHyperbolicAnomaly(null);
         }
-        keplerianElements.setTrueAnomaly(theta);
+        keplerianElements.solveTheta();
         return keplerianElements;
     }
 
@@ -138,8 +131,8 @@ public class KeplerianElements {
      * 		M = e * sinh(H) - H
      * </code>
      * @param keplerianOrbit the keplerian orbit
-     * @param M
-     * @return
+     * @param M mean anomaly
+     * @return the value of the hyperbolic anomaly
      */
     public static double solveHyperbolicAnomaly(KeplerianOrbit keplerianOrbit, double M) {
         double eccentricity = keplerianOrbit.getEccentricity();
@@ -163,6 +156,17 @@ public class KeplerianElements {
     		return solveThetaFromHA(EHA, eccentricity);
     	}
     	return solveThetaFromEA(EHA, eccentricity);
+    }
+
+    public void solveTheta() {
+        double EHA;
+        if (keplerianOrbit.isHyperbolic()) {
+            EHA = getHyperbolicAnomaly();
+        } else {
+            EHA = getEccentricAnomaly();
+        }
+        double theta = solveTheta(EHA, getKeplerianOrbit().getEccentricity());
+        setTrueAnomaly(theta);
     }
 
     private static double solveThetaFromEA(double EA, double eccentricity) {
@@ -240,8 +244,8 @@ public class KeplerianElements {
      * Computes the timestamp when the {@link MovingObject} get to given true anomaly 
      * @param timestamp the current timestamp
      * @param targetTheta the target true anomaly
-     * @param future
-     * @return
+     * @param future if true the method returns only future values
+     * @return the timestamp
      */
     public Timestamp timeToAngle(Timestamp timestamp, double targetTheta, boolean future) {
     	Assert.isTrue(!Double.isNaN(targetTheta), "true anomaly is invalid");
@@ -285,8 +289,6 @@ public class KeplerianElements {
     	//double HA = MathUtils.acosh(cosHA);
         return HA;
     }
-    
-
 
     public double getAltitude() {
         double e = getKeplerianOrbit().getEccentricity();

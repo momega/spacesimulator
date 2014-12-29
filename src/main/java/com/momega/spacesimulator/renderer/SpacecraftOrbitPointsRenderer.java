@@ -1,8 +1,10 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.model.ManeuverPoint;
+import com.momega.spacesimulator.model.OrbitIntersection;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.TargetClosestPoint;
 import com.momega.spacesimulator.service.ManeuverService;
 import com.momega.spacesimulator.service.TargetService;
 
@@ -32,7 +34,7 @@ public class SpacecraftOrbitPointsRenderer extends AbstractOrbitalPositionProvid
         for(TargetClosestPoint closestPoint : targetService.getTargetClosestPoints(spacecraft)) {
             renderPositionProvider(gl, closestPoint);
         }
-        List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime());
+        List<ManeuverPoint> maneuverPoints = maneuverService.findActiveOrNextPoints(spacecraft, spacecraft.getTimestamp());
         for(ManeuverPoint maneuverPoint : maneuverPoints) {
             renderPositionProvider(gl, maneuverPoint);
         }

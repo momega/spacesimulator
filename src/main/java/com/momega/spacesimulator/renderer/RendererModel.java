@@ -37,6 +37,7 @@ public class RendererModel {
 	public static final String MODEL_FILE = "modelFile";
 	public static final String WARP_FACTOR = "warpFactor";
     public static final String FPS = "fps";
+    public static final String MODEL_READY = "modelReady";
 
 	private static final Logger logger = LoggerFactory.getLogger(RendererModel.class);
 
@@ -77,6 +78,8 @@ public class RendererModel {
     private File saveFileRequested = null;
     private File loadFileRequested = null;
     private boolean quitRequested = false;
+
+    private boolean modelReady = false;
     
     private final ModelSerializer modelSerializer;
     private float fps = 0.0f;
@@ -91,7 +94,9 @@ public class RendererModel {
         userPointService = Application.getInstance().getService(UserPointService.class);
         modelService = Application.getInstance().getService(ModelService.class);
 		movingObjectsModel = new PositionProvidersModel(selectPositionProviders());
-		movingObjectsModel.setSelectedItem(ModelHolder.getModel().getCamera().getTargetObject());
+        if (ModelHolder.getModel()!=null) {
+		    movingObjectsModel.setSelectedItem(ModelHolder.getModel().getCamera().getTargetObject());
+        }
 		fileChooser = new JFileChooser();
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Space Simulator Data (.json)", "json"));
 		fileChooser.setFileFilter(fileChooser.getChoosableFileFilters()[1]);
@@ -574,5 +579,15 @@ public class RendererModel {
         float old = this.fps;
         this.fps = fps;
         firePropertyChange(FPS, old, this.fps);
+    }
+
+    public void setModelReady(boolean modelReady) {
+        boolean old = this.modelReady;
+        this.modelReady = modelReady;
+        firePropertyChange(MODEL_READY, old, this.modelReady);
+    }
+
+    public boolean isModelReady() {
+        return modelReady;
     }
 }

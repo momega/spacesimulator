@@ -154,7 +154,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     	Assert.notNull(movingObject);
     	Assert.notNull(centralObject);
     	
-        KeplerianElements keplerianElements = new KeplerianElements();
         KeplerianOrbit orbit = new KeplerianOrbit();
         orbit.setCentralObject(centralObject);
         orbit.setSemimajorAxis(semimajorAxis);
@@ -165,9 +164,6 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         orbit.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
         orbit.setTimeOfPeriapsis(TimeUtils.fromJulianDay(timeOfPeriapsis));
 
-        keplerianElements.setKeplerianOrbit(orbit);
-        movingObject.setKeplerianElements(keplerianElements);
-        
         KeplerianTrajectory trajectory = movingObject.getTrajectory();
         if (trajectory == null) {
 	        trajectory = new KeplerianTrajectory();
@@ -175,11 +171,17 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         }
         movingObject.setTrajectory(trajectory);
         movingObject.setTimestamp(model.getTime());
-        
+
         Assert.notNull(movingObject.getName());
         
         // initialize position
-        keplerianPropagator.computePosition(movingObject, model.getTime());
+        //keplerianPropagator.computePosition(movingObject, model.getTime());
+
+        KeplerianElements keplerianElements = KeplerianElements.fromTimestamp(orbit, model.getTime());
+        CartesianState cartesianState = keplerianElements.toCartesianState();
+
+        movingObject.setKeplerianElements(keplerianElements);
+        movingObject.setCartesianState(cartesianState);
 
         return keplerianElements;
     }
@@ -276,7 +278,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param ra right ascension RA of the north pole
      * @param dec declination 0of the north pole
      * @param wiki the wiki page
-     * @param icon
+     * @param icon the icon resource path
      */
     protected void updateDynamicalPoint(PhysicalBody dp, String name, double mass, double rotationPeriod, double radius, double ra, double dec, String wiki, String icon) {
         updateDynamicalPoint(dp, name, mass, rotationPeriod, radius, wiki, icon);
@@ -332,7 +334,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param throttle
      * @param throttleAlpha
      * @param throttleDelta
-     * @return
+     * @return the new maneuver instance
      */
     public Maneuver addManeuver(Spacecraft spacecraft, String name, Double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
         Maneuver maneuver = maneuverService.createManeuver(spacecraft, name, model.getTime(), startTime, duration, throttle, throttleAlpha, throttleDelta);

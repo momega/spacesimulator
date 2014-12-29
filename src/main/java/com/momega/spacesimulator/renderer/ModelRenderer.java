@@ -1,10 +1,10 @@
 package com.momega.spacesimulator.renderer;
 
+import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.service.ModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.MovingObject;
 
 /**
  * The class contains renderer for any abstract model
@@ -14,13 +14,16 @@ public class ModelRenderer extends CompositeRenderer {
 
     private static final Logger logger = LoggerFactory.getLogger(ModelRenderer.class);
 
+	private ModelService modelService;
+
     public ModelRenderer() {
         logger.info("initializing renderers");
+		modelService = Application.getInstance().getService(ModelService.class);
         createRenderers();
     }
     
     public void createRenderers() {
-    	for(MovingObject mo : ModelHolder.getModel().getMovingObjects()) {
+    	for(MovingObject mo : modelService.findAllMovingObjects()) {
     		MovingObjectCompositeRenderer renderer = new MovingObjectCompositeRenderer(mo);
     		addRenderer(renderer);
         }
