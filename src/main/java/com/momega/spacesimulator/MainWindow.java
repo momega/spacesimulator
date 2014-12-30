@@ -1,49 +1,8 @@
 package com.momega.spacesimulator;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.io.File;
-import java.math.BigDecimal;
-
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JToggleButton;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.jogamp.newt.event.KeyEvent;
 import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.controller.CameraController;
-import com.momega.spacesimulator.controller.Controller;
-import com.momega.spacesimulator.controller.EventBusController;
-import com.momega.spacesimulator.controller.InterplanetaryFlightController;
-import com.momega.spacesimulator.controller.LoadController;
-import com.momega.spacesimulator.controller.PerspectiveController;
-import com.momega.spacesimulator.controller.PreferencesController;
-import com.momega.spacesimulator.controller.QuitController;
-import com.momega.spacesimulator.controller.SaveController;
-import com.momega.spacesimulator.controller.SpacecraftController;
-import com.momega.spacesimulator.controller.TakeScreenshotController;
-import com.momega.spacesimulator.controller.TargetController;
-import com.momega.spacesimulator.controller.TimeController;
-import com.momega.spacesimulator.controller.ToolbarController;
-import com.momega.spacesimulator.controller.UserPointController;
+import com.momega.spacesimulator.controller.*;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.PositionProvider;
@@ -55,12 +14,21 @@ import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.StatusBarEvent;
 import com.momega.spacesimulator.service.HistoryPointListener;
 import com.momega.spacesimulator.service.HistoryPointService;
-import com.momega.spacesimulator.swing.HistoryPointListRenderer;
-import com.momega.spacesimulator.swing.Icons;
-import com.momega.spacesimulator.swing.JStatusBar;
-import com.momega.spacesimulator.swing.MovingObjectListRenderer;
-import com.momega.spacesimulator.swing.SwingUtils;
+import com.momega.spacesimulator.swing.*;
 import com.momega.spacesimulator.utils.TimeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.math.BigDecimal;
 
 
 /**
@@ -80,7 +48,7 @@ public class MainWindow extends DefaultWindow {
         EventBusController controller = new EventBusController();
 
         Application application = Application.getInstance();
-        application.init(0);
+        //application.init(0);
         
         MainGLRenderer mr = new MainGLRenderer(window);
         controller.addController(new QuitController(window));
@@ -96,6 +64,7 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new LoadController());
         controller.addController(new SaveController());
         controller.addController(new SpacecraftController());
+		controller.addController(new CloseController());
         window.openWindow(mr, controller);
         
         final RendererModel rendererModel = RendererModel.getInstance();
@@ -145,11 +114,16 @@ public class MainWindow extends DefaultWindow {
     	final JMenuItem saveAsItem = new JMenuItem("Save As...");
     	saveAsItem.setActionCommand(SaveController.SAVE_AS_COMMAND);
     	saveAsItem.addActionListener(controller);
+
+		final JMenuItem closeItem = new JMenuItem("Close");
+		closeItem.setActionCommand(CloseController.CLOSE_COMMAND);
+		closeItem.addActionListener(controller);
     	
         final JMenuItem saveScreenshotItem = new JMenuItem("Save Screenshot");
         saveScreenshotItem.setActionCommand(TakeScreenshotController.COMMAND);
         saveScreenshotItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_DOWN_MASK));
         saveScreenshotItem.addActionListener(controller);
+
     	JMenuItem preferencesItem = new JMenuItem("Preferences...");
         preferencesItem.setActionCommand(PreferencesController.COMMAND);
         preferencesItem.addActionListener(controller);
@@ -163,6 +137,8 @@ public class MainWindow extends DefaultWindow {
     	fileMenu.add(openItem);
     	fileMenu.add(saveItem);
     	fileMenu.add(saveAsItem);
+		fileMenu.add(closeItem);
+		fileMenu.addSeparator();
         fileMenu.add(saveScreenshotItem);
     	fileMenu.addSeparator();
     	fileMenu.add(preferencesItem);
@@ -228,7 +204,8 @@ public class MainWindow extends DefaultWindow {
 				saveItem.setEnabled(modelReady);
 				projectMenu.setEnabled(modelReady);
 				saveScreenshotItem.setEnabled(modelReady);
-				getCanvas().setVisible(modelReady);
+				closeItem.setEnabled(modelReady);
+				//getCanvas().setVisible(modelReady);
 			}
 		});
 		RendererModel.getInstance().initPropertyChange(RendererModel.MODEL_READY, RendererModel.getInstance().isModelReady());

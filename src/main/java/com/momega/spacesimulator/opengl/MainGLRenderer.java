@@ -51,7 +51,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
     }
 
     @Override
-    protected boolean isModelRead() {
+    protected boolean isModelReady() {
         return (ModelHolder.getModel() !=null);
     }
 
@@ -131,6 +131,17 @@ public class MainGLRenderer extends AbstractGLRenderer {
         if (RendererModel.getInstance().isQuitRequested()) {
         	window.stopAnimator();
         	RendererModel.getInstance().setQuitRequested(false);
+        }
+
+        if (RendererModel.getInstance().isCloseRequested()) {
+            GL2 gl = drawable.getGL().getGL2();
+            renderer.clearAllRenderers();
+            renderer.dispose(gl);
+            ModelHolder.setModel(null);
+            RendererModel.getInstance().setModelFile(null);
+            RendererModel.getInstance().setModelReady(false);
+            RendererModel.getInstance().replaceMovingObjectsModel();
+            RendererModel.getInstance().setCloseRequested(false);
         }
 
         RendererModel.getInstance().setFps(drawable.getAnimator().getLastFPS());

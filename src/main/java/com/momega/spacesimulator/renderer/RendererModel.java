@@ -78,6 +78,7 @@ public class RendererModel {
     private File saveFileRequested = null;
     private File loadFileRequested = null;
     private boolean quitRequested = false;
+    private boolean closeRequested = false;
 
     private boolean modelReady = false;
     
@@ -255,7 +256,9 @@ public class RendererModel {
     public void replaceMovingObjectsModel() {
     	movingObjectsModel.setSelectedItem(null);
     	movingObjectsModel.replaceElements(selectPositionProviders());
-    	movingObjectsModel.setSelectedItem(ModelHolder.getModel().getCamera().getTargetObject());
+        if (isModelReady()) {
+            movingObjectsModel.setSelectedItem(ModelHolder.getModel().getCamera().getTargetObject());
+        }
     }
     
     public PositionProvider getSelectedItem() {
@@ -589,5 +592,13 @@ public class RendererModel {
 
     public boolean isModelReady() {
         return modelReady;
+    }
+
+    public void setCloseRequested(boolean closeRequested) {
+        this.closeRequested = closeRequested;
+    }
+
+    public boolean isCloseRequested() {
+        return closeRequested;
     }
 }
