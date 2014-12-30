@@ -146,7 +146,6 @@ public class MainGLRenderer extends AbstractGLRenderer {
         }
 
         if (RendererModel.getInstance().getModelBuilderRequested() != null) {
-
             GL2 gl = drawable.getGL().getGL2();
             renderer.dispose(gl);
             renderer.clearAllRenderers();

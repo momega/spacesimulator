@@ -34,7 +34,7 @@ public class DeleteSpacecraftPanel extends AbstractDefaultPanel {
 		layout.setAutoCreateContainerGaps(true);
 
 		JLabel lblSpacecraft = new JLabel("Spacecraft:", SwingConstants.RIGHT);
-		JComboBox<Spacecraft> spacecraftBox = new JComboBox<Spacecraft>(spacecraftObjectModel);
+		JComboBox<Spacecraft> spacecraftBox = new JComboBox<>(spacecraftObjectModel);
 		spacecraftBox.setRenderer(new MovingObjectListRenderer());
 
 		layout.setVerticalGroup(layout.createSequentialGroup().addGroup(
@@ -58,6 +58,9 @@ public class DeleteSpacecraftPanel extends AbstractDefaultPanel {
 	@Override
 	public boolean okPressed() {
 		Spacecraft spacecraft = (Spacecraft) spacecraftObjectModel.getSelectedItem();
+		if (spacecraft == null) {
+			return false;
+		}
 		logger.info("spacecraft = {}", spacecraft.getName());
 		RendererModel.getInstance().setDeleteSpacecraft(spacecraft);
 		return true;

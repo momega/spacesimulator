@@ -517,7 +517,7 @@ public class RendererModel {
 				@Override
 				public void run() {
 					StatusBarEvent event = new StatusBarEvent(ModelHolder.getModel(), "Model successfully saved.");
-					RendererModel.getInstance().fireModelEvent(event);
+					fireModelEvent(event);
 
 				}
 			});
@@ -547,7 +547,7 @@ public class RendererModel {
 				@Override
 				public void run() {
 					StatusBarEvent event = new StatusBarEvent(ModelHolder.getModel(), "Model successfully loaded.");
-					RendererModel.getInstance().fireModelEvent(event);
+					fireModelEvent(event);
 				}
 			});
 			setModelFile(file);
@@ -568,7 +568,7 @@ public class RendererModel {
 	}
 	
 	public File selectSaveFile() {
-		JFileChooser fileChooser = RendererModel.getInstance().getFileChooser();
+		JFileChooser fileChooser = getFileChooser();
 		fileChooser.setDialogTitle("Save Dialog...");
 		if (fileChooser.showSaveDialog(null)==JFileChooser.APPROVE_OPTION) {
 			return fileChooser.getSelectedFile();
@@ -614,7 +614,9 @@ public class RendererModel {
 
     public void createFromBuilder(ModelBuilder modelBuilder) {
         Application.getInstance().init(modelBuilder);
-        RendererModel.getInstance().setModelReady(true);
+        setModelReady(true);
+
+        fireModelEvent(new StatusBarEvent(ModelHolder.getModel(), "Model created from builder '" + modelBuilder.getName() + "'"));
     }
 
     public void createFromBuilder() {

@@ -66,4 +66,9 @@ public class SolarSystemModelBuilder extends MediumSolarSystemModelBuilder {
         addPlanetToSoiTree(callisto, jupiterSoi);
     }
 
+    @Override
+    public String getName() {
+        return "Medium Solar System model with Jupiter";
+    }
+
 }

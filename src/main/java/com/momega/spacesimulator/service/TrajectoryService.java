@@ -27,17 +27,17 @@ public class TrajectoryService {
     /**
      * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation
      * @param movingObject the moving objects
-     * @param newTime new timestamp
+     * @param newTimestamp new timestamp
      */
-    public void move(MovingObject movingObject, Timestamp newTime) {
-        logger.debug("new time = {}", newTime);
+    public void move(MovingObject movingObject, Timestamp newTimestamp) {
+        logger.debug("new time = {}", newTimestamp);
         Assert.notNull(movingObject);
         Trajectory trajectory = movingObject.getTrajectory();
         Assert.notNull(trajectory);
         for (Propagator propagator : propagators) {
             if (propagator.supports(trajectory)) {
-                propagator.computePosition(movingObject, newTime);
-                movingObject.setTimestamp(newTime);
+                propagator.computePosition(movingObject, newTimestamp);
+                movingObject.setTimestamp(newTimestamp);
             }
         }
     }

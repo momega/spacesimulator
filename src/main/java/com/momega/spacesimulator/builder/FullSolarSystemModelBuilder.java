@@ -115,4 +115,9 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         addPlanetToSoiTree(vesta, sunSoi);
     }
 
+    @Override
+    public String getName() {
+        return "Full Solar System model";
+    }
+
 }

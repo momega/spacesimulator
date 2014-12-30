@@ -8,6 +8,12 @@ import com.momega.spacesimulator.model.Model;
 public interface ModelBuilder {
 
     /**
+     * Returns the name of the builder
+     * @return
+     */
+    String getName();
+
+    /**
      * Builds the model
      * @return the instance of the model
      */

@@ -38,4 +38,9 @@ public class EmptyModelBuilder extends AbstractModelBuilder {
 		return empty;
 	}
 
+	@Override
+	public String getName() {
+		return "Empty model";
+	}
+
 }

@@ -63,7 +63,7 @@ public class NewtonianPropagator implements Propagator {
 
         double dt = newTimestamp.subtract(movingObject.getTimestamp()).doubleValue();
 
-        CartesianState cartesianState = eulerSolver(spacecraft, dt);
+        CartesianState cartesianState = eulerSolver(spacecraft, newTimestamp, dt);
         movingObject.setCartesianState(cartesianState);
 
         computePrediction(spacecraft, newTimestamp);
@@ -179,10 +179,10 @@ public class NewtonianPropagator implements Propagator {
     /**
      * Solves the velocity and position by the simple Euler method
      * @param spacecraft the spacecraft
-     * @param dt time interval
-     * @return the position
+     * @param newTimestamp
+     *@param dt time interval  @return the position
      */
-    protected CartesianState eulerSolver(Spacecraft spacecraft, double dt) {
+    protected CartesianState eulerSolver(Spacecraft spacecraft, Timestamp newTimestamp, double dt) {
         // Euler's method
         Vector3d position = spacecraft.getCartesianState().getPosition();
         Vector3d velocity = spacecraft.getCartesianState().getVelocity();

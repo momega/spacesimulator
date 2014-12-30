@@ -21,8 +21,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
-	
-	protected void initTime() {
+
+    protected void initTime() {
         model.setTime(TimeUtils.fromDateTime(new DateTime(2016, 2, 22, 10, 0, DateTimeZone.UTC)));
     }
 
@@ -50,8 +50,8 @@ public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
         habitableModule.setName("Habitat");
         subsystems.add(habitableModule);
 
-        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 2", position, velocity, 2, new double[] {1, 1, 0}, subsystems);
-        
+        Spacecraft spacecraft = createSpacecraft(earth, "Spacecraft 2", position, velocity, 2, new double[]{1, 1, 0}, subsystems);
+
         addManeuver(spacecraft, "M5", 0 * 60d, 1100d, 1d, 0, Math.toRadians(-90));
         addManeuver(spacecraft, "M6", 82 * 60d, 1200d, 1d, 0, Math.toRadians(-90));
         addManeuver(spacecraft, "M7", 107.5 * 60d, 2654d, 1d, 0, Math.toRadians(0));
@@ -64,4 +64,10 @@ public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
         setTarget(spacecraft, mars);
 
     }
+
+    @Override
+    public String getName() {
+        return "Medium Solar System model, mission to Mars";
+    }
+
 }

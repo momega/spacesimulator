@@ -3,6 +3,7 @@ package com.momega.spacesimulator.builder;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.service.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
@@ -12,41 +13,22 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.CartesianState;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.KeplerianElements;
-import com.momega.spacesimulator.model.KeplerianOrbit;
-import com.momega.spacesimulator.model.KeplerianTrajectory;
-import com.momega.spacesimulator.model.Maneuver;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Orientation;
-import com.momega.spacesimulator.model.PhysicalBody;
-import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.model.Ring;
-import com.momega.spacesimulator.model.RotatingObject;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.SpacecraftSubsystem;
-import com.momega.spacesimulator.model.SphereOfInfluence;
-import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.model.Trajectory;
-import com.momega.spacesimulator.model.TrajectoryType;
-import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
- * Super class for all model builders
+ * Super class for all model builders.
+ * Implementation note:
+ * The builder should never used {@link com.momega.spacesimulator.context.ModelHolder}. The reason is obvious. The ModelHolder
+ * contains the current running model and builder should not manipulate instance within the running model
  * Created by martin on 6/18/14.
  */
 public abstract class AbstractModelBuilder implements ModelBuilder {
 
     private static final Logger logger = LoggerFactory.getLogger(AbstractModelBuilder.class);
 
-    protected Model model = new Model();
+    protected Model model = null;
 
     private static final int MOVING_OBJECTS_START_INDEX = 10;
     
@@ -74,6 +56,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * Initialize model and  returns the instance
      */
     public final Model build() {
+        model = new Model();
         initTime();
         initPlanets();
         initSpacecrafts();
@@ -331,12 +314,13 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param name the name of the maneuver
      * @param startTime start of the maneuver in seconds from the start
      * @param duration the duration of maneuver in seconds
-     * @param throttle
+     * @param throttle the engine throttle as number from 0..1, 1 means 100%
      * @param throttleAlpha
      * @param throttleDelta
      * @return the new maneuver instance
      */
     public Maneuver addManeuver(Spacecraft spacecraft, String name, Double startTime, double duration, double throttle, double throttleAlpha, double throttleDelta) {
+
         Maneuver maneuver = maneuverService.createManeuver(spacecraft, name, model.getTime(), startTime, duration, throttle, throttleAlpha, throttleDelta);
         spacecraft.getManeuvers().add(maneuver);
         return maneuver;

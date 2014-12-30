@@ -90,4 +90,9 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
     protected void initCamera() {
         createCamera(findMovingObject("Earth"));
     }
+
+    @Override
+    public String getName() {
+        return "Simple Earth/Moon model";
+    }
 }

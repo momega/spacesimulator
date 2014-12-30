@@ -69,4 +69,9 @@ public class VenusSpacecraftModelBuilder extends MediumSolarSystemModelBuilder {
 
 		setTarget(spacecraft, venus);
 	}
+
+	@Override
+	public String getName() {
+		return "Medium Solar System model, mission to Venus";
+	}
 }

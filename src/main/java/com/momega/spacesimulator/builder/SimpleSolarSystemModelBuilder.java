@@ -98,4 +98,9 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
     protected MovingObject getCentralObject() {
         return sun;
     }
+
+    @Override
+    public String getName() {
+        return "Medium Solar System model, mission to Moon";
+    }
 }

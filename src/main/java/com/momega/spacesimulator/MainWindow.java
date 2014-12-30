@@ -1,6 +1,7 @@
 package com.momega.spacesimulator;
 
 import com.jogamp.newt.event.KeyEvent;
+import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.controller.*;
 import com.momega.spacesimulator.model.HistoryPoint;
@@ -18,6 +19,8 @@ import com.momega.spacesimulator.swing.*;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.PropertySource;
+import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,6 +41,8 @@ import java.math.BigDecimal;
 public class MainWindow extends DefaultWindow {
 
 	private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
+
+	private static final String BUILDER_CLASS_NAME_OPTION = "builderClassName";
 	
     public MainWindow(String title) {
         super(title);
@@ -47,9 +52,6 @@ public class MainWindow extends DefaultWindow {
         final MainWindow window = new MainWindow("Space Simulator");
         EventBusController controller = new EventBusController();
 
-        Application application = Application.getInstance();
-        //application.init(0);
-        
         MainGLRenderer mr = new MainGLRenderer(window);
         controller.addController(new QuitController(window));
         controller.addController(new UserPointController());
@@ -81,6 +83,18 @@ public class MainWindow extends DefaultWindow {
 				window.getFrame().setTitle(title);
 			}
 		});
+
+		PropertySource ps = new SimpleCommandLinePropertySource(args);
+		String builderClassName = (String) ps.getProperty(BUILDER_CLASS_NAME_OPTION);
+		if (builderClassName != null) {
+			ModelBuilder modelBuilder = Application.getInstance().createBuilder(builderClassName);
+			RendererModel.getInstance().setModelBuilderRequested(modelBuilder);
+		}
+
+		if (builderClassName==null && !rendererModel.isModelReady()) {
+			ActionEvent event = new ActionEvent(window, ActionEvent.ACTION_FIRST, CreateFromBuilderController.CREATE_FROM_BUILDER_COMMAND);
+			controller.actionPerformed(event);
+		}
 
     }
     
@@ -213,7 +227,6 @@ public class MainWindow extends DefaultWindow {
 				projectMenu.setEnabled(modelReady);
 				saveScreenshotItem.setEnabled(modelReady);
 				closeItem.setEnabled(modelReady);
-				//getCanvas().setVisible(modelReady);
 			}
 		});
 		RendererModel.getInstance().initPropertyChange(RendererModel.MODEL_READY, RendererModel.getInstance().isModelReady());
@@ -224,7 +237,7 @@ public class MainWindow extends DefaultWindow {
     @Override
     protected void createStatusBar(final Controller controller, JFrame frame) {
     	JStatusBar statusPanel = new JStatusBar();
-        final JLabel statusLabel = new JLabel("The simulator has started.");
+        final JLabel statusLabel = new JLabel("The application has started.");
         statusPanel.setLeftComponent(statusLabel);
  
         final JLabel timeLabel = new JLabel();

@@ -7,9 +7,9 @@ import com.momega.spacesimulator.service.ModelWorker;
 import com.momega.spacesimulator.utils.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 /**
  * The default implementation of the root application object. The different subclasses may be used for
@@ -29,6 +29,16 @@ public class DefaultApplication extends AbstractSpringApplication {
 
     public void next(boolean runningHeadless, BigDecimal warpFactor) {
         modelWorker.next(runningHeadless, warpFactor);
+    }
+
+    public ModelBuilder createBuilder(String builderClassName) {
+        try {
+            Class<?> clazz = Class.forName(builderClassName);
+            Assert.isAssignable(ModelBuilder.class, clazz);
+            return (ModelBuilder) getBeanOfClass(clazz);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid class name to load " + builderClassName, e);
+        }
     }
 
     public void init(Class<? extends ModelBuilder> modelBuilderClass) {
