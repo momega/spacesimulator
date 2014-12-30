@@ -1,5 +1,7 @@
 package com.momega.spacesimulator;
 
+import com.momega.spacesimulator.builder.MediumSolarSystemModelBuilder;
+import com.momega.spacesimulator.builder.SimpleSolarSystemModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.DefaultApplication;
 import com.momega.spacesimulator.model.Spacecraft;
@@ -19,7 +21,7 @@ public class ApplicationTest {
     @Test
     public void runTest() {
         DefaultApplication application = new DefaultApplication(TestAppConfig.class);
-        application.init(0);
+        application.init(SimpleSolarSystemModelBuilder.class);
         for(int i=0; i<10000; i++) {
             application.next(false, BigDecimal.ONE);
         }

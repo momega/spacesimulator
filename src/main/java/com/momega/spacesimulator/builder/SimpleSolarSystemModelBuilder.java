@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.momega.spacesimulator.model.*;
+import org.springframework.stereotype.Component;
 
 /**
  * The builder creates very simple model of the solar system just with the sun, moon and earth.
  * The moon and earth are orbiting common barycentre.
  * Created by martin on 7/14/14.
  */
+@Component
 public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
 
     protected CelestialBody sun;
@@ -21,7 +23,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         updateDynamicalPoint(sun, "Sun", 1.989 * 1E6, 25.05, 696.342, 286.13, 63.87, "Sun", "/images/sun.png");
         setCentralPoint(sun);
         createTrajectory(sun, new double[] {1, 0.7, 0});
-        sun.setTextureFileName("sun.jpg");
+        sun.setTextureFileName("realsun.jpg");
 
         BaryCentre earthMoonBarycenter = new BaryCentre();
         updateDynamicalPoint(earthMoonBarycenter, "Earth-Moon Barycenter", 0, 0, 1, 0, null, null);

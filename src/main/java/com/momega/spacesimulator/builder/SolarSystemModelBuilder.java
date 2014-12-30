@@ -3,11 +3,13 @@ package com.momega.spacesimulator.builder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.SphereOfInfluence;
+import org.springframework.stereotype.Component;
 
 /**
  * The builder of the solar system
  * Created by martin on 5/6/14.
  */
+@Component
 public class SolarSystemModelBuilder extends MediumSolarSystemModelBuilder {
 
     @Override

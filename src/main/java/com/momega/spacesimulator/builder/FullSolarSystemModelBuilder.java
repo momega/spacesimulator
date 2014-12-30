@@ -2,11 +2,13 @@ package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * The builder of the solar system
  * Created by martin on 5/6/14.
  */
+@Component
 public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
 
     @Override

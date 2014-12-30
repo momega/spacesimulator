@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.renderer;
 
+import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
@@ -84,6 +85,7 @@ public class RendererModel {
     
     private final ModelSerializer modelSerializer;
     private float fps = 0.0f;
+    private ModelBuilder modelBuilderRequested;
 
     private RendererModel() {
         super();
@@ -600,5 +602,22 @@ public class RendererModel {
 
     public boolean isCloseRequested() {
         return closeRequested;
+    }
+
+    public void setModelBuilderRequested(ModelBuilder modelBuilderRequested) {
+        this.modelBuilderRequested = modelBuilderRequested;
+    }
+
+    public ModelBuilder getModelBuilderRequested() {
+        return modelBuilderRequested;
+    }
+
+    public void createFromBuilder(ModelBuilder modelBuilder) {
+        Application.getInstance().init(modelBuilder);
+        RendererModel.getInstance().setModelReady(true);
+    }
+
+    public void createFromBuilder() {
+        createFromBuilder(getModelBuilderRequested());
     }
 }

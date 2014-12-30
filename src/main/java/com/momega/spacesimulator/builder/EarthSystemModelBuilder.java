@@ -5,11 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.momega.spacesimulator.model.*;
+import org.springframework.stereotype.Component;
 
 /**
  * The builder or simple earth-moon model with the satellites
  * Created by martin on 5/6/14.
  */
+@Component
 public class EarthSystemModelBuilder extends AbstractModelBuilder {
 
     private CelestialBody earth;

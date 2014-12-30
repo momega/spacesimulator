@@ -65,6 +65,7 @@ public class MainWindow extends DefaultWindow {
         controller.addController(new SaveController());
         controller.addController(new SpacecraftController());
 		controller.addController(new CloseController());
+		controller.addController(new CreateFromBuilderController());
         window.openWindow(mr, controller);
         
         final RendererModel rendererModel = RendererModel.getInstance();
@@ -98,6 +99,12 @@ public class MainWindow extends DefaultWindow {
     	JMenuBar menuBar = new JMenuBar();
     	JMenu fileMenu = new JMenu("File");
     	fileMenu.setMnemonic(KeyEvent.VK_F);
+
+		JMenuItem createItem = new JMenuItem("Create...");
+		createItem.setMnemonic(KeyEvent.VK_C);
+		createItem.setIcon(Icons.CREATE_FROM_BUILDER);
+		createItem.setActionCommand(CreateFromBuilderController.CREATE_FROM_BUILDER_COMMAND);
+		createItem.addActionListener(controller);
     	
     	JMenuItem openItem = new JMenuItem("Open...");
     	openItem.setMnemonic(KeyEvent.VK_O);
@@ -133,7 +140,8 @@ public class MainWindow extends DefaultWindow {
     	exitItem.setIcon(SwingUtils.createImageIcon("/images/door_out.png"));
     	exitItem.setMnemonic(KeyEvent.VK_X);
     	exitItem.addActionListener(controller);
-    	
+
+		fileMenu.add(createItem);
     	fileMenu.add(openItem);
     	fileMenu.add(saveItem);
     	fileMenu.add(saveAsItem);

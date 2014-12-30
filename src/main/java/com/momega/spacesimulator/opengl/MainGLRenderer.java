@@ -110,15 +110,16 @@ public class MainGLRenderer extends AbstractGLRenderer {
         	File file = RendererModel.getInstance().getLoadFileRequested();
 			Model model = RendererModel.getInstance().loadFile(file);
 			ModelHolder.setModel(model);
-            RendererModel.getInstance().setModelReady(true);
 	    	RendererModel.getInstance().replaceMovingObjectsModel();
 	    	
 	    	GL2 gl = drawable.getGL().getGL2();
-        	renderer.clearAllRenderers();
-	    	renderer.createRenderers();
-	    	renderer.dispose(gl);
+            renderer.dispose(gl);
+            renderer.clearAllRenderers();
+
+            renderer.createRenderers();
 	    	renderer.init(gl);
-	    	
+
+            RendererModel.getInstance().setModelReady(true);
         	RendererModel.getInstance().setLoadFileRequested(null);
         }
         
@@ -135,13 +136,27 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
         if (RendererModel.getInstance().isCloseRequested()) {
             GL2 gl = drawable.getGL().getGL2();
-            renderer.clearAllRenderers();
             renderer.dispose(gl);
+            renderer.clearAllRenderers();
             ModelHolder.setModel(null);
             RendererModel.getInstance().setModelFile(null);
             RendererModel.getInstance().setModelReady(false);
             RendererModel.getInstance().replaceMovingObjectsModel();
             RendererModel.getInstance().setCloseRequested(false);
+        }
+
+        if (RendererModel.getInstance().getModelBuilderRequested() != null) {
+
+            GL2 gl = drawable.getGL().getGL2();
+            renderer.dispose(gl);
+            renderer.clearAllRenderers();
+
+            RendererModel.getInstance().createFromBuilder();
+            renderer.createRenderers();
+            renderer.init(gl);
+            RendererModel.getInstance().replaceMovingObjectsModel();
+
+            RendererModel.getInstance().setModelBuilderRequested(null);
         }
 
         RendererModel.getInstance().setFps(drawable.getAnimator().getLastFPS());

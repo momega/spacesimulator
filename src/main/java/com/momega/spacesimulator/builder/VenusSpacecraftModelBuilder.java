@@ -14,7 +14,9 @@ import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SpacecraftSubsystem;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.TimeUtils;
+import org.springframework.stereotype.Component;
 
+@Component
 public class VenusSpacecraftModelBuilder extends MediumSolarSystemModelBuilder {
 
 	protected void initTime() {
@@ -55,8 +57,8 @@ public class VenusSpacecraftModelBuilder extends MediumSolarSystemModelBuilder {
 		addManeuver(spacecraft, "V3", 130 * 60d, 1100, 1d, 0, Math.toRadians(0));
 		addManeuver(spacecraft, "V4", 339 * 60d, 1575, 1d, 0, Math.toRadians(0));
 		addManeuver(spacecraft, "V5", 29059 * 60d, 684, 1d, 0,	Math.toRadians(90));
-		addManeuver(spacecraft, "V5", 170000 * 60d, 63, 1d, Math.toRadians(90),	Math.toRadians(10));
-		addManeuver(spacecraft, "V5", 181970.362 * 60d, 50, 1d,	Math.toRadians(2), Math.toRadians(60));
+		addManeuver(spacecraft, "V6", 170000 * 60d, 63, 1d, Math.toRadians(90),	Math.toRadians(10));
+		addManeuver(spacecraft, "V7", 181970.362 * 60d, 50, 1d,	Math.toRadians(2), Math.toRadians(60));
 
 		// addManeuver(spacecraft, "V4", 1830 * 60d, 900, 1d, 0,
 		// Math.toRadians(0));

@@ -3,6 +3,7 @@ package com.momega.spacesimulator.builder;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.momega.spacesimulator.service.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
@@ -33,11 +34,6 @@ import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.model.Trajectory;
 import com.momega.spacesimulator.model.TrajectoryType;
 import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.service.HistoryPointService;
-import com.momega.spacesimulator.service.KeplerianPropagator;
-import com.momega.spacesimulator.service.ManeuverService;
-import com.momega.spacesimulator.service.SpacecraftService;
-import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
@@ -70,6 +66,9 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
 
     @Autowired
     private SpacecraftService spacecraftService;
+
+    @Autowired
+    private SoiMapCache soiMapCache;
     
     /**
      * Initialize model and  returns the instance
@@ -79,6 +78,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         initPlanets();
         initSpacecrafts();
         initCamera();
+        soiMapCache.clear();
         logger.info("model initialized");
         return model;
     }

@@ -14,10 +14,12 @@ import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SpacecraftSubsystem;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.TimeUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by martin on 10/19/14.
  */
+@Component
 public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
 	
 	protected void initTime() {

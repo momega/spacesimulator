@@ -24,7 +24,7 @@ public abstract class AbstractKeplerianTrajectoryRenderer extends AbstractRender
 
         logger.debug("semi-major = {}", a);
 
-        gl.glLineWidth(1.5f);
+        gl.glLineWidth(1f);
         gl.glTranslated(-e, 0, 0); // move from foci to center
         if (keplerianElements.getKeplerianOrbit().getEccentricity() < 1) {
             double b = keplerianElements.getKeplerianOrbit().getSemiminorAxis();

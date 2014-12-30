@@ -1,4 +1,4 @@
-package com.momega.spacesimulator.service;
+    package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
@@ -12,6 +12,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
+ * The class contains set of the useful methods to manipulate with the model.
  * Created by martin on 12/29/14.
  */
 @Component
@@ -107,7 +108,7 @@ public class ModelService {
     /**
      * Returns the celestial objects
      * @param onlyMoving if true only moving objects are returned
-     * @return the list of celesial bodies
+     * @return the list of celestial bodies
      */
     public List<CelestialBody> findCelestialBodies(boolean onlyMoving) {
         List<CelestialBody> list = new ArrayList<>();
