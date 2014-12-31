@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.model.Timestamp;
 
 /**
@@ -25,17 +24,11 @@ public class MotionService {
     @Autowired
     private TrajectoryService trajectoryService;
 
-    @Autowired
-    private RotationService rotationService;
-
     public Timestamp move(Timestamp time, double warpFactor) {
         Timestamp newTimestamp = time.add(warpFactor);
         logger.debug("time={}", newTimestamp.getValue());
         if (warpFactor > 0) {
             for (MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
-                if (dp instanceof RotatingObject && !ModelHolder.getModel().isRunningHeadless()) {
-                    rotationService.rotate((RotatingObject) dp, newTimestamp);
-                }
                 trajectoryService.move(dp, newTimestamp);
             }
         }

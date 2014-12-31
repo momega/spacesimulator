@@ -17,7 +17,7 @@ public class StaticPropagator implements Propagator {
     }
 
     @Override
-    public boolean supports(Trajectory trajectory) {
-        return TrajectoryType.STATIC.equals(trajectory.getType());
+    public boolean supports(MovingObject movingObject) {
+        return TrajectoryType.STATIC.equals(movingObject.getTrajectory().getType());
     }
 }

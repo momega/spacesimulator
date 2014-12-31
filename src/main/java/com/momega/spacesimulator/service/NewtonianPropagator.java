@@ -21,7 +21,6 @@ import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SphereOfInfluence;
 import com.momega.spacesimulator.model.Target;
 import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.model.Trajectory;
 import com.momega.spacesimulator.model.TrajectoryType;
 import com.momega.spacesimulator.model.Vector3d;
 
@@ -230,8 +229,8 @@ public class NewtonianPropagator implements Propagator {
 //    }
 
     @Override
-    public boolean supports(Trajectory trajectory) {
-        return TrajectoryType.NEWTONIAN.equals(trajectory.getType());
+    public boolean supports(MovingObject movingObject) {
+        return TrajectoryType.NEWTONIAN.equals(movingObject.getTrajectory().getType());
     }
 
 }

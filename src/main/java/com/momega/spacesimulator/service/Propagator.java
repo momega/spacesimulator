@@ -2,7 +2,6 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.model.Trajectory;
 
 /**
  * Created by martin on 5/21/14.
@@ -21,5 +20,5 @@ public interface Propagator {
      * @param trajectory the trajectory
      * @return returns boolean value
      */
-    boolean supports(Trajectory trajectory);
+    boolean supports(MovingObject movingObject);
 }

@@ -22,7 +22,7 @@ public class ApplicationTest {
     public void runTest() {
         DefaultApplication application = new DefaultApplication(AppConfig.class);
         application.init(SimpleSolarSystemModelBuilder.class);
-        for(int i=0; i<1000; i++) {
+        for(int i=0; i<10000; i++) {
             application.next(true, 1.0);
         }
 
@@ -35,8 +35,8 @@ public class ApplicationTest {
         UserPointService ups = application.getService(UserPointService.class);
         ups.createUserOrbitalPoint(spacecraft, "Some User Points", Math.toRadians(90));
 
-        for(int i=0; i<500; i++) {
-            application.next(false, 1.0);
+        for(int i=0; i<5000; i++) {
+            application.next(true, 1.0);
         }
 
         application.dispose();

@@ -10,7 +10,9 @@ import javax.swing.*;
  */
 public class ModelBuilderListRenderer extends AbstractObjectListRenderer<ModelBuilder> {
 
-    @Override
+	private static final long serialVersionUID = 5542299320496252401L;
+
+	@Override
     protected String getText(ModelBuilder value) {
         return value.getName();
     }

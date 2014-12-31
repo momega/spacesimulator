@@ -40,8 +40,8 @@ public class KeplerianPropagator implements Propagator {
     }
 
     @Override
-    public boolean supports(Trajectory trajectory) {
-        return TrajectoryType.KEPLERIAN.equals(trajectory.getType());
+    public boolean supports(MovingObject movingObject) {
+        return TrajectoryType.KEPLERIAN.equals(movingObject.getTrajectory().getType());
     }
 
 }
