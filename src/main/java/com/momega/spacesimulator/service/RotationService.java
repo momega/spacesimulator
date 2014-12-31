@@ -23,7 +23,7 @@ public class RotationService {
      * @param newTime new time
      */
     public void rotate(RotatingObject rotatingObject, Timestamp newTime) {
-        double dt = newTime.subtract(TimeUtils.JD2000).doubleValue();
+        double dt = newTime.subtract(TimeUtils.JD2000);
         double phi = dt / rotatingObject.getRotationPeriod();
         phi = MathUtils.normalizeAngle(phi * 2 * Math.PI);
         phi += Math.PI/2; //TODO : why? because of texture?

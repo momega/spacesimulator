@@ -83,7 +83,7 @@ public class KeplerianElements {
      * @return returns new instance of keplerian elements
      */
     public static KeplerianElements fromTimestamp(KeplerianOrbit keplerianOrbit, Timestamp timestamp) {
-        double dt = timestamp.subtract(keplerianOrbit.getTimeOfPeriapsis()).doubleValue();
+        double dt = timestamp.subtract(keplerianOrbit.getTimeOfPeriapsis());
         double meanAnomaly = keplerianOrbit.getMeanMotion() * dt;   // mean anomaly
 
         KeplerianElements keplerianElements = new KeplerianElements();
@@ -116,8 +116,8 @@ public class KeplerianElements {
         double E = Math.PI;
 
         double ratio = 1;
-        while (Math.abs(ratio) > MINOR_ERROR) {
-            ratio = (E - eccentricity * Math.sin(E) - meanAnomaly) / (1 - eccentricity * Math.cos(E));
+        while (FastMath.abs(ratio) > MINOR_ERROR) {
+            ratio = (E - eccentricity * FastMath.sin(E) - meanAnomaly) / (1 - eccentricity * FastMath.cos(E));
             E = E - ratio;
         }
 
@@ -170,21 +170,21 @@ public class KeplerianElements {
     }
 
     private static double solveThetaFromEA(double EA, double eccentricity) {
-        double cosTheta = (Math.cos(EA) - eccentricity) / (1.0 - eccentricity * Math.cos(EA));
+        double cosTheta = (FastMath.cos(EA) - eccentricity) / (1.0 - eccentricity * FastMath.cos(EA));
         double theta;
         if (EA < 0) {
-            theta = 2 * Math.PI - Math.acos(cosTheta);
+            theta = 2 * Math.PI - FastMath.acos(cosTheta);
         } else if (EA < Math.PI) {
-            theta = Math.acos(cosTheta);
+            theta = FastMath.acos(cosTheta);
         } else {
-            theta = 2 * Math.PI - Math.acos(cosTheta);
+            theta = 2 * Math.PI - FastMath.acos(cosTheta);
         }
         return theta;
     }
 
     private static double solveThetaFromHA(double HA, double eccentricity) {
         double param = FastMath.sqrt((eccentricity + 1) / (eccentricity -1));
-        double theta = 2 * FastMath.atan(param * Math.tanh(HA / 2));
+        double theta = 2 * FastMath.atan(param * FastMath.tanh(HA / 2));
         if (theta < 0) {
             theta = Math.PI * 2 + theta;
         }
@@ -206,9 +206,9 @@ public class KeplerianElements {
         double n = getKeplerianOrbit().getMeanMotion();
 
         Vector3d P = new Vector3d(
-                Math.cos(omega) * Math.cos(OMEGA) - Math.sin(omega) * Math.cos(i) * Math.sin(OMEGA),
-                Math.cos(omega) * Math.sin(OMEGA) + Math.sin(omega) * Math.cos(i) * Math.cos(OMEGA),
-                Math.sin(omega) * Math.sin(i)
+        		FastMath.cos(omega) * FastMath.cos(OMEGA) - FastMath.sin(omega) * FastMath.cos(i) * FastMath.sin(OMEGA),
+        		FastMath.cos(omega) * FastMath.sin(OMEGA) + FastMath.sin(omega) * FastMath.cos(i) * FastMath.cos(OMEGA),
+        		FastMath.sin(omega) * FastMath.sin(i)
         );
 
         Vector3d Q = new Vector3d(

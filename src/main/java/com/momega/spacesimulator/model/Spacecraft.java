@@ -1,12 +1,12 @@
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
-import org.springframework.util.Assert;
-
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.util.Assert;
+
+import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
  * The spacecraft class is the representation of the any artificial object.
@@ -114,9 +114,9 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
      * @see #solveClosestPoint(TargetClosestPoint, MovingObject, TimeInterval, java.math.BigDecimal)
      */
     private void findClosestPoint(TargetClosestPoint closestPoint, MovingObject other, TimeInterval interval) {
-        BigDecimal dT = TimeUtils.getDuration(interval).divide(BigDecimal.valueOf(100));
+        double dT = TimeUtils.getDuration(interval) / 100.0;
         solveClosestPoint(closestPoint, other, interval, dT);
-        if (closestPoint.getError() > CLOSEST_POINT_ERROR && dT.doubleValue()>1) {
+        if ((closestPoint.getError() > CLOSEST_POINT_ERROR) && (dT > 1)) {
             Timestamp start = closestPoint.getTimestamp().subtract(dT);
             Timestamp end = closestPoint.getTimestamp().add(dT);
             TimeInterval newInterval = new DefaultTimeInterval(start, end);
@@ -132,7 +132,7 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
      * @param interval the interval of search
      * @param dT the step of the search
      */
-    private void solveClosestPoint(TargetClosestPoint closestPoint, MovingObject other, TimeInterval interval, BigDecimal dT) {
+    private void solveClosestPoint(TargetClosestPoint closestPoint, MovingObject other, TimeInterval interval, double dT) {
         Timestamp t = interval.getStartTime();
 
         // initializing the value

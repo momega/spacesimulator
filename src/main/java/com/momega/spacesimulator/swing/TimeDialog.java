@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -168,28 +167,28 @@ public class TimeDialog extends JDialog {
         minusOneHour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.addTime(BigDecimal.valueOf(-60*60.0));
+                model.addTime(-60*60.0);
             }
         });
         quickTimeButtons.add(minus10Minutes);
         minus10Minutes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.addTime(BigDecimal.valueOf(-10*60.0));
+                model.addTime(-10*60.0);
             }
         });
         quickTimeButtons.add(plus10Minutes);
         plus10Minutes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.addTime(BigDecimal.valueOf(10*60.0));
+                model.addTime(10*60.0);
             }
         });
         quickTimeButtons.add(plusOneHour);
         plusOneHour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.addTime(BigDecimal.valueOf(60*60.0));
+                model.addTime(60*60.0);
             }
         });
 
@@ -315,7 +314,7 @@ public class TimeDialog extends JDialog {
             updateButtons();
         }
 
-        public void addTime(BigDecimal seconds) {
+        public void addTime(double seconds) {
             timestamp = timestamp.add(seconds);
             calendar.setTimeInMillis(TimeUtils.toLinuxTime(timestamp));
 
@@ -346,13 +345,13 @@ public class TimeDialog extends JDialog {
 
         public TimeWorker(Timestamp endTime) {
             this.endTime = endTime;
-            progressBar.setMinimum(ModelHolder.getModel().getTime().getValue().intValue());
-            progressBar.setMaximum(endTime.getValue().intValue());
+            progressBar.setMinimum(ModelHolder.getModel().getTime().toInteger());
+            progressBar.setMaximum(endTime.toInteger());
         }
         
         @Override
         protected Void doInBackground() throws Exception {
-        	BigDecimal warpFactor = RendererModel.getInstance().getWarpFactor();
+        	double warpFactor = RendererModel.getInstance().getWarpFactor();
             while(ModelHolder.getModel().getTime().compareTo(endTime)<=0) {
                 Application.getInstance().next(true, warpFactor);
                 publish(ModelHolder.getModel().getTime());
@@ -367,7 +366,7 @@ public class TimeDialog extends JDialog {
         protected void process(List<Timestamp> chunks) {
             if (!CollectionUtils.isEmpty(chunks)) {
                 Timestamp val = chunks.get(chunks.size()-1);
-                progressBar.setValue(val.getValue().intValue());
+                progressBar.setValue(val.toInteger());
                 progressBar.setString(TimeUtils.timeAsString(val));
             }
         }

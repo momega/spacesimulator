@@ -1,48 +1,46 @@
 package com.momega.spacesimulator.model;
 
-import java.math.BigDecimal;
-
 /**
  * The wrapper object which holds the current time and warp factor
  * Created by martin on 4/29/14.
  */
 public class Timestamp implements Comparable<Timestamp> {
 
-    private BigDecimal value;
+    private double value;
 
-    public BigDecimal getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(BigDecimal value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
     public Timestamp add(double delta) {
-        return add(new BigDecimal(delta));
+        return newTime(value + delta);
     }
 
-    public Timestamp add(BigDecimal delta) {
-        return newTime(getValue().add(delta));
+    public Timestamp subtract(double delta) {
+        return add(-delta);
     }
 
-    public Timestamp subtract(BigDecimal delta) {
-        return add(delta.negate());
+    public double subtract(Timestamp v) {
+        return value - v.getValue();
     }
 
-    public BigDecimal subtract(Timestamp v) {
-        return getValue().subtract(v.getValue());
-    }
-
-    public static Timestamp newTime(BigDecimal value) {
+    public static Timestamp newTime(double value) {
         Timestamp t = new Timestamp();
         t.setValue(value);
         return t;
     }
+    
+    public int toInteger() {
+    	return Double.valueOf(value).intValue();
+    }
 
 	@Override
 	public int compareTo(Timestamp o) {
-		return value.compareTo(o.getValue());
+		return Double.compare(value, o.getValue());
 	}
 
     public boolean after(Timestamp o) {

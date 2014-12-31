@@ -1,17 +1,16 @@
 package com.momega.spacesimulator.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
+
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.Maneuver;
 import com.momega.spacesimulator.model.ManeuverPoint;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
-
-import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The maneuver service contains helpful method to manipulate with
@@ -22,12 +21,12 @@ import java.util.List;
 public class ManeuverService {
 
     public Maneuver findActiveOrNext(Spacecraft spacecraft, Timestamp timestamp) {
-        BigDecimal min = null;
+        Double min = null;
         Maneuver result = null;
         for(Maneuver maneuver : spacecraft.getManeuvers()) {
-            BigDecimal timeDiff = maneuver.getEndTime().subtract(timestamp);
-            if (timeDiff.compareTo(BigDecimal.ZERO)>0) {
-                if (min == null || timeDiff.compareTo(min)<0) {
+            double timeDiff = maneuver.getEndTime().subtract(timestamp);
+            if (timeDiff > 0) {
+                if (min == null || (timeDiff < min)) {
                     result = maneuver;
                     min = timeDiff;
                 }

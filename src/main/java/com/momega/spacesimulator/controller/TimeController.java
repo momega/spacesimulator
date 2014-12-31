@@ -2,7 +2,6 @@ package com.momega.spacesimulator.controller;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.math.BigDecimal;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.opengl.DefaultWindow;
@@ -69,18 +68,18 @@ public class TimeController extends AbstractController {
     }
 
     private void pauseOrStart() {
-        BigDecimal warpFactor = RendererModel.getInstance().getWarpFactor();
-        if (!warpFactor.equals(BigDecimal.ZERO)) {
-            warpFactor = BigDecimal.ZERO;
+        double warpFactor = RendererModel.getInstance().getWarpFactor();
+        if (warpFactor > 0.0 ) {
+            warpFactor = 0.0;
         } else {
-            warpFactor = BigDecimal.ONE;
+            warpFactor = 1.0;
         }
         RendererModel.getInstance().setWarpFactor(warpFactor);
     }
 
     public void changeWarpFactor(double ratio) {
-        BigDecimal warpFactor = RendererModel.getInstance().getWarpFactor();
-        warpFactor = warpFactor.multiply(BigDecimal.valueOf(ratio));
+        double warpFactor = RendererModel.getInstance().getWarpFactor();
+        warpFactor = warpFactor * ratio;
         RendererModel.getInstance().setWarpFactor(warpFactor);
     }
 

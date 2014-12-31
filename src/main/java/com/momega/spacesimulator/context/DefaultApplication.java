@@ -1,15 +1,14 @@
 package com.momega.spacesimulator.context;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
 import com.momega.common.AbstractSpringApplication;
 import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.service.ModelWorker;
 import com.momega.spacesimulator.utils.TimeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-
-import java.math.BigDecimal;
 
 /**
  * The default implementation of the root application object. The different subclasses may be used for
@@ -27,7 +26,7 @@ public class DefaultApplication extends AbstractSpringApplication {
         modelWorker = getService(ModelWorker.class);
     }
 
-    public void next(boolean runningHeadless, BigDecimal warpFactor) {
+    public void next(boolean runningHeadless, double warpFactor) {
         modelWorker.next(runningHeadless, warpFactor);
     }
 
@@ -42,7 +41,7 @@ public class DefaultApplication extends AbstractSpringApplication {
     }
 
     public void init(Class<? extends ModelBuilder> modelBuilderClass) {
-        ModelBuilder modelBuilder = getService(modelBuilderClass);
+        ModelBuilder modelBuilder = getBeanOfClass(modelBuilderClass);
         init(modelBuilder);
     }
 
@@ -51,7 +50,7 @@ public class DefaultApplication extends AbstractSpringApplication {
         ModelHolder.setModel(model);
         logger.info("execute first second at time = {}", TimeUtils.timeAsString(model.getTime()));
 
-        modelWorker.next(true, BigDecimal.ONE);
+        modelWorker.next(true, 1.0);
         logger.info("model data built");
     }
 

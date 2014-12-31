@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.service;
 
-import java.math.BigDecimal;
-
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.Timestamp;
@@ -30,7 +28,7 @@ public class ModelWorker {
      * @param runningHeadless running headless
      * @param warpFactor the warp factor
      */
-    public void next(boolean runningHeadless, BigDecimal warpFactor) {
+    public void next(boolean runningHeadless, double warpFactor) {
         Model model = ModelHolder.getModel();
         if (model == null) {
             return;

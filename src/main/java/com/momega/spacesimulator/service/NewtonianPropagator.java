@@ -61,7 +61,7 @@ public class NewtonianPropagator implements Propagator {
         Assert.isInstanceOf(Spacecraft.class, movingObject, "predication of trajectory is supported only for satellites");
         Spacecraft spacecraft = (Spacecraft) movingObject;
 
-        double dt = newTimestamp.subtract(movingObject.getTimestamp()).doubleValue();
+        double dt = newTimestamp.subtract(movingObject.getTimestamp());
 
         CartesianState cartesianState = eulerSolver(spacecraft, newTimestamp, dt);
         movingObject.setCartesianState(cartesianState);

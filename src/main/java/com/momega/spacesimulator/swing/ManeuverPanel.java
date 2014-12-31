@@ -1,5 +1,22 @@
 package com.momega.spacesimulator.swing;
 
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+
+import org.springframework.beans.BeanUtils;
+
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.HistoryPoint;
@@ -11,19 +28,6 @@ import com.momega.spacesimulator.renderer.NewManeuverEvent;
 import com.momega.spacesimulator.service.HistoryPointService;
 import com.momega.spacesimulator.service.ManeuverService;
 import com.momega.spacesimulator.utils.TimeUtils;
-
-import org.springframework.beans.BeanUtils;
-
-import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * The panel for editing the maneuvers
@@ -129,9 +133,9 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
             switch (columnIndex) {
                 case 0: return m.getName();
                 case 1: return m.getStartTime();
-                case 2: return m.getStartTime().subtract(getStartTime()).doubleValue() / 60d;
+                case 2: return m.getStartTime().subtract(getStartTime()) / 60d;
                 case 3: return m.getEndTime();
-                case 4: return m.getEndTime().subtract(m.getStartTime());
+                case 4: return TimeUtils.getDuration(m);
                 case 5: return m.getThrottle();
                 case 6: return Math.toDegrees(m.getThrottleAlpha());
                 case 7: return Math.toDegrees(m.getThrottleDelta());
@@ -149,13 +153,13 @@ public class ManeuverPanel extends JPanel implements UpdatablePanel {
                     break;
                 case 2:
                     Double min = (Double) value;
-                    BigDecimal duration = m.getEndTime().subtract(m.getStartTime());
+                    double duration = TimeUtils.getDuration(m);
                     m.getStart().setTimestamp(getStartTime().add(min.doubleValue() * 60));
                     m.getEnd().setTimestamp(m.getStartTime().add(duration));
                     fireTableRowsUpdated(row, row);
                     break;
                 case 4:
-                    BigDecimal val = (BigDecimal) value;
+                    double val = (double) value;
                     m.getEnd().setTimestamp(m.getStartTime().add(val));
                     fireTableCellUpdated(row, col-1);
                     break;

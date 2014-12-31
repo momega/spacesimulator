@@ -31,8 +31,6 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.math.BigDecimal;
-
 
 /**
  * The main window of the application
@@ -84,7 +82,7 @@ public class MainWindow extends DefaultWindow {
 			}
 		});
 
-		PropertySource ps = new SimpleCommandLinePropertySource(args);
+		PropertySource<?> ps = new SimpleCommandLinePropertySource(args);
 		String builderClassName = (String) ps.getProperty(BUILDER_CLASS_NAME_OPTION);
 		if (builderClassName != null) {
 			ModelBuilder modelBuilder = Application.getInstance().createBuilder(builderClassName);
@@ -281,7 +279,7 @@ public class MainWindow extends DefaultWindow {
     	RendererModel.getInstance().addPropertyChangeListener(RendererModel.WARP_FACTOR, new PropertyChangeListener() {
 			@Override
 			public void propertyChange(PropertyChangeEvent evt) {
-				BigDecimal warpFactor = (BigDecimal) evt.getNewValue();
+				double warpFactor = (double) evt.getNewValue();
 				String w = String.format("%3.5f", warpFactor);
 				warpLabel.setText(w);
 			}

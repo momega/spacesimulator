@@ -1,13 +1,14 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.Timestamp;
 
 /**
  * The motion service is responsible for computing new position of dynamical points such as planets and satellites.
@@ -27,10 +28,10 @@ public class MotionService {
     @Autowired
     private RotationService rotationService;
 
-    public Timestamp move(Timestamp time, BigDecimal warpFactor) {
+    public Timestamp move(Timestamp time, double warpFactor) {
         Timestamp newTimestamp = time.add(warpFactor);
         logger.debug("time={}", newTimestamp.getValue());
-        if (!warpFactor.equals(BigDecimal.ZERO)) {
+        if (warpFactor > 0) {
             for (MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
                 if (dp instanceof RotatingObject && !ModelHolder.getModel().isRunningHeadless()) {
                     rotationService.rotate((RotatingObject) dp, newTimestamp);

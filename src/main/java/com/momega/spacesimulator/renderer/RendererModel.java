@@ -1,33 +1,49 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.builder.ModelBuilder;
-import com.momega.spacesimulator.context.Application;
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.service.ModelSerializer;
-import com.momega.spacesimulator.service.ModelService;
-import com.momega.spacesimulator.service.UserPointService;
-import com.momega.spacesimulator.swing.PositionProvidersModel;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
+import java.awt.Point;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
+import com.momega.spacesimulator.builder.ModelBuilder;
+import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.AbstractOrbitalPoint;
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.service.ModelSerializer;
+import com.momega.spacesimulator.service.ModelService;
+import com.momega.spacesimulator.service.UserPointService;
+import com.momega.spacesimulator.swing.PositionProvidersModel;
 
 /**
  * The renderer model
@@ -68,7 +84,7 @@ public class RendererModel {
 	private UserOrbitalPoint selectedUserOrbitalPoint;
 	private PropertyChangeSupport propertyChangeSupport;
 
-	private BigDecimal warpFactor = BigDecimal.valueOf(0.1);
+	private double warpFactor = 0.1;
 	
 	private Spacecraft newSpacecraft = null;
 	private Spacecraft deleteSpacecraft = null;
@@ -410,13 +426,13 @@ public class RendererModel {
 	}	
 
 
-    public void setWarpFactor(BigDecimal warpFactor) {
-    	BigDecimal oldValue = this.warpFactor;
+    public void setWarpFactor(double warpFactor) {
+    	double oldValue = this.warpFactor;
         this.warpFactor = warpFactor;
         firePropertyChange(WARP_FACTOR, oldValue, warpFactor);
     }
 
-    public BigDecimal getWarpFactor() {
+    public double getWarpFactor() {
         return warpFactor;
     }
     

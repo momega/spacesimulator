@@ -1,9 +1,7 @@
 package com.momega.spacesimulator.utils;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.model.TimeInterval;
-import com.momega.spacesimulator.model.Timestamp;
+import java.util.Calendar;
+
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeUtils;
@@ -14,8 +12,10 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.springframework.util.Assert;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.TimeInterval;
+import com.momega.spacesimulator.model.Timestamp;
 
 /**
  * Set of the function working with time
@@ -51,13 +51,18 @@ public class TimeUtils {
      */
     public static Timestamp fromJulianDay(double julianDay) {
         Timestamp time = new Timestamp();
-        time.setValue(BigDecimal.valueOf(DateTimeUtils.fromJulianDay(julianDay) / DateTimeConstants.MILLIS_PER_SECOND));
+        time.setValue(DateTimeUtils.fromJulianDay(julianDay) / DateTimeConstants.MILLIS_PER_SECOND);
         return time;
     }
     
-    public static Timestamp fromSeconds(long seconds) {
+    /**
+     * Creates the timestamp
+     * @param seconds
+     * @return
+     */
+    public static Timestamp fromSeconds(double seconds) {
     	Timestamp time = new Timestamp();
-    	time.setValue(BigDecimal.valueOf(seconds));
+    	time.setValue(seconds);
     	return time;
     }
 
@@ -79,7 +84,7 @@ public class TimeUtils {
      */
     public static Timestamp fromDateTime(DateTime datetime) {
         Timestamp time = new Timestamp();
-        time.setValue(BigDecimal.valueOf(datetime.getMillis() / DateTimeConstants.MILLIS_PER_SECOND));
+        time.setValue(datetime.getMillis() / DateTimeConstants.MILLIS_PER_SECOND);
         return time;
     }
 
@@ -89,11 +94,11 @@ public class TimeUtils {
      * @return the instance of the JODA time
      */
     public static DateTime toDateTime(Timestamp timestamp) {
-        return new DateTime(timestamp.getValue().multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue());
+        return new DateTime(toLinuxTime(timestamp));
     }
 
     public static long toLinuxTime(Timestamp timestamp) {
-        long t = timestamp.getValue().multiply(BigDecimal.valueOf(DateTimeConstants.MILLIS_PER_SECOND)).longValue();
+        long t = Double.valueOf(timestamp.getValue() * DateTimeConstants.MILLIS_PER_SECOND).longValue();
         return t;
     }
 
@@ -104,10 +109,8 @@ public class TimeUtils {
         return calendar;
     }
 
-    public static BigDecimal getDuration(TimeInterval timeInterval) {
-        BigDecimal s = timeInterval.getStartTime().getValue();
-        BigDecimal e = timeInterval.getEndTime().getValue();
-        return e.subtract(s);
+    public static double getDuration(TimeInterval timeInterval) {
+        return timeInterval.getEndTime().subtract(timeInterval.getStartTime());
     }
 
     public static boolean isTimestampInInterval(Timestamp timestamp, TimeInterval interval) {
@@ -116,8 +119,8 @@ public class TimeUtils {
         Assert.notNull(interval.getStartTime());
         Assert.notNull(interval.getEndTime());
 
-        return (interval.getStartTime().getValue().compareTo(timestamp.getValue()) <=0) &&
-                (interval.getEndTime().getValue().compareTo(timestamp.getValue()) >= 0);
+        return (interval.getStartTime().compareTo(timestamp) <=0) &&
+                (interval.getEndTime().compareTo(timestamp) >= 0);
     }
 
     public static boolean isIntervalInFuture(Timestamp timestamp, TimeInterval interval) {
@@ -125,7 +128,7 @@ public class TimeUtils {
         Assert.notNull(interval);
         Assert.notNull(interval.getStartTime());
 
-        return interval.getStartTime().getValue().compareTo(timestamp.getValue()) > 0;
+        return interval.getStartTime().compareTo(timestamp) > 0;
     }
 
     public static boolean isIntervalInPast(Timestamp timestamp, TimeInterval interval) {
@@ -133,7 +136,7 @@ public class TimeUtils {
         Assert.notNull(interval);
         Assert.notNull(interval.getEndTime());
 
-        return interval.getEndTime().getValue().compareTo(timestamp.getValue()) < 0;
+        return interval.getEndTime().compareTo(timestamp) < 0;
     }
 
     public static String timeAsString(Timestamp timestamp) {
@@ -158,7 +161,7 @@ public class TimeUtils {
     private static double getETA(PositionProvider positionProvider) {
         Timestamp current = ModelHolder.getModel().getTime();
         Timestamp future = positionProvider.getTimestamp();
-        return future.subtract(current).doubleValue();
+        return future.subtract(current);
     }
 
 }

@@ -53,7 +53,9 @@ public class ThrustModel implements ForceModel {
         double thrust = propulsion.getMassFlow() * maneuver.getThrottle() * propulsion.getSpecificImpulse() * MathUtils.G0;
         double a = thrust / spacecraft.getMass();
 
-        logger.debug("Engine is running, thrust = {}", thrust);
+        if (logger.isDebugEnabled()) {
+        	logger.debug("Engine is running, thrust = {}", thrust);
+        }
 
         Orientation o = VectorUtils.rotateByAngles(spacecraft.getOrientation(), maneuver.getThrottleAlpha(), maneuver.getThrottleDelta());
         Vector3d n = o.getN();
@@ -65,7 +67,9 @@ public class ThrustModel implements ForceModel {
         spacecraft.setMass( spacecraft.getMass() - dm);
         propulsion.setFuel( propulsion.getFuel() - dm);
 
-        logger.debug("fuel level = {}, acc = {}", propulsion.getFuel(), acceleration.toString());
+        if (logger.isDebugEnabled()) {
+        	logger.debug("fuel level = {}, acc = {}", propulsion.getFuel(), acceleration);
+        }
 
         return acceleration;
     }

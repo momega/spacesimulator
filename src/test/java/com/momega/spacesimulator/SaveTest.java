@@ -3,17 +3,19 @@
  */
 package com.momega.spacesimulator;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import junit.framework.Assert;
+
+import org.junit.Test;
+
 import com.momega.spacesimulator.builder.MediumSolarSystemModelBuilder;
+import com.momega.spacesimulator.context.AppConfig;
 import com.momega.spacesimulator.context.DefaultApplication;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.service.ModelSerializer;
-import junit.framework.Assert;
-import org.junit.Test;
-
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.math.BigDecimal;
 
 /**
  * @author martin
@@ -23,10 +25,10 @@ public class SaveTest {
 
 	@Test
 	public void simpleTest() {
-		DefaultApplication application = new DefaultApplication(TestAppConfig.class);
+		DefaultApplication application = new DefaultApplication(AppConfig.class);
         application.init(MediumSolarSystemModelBuilder.class);
         for(int i=0; i<1000; i++)
-        	application.next(false,  BigDecimal.ONE);
+        	application.next(false,  1.0);
         
         ModelSerializer serializer = application.getService(ModelSerializer.class);
         StringWriter writer = new StringWriter();
