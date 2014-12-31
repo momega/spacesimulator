@@ -139,7 +139,7 @@ public class KeplerianElements {
         double H = M;
         double ratio = 1;
         while (Math.abs(ratio) > MINOR_ERROR) {
-            ratio = (eccentricity * Math.sinh(H) - H - M) / (eccentricity * Math.cosh(H) - 1);
+            ratio = (eccentricity * FastMath.sinh(H) - H - M) / (eccentricity * FastMath.cosh(H) - 1);
             H = H - ratio;
         }
         return H;

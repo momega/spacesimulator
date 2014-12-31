@@ -134,19 +134,17 @@ public class NewtonianPropagator implements Propagator {
     protected void computeApsides(MovingObject spacecraft) {
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
 
-        // TODO: fix for eccentricity near 1
-        Double HA = keplerianElements.getHyperbolicAnomaly();
-        KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();
-
-        if (keplerianElements.getKeplerianOrbit().getEccentricity()<1 || (keplerianElements.getKeplerianOrbit().getEccentricity()>1 && HA!=null)) {
+        if (!keplerianElements.getKeplerianOrbit().isHyperbolic()) {
+        	apsisService.updateApoapsis(spacecraft);
             apsisService.updatePeriapsis(spacecraft);
         } else {
-            keplerianTrajectory.setPeriapsis(null);
-        }
-
-        if (keplerianElements.getKeplerianOrbit().getEccentricity()<1) {
-            apsisService.updateApoapsis(spacecraft);
-        } else {
+        	Double HA = keplerianElements.getHyperbolicAnomaly();
+        	KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();
+        	if (HA<0) {
+        		apsisService.updatePeriapsis(spacecraft);
+        	} else {
+        		keplerianTrajectory.setPeriapsis(null);
+        	}
             keplerianTrajectory.setApoapsis(null);
         }
     }
