@@ -266,7 +266,8 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
 		txtTheta.setText(String.format("%3.6f", Math.toDegrees(theta)));
 		txtTof.setText(String.format("%3.6f", tof/60/60/24));
 		
-		double omega = 2*Math.PI/targetBody.getKeplerianElements().getKeplerianOrbit().getPeriod().doubleValue();
+		//TODO: getMeanMotion
+		double omega = 2*Math.PI/targetBody.getKeplerianElements().getKeplerianOrbit().getPeriod();
 		angle = theta - omega * tof;
 		
 		txtAngle.setText(String.format("%3.6f", Math.toDegrees(angle)));

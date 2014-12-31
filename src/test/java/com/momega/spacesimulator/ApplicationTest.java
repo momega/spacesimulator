@@ -23,7 +23,7 @@ public class ApplicationTest {
         DefaultApplication application = new DefaultApplication(AppConfig.class);
         application.init(SimpleSolarSystemModelBuilder.class);
         for(int i=0; i<1000; i++) {
-            application.next(false, 1.0);
+            application.next(true, 1.0);
         }
 
         ModelService modelService = application.getService(ModelService.class);

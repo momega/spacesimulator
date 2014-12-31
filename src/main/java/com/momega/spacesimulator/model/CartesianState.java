@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import java.math.BigDecimal;
-
 import org.apache.commons.math3.util.FastMath;
 
 import com.momega.spacesimulator.utils.MathUtils;
@@ -150,7 +148,8 @@ public class CartesianState {
             meanMotion = FastMath.sqrt(mi / (a * a * a));
         }
         double period = 2* Math.PI / meanMotion;
-        keplerianOrbit.setPeriod(BigDecimal.valueOf(period));
+        keplerianOrbit.setMeanMotion(Double.valueOf(meanMotion));
+        keplerianOrbit.setPeriod(period);
 
         Timestamp TT = keplerianElements.timeToAngle(newTimestamp, 0.0, false);
         keplerianOrbit.setTimeOfPeriapsis(TT);

@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class KeplerianOrbit {
     private double inclination; // i
     private double ascendingNode; // uppercase omega
     private Timestamp timeOfPeriapsis; // seconds
-    private BigDecimal period; // in seconds
+    private double period; // in seconds
 
     // computed elements
     private transient Double meanMotion; // n
@@ -112,10 +111,14 @@ public class KeplerianOrbit {
 
     public Double getMeanMotion() {
         if (meanMotion == null) {
-        	meanMotion = 2* Math.PI / period.doubleValue();
+        	meanMotion = 2* Math.PI / period;
         }
         return meanMotion;
     }
+    
+    public void setMeanMotion(Double meanMotion) {
+		this.meanMotion = meanMotion;
+	}
 
     public double getSemiminorAxis() {
         if (isHyperbolic()) {
@@ -129,11 +132,11 @@ public class KeplerianOrbit {
      * Calculated element o f the period
      * @return the period in seconds
      */
-    public BigDecimal getPeriod() {
+    public double getPeriod() {
         return period;
     }
 
-    public void setPeriod(BigDecimal period) {
+    public void setPeriod(double period) {
         this.period = period;
     }
 

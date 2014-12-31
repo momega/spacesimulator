@@ -97,7 +97,7 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
             closestPoint.setName("Closest Point to " + other.getName());
         }
 
-        double period = getKeplerianElements().getKeplerianOrbit().getPeriod().doubleValue();
+        double period = getKeplerianElements().getKeplerianOrbit().getPeriod();
         TimeInterval interval = new DefaultTimeInterval(newTimestamp, newTimestamp.add(period));
 
         findClosestPoint(closestPoint, other, interval);

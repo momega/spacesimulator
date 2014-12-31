@@ -1,11 +1,22 @@
 package com.momega.spacesimulator.builder;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.momega.spacesimulator.model.*;
 import org.springframework.stereotype.Component;
+
+import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.HabitableModule;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.KeplerianOrbit;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.Propulsion;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.SpacecraftSubsystem;
+import com.momega.spacesimulator.model.SphereOfInfluence;
+import com.momega.spacesimulator.model.Vector3d;
 
 /**
  * The builder or simple earth-moon model with the satellites
@@ -49,7 +60,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         keplerianOrbit.setCentralObject(earth);
         keplerianOrbit.setEccentricity(0.001);
         keplerianOrbit.setInclination(0);
-        keplerianOrbit.setPeriod(BigDecimal.valueOf(90.0 * 60));
+        keplerianOrbit.setPeriod(90.0 * 60);
         keplerianOrbit.setSemimajorAxis(250 * 1E3 + earth.getRadius());
         keplerianOrbit.setTimeOfPeriapsis(getTime());
         

@@ -1,10 +1,7 @@
 package com.momega.spacesimulator.builder;
 
-import java.math.BigDecimal;
 import java.util.List;
 
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.service.*;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.DateTimeZone;
@@ -13,6 +10,34 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
+import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.KeplerianOrbit;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.Maneuver;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Orientation;
+import com.momega.spacesimulator.model.PhysicalBody;
+import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.Ring;
+import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.SpacecraftSubsystem;
+import com.momega.spacesimulator.model.SphereOfInfluence;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.model.Trajectory;
+import com.momega.spacesimulator.model.TrajectoryType;
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.service.HistoryPointService;
+import com.momega.spacesimulator.service.KeplerianPropagator;
+import com.momega.spacesimulator.service.ManeuverService;
+import com.momega.spacesimulator.service.SoiMapCache;
+import com.momega.spacesimulator.service.SpacecraftService;
+import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
 import com.momega.spacesimulator.utils.VectorUtils;
@@ -144,7 +169,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         orbit.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
         orbit.setInclination(Math.toRadians(inclination));
         orbit.setAscendingNode(Math.toRadians(ascendingNode));
-        orbit.setPeriod(BigDecimal.valueOf(period * DateTimeConstants.SECONDS_PER_DAY));
+        orbit.setPeriod(period * DateTimeConstants.SECONDS_PER_DAY);
         orbit.setTimeOfPeriapsis(TimeUtils.fromJulianDay(timeOfPeriapsis));
 
         KeplerianTrajectory trajectory = movingObject.getTrajectory();
