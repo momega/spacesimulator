@@ -111,7 +111,7 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
      * @param closestPoint
      * @param other the other moving body
      * @param interval the given interval to check
-     * @see #solveClosestPoint(TargetClosestPoint, MovingObject, TimeInterval, java.math.BigDecimal)
+     * @see #solveClosestPoint(TargetClosestPoint, MovingObject, TimeInterval, double)
      */
     private void findClosestPoint(TargetClosestPoint closestPoint, MovingObject other, TimeInterval interval) {
         double dT = TimeUtils.getDuration(interval) / 100.0;

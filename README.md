@@ -9,6 +9,19 @@ The planets are moving based on Keplerian law (simplified elliptical) trajectory
 The position and velocity of spacecraft(s) are computed based on Newtonian gravitational law. The gravitation of all the planets
 influences the trajectory of the spacecrafts.
 
+How to run application?
+=======================
+1. Application used maven to build, so download and install it.
+2. Type the following command to compile the application, run few tests and execute the main application.  
+```
+	mvn clean test exec:java
+```
+
+If you do not want to execute the tests, run the following command:
+```
+	mvn clean compile exec:java
+```
+
 Features
 ========
 
@@ -22,7 +35,8 @@ Features
 * Headless computations
 * Sphere of Influence
 * Load and save models
-* Interplanetary planner
+* Run the simulation from prepared models.
+* Interplanetary flight planner
 
 Screenshots
 ===========

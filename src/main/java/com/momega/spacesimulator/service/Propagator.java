@@ -17,7 +17,7 @@ public interface Propagator {
 
     /**
      * Indicates whether or not the service supports the trajectory
-     * @param trajectory the trajectory
+     * @param movingObject the moving object
      * @return returns boolean value
      */
     boolean supports(MovingObject movingObject);
