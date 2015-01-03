@@ -302,7 +302,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param name the name
      * @param mass the mass in 1E24 kilograms
      * @param rotationPeriod rotation period in days
-     * @param radius radius in kilometers
+     * @param radius radius in thousand of kilometers
      * @param ra right ascension RA of the north pole
      * @param dec declination 0of the north pole
      * @param primeMeridianJd2000 prime meridian at JD2000 epoch

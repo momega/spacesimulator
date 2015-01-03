@@ -172,7 +172,39 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         addPlanetToSoiTree(titania, uranSoi);
         addPlanetToSoiTree(oberon, uranSoi);
         addPlanetToSoiTree(puck, uranSoi);
-
+        
+        Planet neptune = new Planet();
+        updateDynamicalPoint(neptune, "Neptune", 102.43, 0.6713, 24.764, 299.36, 43.46, "Neptune", null);
+        createKeplerianElements(neptune, sun, 4498542.600d * 1E6, 0.00867797, 273.219414, 60190.03, 2471199.431232342497, 1.767975, 131.782974);
+        createTrajectory(neptune, "#000066");
+        neptune.setTextureFileName("neptune.jpg");
+        addMovingObject(neptune);
+        
+        CelestialBody triton = new CelestialBody();
+        updateDynamicalPoint(triton, "Triton", 2.14E-02, 5.876854, 1.3534, 0d, "Triton_(moon)", null);
+        createKeplerianElements(triton, neptune, 354.759 * 1E6, 0.000016, 282.3554450824498, 5.876854, 2457025.5678469501443, 129.5161810590091, 219.7498154015365);
+        createTrajectory(triton, new double[]{1, 1, 1});
+        triton.setTextureFileName("triton.jpg");
+        addMovingObject(triton);
+        
+        CelestialBody nereid = new CelestialBody();
+        updateDynamicalPoint(nereid, "Nereid", 2700E-8, 100, 0.170, 0d, "Nereid_(moon)", null);
+        createKeplerianElements(nereid, neptune, 5513787 * 1E3, 0.7507, 2.967069004014350E+02, 100, 2457090.755645701196, 5.043590073541761, 319.5502676454929);
+        createTrajectory(nereid, new double[]{1, 1, 1});
+        nereid.setTextureFileName("vesta.jpg");
+        addMovingObject(nereid);
+        
+        CelestialBody proteus = new CelestialBody();
+        updateDynamicalPoint(proteus, "Proteus", 4.4E-5, 1.12231477, 0.210, 0d, "Proteus_(moon)", null);
+        createKeplerianElements(proteus, neptune, 117647 * 1E3, 0.00053, 3.657531026517818E+01, 1.12231477, 2457025.719713653438, 29.01189057153806, 48.56965913406979);
+        createTrajectory(proteus, new double[]{1, 1, 1});
+        proteus.setTextureFileName("vesta.jpg");
+        addMovingObject(proteus);
+        
+        SphereOfInfluence neptuneSoi = addPlanetToSoiTree(neptune, sunSoi);
+        addPlanetToSoiTree(triton, neptuneSoi);
+        addPlanetToSoiTree(nereid, neptuneSoi);
+        addPlanetToSoiTree(proteus, neptuneSoi);
     }
 
     @Override
