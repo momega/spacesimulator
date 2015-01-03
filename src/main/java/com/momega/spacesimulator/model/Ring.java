@@ -9,6 +9,7 @@ public class Ring {
     private double minDistance;
     private double maxDistance;
     private String textureFileName;
+    private String transparencyFileName;
 
     public double getMinDistance() {
         return minDistance;
@@ -33,4 +34,12 @@ public class Ring {
     public void setTextureFileName(String textureFileName) {
         this.textureFileName = textureFileName;
     }
+    
+    public void setTransparencyFileName(String transparencyFileName) {
+		this.transparencyFileName = transparencyFileName;
+	}
+    
+    public String getTransparencyFileName() {
+		return transparencyFileName;
+	}
 }

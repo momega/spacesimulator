@@ -4,7 +4,6 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
 import com.jogamp.opengl.util.texture.Texture;
-import com.momega.spacesimulator.opengl.GLUtils;
 
 /**
  * Abstract renderer with prepares and uses the texture
@@ -12,15 +11,10 @@ import com.momega.spacesimulator.opengl.GLUtils;
  */
 public abstract class AbstractTextureRenderer extends AbstractRenderer {
 
-    protected Texture texture;
+    private Texture texture;
     protected int listIndex;
 
-    protected Texture loadTexture(GL2 gl, String textureFileName) {
-        this.texture =  GLUtils.loadTexture(gl, getClass(), textureFileName);
-        return this.texture;
-    }
-
-    protected abstract void loadTexture(GL2 gl);
+    protected abstract Texture loadTexture(GL2 gl);
 
     @Override
     public void reload(GL2 gl) {
@@ -42,7 +36,7 @@ public abstract class AbstractTextureRenderer extends AbstractRenderer {
         if (this.listIndex==0) {
             throw new IllegalStateException("gl list not created");
         }
-        loadTexture(gl);
+        this.texture = loadTexture(gl);
         gl.glNewList(this.listIndex, GL2.GL_COMPILE);
         prepareObject(gl);
         gl.glEndList();

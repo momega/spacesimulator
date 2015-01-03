@@ -2,6 +2,7 @@ package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,16 +17,16 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         super.initPlanets();
 
         Planet saturn = new Planet();
-        updateDynamicalPoint(saturn, "Saturn", 568.46, 10.57d / 24, 58.232, 40.589, 83.537, "Saturn_(planet)", null);
+        updateDynamicalPoint(saturn, "Saturn", 568.46, 10.57d / 24, 60.268, 40.589, 83.537, "Saturn_(planet)", null);
         createKeplerianElements(saturn, sun, 1433449.370d * 1E6, 0.055723219, 336.013862, 10759.22, 2452827.261731969193, 2.485240, 113.642811);
         createTrajectory(saturn, new double[]{1,0.1,0.7});
         saturn.setTextureFileName("saturn.jpg");
-        addRing(saturn, 74.500E6, 136.780E6, "saturnring.jpg");
+        addRing(saturn, 74.500E6, 140.680E6, "/rings/saturnringcolor.jpg", "/rings/saturnringpattern.gif");
 
         addMovingObject(saturn);
 
         CelestialBody titan = new CelestialBody();
-        updateDynamicalPoint(titan, "Titan", 134.553E-3, 15.945421, 2.5755, 0d, null, null);
+        updateDynamicalPoint(titan, "Titan", 134.553E-3, 15.945421, 2.5755, 0d, "Titan_(moon)", null);
         createKeplerianElements(titan, saturn, 1221.870 * 1E6, 0.0288, 1.720452693875055E+02, 15.945, 2456816.038511817809, 27.7046188, 169.138297868292);
         createTrajectory(titan, new double[]{1, 1, 1});
         titan.setTextureFileName("titan.jpg");
@@ -87,14 +88,14 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         phoebe.setTextureFileName("phoebe.jpg");
         addMovingObject(phoebe);
 
-        Planet ceres = new Planet();
+        CelestialBody ceres = new CelestialBody();
         updateDynamicalPoint(ceres, "Ceres", 9.43E-04, 0.3781d, 0.4762, 291, 59, 170.90, "Ceres_(dwarf_planet)", null);
         createKeplerianElements(ceres, sun, 2.7668 * MathUtils.AU, 0.075797, 7.240455940332073E+01, 1680.99, 2456551.647886344232, 10.59386305801516, 8.032841384703973E+01);
         createTrajectory(ceres, new double[]{139d / 255d, 119d / 255d, 101d / 255d});
         ceres.setTextureFileName("vesta.jpg");
         addMovingObject(ceres);
 
-        Planet vesta = new Planet();
+        CelestialBody vesta = new CelestialBody();
         updateDynamicalPoint(vesta, "Vesta", 2.59076E-04, 0.2226d, 0.5254, 305.8, 41.4, 292, "4_Vesta", null);
         createKeplerianElements(vesta, sun, 2.362 * MathUtils.AU, 0.08862, 149.84, 1325.653, 2456923.721471834928, 7.134, 103.91);
         createTrajectory(vesta, new double[] {211d/255d, 211d/255d, 211d/255d});
@@ -113,6 +114,65 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         addPlanetToSoiTree(enceladus, saturnSoi);
         addPlanetToSoiTree(ceres, sunSoi);
         addPlanetToSoiTree(vesta, sunSoi);
+        
+        Planet uran = new Planet();
+        updateDynamicalPoint(uran, "Uranus", 86.810, 0.71833d, 25.559, 257.311, -15.175, "Uranus", null);
+        createKeplerianElements(uran, sun, 2870671.400d * 1E6, 0.047220087, 96.998857, 30687.15, 2470011.984117519576, 0.772556, 73.999342);
+        createTrajectory(uran, "#99CCFF");
+        uran.setTextureFileName("uranus.jpg");
+        addRing(uran, 37.000E6, 103.000E6, "/rings/uranusringcolour.jpg", "/rings/uranusringtrans.gif");
+        addMovingObject(uran);
+
+        CelestialBody miranda = new CelestialBody();
+        updateDynamicalPoint(miranda, "Miranda", 6.59E-5, 1.413479, 0.2358, 0d, "Miranda_(moon)", null);
+        createKeplerianElements(miranda, uran, 129.390 * 1E6, 0.0013, 1.792243142829730E+02, 1.413479, 2457025.902318560053, 93.83319442912550, 169.7298302941967);
+        createTrajectory(miranda, new double[]{1, 1, 1});
+        miranda.setTextureFileName("miranda.jpg");
+        addMovingObject(miranda);
+        
+        CelestialBody ariel = new CelestialBody();
+        updateDynamicalPoint(ariel, "Ariel", 1.353E-3, 2.520, 0.5789, 0d, "Ariel_(moon)", null);
+        createKeplerianElements(ariel, uran, 191.020 * 1E6, 0.0012, 1.324335171727475E+02, 2.520, 2457026.365926329512, 97.71537536124706, 167.6437488326870);
+        createTrajectory(ariel, new double[]{1, 1, 1});
+        ariel.setTextureFileName("ariel.jpg");
+        addMovingObject(ariel);
+        
+        CelestialBody umbriel = new CelestialBody();
+        updateDynamicalPoint(umbriel, "Umbriel", 1.172E-3, 4.144, 0.5847, 0d, "Umbriel_(moon)", null);
+        createKeplerianElements(umbriel, uran, 266.000 * 1E6, 0.0039, 3.155999159193122E+01, 4.144, 2457025.275312449783, 97.69503925158121, 167.6819981321552);
+        createTrajectory(umbriel, new double[]{1, 1, 1});
+        umbriel.setTextureFileName("umbriel.jpg");
+        addMovingObject(umbriel);
+        
+        CelestialBody titania = new CelestialBody();
+        updateDynamicalPoint(titania, "Titania", 3.527E-3, 8.706234, 0.7884, 0d, "Titania_(moon)", null);
+        createKeplerianElements(titania, uran, 435.910 * 1E6, 0.0011, 2.226555134164715E+02, 8.706234, 2457028.394785598852, 97.79121764510873, 167.6200479537000);
+        createTrajectory(titania, new double[]{1, 1, 1});
+        titania.setTextureFileName("titania.jpg");
+        addMovingObject(titania);
+        
+        CelestialBody oberon = new CelestialBody();
+        updateDynamicalPoint(oberon, "Oberon", 3.014E-3, 13.463234, 0.7614, 0d, "Oberon_(moon)", null);
+        createKeplerianElements(oberon, uran, 583.520 * 1E6, 0.0014, 1.472524176601162E+02, 13.463234, 2457030.513731509913, 97.90789949203217, 167.7319903733843);
+        createTrajectory(oberon, new double[]{1, 1, 1});
+        oberon.setTextureFileName("oberon.jpg");
+        addMovingObject(oberon);
+        
+        CelestialBody puck = new CelestialBody();
+        updateDynamicalPoint(puck, "Puck", 2.9E-6, 0.76183287, 0.081, 0d, "Puck	_(moon)", null);
+        createKeplerianElements(puck, uran, 86.004444 * 1E6, 0.00012, 2.080067072476500E+02, 0.081, 2457025.513866120484, 97.79534963320324, 167.9995181114998);
+        createTrajectory(puck, new double[]{1, 1, 1});
+        puck.setTextureFileName("vesta.jpg");
+        addMovingObject(puck);
+
+        SphereOfInfluence uranSoi = addPlanetToSoiTree(uran, sunSoi);
+        addPlanetToSoiTree(miranda, uranSoi);
+        addPlanetToSoiTree(ariel, uranSoi);
+        addPlanetToSoiTree(umbriel, uranSoi);
+        addPlanetToSoiTree(titania, uranSoi);
+        addPlanetToSoiTree(oberon, uranSoi);
+        addPlanetToSoiTree(puck, uranSoi);
+
     }
 
     @Override

@@ -36,8 +36,8 @@ public abstract class AbstractGLRenderer implements GLEventListener {
         gl.glEnable(GL_DEPTH_TEST); // for textures
 
         gl.glShadeModel(GL2.GL_SMOOTH); // try setting this to GL_FLAT and see what happens.
-        gl.glBlendFunc(GL2.GL_SRC_ALPHA, GL2.GL_ONE_MINUS_SRC_ALPHA);
-        //gl.glEnable(GL.GL_BLEND);
+        gl.glEnable(GL.GL_BLEND);
+        gl.glBlendFunc(GL2.GL_ONE, GL2.GL_ONE_MINUS_SRC_ALPHA); 
 
         gl.glEnable( GL2.GL_POLYGON_SMOOTH );
         gl.glEnable( GL2.GL_POINT_SMOOTH );

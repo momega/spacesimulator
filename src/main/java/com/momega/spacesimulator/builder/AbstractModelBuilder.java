@@ -151,11 +151,11 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param centralObject the central object
      * @param semimajorAxis the semimajor axis
      * @param eccentricity the eccentricity
-     * @param argumentOfPeriapsis the argument of periapsis in degrees
+     * @param argumentOfPeriapsis the argument of periapsis in degrees (omega)
      * @param period the period in days
      * @param timeOfPeriapsis the time of the last periapsis in timestamp
      * @param inclination the inclination in degrees
-     * @param ascendingNode the ascending node in degrees
+     * @param ascendingNode the ascending node in degrees (OMEGA)
      * @return new instance of the keplerian trajectory
      */
     public KeplerianElements createKeplerianElements(MovingObject movingObject, MovingObject centralObject, double semimajorAxis, double eccentricity, double argumentOfPeriapsis, double period, double timeOfPeriapsis, double inclination, double ascendingNode) {
@@ -324,11 +324,12 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      * @param textureFileName texture of the ring
      * @return new instance of the ring
      */
-    public Ring addRing(Planet planet, double min, double max, String textureFileName) {
+    public Ring addRing(Planet planet, double min, double max, String textureFileName, String transparencyFileName) {
         Ring ring = new Ring();
         ring.setMinDistance(min);
         ring.setMaxDistance(max);
         ring.setTextureFileName(textureFileName);
+        ring.setTransparencyFileName(transparencyFileName);
         planet.getRings().add(ring);
         return ring;
     }

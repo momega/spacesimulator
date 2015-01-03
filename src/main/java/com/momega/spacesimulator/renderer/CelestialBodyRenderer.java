@@ -1,9 +1,11 @@
 package com.momega.spacesimulator.renderer;
 
+import com.jogamp.opengl.util.texture.Texture;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.SphericalCoordinates;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,9 +30,10 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     }
 
     @Override
-    protected void loadTexture(GL2 gl) {
-        loadTexture(gl, celestialBody.getTextureFileName());
+    protected Texture loadTexture(GL2 gl) {
+    	Texture texture = GLUtils.loadTexture(gl, getClass(), celestialBody.getTextureFileName());
         logger.info("texture object {} is created for {}", celestialBody.getTextureFileName(), celestialBody.getName());
+        return texture;
     }
 
     @Override
@@ -49,6 +52,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
         gl.glShadeModel(GL2.GL_FLAT);
         gl.glDisable(GL2.GL_CULL_FACE);
+        gl.glEnable(GL2.GL_BLEND);
     }
 
     @Override

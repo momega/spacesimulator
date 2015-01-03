@@ -7,6 +7,7 @@ import com.jogamp.opengl.util.texture.TextureIO;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.renderer.ScreenCoordinates;
 import com.momega.spacesimulator.renderer.ViewCoordinates;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLDrawable;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
+
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -218,6 +220,7 @@ public class GLUtils {
      * @param num_slices number of the disk slices
      */
     public static void drawRing(GL2 gl, double minorRadius, double majorRadius, int num_segments, int num_slices) {
+    	gl.glColor3dv(new double[] {1, 1, 1}, 0);
         gl.glBegin(GL2.GL_QUAD_STRIP);
         double DEG2RAD = 2.0 * Math.PI / num_segments;
         for (int j=0; j<num_slices; j++){
@@ -381,20 +384,27 @@ public class GLUtils {
     }
 
     public static Texture loadTexture(GL2 gl, Class<?> clazz, String fileName) {
-        InputStream stream = null;
+        Texture result = loadTexture(gl, clazz, fileName, TextureIO.JPG, true);
+        result.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+        result.setTexParameteri(gl, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        return result;
+    }
+    
+    public static Texture loadTexture(GL2 gl, Class<?> clazz, String fileName, String fileSuffix, boolean mipmap) {
+    	InputStream stream = clazz.getResourceAsStream(fileName);
+    	return loadTexture(gl, stream, fileSuffix, mipmap);
+    }
+    
+    public static Texture loadTexture(GL2 gl, InputStream stream, String fileSuffix, boolean mipmap) {
         try {
-            stream = clazz.getResourceAsStream(fileName);
-            TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, true, "jpg");
+            TextureData data = TextureIO.newTextureData(GLProfile.getDefault(), stream, mipmap, fileSuffix);
             Texture result = TextureIO.newTexture(data);
-            result.setTexParameteri(gl, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            result.setTexParameteri(gl, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             return result;
-        }
-        catch (IOException exc) {
+        } catch (IOException e) {
+        	throw new IllegalArgumentException("loading texture failed", e);
+        } finally {
             IOUtils.closeQuietly(stream);
         }
-
-        return null;
     }
 
     public static void translate(GL2 gl, Vector3d position) {
