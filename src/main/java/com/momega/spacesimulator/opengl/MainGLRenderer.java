@@ -71,12 +71,12 @@ public class MainGLRenderer extends AbstractGLRenderer {
         
         if (RendererModel.getInstance().getDeleteSpacecraft()!=null) {
             Spacecraft spacecraft = RendererModel.getInstance().getDeleteSpacecraft();
+            RendererModel.getInstance().removeSpacecraft(spacecraft);
             GL2 gl = drawable.getGL().getGL2();
             MovingObjectCompositeRenderer movingObjectCompositeRenderer = renderer.deleteMovingObject(spacecraft);
             movingObjectCompositeRenderer.dispose(gl);
-            movingObjectCompositeRenderer = new MovingObjectCompositeRenderer(spacecraft);
-            movingObjectCompositeRenderer.init(gl);
-            renderer.addRenderer(movingObjectCompositeRenderer);
+            renderer.removeRenderer(movingObjectCompositeRenderer);
+            RendererModel.getInstance().fireModelEvent(new StatusBarEvent(ModelHolder.getModel(), "Spacecraft '" + spacecraft.getName() + "' removed"));
         	RendererModel.getInstance().setDeleteSpacecraft(null);
         }
 

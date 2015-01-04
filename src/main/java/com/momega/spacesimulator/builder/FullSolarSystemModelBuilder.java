@@ -205,6 +205,55 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         addPlanetToSoiTree(triton, neptuneSoi);
         addPlanetToSoiTree(nereid, neptuneSoi);
         addPlanetToSoiTree(proteus, neptuneSoi);
+        
+        BaryCentre plutoCharonBarycenter = new BaryCentre();
+        updateDynamicalPoint(plutoCharonBarycenter, "Pluto-Charon Barycenter", 0, 0, 1, 0, null, null);
+        createKeplerianElements(plutoCharonBarycenter, sun, 3.935088314677154E+01* MathUtils.AU, 2.472474378055403E-01, 1.132765167608166E+02, 9.016337309517009E+04, 2447724.741131972056, 1.717008568728039E+01, 1.102844806866985E+02);
+        createTrajectory(plutoCharonBarycenter, "#FFCC99");
+        addMovingObject(plutoCharonBarycenter);
+        
+        CelestialBody pluto = new CelestialBody();
+        updateDynamicalPoint(pluto, "Pluto", 1.305E-02, 6.3872304d, 1.184, 132.993, -6.163, "Pluto", null);
+        createKeplerianElements(pluto, plutoCharonBarycenter, 1.369273256402019E-05 * MathUtils.AU, 3.846180056805155E-02, 3.362604645493907E+02, 6.3872304, 2457022.543176275678, 1.128727159349312E+02, 2.274086267629573E+02);
+        createTrajectory(pluto, "#FFCC99");
+        pluto.setTextureFileName("pluto.jpg");
+        addMovingObject(pluto);
+        
+        CelestialBody charon = new CelestialBody();
+        updateDynamicalPoint(charon, "Charon", 1.52E-03, 6.3872304d, 0.6035, 132.993, -6.163, "Charon_(moon)", null);
+        createKeplerianElements(charon, plutoCharonBarycenter, 1.165270291213379E-04 * MathUtils.AU, 2.149688648377010E-03, 1.569596620934215E+02, 6.3872304, 2457022.335152104963, 1.128726956458377E+02, 2.274085913353366E+02);
+        createTrajectory(charon, "#FFCC99");
+        charon.setTextureFileName("vesta.jpg");
+        addMovingObject(charon);
+        
+        CelestialBody nix = new CelestialBody();
+        updateDynamicalPoint(nix, "Nix", 4E-07, 2.551073069416632E+01, 0.045, 132.993, -6.163, "Nix_(moon)", null);
+        createKeplerianElements(nix, plutoCharonBarycenter, 3.299204751316176E-04 * MathUtils.AU, 1.602222939815994E-02, 3.358597780055543E+02, 2.551073069416632E+01, 2457028.685374348890, 1.128744500183007E+02, 2.274336178035751E+02);
+        createTrajectory(nix, "#FFCC99");
+        nix.setTextureFileName("vesta.jpg");
+        addMovingObject(nix);
+        
+        CelestialBody hydra = new CelestialBody();
+        updateDynamicalPoint(hydra, "Hydra", 8E-07, 3.877739647673390E+01, 0.057, 132.993, -6.163, "Hydra_(moon)", null);
+        createKeplerianElements(hydra, plutoCharonBarycenter, 4.361605307490110E-04 * MathUtils.AU, 8.511493955685394E-03, 1.191303678795191E+01, 3.877739647673390E+01, 2457020.752129887696, 1.128744500183007E+02, 2.277164621598970E+02);
+        createTrajectory(hydra, "#FFCC99");
+        hydra.setTextureFileName("vesta.jpg");
+        addMovingObject(hydra);
+        
+        SphereOfInfluence plutoSoi = addPlanetToSoiTree(pluto, sunSoi);
+        addPlanetToSoiTree(charon, plutoSoi);
+        addPlanetToSoiTree(nix, plutoSoi);
+        addPlanetToSoiTree(hydra, plutoSoi);
+        
+        CelestialBody halleyComet = new CelestialBody();
+        updateDynamicalPoint(halleyComet, "Halley Comet", 2.2E-10, 2.2d, 0.001, 0, 0, "Halley%27s_Comet", null);
+        createKeplerianElements(halleyComet, sun, 1.785769231444713E+01 * MathUtils.AU, 9.680101580685400E-01, 1.117746227056610E+02, 2.756363121620670E+04, 2446464.777263985481, 1.622389811755269E+02, 5.891842792038428E+01);
+        createTrajectory(halleyComet, "#FF6666");
+        halleyComet.setTextureFileName("vesta.jpg");
+        addMovingObject(halleyComet);
+        
+        addPlanetToSoiTree(halleyComet, sunSoi);
+        
     }
 
     @Override

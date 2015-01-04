@@ -10,7 +10,8 @@ import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
  * The spacecraft class is the representation of the any artificial object.
- * The spacecraft can contain several {@link SpacecraftSubsystem}s.
+ * The spacecraft can contain several {@link SpacecraftSubsystem}s. All important events during
+ * flight are stored into named history point collection.
  * 
  * Created by martin on 5/5/14.
  */
@@ -61,6 +62,10 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
         this.target = target;
     }
 
+    /**
+     * Gets the current thrust as a vector of the spacecraft
+     * @return
+     */
     public Target getTarget() {
         return target;
     }

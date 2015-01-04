@@ -638,4 +638,8 @@ public class RendererModel {
     public void createFromBuilder() {
         createFromBuilder(getModelBuilderRequested());
     }
+    
+    public void removeSpacecraft(Spacecraft spacecraft) {
+    	modelService.removeMovingObject(spacecraft);
+    }
 }

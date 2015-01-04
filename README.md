@@ -9,8 +9,8 @@ The planets are moving based on Keplerian law (simplified elliptical) trajectory
 The position and velocity of spacecraft(s) are computed based on Newtonian gravitational law. The gravitation of all the planets
 influences the trajectory of the spacecrafts.
 
-How to run application?
-=======================
+How to run the application?
+===========================
 1. Application used maven to build, so download and install it.
 2. Type the following command to compile the application, run few tests and execute the main application.  
 ```
@@ -31,6 +31,7 @@ Features
 * Display popup dialogs with detail information about all objects
 * All 8 planets and their moon + two minor bodies included in model
 * User defined points for on the spacecraft and planets trajectory
+* Create and remove the spacecraft
 * Take a screenshot
 * Headless computations
 * Sphere of Influence
@@ -41,31 +42,35 @@ Features
 Screenshots
 ===========
 
-![Spacecraft orbiting earth](/images/earth.png "Spacecraft orbiting earth")
+![Spacecraft orbiting earth](images/earth.png "Spacecraft orbiting earth")
 
-![High eccentricity orbit](/images/spacecraft.png "High eccentricity orbit")
+![High eccentricity orbit](images/spacecraft.png "High eccentricity orbit")
 
-![Near the Moon](/images/moon.png "Near the Moon")
+![Near the Moon](images/moon.png "Near the Moon")
 
-![Leaving Earth Orbit](/images/leavingearth.png "Leaving Earth Orbit")
+![Leaving Earth Orbit](images/leavingearth.png "Leaving Earth Orbit")
 
-![Arriving to Mars](/images/mars1.png "Arriving to Mars")
+![Arriving to Mars](images/mars1.png "Arriving to Mars")
 
-![Arriving to Mars](/images/mars1.png "Arriving to Mars")
+![Arriving to Mars](images/mars1.png "Arriving to Mars")
 
-![Maneuver at Periapsis](/images/mars2.png "Maneuver at Periapsis")
+![Maneuver at Periapsis](images/mars2.png "Maneuver at Periapsis")
 
-![Orbit around Mars](/images/mars3.png "Orbit around Mars")
+![Orbit around Mars](images/mars3.png "Orbit around Mars")
 
-![Maneuver at Periapsis](/images/venus.png "Orbiting Venus")
+![Maneuver at Periapsis](images/venus.png "Orbiting Venus")
 
-![Orbit around Mars](/images/arrivetovenus.png "Approaching Venus")
+![Orbit around Mars](images/arrivetovenus.png "Approaching Venus")
 
-![Hi-resolution Earth](/images/earth_hi.png "Hi-resolution Earth")
+![Hi-resolution Earth](images/earth_hi.png "Hi-resolution Earth")
 
-![All type of the points](/images/allpoints.png "All types of the points")
+![All type of the points](images/allpoints.png "All types of the points")
 
-![Titan and Saturn](/images/titan.png "Titan and Saturn")
+![Titan and Saturn](images/titan.png "Titan and Saturn")
+
+![Uranus and its moons](images/uranus.png "Uranus and its moons")
+
+![Pluto system](images/pluto.png "Pluto system")
 
 Build
 =====

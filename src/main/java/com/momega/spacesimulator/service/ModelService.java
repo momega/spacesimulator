@@ -1,15 +1,29 @@
     package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
+
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.BaryCentre;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.ManeuverPoint;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.OrbitIntersection;
+import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.TargetClosestPoint;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
 
 /**
  * The class contains set of the useful methods to manipulate with the model.
@@ -17,6 +31,8 @@ import java.util.List;
  */
 @Component
 public class ModelService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ModelService.class);
 
     @Autowired
     private TargetService targetService;
@@ -156,6 +172,16 @@ public class ModelService {
             }
         }
         return result;
+    }
+    
+    /**
+     * Removes the moving object from the model
+     * @param movingObject the moving object
+     */
+    public void removeMovingObject(MovingObject movingObject) {
+    	Assert.notNull(movingObject);
+    	logger.info("moving object = {}", movingObject.getName());
+    	ModelHolder.getModel().getMovingObjects().remove(movingObject);
     }
 
 }

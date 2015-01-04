@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * The target service contains several methods for manipulating with the {@link Target} and computing
+ * the spacecraft points related to the target such as {@link OrbitIntersection} and {@link TargetClosestPoint}.
  * Created by martin on 10/19/14.
  */
 @Component

@@ -22,8 +22,8 @@ import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
+ * The service contain the methods to manipulate of the spacecrafts 
  * @author martin
- *
  */
 @Component
 public class SpacecraftService {
