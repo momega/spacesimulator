@@ -29,7 +29,7 @@ Features
 * Display closes point and planes intersections of the spacecraft and target celestial body
 * Time warp
 * Display popup dialogs with detail information about all objects
-* All 8 planets and their moon + two minor bodies included in model
+* All 8 planets and their moons + Pluto with moons, Ceres, Vesta and Halley Comet included in model
 * User defined points for on the spacecraft and planets trajectory
 * Create and remove the spacecraft
 * Take a screenshot
