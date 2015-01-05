@@ -101,6 +101,6 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
 
     @Override
     public String getName() {
-        return "Medium Solar System model, mission to Moon";
+        return "Simple Solar System model, mission to Moon";
     }
 }

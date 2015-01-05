@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.model.Trajectory;
@@ -27,13 +26,16 @@ public class MotionService {
     private static final Logger logger = LoggerFactory.getLogger(MotionService.class);
     
     @Autowired
+    private ModelService modelService;
+    
+    @Autowired
     private List<Propagator> propagators = new ArrayList<>();
 
     public Timestamp move(Timestamp time, double warpFactor) {
         Timestamp newTimestamp = time.add(warpFactor);
         logger.debug("time={}", newTimestamp.getValue());
         if (warpFactor > 0) {
-            for (MovingObject mo : ModelHolder.getModel().getMovingObjects()) {
+            for (MovingObject mo : modelService.findAllMovingObjects()) {
                 move(mo, newTimestamp);
                 mo.setTimestamp(newTimestamp);
             }

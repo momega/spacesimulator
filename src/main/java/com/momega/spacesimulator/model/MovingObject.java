@@ -49,6 +49,17 @@ public abstract class MovingObject extends NamedObject implements PositionProvid
     public KeplerianElements getKeplerianElements() {
         return keplerianElements;
     }
+    
+    /**
+     * Gets predicted position of the moving object based on the current keplerian elements
+     * @param time the given timestamp
+     * @return the future position
+     */
+    public Vector3d getPosition(Timestamp time) {
+        KeplerianElements ke = KeplerianElements.fromTimestamp(getKeplerianElements().getKeplerianOrbit(), time);
+        Vector3d position = ke.getCartesianPosition();
+        return position;
+    }
 
     @Override
     public Vector3d getPosition() {

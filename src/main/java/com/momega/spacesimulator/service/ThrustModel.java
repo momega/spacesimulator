@@ -1,14 +1,20 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
-import com.momega.spacesimulator.utils.VectorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.momega.spacesimulator.model.Maneuver;
+import com.momega.spacesimulator.model.Orientation;
+import com.momega.spacesimulator.model.Propulsion;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.SpacecraftSubsystem;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
+import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
  * The model of the propeller propulsion system
@@ -92,7 +98,7 @@ public class ThrustModel implements ForceModel {
     }
 
     protected Maneuver findManeuver(Spacecraft spacecraft) {
-        Timestamp timestamp = ModelHolder.getModel().getTime();
+        Timestamp timestamp = spacecraft.getTimestamp();
         for(Maneuver maneuver : spacecraft.getManeuvers()) {
             if (TimeUtils.isTimestampInInterval(timestamp, maneuver)) {
                 return maneuver;

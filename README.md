@@ -72,11 +72,10 @@ Screenshots
 
 ![Pluto system](images/pluto.png "Pluto system")
 
-Build
-=====
-
+Build Status
+============
+	
 [![wercker status](https://app.wercker.com/status/262d561454952437fddc94f925ffc667/m/master "wercker status")](https://app.wercker.com/project/bykey/262d561454952437fddc94f925ffc667)
-
-
+[![Codeship Status for momega/spacesimulator](https://codeship.com/projects/ef67ae30-6c58-0132-0fdd-2258e2e8174d/status?branch=master)](https://codeship.com/projects/54024)
 
 

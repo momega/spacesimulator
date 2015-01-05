@@ -6,6 +6,7 @@ package com.momega.spacesimulator.builder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.SphereOfInfluence;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -55,5 +56,10 @@ public class MediumSolarSystemModelBuilder extends SimpleSolarSystemModelBuilder
         
         addPlanetToSoiTree(venus, sunSoi);
 	}
+	
+	@Override
+    public String getName() {
+        return "Medium Solar System model, mission to Moon";
+    }
 
 }

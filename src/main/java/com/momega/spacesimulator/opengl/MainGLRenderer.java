@@ -1,8 +1,5 @@
 package com.momega.spacesimulator.opengl;
 
-import java.awt.Point;
-import java.io.File;
-
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.glu.GLU;
@@ -14,13 +11,9 @@ import com.momega.spacesimulator.MainWindow;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelRenderer;
-import com.momega.spacesimulator.renderer.MovingObjectCompositeRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
-import com.momega.spacesimulator.renderer.StatusBarEvent;
 
 /**
  * The class contains main OPENGL renderer for the application. It is the subclass for #AbstractRenderer which is the super class
@@ -58,107 +51,7 @@ public class MainGLRenderer extends AbstractGLRenderer {
     @Override
     protected void draw(GLAutoDrawable drawable) {
         renderer.draw(drawable);
-        
-        if (RendererModel.getInstance().getNewSpacecraft()!=null) {
-        	Spacecraft spacecraft = RendererModel.getInstance().getNewSpacecraft();
-        	RendererModel.getInstance().replaceMovingObjectsModel();
-        	GL2 gl = drawable.getGL().getGL2();
-        	MovingObjectCompositeRenderer movingObjectCompositeRenderer = new MovingObjectCompositeRenderer(spacecraft);
-        	movingObjectCompositeRenderer.init(gl);
-        	renderer.addRenderer(movingObjectCompositeRenderer);
-        	RendererModel.getInstance().setNewSpacecraft(null);
-        }
-        
-        if (RendererModel.getInstance().getDeleteSpacecraft()!=null) {
-            Spacecraft spacecraft = RendererModel.getInstance().getDeleteSpacecraft();
-            RendererModel.getInstance().removeSpacecraft(spacecraft);
-            GL2 gl = drawable.getGL().getGL2();
-            MovingObjectCompositeRenderer movingObjectCompositeRenderer = renderer.deleteMovingObject(spacecraft);
-            movingObjectCompositeRenderer.dispose(gl);
-            renderer.removeRenderer(movingObjectCompositeRenderer);
-            RendererModel.getInstance().fireModelEvent(new StatusBarEvent(ModelHolder.getModel(), "Spacecraft '" + spacecraft.getName() + "' removed"));
-        	RendererModel.getInstance().setDeleteSpacecraft(null);
-        }
-
-        if (RendererModel.getInstance().isReloadRenderersRequired()) {
-            GL2 gl = drawable.getGL().getGL2();
-            renderer.reload(gl);
-            RendererModel.getInstance().setReloadRenderersRequired(false);
-        }
-
-        if (RendererModel.getInstance().isTakeScreenshotRequired()) {
-            logger.info("take screenshot now");
-            File dir = new File(System.getProperty("user.home"));
-            File file = GLUtils.saveFrameAsPng(drawable, dir);
-            RendererModel.getInstance().setTakeScreenshotRequired(false);
-            RendererModel.getInstance().fireModelEvent(new StatusBarEvent(ModelHolder.getModel(), "Screenshot taken as file:" + file.getAbsolutePath()));
-        }
-        
-        if (RendererModel.getInstance().getNewUserPointPosition()!=null) {
-        	Point position = RendererModel.getInstance().getNewUserPointPosition();
-        	RendererModel.getInstance().createUserPoint(drawable, position);
-        	RendererModel.getInstance().setNewUserPointPosition(null);
-        }
-        
-        if (RendererModel.getInstance().getSaveFileRequested()!=null) {
-        	File file = RendererModel.getInstance().getSaveFileRequested();
-        	RendererModel.getInstance().saveFile(file);
-        	RendererModel.getInstance().setSaveFileRequested(null);
-        }
-        
-        if (RendererModel.getInstance().getLoadFileRequested()!=null) {
-        	File file = RendererModel.getInstance().getLoadFileRequested();
-			Model model = RendererModel.getInstance().loadFile(file);
-			ModelHolder.setModel(model);
-	    	RendererModel.getInstance().replaceMovingObjectsModel();
-	    	
-	    	GL2 gl = drawable.getGL().getGL2();
-            renderer.dispose(gl);
-            renderer.clearAllRenderers();
-
-            renderer.createRenderers();
-	    	renderer.init(gl);
-
-            RendererModel.getInstance().setModelReady(true);
-        	RendererModel.getInstance().setLoadFileRequested(null);
-        }
-        
-        if (RendererModel.getInstance().getDragUserPointPosition()!=null) {
-        	Point position = RendererModel.getInstance().getDragUserPointPosition();
-        	RendererModel.getInstance().dragUserPoint(drawable, position);
-        	RendererModel.getInstance().setDragUserPointPosition(null);
-        }
-        
-        if (RendererModel.getInstance().isQuitRequested()) {
-        	window.stopAnimator();
-        	RendererModel.getInstance().setQuitRequested(false);
-        }
-
-        if (RendererModel.getInstance().isCloseRequested()) {
-            GL2 gl = drawable.getGL().getGL2();
-            renderer.dispose(gl);
-            renderer.clearAllRenderers();
-            ModelHolder.setModel(null);
-            RendererModel.getInstance().setModelFile(null);
-            RendererModel.getInstance().setModelReady(false);
-            RendererModel.getInstance().replaceMovingObjectsModel();
-            RendererModel.getInstance().setCloseRequested(false);
-        }
-
-        if (RendererModel.getInstance().getModelBuilderRequested() != null) {
-            GL2 gl = drawable.getGL().getGL2();
-            renderer.dispose(gl);
-            renderer.clearAllRenderers();
-
-            RendererModel.getInstance().createFromBuilder();
-            renderer.createRenderers();
-            renderer.init(gl);
-            RendererModel.getInstance().replaceMovingObjectsModel();
-
-            RendererModel.getInstance().setModelBuilderRequested(null);
-        }
-
-        RendererModel.getInstance().setFps(drawable.getAnimator().getLastFPS());
+        RendererModel.getInstance().runDelayedActions(drawable, renderer, window);
     }
 
     @Override
@@ -274,6 +167,5 @@ public class MainGLRenderer extends AbstractGLRenderer {
 //
 //        return znear;
 //    }
-
 
 }

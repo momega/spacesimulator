@@ -39,6 +39,7 @@ import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
 import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.service.ModelSerializer;
 import com.momega.spacesimulator.service.ModelService;
@@ -359,7 +360,7 @@ public class RendererModel {
 
             MovingObject movingObject = modelService.findMovingObjectByIndex(entry.getKey().intValue());
             UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
-            userPointService.createUserOrbitalPoint(movingObject, modelCoordinates);
+            userPointService.createUserOrbitalPoint(movingObject, modelCoordinates, ModelHolder.getModel().getTime());
         }
     }
 
@@ -372,7 +373,7 @@ public class RendererModel {
             Vector3d modelCoordinates = GLUtils.getModelCoordinates(gl, screenCoordinates);
 
             logger.info("dragged model coordinates = {}", modelCoordinates.asArray());
-            userPointService.updateUserOrbitalPoint(userOrbitalPoint, modelCoordinates);
+            userPointService.updateUserOrbitalPoint(userOrbitalPoint, modelCoordinates, ModelHolder.getModel().getTime());
         }
     }
 
@@ -641,5 +642,109 @@ public class RendererModel {
     
     public void removeSpacecraft(Spacecraft spacecraft) {
     	modelService.removeMovingObject(spacecraft);
+    }
+    
+    public void runDelayedActions(GLAutoDrawable drawable, ModelRenderer renderer, DefaultWindow window) {
+        if (getNewSpacecraft()!=null) {
+        	Spacecraft spacecraft = getNewSpacecraft();
+        	replaceMovingObjectsModel();
+        	GL2 gl = drawable.getGL().getGL2();
+        	MovingObjectCompositeRenderer movingObjectCompositeRenderer = new MovingObjectCompositeRenderer(spacecraft);
+        	movingObjectCompositeRenderer.init(gl);
+        	renderer.addRenderer(movingObjectCompositeRenderer);
+        	setNewSpacecraft(null);
+        }
+        
+        if (getDeleteSpacecraft()!=null) {
+            Spacecraft spacecraft = getDeleteSpacecraft();
+            removeSpacecraft(spacecraft);
+            GL2 gl = drawable.getGL().getGL2();
+            MovingObjectCompositeRenderer movingObjectCompositeRenderer = renderer.deleteMovingObject(spacecraft);
+            movingObjectCompositeRenderer.dispose(gl);
+            renderer.removeRenderer(movingObjectCompositeRenderer);
+            fireModelEvent(new StatusBarEvent(ModelHolder.getModel(), "Spacecraft '" + spacecraft.getName() + "' removed"));
+        	setDeleteSpacecraft(null);
+        }
+
+        if (isReloadRenderersRequired()) {
+            GL2 gl = drawable.getGL().getGL2();
+            renderer.reload(gl);
+            setReloadRenderersRequired(false);
+        }
+
+        if (isTakeScreenshotRequired()) {
+            logger.info("take screenshot now");
+            File dir = new File(System.getProperty("user.home"));
+            File file = GLUtils.saveFrameAsPng(drawable, dir);
+            setTakeScreenshotRequired(false);
+            fireModelEvent(new StatusBarEvent(ModelHolder.getModel(), "Screenshot taken as file:" + file.getAbsolutePath()));
+        }
+        
+        if (getNewUserPointPosition()!=null) {
+        	Point position = getNewUserPointPosition();
+        	createUserPoint(drawable, position);
+        	setNewUserPointPosition(null);
+        }
+        
+        if (getSaveFileRequested()!=null) {
+        	File file = getSaveFileRequested();
+        	saveFile(file);
+        	setSaveFileRequested(null);
+        }
+        
+        if (getLoadFileRequested()!=null) {
+        	File file = getLoadFileRequested();
+			Model model = loadFile(file);
+			ModelHolder.setModel(model);
+	    	replaceMovingObjectsModel();
+	    	
+	    	GL2 gl = drawable.getGL().getGL2();
+            renderer.dispose(gl);
+            renderer.clearAllRenderers();
+
+            renderer.createRenderers();
+	    	renderer.init(gl);
+
+            setModelReady(true);
+        	setLoadFileRequested(null);
+        }
+        
+        if (getDragUserPointPosition()!=null) {
+        	Point position = getDragUserPointPosition();
+        	dragUserPoint(drawable, position);
+        	setDragUserPointPosition(null);
+        }
+        
+        if (isQuitRequested()) {
+        	window.stopAnimator();
+        	setQuitRequested(false);
+        }
+
+        if (isCloseRequested()) {
+            GL2 gl = drawable.getGL().getGL2();
+            renderer.dispose(gl);
+            renderer.clearAllRenderers();
+            ModelHolder.setModel(null);
+            setModelFile(null);
+            setModelReady(false);
+            replaceMovingObjectsModel();
+            setCloseRequested(false);
+        }
+
+        if (getModelBuilderRequested() != null) {
+            GL2 gl = drawable.getGL().getGL2();
+            renderer.dispose(gl);
+            renderer.clearAllRenderers();
+
+            createFromBuilder();
+            renderer.createRenderers();
+            renderer.init(gl);
+            replaceMovingObjectsModel();
+
+            setModelBuilderRequested(null);
+        }
+
+        setFps(drawable.getAnimator().getLastFPS());
+
     }
 }

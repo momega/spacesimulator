@@ -1,6 +1,5 @@
 package com.momega.spacesimulator.swing;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -9,8 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Calendar;
-import java.util.Date;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
 
 import javax.swing.DefaultListModel;
@@ -22,19 +21,10 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
 import javax.swing.ListSelectionModel;
-import javax.swing.SpinnerDateModel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.text.DateFormatter;
-
-import net.sourceforge.jdatepicker.JDateComponentFactory;
-import net.sourceforge.jdatepicker.JDatePicker;
-import net.sourceforge.jdatepicker.impl.UtilCalendarModel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,14 +49,13 @@ public class TimeDialog extends JDialog {
 	private static final long serialVersionUID = -747554595762069797L;
 	private static final Logger logger = LoggerFactory.getLogger(TimeDialog.class);
     private final DateTimeModel model;
-    private final UtilCalendarModel dateModel;
     private final JButton goButton;
     private final JButton cancelButton;
-    private final SpinnerDateModel timeModel;
     private final JProgressBar progressBar;
 	private JButton closeButton;
 	private JList<HistoryPoint> historyEvents;
 	private DefaultListModel<HistoryPoint> eventModel;
+	private TimeWorker worker;
 
     /**
      * Constructor
@@ -74,7 +63,6 @@ public class TimeDialog extends JDialog {
      * @param initTime the time initially displayed in the dialog
      */
     public TimeDialog(final DefaultWindow window, Timestamp initTime) {
-        super();
         setTitle("Time");
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setModalityType(ModalityType.APPLICATION_MODAL);
@@ -84,30 +72,9 @@ public class TimeDialog extends JDialog {
         layout.setAutoCreateGaps(true);
         layout.setAutoCreateContainerGaps(true);
 
-        model = new DateTimeModel(TimeUtils.toCalendar(initTime));
-
-        dateModel = new UtilCalendarModel(model.getCalendar());
-        JDatePicker picker = JDateComponentFactory.createJDatePicker(dateModel);
-        picker.setTextEditable(true);
-        picker.setShowYearButtons(false);
-        ((Component)picker).setPreferredSize(new Dimension(300, 30));
-        dateModel.addChangeListener(model);
-
         JLabel timeLabel = new JLabel("Wait until:");
         JLabel progressLabel = new JLabel("Progress until:");
         JLabel lblEvents = new JLabel("Events:");
-
-        timeModel = new SpinnerDateModel();
-        timeModel.setValue(model.getCalendar().getTime());
-        timeModel.addChangeListener(model);
-
-        JSpinner spinner = new JSpinner(timeModel);
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(spinner, "HH:mm:ss");
-        DateFormatter formatter = (DateFormatter)editor.getTextField().getFormatter();
-        formatter.setAllowsInvalid(false); // this makes what you want
-        formatter.setOverwriteMode(true);
-        spinner.setEditor(editor);
-        spinner.getInsets().set(5,5,5,5);
 
         goButton = new JButton("Go to");
         goButton.setIcon(SwingUtils.createImageIcon("/images/control_fastforward.png"));
@@ -130,7 +97,7 @@ public class TimeDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 try {
                     logger.info("Run worker thread");
-                    model.start();
+                    start();
                     goButton.setEnabled(false);
                     cancelButton.setEnabled(true);
                     closeButton.setEnabled(false);
@@ -143,7 +110,7 @@ public class TimeDialog extends JDialog {
         cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				model.stop();			
+				stop();			
 			}
 		});
         cancelButton.setEnabled(false);
@@ -167,36 +134,34 @@ public class TimeDialog extends JDialog {
         minusOneHour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.addTime(-60*60.0);
+                model.addTime(-60*60);
             }
         });
         quickTimeButtons.add(minus10Minutes);
         minus10Minutes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.addTime(-10*60.0);
+                model.addTime(-10*60);
             }
         });
         quickTimeButtons.add(plus10Minutes);
         plus10Minutes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.addTime(10*60.0);
+                model.addTime(10*60);
             }
         });
         quickTimeButtons.add(plusOneHour);
         plusOneHour.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                model.addTime(60*60.0);
+                model.addTime(60*60);
             }
         });
 
-        JPanel timePanel = new JPanel();
-        FlowLayout fl = new FlowLayout(FlowLayout.TRAILING, 5, 0);
-        timePanel.setLayout(fl);
-        timePanel.add((Component) picker);
-        timePanel.add(spinner);
+        model = new DateTimeModel(TimeUtils.toCalendar(initTime));
+        TimePanel timePanel = new TimePanel();
+        timePanel.setModel(model);
 
         progressBar = new JProgressBar();
         progressBar.setStringPainted(true);
@@ -277,67 +242,33 @@ public class TimeDialog extends JDialog {
 
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
-    }
-
-    class DateTimeModel implements ChangeListener {
-
-        private final Calendar calendar;
-        private Timestamp timestamp;
-		private TimeWorker worker;
-
-        DateTimeModel(Calendar calendar) {
-            this.calendar = calendar;
-            timestamp = TimeUtils.fromCalendar(calendar);
-        }
-
-        public void stop() {
-        	if (worker != null) {
-        		worker.cancel(true);
-        	}
-		}
-
-		@Override
-        public void stateChanged(ChangeEvent e) {
-            calendar.set(Calendar.YEAR, dateModel.getYear());
-            calendar.set(Calendar.MONTH, dateModel.getMonth());
-            calendar.set(Calendar.DAY_OF_MONTH, dateModel.getDay());
-
-            Calendar c = Calendar.getInstance();
-            c.setTime((Date) timeModel.getValue());
-
-            calendar.set(Calendar.HOUR_OF_DAY, c.get(Calendar.HOUR_OF_DAY));
-            calendar.set(Calendar.MINUTE, c.get(Calendar.MINUTE));
-            calendar.set(Calendar.SECOND, c.get(Calendar.SECOND));
-
-            timestamp = TimeUtils.fromCalendar(calendar);
-            logger.debug("Calendar = {}", calendar.getTime());
-            updateButtons();
-        }
-
-        public void addTime(double seconds) {
-            timestamp = timestamp.add(seconds);
-            calendar.setTimeInMillis(TimeUtils.toLinuxTime(timestamp));
-
-            timeModel.setValue(calendar.getTime());
-            dateModel.setValue(calendar);
-            updateButtons();
-        }
         
-        protected void updateButtons() {
-        	Timestamp modelTimestamp = ModelHolder.getModel().getTime();
-        	boolean timeInFuture = (modelTimestamp.compareTo(timestamp)<=0);
-        	goButton.setEnabled(timeInFuture);
-        }
-
-        public Calendar getCalendar() {
-            return calendar;
-        }
-
-        public void start() {
-            worker = new TimeWorker(timestamp);
-            worker.execute();
-        }
+        model.addPropertyChangeListener(new PropertyChangeListener() {
+			@Override
+			public void propertyChange(PropertyChangeEvent evt) {
+				updateButtons();
+			}
+		});
     }
+    
+	protected void updateButtons() {
+		Timestamp modelTimestamp = ModelHolder.getModel().getTime();
+		Timestamp timestamp = TimeUtils.fromCalendar(model.getCalendar());
+		boolean timeInFuture = (modelTimestamp.compareTo(timestamp)<=0);
+		goButton.setEnabled(timeInFuture);
+	}   
+	
+	public void start() {
+		Timestamp timestamp = TimeUtils.fromCalendar(model.getCalendar());
+		worker = new TimeWorker(timestamp);
+		worker.execute();
+	}
+	
+	public void stop() {
+		if (worker != null) {
+			worker.cancel(true);
+		}
+	}
 
     class TimeWorker extends SwingWorker<Void, Timestamp> {
 

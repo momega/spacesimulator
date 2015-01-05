@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.text.NumberFormatter;
 
 import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.service.UserPointService;
 
@@ -95,7 +96,7 @@ public class NewUserPointPanel extends AbstractDefaultPanel {
 		try {
 			double theta = Double.parseDouble(txtTrueAnomaly.getText());
 			String name = txtName.getText();
-			userPointService.createUserOrbitalPoint(movingObject, name, Math.toRadians(theta));
+			userPointService.createUserOrbitalPoint(movingObject, name, Math.toRadians(theta), ModelHolder.getModel().getTime());
 			return true;
 		} catch (NumberFormatException nfe) {
 			JOptionPane.showMessageDialog(NewUserPointPanel.this,

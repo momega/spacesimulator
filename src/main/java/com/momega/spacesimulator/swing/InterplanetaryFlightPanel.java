@@ -8,8 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
+import java.util.Calendar;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -27,16 +29,15 @@ import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.renderer.ModelChangeEvent;
-import com.momega.spacesimulator.renderer.ModelChangeListener;
-import com.momega.spacesimulator.renderer.RendererModel;
+import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
  * @author martin
  *
  */
-public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements ModelChangeListener {
+public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = -6729550892556811416L;
 	
@@ -59,7 +60,7 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
 	private MovingObject targetBody;
 	private JFormattedTextField txtAngle;
 	private JFormattedTextField txtCurrentAngle;
-
+	private TimePanel timePanel;
 	private JFormattedTextField txtAngleDiff;
 
 	private double angle;
@@ -80,6 +81,8 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
         JLabel lblTargetTheta = new JLabel("Target true anomaly:", SwingConstants.RIGHT);
         JLabel lblTof = new JLabel("Time of flight:", SwingConstants.RIGHT);
         JLabel lblAngle = new JLabel("Phase angle:", SwingConstants.RIGHT);
+        
+        JLabel lblTime = new JLabel("Time:", SwingConstants.RIGHT);
         JLabel lblCurrentAngle = new JLabel("Current angle:", SwingConstants.RIGHT);
         JLabel lblAngleDiff = new JLabel("Angle Difference:", SwingConstants.RIGHT);
         
@@ -132,6 +135,9 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
         txtAngle.setText("0.0");
         txtAngle.setEnabled(false);
         
+        timePanel = new TimePanel();
+        timePanel.setModel(new DateTimeModel(TimeUtils.toCalendar(ModelHolder.getModel().getTime())));
+        
         txtCurrentAngle = new JFormattedTextField(formatter);
         txtCurrentAngle.setText("0.0");
         txtCurrentAngle.setEnabled(false);
@@ -181,6 +187,10 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
                         .addComponent(txtAngle)
                     )
                     .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(lblTime)
+                        .addComponent(timePanel)
+                    )
+                    .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(lblCurrentAngle)
                         .addComponent(txtCurrentAngle)
                     )
@@ -200,6 +210,7 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
                         .addComponent(lblTargetTheta)
                         .addComponent(lblTof)
                         .addComponent(lblAngle)
+                        .addComponent(lblTime)
                         .addComponent(lblCurrentAngle)
                         .addComponent(lblAngleDiff)
                     )
@@ -211,6 +222,7 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
                         .addComponent(txtTheta)
                         .addComponent(txtTof)
                         .addComponent(txtAngle)
+                        .addComponent(timePanel)
                         .addComponent(txtCurrentAngle)
                         .addComponent(txtAngleDiff)
                     )
@@ -218,8 +230,6 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
                     	.addComponent(btnCalculate)
                     )
             );
-        
-        RendererModel.getInstance().addModelChangeListener(this);
         
         planetsBox.addItemListener(new ItemListener() {
 			@Override
@@ -231,12 +241,9 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
 			}
 		});
         
+        timePanel.getModel().addPropertyChangeListener(this);
+        
         calculateSemimajorTargetTrajectory();
-	}
-	
-	@Override
-	public void windowClosed(WindowEvent e) {
-		RendererModel.getInstance().removeModelChangeListener(this);
 	}
 	
 	protected void calculateSemimajorTargetTrajectory() {
@@ -258,19 +265,19 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
 	protected void calculate() {
 		atx = Double.parseDouble(txtTransferA.getText()) * MathUtils.AU;
 		double e = 1 - (rA/atx);
-		double theta = Math.acos((atx/rB*(1-e*e)-1)/e);
+		double theta = FastMath.acos((atx/rB*(1-e*e)-1)/e);
 		double E = KeplerianElements.solveEA(e, theta);
 		double mi = MathUtils.G * rootBody.getMass();
-		double tof = (E - e* Math.sin(E)) * FastMath.sqrt(atx*atx*atx / mi);
+		double tof = (E - e* FastMath.sin(E)) * FastMath.sqrt(atx*atx*atx / mi);
 		txtEccentricity.setText(String.format("%3.6f", e));
 		txtTheta.setText(String.format("%3.6f", Math.toDegrees(theta)));
 		txtTof.setText(String.format("%3.6f", tof/60/60/24));
 		
-		//TODO: getMeanMotion
-		double omega = 2*Math.PI/targetBody.getKeplerianElements().getKeplerianOrbit().getPeriod();
+		double omega = targetBody.getKeplerianElements().getKeplerianOrbit().getMeanMotion();
 		angle = theta - omega * tof;
 		
 		txtAngle.setText(String.format("%3.6f", Math.toDegrees(angle)));
+		calculateAngle();
 	}
 	
 	protected MovingObject findObjectOrbitingCenter(MovingObject movingObject) {
@@ -285,8 +292,14 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
 		return m;
 	}
 	
-	protected void calculateCurrentAngle() {
-		double currentAngle = selectedSpacecraft.getPosition().angle(targetPlanet.getPosition());
+	protected void calculateAngle() {
+		Calendar cal = timePanel.getModel().getCalendar();
+		Timestamp timestamp = TimeUtils.fromCalendar(cal);
+		calculateAngle(timestamp);
+	}
+	
+	protected void calculateAngle(Timestamp timestamp) {
+		double currentAngle = selectedSpacecraft.getPosition(timestamp).angle(targetPlanet.getPosition(timestamp));
 		txtCurrentAngle.setText(String.format("%3.6f", Math.toDegrees(currentAngle)));
 		
 		double angleDiff =  angle - currentAngle;
@@ -294,8 +307,8 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements M
 	}
 
 	@Override
-	public void modelChanged(ModelChangeEvent event) {
-		calculateCurrentAngle();
+	public void propertyChange(PropertyChangeEvent evt) {
+		calculateAngle();
 	}
 
 }

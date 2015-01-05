@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.momega.spacesimulator.builder.SimpleSolarSystemModelBuilder;
 import com.momega.spacesimulator.context.AppConfig;
 import com.momega.spacesimulator.context.DefaultApplication;
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.service.ModelService;
 import com.momega.spacesimulator.service.UserPointService;
@@ -33,7 +34,7 @@ public class ApplicationTest {
         Spacecraft spacecraft = spacecraftList.get(0);
 
         UserPointService ups = application.getService(UserPointService.class);
-        ups.createUserOrbitalPoint(spacecraft, "Some User Points", Math.toRadians(90));
+        ups.createUserOrbitalPoint(spacecraft, "Some User Points", Math.toRadians(90), ModelHolder.getModel().getTime());
 
         for(int i=0; i<5000; i++) {
             application.next(true, 1.0);

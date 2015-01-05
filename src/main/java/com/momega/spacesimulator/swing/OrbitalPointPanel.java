@@ -124,7 +124,7 @@ public class OrbitalPointPanel extends JPanel implements UpdatablePanel {
                     Object newTheta = JOptionPane.showInputDialog(OrbitalPointPanel.this, "True Anomaly:", "True Anomaly Dialog", JOptionPane.PLAIN_MESSAGE, null, null, Math.toDegrees(orbitalPoint.getKeplerianElements().getTrueAnomaly()));
                     if (newTheta instanceof String && ((String) newTheta).length()>0) {
                         try {
-                            userPointService.updateUserOrbitalPoint((UserOrbitalPoint) point, Math.toRadians(Double.valueOf((String) newTheta)), movingObject);
+                            userPointService.updateUserOrbitalPoint((UserOrbitalPoint) point, Math.toRadians(Double.valueOf((String) newTheta)), movingObject, ModelHolder.getModel().getTime());
                         } catch (NumberFormatException nfe) {
                             JOptionPane.showMessageDialog(OrbitalPointPanel.this,
                                     "Incorrect angle",

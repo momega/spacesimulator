@@ -177,7 +177,8 @@ public class NewtonianPropagator implements Propagator {
      * Solves the velocity and position by the simple Euler method
      * @param spacecraft the spacecraft
      * @param newTimestamp
-     *@param dt time interval  @return the position
+     * @param dt time interval
+     * @return the position
      */
     protected CartesianState eulerSolver(Spacecraft spacecraft, Timestamp newTimestamp, double dt) {
         // Euler's method

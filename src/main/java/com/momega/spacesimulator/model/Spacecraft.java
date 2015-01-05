@@ -149,9 +149,9 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
 
         while(!t.after(interval.getEndTime())) {
             KeplerianElements ke = KeplerianElements.fromTimestamp(getKeplerianElements().getKeplerianOrbit(), t);
-            Vector3d thisPosition = ke.getCartesianPosition();
-            Vector3d otherObj = KeplerianElements.fromTimestamp(other.getKeplerianElements().getKeplerianOrbit(), t).getCartesianPosition();
-            double dist = thisPosition.subtract(otherObj).length();
+        	Vector3d thisPosition = ke.getCartesianPosition();
+            Vector3d otherPosition = other.getPosition(t);
+            double dist = thisPosition.subtract(otherPosition).length();
             if (dist< bestDistance) {
                 error = Math.abs(dist-bestDistance);
                 bestDistance = dist;

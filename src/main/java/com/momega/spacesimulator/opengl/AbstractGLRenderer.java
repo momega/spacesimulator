@@ -69,7 +69,6 @@ public abstract class AbstractGLRenderer implements GLEventListener {
 
             // computes the view object
             computeView(drawable);
-
         }
 
         // draw all objects
