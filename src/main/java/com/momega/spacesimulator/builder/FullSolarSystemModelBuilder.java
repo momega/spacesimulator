@@ -2,7 +2,10 @@ package com.momega.spacesimulator.builder;
 
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.springframework.stereotype.Component;
 
 /**
@@ -175,7 +178,7 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         
         Planet neptune = new Planet();
         updateDynamicalPoint(neptune, "Neptune", 102.43, 0.6713, 24.764, 299.36, 43.46, "Neptune", null);
-        createKeplerianElements(neptune, sun, 4498542.600d * 1E6, 0.00867797, 273.219414, 60190.03, 2471199.431232342497, 1.767975, 131.782974);
+        createKeplerianElements(neptune, sun, 4498542.600d * 1E6, 0.00867797, 2.909626560154423E+02, 60190.03, 2471199.431232342497, 1.772543041839700, 131.782974);
         createTrajectory(neptune, "#000066");
         neptune.setTextureFileName("neptune.jpg");
         addMovingObject(neptune);
@@ -254,6 +257,11 @@ public class FullSolarSystemModelBuilder extends SolarSystemModelBuilder {
         
         addPlanetToSoiTree(halleyComet, sunSoi);
         
+    }
+    
+    @Override
+    protected void initTime() {
+    	model.setTime(TimeUtils.fromDateTime(new DateTime(2015, 1, 5, 8, 0, DateTimeZone.UTC)));
     }
 
     @Override
