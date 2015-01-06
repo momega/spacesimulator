@@ -1,11 +1,11 @@
 package com.momega.spacesimulator.renderer;
 
-import com.momega.spacesimulator.model.KeplerianElements;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.Target;
-
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
+
+import com.momega.spacesimulator.model.ExitSoiOrbitalPoint;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.Spacecraft;
 
 /**
  * Created by martin on 10/24/14.
@@ -20,10 +20,10 @@ public class TargetTrajectoryRenderer extends AbstractKeplerianTrajectoryRendere
 
     @Override
     public void draw(GLAutoDrawable drawable) {
-    	if (Preferences.getInstance().isDrawTargetTrajectory()) {
-	        if (RendererModel.getInstance().isVisibleOnScreen(spacecraft)) {
-	            Target target = spacecraft.getTarget();
-	            KeplerianElements keplerianElements = target.getKeplerianElements();
+        if (RendererModel.getInstance().isVisibleOnScreen(spacecraft)) {
+            ExitSoiOrbitalPoint exitSoiOrbitalPoint = spacecraft.getExitSoiOrbitalPoint();
+            if (exitSoiOrbitalPoint != null) {
+	            KeplerianElements keplerianElements = exitSoiOrbitalPoint.getPredictedKeplerianElements();
 	            if (keplerianElements != null) {
 	                GL2 gl = drawable.getGL().getGL2();
 	                gl.glPushMatrix();
@@ -32,13 +32,13 @@ public class TargetTrajectoryRenderer extends AbstractKeplerianTrajectoryRendere
 	
 	                gl.glPopMatrix();
 	            }
-	        }
-    	}
+            }
+        }
     }
 
     @Override
     public double[] getColor() {
-        return new double[] { 0, 1, 0};
+        return new double[] { 1, 1, 0.4};
     }
 
 }

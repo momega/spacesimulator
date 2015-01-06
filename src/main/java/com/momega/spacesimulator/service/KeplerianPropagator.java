@@ -23,14 +23,14 @@ public class KeplerianPropagator implements Propagator {
 
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
-        KeplerianElements keplerianElements = movingObject.getKeplerianElements();
-        KeplerianOrbit keplerianOrbit = keplerianElements.getKeplerianOrbit();
+        KeplerianOrbit keplerianOrbit = movingObject.getKeplerianElements().getKeplerianOrbit();
 
-        keplerianElements = KeplerianElements.fromTimestamp(keplerianOrbit, newTimestamp);
+        KeplerianElements keplerianElements = KeplerianElements.fromTimestamp(keplerianOrbit, newTimestamp);
         CartesianState cartesianState = keplerianElements.toCartesianState();
 
         movingObject.setKeplerianElements(keplerianElements);
         movingObject.setCartesianState(cartesianState);
+        movingObject.setTimestamp(newTimestamp);
         
         if (!ModelHolder.getModel().isRunningHeadless()) {
 	        apsisService.updatePeriapsis(movingObject);

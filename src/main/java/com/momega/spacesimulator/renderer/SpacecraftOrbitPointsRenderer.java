@@ -38,6 +38,9 @@ public class SpacecraftOrbitPointsRenderer extends AbstractOrbitalPositionProvid
         for(ManeuverPoint maneuverPoint : maneuverPoints) {
             renderPositionProvider(gl, maneuverPoint);
         }
+        if (spacecraft.getExitSoiOrbitalPoint()!=null) {
+        	renderPositionProvider(gl, spacecraft.getExitSoiOrbitalPoint());
+        }
     }
 
 }

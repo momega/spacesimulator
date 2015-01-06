@@ -13,7 +13,7 @@ public class StaticPropagator implements Propagator {
 
     @Override
     public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
-        // do nothing
+    	movingObject.setTimestamp(newTimestamp);
     }
 
     @Override

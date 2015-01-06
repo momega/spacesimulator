@@ -11,7 +11,6 @@ import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.model.Trajectory;
 
 /**
  * The motion service is responsible for computing new position of moving objects such as planets and satellites.
@@ -37,7 +36,6 @@ public class MotionService {
         if (warpFactor > 0) {
             for (MovingObject mo : modelService.findAllMovingObjects()) {
                 move(mo, newTimestamp);
-                mo.setTimestamp(newTimestamp);
             }
         }
         return newTimestamp;
@@ -51,8 +49,6 @@ public class MotionService {
     public void move(MovingObject movingObject, Timestamp newTimestamp) {
         logger.debug("new time = {}", newTimestamp);
         Assert.notNull(movingObject);
-        Trajectory trajectory = movingObject.getTrajectory();
-        Assert.notNull(trajectory);
         for (Propagator propagator : propagators) {
             if (propagator.supports(movingObject)) {
                 propagator.computePosition(movingObject, newTimestamp);

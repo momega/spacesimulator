@@ -156,5 +156,19 @@ public class CartesianState {
 
         return keplerianElements;
     }
+    
+    /**
+     * Computers the relative keplerian elements of this cartesian state relative to some celestial body and
+     * its current/future cartesian state
+     * @param celestialBody
+     * @param celestialBodyCartesianState
+     * @param timestamp the timestamp
+     * @return new instance of the keplerian elements
+     */
+    public KeplerianElements computeRelativeKeplerianElements(CelestialBody celestialBody, CartesianState celestialBodyCartesianState, Timestamp timestamp) {
+    	CartesianState relativeCartesianState = subtract(celestialBodyCartesianState);
+    	KeplerianElements relativeKeplerianElements = relativeCartesianState.toKeplerianElements(celestialBody, timestamp);
+    	return relativeKeplerianElements;
+    }
 
 }

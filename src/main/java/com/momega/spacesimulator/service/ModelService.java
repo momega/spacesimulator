@@ -87,6 +87,9 @@ public class ModelService {
                 for(TargetClosestPoint closestPoint : targetService.getTargetClosestPoints(spacecraft)) {
                     result.add(closestPoint);
                 }
+                if (spacecraft.getExitSoiOrbitalPoint()!=null) {
+                	result.add(spacecraft.getExitSoiOrbitalPoint());
+                }
             }
         }
         return result;

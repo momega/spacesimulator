@@ -3,19 +3,10 @@ package com.momega.spacesimulator.model;
 /**
  * Created by martin on 12/28/14.
  */
-public class TargetClosestPoint extends AbstractOrbitalPoint {
+public class TargetClosestPoint extends AbstractTargetOrbitalPoint {
 
-    private transient MovingObject targetObject;
     private double distance;
     private double error;
-
-    public MovingObject getTargetObject() {
-        return targetObject;
-    }
-
-    public void setTargetObject(MovingObject targetObject) {
-        this.targetObject = targetObject;
-    }
 
     public void setDistance(double distance) {
         this.distance = distance;

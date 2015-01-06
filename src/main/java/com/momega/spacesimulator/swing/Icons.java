@@ -16,6 +16,7 @@ public final class Icons {
     public static final ImageIcon APSIS_POINT = SwingUtils.createImageIcon("/images/Letter-A-icon.png");
     public static final ImageIcon PERIAPSIS_POINT = SwingUtils.createImageIcon("/images/Letter-P-icon.png");
     public static final ImageIcon INTERSECTION_POINT = SwingUtils.createImageIcon("/images/Math-divide-icon.png");
+    public static final ImageIcon EXIT_SOI_POINT = SwingUtils.createImageIcon("/images/Letter-E-icon.png");
     public static final ImageIcon CLOSEST_POINT = SwingUtils.createImageIcon("/images/Math-multiply-icon.png");
     public static final ImageIcon HISTORY_POINT = SwingUtils.createImageIcon("/images/Letter-H-icon.png");
     public static final ImageIcon USER_POINT = SwingUtils.createImageIcon("/images/Letter-U-icon.png");

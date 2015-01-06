@@ -18,7 +18,6 @@ import com.momega.spacesimulator.model.ManeuverPoint;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.SphereOfInfluence;
 import com.momega.spacesimulator.model.Target;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.model.TrajectoryType;
@@ -64,17 +63,19 @@ public class NewtonianPropagator implements Propagator {
 
         CartesianState cartesianState = eulerSolver(spacecraft, newTimestamp, dt);
         movingObject.setCartesianState(cartesianState);
+        movingObject.setTimestamp(newTimestamp);
 
         computePrediction(spacecraft, newTimestamp);
         if (!ModelHolder.getModel().isRunningHeadless()) {
 	        computeApsides(spacecraft);
 	        computeTargetPoints(spacecraft, newTimestamp);
+	        computeExitPoint(spacecraft, newTimestamp);
 	        computeManeuvers(spacecraft, newTimestamp);
 	        computeUserPoints(spacecraft, newTimestamp);
         }
     }
 
-    protected void computeUserPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
+	protected void computeUserPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
 		userPointService.computeUserPoints(spacecraft, newTimestamp);
 	}
 
@@ -92,6 +93,10 @@ public class NewtonianPropagator implements Propagator {
         maneuverPoint.setPosition(position);
         maneuverPoint.setKeplerianElements(keplerianElements);
     }
+    
+    protected void computeExitPoint(Spacecraft spacecraft, Timestamp newTimestamp) {
+    	sphereOfInfluenceService.findExitSoi(spacecraft, newTimestamp);
+	}
 
     protected void computeTargetPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
     	// if there is no target
@@ -121,8 +126,7 @@ public class NewtonianPropagator implements Propagator {
         targetService.computeClosestPoint(spacecraft, newTimestamp);
 
         // compute trajectory relative to the target body
-        CartesianState cartesianState = spacecraft.getCartesianState().subtract(target.getTargetBody().getCartesianState());
-        KeplerianElements targetKeplerianElements = cartesianState.toKeplerianElements(target.getTargetBody(), newTimestamp);
+        KeplerianElements targetKeplerianElements = spacecraft.getCartesianState().computeRelativeKeplerianElements(target.getTargetBody(),target.getTargetBody().getCartesianState(), newTimestamp);
         target.setKeplerianElements(targetKeplerianElements);
     }
 
@@ -154,8 +158,8 @@ public class NewtonianPropagator implements Propagator {
      * @param newTimestamp new timestamp
      */
     public void computePrediction(Spacecraft spacecraft, Timestamp newTimestamp) {
-        SphereOfInfluence soi = sphereOfInfluenceService.findCurrentSoi(spacecraft);
-        CelestialBody soiBody = soi.getBody();
+        FindSoiResult findSoiResult = sphereOfInfluenceService.findSoi(spacecraft, newTimestamp);
+        CelestialBody soiBody = findSoiResult.getSphereOfInfluence().getBody();
 
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
         if (keplerianElements!=null && keplerianElements.getKeplerianOrbit().getCentralObject() != soiBody) {
