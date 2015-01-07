@@ -103,7 +103,7 @@ public class TargetService {
         KeplerianOrbit orbit = spacecraft.getKeplerianElements().getKeplerianOrbit();
         Line intersectionLine;
         try {
-        	intersectionLine = spacecraftPlane.intersection(targetBodyPlane, orbit.getCentralObject().getPosition());
+        	intersectionLine = spacecraftPlane.intersection(targetBodyPlane, orbit.getReferenceFrame().getPosition());
         } catch (IllegalStateException e) {
         	logger.warn("almost colinear planes, planesAngle = {}", Math.toDegrees(angle));
         	target.setOrbitIntersections(new ArrayList<OrbitIntersection>());
@@ -111,7 +111,7 @@ public class TargetService {
         }
 
         // now transform to 2D to compute intersections
-        Vector3d intersectionLinePoint = intersectionLine.getOrigin().subtract(orbit.getCentralObject().getPosition());
+        Vector3d intersectionLinePoint = intersectionLine.getOrigin().subtract(orbit.getReferenceFrame().getPosition());
         intersectionLinePoint = VectorUtils.transform(orbit, intersectionLinePoint);
         Vector3d intersectionLineVector = VectorUtils.transform(orbit, intersectionLine.getDirection()).normalize();
         intersectionLine = new Line(intersectionLinePoint, intersectionLineVector);
@@ -174,7 +174,7 @@ public class TargetService {
     protected Plane createOrbitalPlane(MovingObject movingObject) {
         CartesianState relative = VectorUtils.relativeCartesianState(movingObject);
         Vector3d normal = relative.getAngularMomentum();
-        Vector3d origin = movingObject.getKeplerianElements().getKeplerianOrbit().getCentralObject().getPosition();
+        Vector3d origin = movingObject.getKeplerianElements().getKeplerianOrbit().getReferenceFrame().getPosition();
         return new Plane(origin, normal);
     }
 
@@ -193,7 +193,7 @@ public class TargetService {
         Assert.notNull(target.getTargetBody());
 
         CelestialBody parent = sphereOfInfluenceService.findParentBody(spacecraft.getTarget().getTargetBody());
-        if (spacecraft.getKeplerianElements().getKeplerianOrbit().getCentralObject() != parent) {
+        if (spacecraft.getKeplerianElements().getKeplerianOrbit().getReferenceFrame() != parent) {
             target.setClosestPoint(null);
             return; // do nothing we are not within the same sphere of influence
         }

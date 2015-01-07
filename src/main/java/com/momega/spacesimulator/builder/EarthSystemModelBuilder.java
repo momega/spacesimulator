@@ -57,7 +57,7 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
         KeplerianOrbit keplerianOrbit = new KeplerianOrbit();
         keplerianOrbit.setArgumentOfPeriapsis(0);
         keplerianOrbit.setAscendingNode(0);
-        keplerianOrbit.setCentralObject(earth);
+        keplerianOrbit.setReferenceFrame(earth);
         keplerianOrbit.setEccentricity(0.001);
         keplerianOrbit.setInclination(0);
         keplerianOrbit.setPeriod(90.0 * 60);

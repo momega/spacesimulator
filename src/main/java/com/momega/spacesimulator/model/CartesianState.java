@@ -2,8 +2,6 @@ package com.momega.spacesimulator.model;
 
 import org.apache.commons.math3.util.FastMath;
 
-import com.momega.spacesimulator.utils.MathUtils;
-
 /**
  * Created by martin on 8/12/14.
  */
@@ -51,22 +49,26 @@ public class CartesianState {
     public Vector3d getAngularMomentum() {
         return position.cross(velocity);
     }
+    
+    public KeplerianElements toKeplerianElements(CelestialBody celestialBody, Timestamp newTimestamp) {
+    	double mi = celestialBody.getGravitationParameter();
+    	return toKeplerianElements(celestialBody, newTimestamp, mi);
+    }
 
     /**
      * Computes the keplerian elements from the cartesian coordinates.
-     * @param soiBody the central object of the result central object. This comes from from sphere of influence
+     * @param referenceFrame the the reference frame of the central point. 
      * @param newTimestamp new timestamp
+     * @param mi the gravitation parameter (mass * G)
      * @return new instance of the keplerian elements.
      */
-    public KeplerianElements toKeplerianElements(CelestialBody soiBody, Timestamp newTimestamp) {
+    public KeplerianElements toKeplerianElements(ReferenceFrame referenceFrame, Timestamp newTimestamp, double mi) {
         Vector3d position = getPosition();
         Vector3d velocity = getVelocity();
         Vector3d hVector = getAngularMomentum();
 
         double h = hVector.length();
         double i = FastMath.acos(hVector.getZ() / h);
-
-        double mi = soiBody.getMass() * MathUtils.G;
 
         Vector3d eVector = velocity.cross(hVector).scale(1/mi).subtract(position.normalize());
         double e = eVector.length();
@@ -133,7 +135,7 @@ public class CartesianState {
         KeplerianElements keplerianElements = new KeplerianElements();
         KeplerianOrbit keplerianOrbit = new KeplerianOrbit();
         keplerianElements.setKeplerianOrbit(keplerianOrbit);
-        keplerianOrbit.setCentralObject(soiBody);
+        keplerianOrbit.setReferenceFrame(referenceFrame);
         keplerianOrbit.setInclination(i);
         keplerianOrbit.setEccentricity(e);
         keplerianOrbit.setSemimajorAxis(a);
@@ -165,9 +167,9 @@ public class CartesianState {
      * @param timestamp the timestamp
      * @return new instance of the keplerian elements
      */
-    public KeplerianElements computeRelativeKeplerianElements(CelestialBody celestialBody, CartesianState celestialBodyCartesianState, Timestamp timestamp) {
-    	CartesianState relativeCartesianState = subtract(celestialBodyCartesianState);
-    	KeplerianElements relativeKeplerianElements = relativeCartesianState.toKeplerianElements(celestialBody, timestamp);
+    public KeplerianElements computeRelativeKeplerianElements(ReferenceFrame referenceFrame, double gravitationalParameter, Timestamp timestamp) {
+    	CartesianState relativeCartesianState = subtract(referenceFrame.getCartesianState());
+    	KeplerianElements relativeKeplerianElements = relativeCartesianState.toKeplerianElements(referenceFrame, timestamp, gravitationalParameter);
     	return relativeKeplerianElements;
     }
 

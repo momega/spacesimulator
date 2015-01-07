@@ -226,7 +226,7 @@ public class KeplerianElements {
         cartesianState.setPosition(r);
         cartesianState.setVelocity(v);
 
-        cartesianState = cartesianState.add(getKeplerianOrbit().getCentralObject().getCartesianState());
+        cartesianState = cartesianState.add(getKeplerianOrbit().getReferenceFrame().getCartesianState());
 
         return cartesianState;
     }
@@ -294,8 +294,8 @@ public class KeplerianElements {
         double e = getKeplerianOrbit().getEccentricity();
         double r = getKeplerianOrbit().getSemimajorAxis() * (1 - e * e) / (1 + e * Math.cos(getTrueAnomaly()));
         double radius = 0;
-        if (getKeplerianOrbit().getCentralObject() instanceof RotatingObject) {
-            RotatingObject ro = (RotatingObject) getKeplerianOrbit().getCentralObject();
+        if (getKeplerianOrbit().getReferenceFrame() instanceof RotatingObject) {
+            RotatingObject ro = (RotatingObject) getKeplerianOrbit().getReferenceFrame();
             radius = ro.getRadius();
         }
         r = r - radius;

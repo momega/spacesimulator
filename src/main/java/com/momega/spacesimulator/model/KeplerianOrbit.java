@@ -15,7 +15,7 @@ import com.momega.spacesimulator.utils.TimeUtils;
  */
 public class KeplerianOrbit {
 
-    private transient MovingObject centralObject;
+    private transient ReferenceFrame referenceFrame;
     private double semimajorAxis; // (a)
     private double eccentricity; // epsilon
     private double argumentOfPeriapsis; // lowercase omega
@@ -53,12 +53,12 @@ public class KeplerianOrbit {
      * and as a gravitation parameter for period computation
      * @return the central object
      */
-    public MovingObject getCentralObject() {
-        return centralObject;
+    public ReferenceFrame getReferenceFrame() {
+        return referenceFrame;
     }
 
-    public void setCentralObject(MovingObject centralObject) {
-        this.centralObject = centralObject;
+    public void setReferenceFrame(ReferenceFrame referenceFrame) {
+        this.referenceFrame = referenceFrame;
     }
 
     public void setEccentricity(double eccentricity) {
@@ -154,7 +154,7 @@ public class KeplerianOrbit {
         double inclination = getInclination();
         double ascendingNode = getAscendingNode();
         Vector3d v = getCartesianPosition(r, trueAnomaly, inclination, ascendingNode, argumentOfPeriapsis );
-        return getCentralObject().getCartesianState().getPosition().add(v);
+        return getReferenceFrame().getCartesianState().getPosition().add(v);
     }
 
     public static Vector3d getCartesianPosition(double r, double theta, double inclination, double ascendingNode, double argumentOfPeriapsis) {

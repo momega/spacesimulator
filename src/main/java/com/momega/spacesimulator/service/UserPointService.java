@@ -102,7 +102,7 @@ public class UserPointService {
     protected void createKeplerianElementsByPosition(MovingObject movingObject, UserOrbitalPoint userPoint, Vector3d position, Timestamp timestamp) {
         KeplerianOrbit keplerianOrbit = movingObject.getKeplerianElements().getKeplerianOrbit();
         logger.debug("orbit = {}", keplerianOrbit.toString());
-        Vector3d v = position.subtract(keplerianOrbit.getCentralObject().getPosition());
+        Vector3d v = position.subtract(keplerianOrbit.getReferenceFrame().getPosition());
         v = VectorUtils.transform(keplerianOrbit, v);
         logger.debug("vector = {}", v.asArray());
         double theta = Math.atan2(v.getY(), v.getX());

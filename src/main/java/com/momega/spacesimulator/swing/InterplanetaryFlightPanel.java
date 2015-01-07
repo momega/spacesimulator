@@ -267,7 +267,7 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements P
 		double e = 1 - (rA/atx);
 		double theta = FastMath.acos((atx/rB*(1-e*e)-1)/e);
 		double E = KeplerianElements.solveEA(e, theta);
-		double mi = MathUtils.G * rootBody.getMass();
+		double mi = rootBody.getGravitationParameter();
 		double tof = (E - e* FastMath.sin(E)) * FastMath.sqrt(atx*atx*atx / mi);
 		txtEccentricity.setText(String.format("%3.6f", e));
 		txtTheta.setText(String.format("%3.6f", Math.toDegrees(theta)));
@@ -282,13 +282,15 @@ public class InterplanetaryFlightPanel extends AbstractDefaultPanel implements P
 	
 	protected MovingObject findObjectOrbitingCenter(MovingObject movingObject) {
 		MovingObject m = movingObject;
-		if (m.isStatic()) {
-			// we are orbiting center of the system, I do not know what to do
-			return null;
-		}
-		while(!m.getOrbitingBody().isStatic()) {
-			m = m.getOrbitingBody();
-		}
+		
+//		TODO: Fix this		
+//		if (m.isStatic()) {
+//			// we are orbiting center of the system, I do not know what to do
+//			return null;
+//		}
+//		while(!m.getOrbitingBody().isStatic()) {
+//			m = m.getOrbitingBody();
+//		}
 		return m;
 	}
 	

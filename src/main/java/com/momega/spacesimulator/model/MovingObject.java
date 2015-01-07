@@ -9,22 +9,12 @@ import java.util.List;
  * The state of the object is defined for the given {@link #getTimestamp()}.
  * Created by martin on 10.5.2014.
  */
-public abstract class MovingObject extends NamedObject implements PositionProvider {
+public abstract class MovingObject extends ReferenceFrame {
 
-    private CartesianState cartesianState;
     private KeplerianElements keplerianElements;
     private KeplerianTrajectory trajectory;
-    private Timestamp timestamp;
 	protected List<UserOrbitalPoint> userOrbitalPoints = new ArrayList<>();
 	protected Integer index;
-
-    public CartesianState getCartesianState() {
-        return cartesianState;
-    }
-
-    public void setCartesianState(CartesianState cartesianState) {
-        this.cartesianState = cartesianState;
-    }
 
     public KeplerianTrajectory getTrajectory() {
         return trajectory;
@@ -32,14 +22,6 @@ public abstract class MovingObject extends NamedObject implements PositionProvid
 
     public void setTrajectory(KeplerianTrajectory trajectory) {
         this.trajectory = trajectory;
-    }
-
-    public Timestamp getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
     }
 
     public void setKeplerianElements(KeplerianElements keplerianElements) {
@@ -66,19 +48,6 @@ public abstract class MovingObject extends NamedObject implements PositionProvid
         return position;
     }
 
-    @Override
-    public Vector3d getPosition() {
-        if (getCartesianState() == null) {
-            return null;
-        } else {
-            return getCartesianState().getPosition();
-        }
-    }
-    
-    public MovingObject getOrbitingBody() {
-    	return getKeplerianElements().getKeplerianOrbit().getCentralObject();
-    }
-    
     public boolean isStatic() {
     	return getTrajectory().getType()==TrajectoryType.STATIC;
     }

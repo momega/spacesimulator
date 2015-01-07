@@ -12,6 +12,7 @@ import com.momega.spacesimulator.model.DefaultTimeInterval;
 import com.momega.spacesimulator.model.ExitSoiOrbitalPoint;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.ReferenceFrame;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.SphereOfInfluence;
 import com.momega.spacesimulator.model.TimeInterval;
@@ -105,7 +106,7 @@ public class SphereOfInfluenceService {
     public boolean solveExitSoiPoint(Spacecraft spacecraft, ExitSoiOrbitalPoint exitSoiPoint, TimeInterval interval, double dT) {
     	Timestamp t = interval.getStartTime();
     	
-    	MovingObject currentSoi = spacecraft.getOrbitingBody();
+    	ReferenceFrame currentSoi = spacecraft.getKeplerianElements().getKeplerianOrbit().getReferenceFrame();
     	
     	while(!t.after(interval.getEndTime())) {
     		FindSoiResult findSoiResult = findSoi(spacecraft, t);
@@ -124,7 +125,12 @@ public class SphereOfInfluenceService {
     			exitSoiPoint.setError(error);
     			exitSoiPoint.setName("Enter Soi " + newSoiBody.getName());
     			
-    			KeplerianElements predictedKeplerianElements = spacecraftCartesianState.computeRelativeKeplerianElements(newSoiBody, newSoiBodyCartesianState, t);
+    			ReferenceFrame referenceFrame = new ReferenceFrame();
+    			referenceFrame.setCartesianState(newSoiBodyCartesianState);
+    			referenceFrame.setTimestamp(t);
+    			referenceFrame.setName("Future " + newSoiBody.getName());
+    			
+    			KeplerianElements predictedKeplerianElements = spacecraftCartesianState.computeRelativeKeplerianElements(referenceFrame, newSoiBody.getGravitationParameter(), t);
     			exitSoiPoint.setPredictedKeplerianElements(predictedKeplerianElements);
     			return true;
     			

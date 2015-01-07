@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.utils.MathUtils;
+
 
 /**
  * Physical body in space. It is the {@link com.momega.spacesimulator.model.MovingObject} with the mass and the given orientation.
@@ -9,6 +11,7 @@ public abstract class PhysicalBody extends MovingObject {
 
     private double mass;
     private Orientation orientation;
+    private double mi = 0;
 	
     /**
      * Gets the orientation of the 3d object
@@ -32,6 +35,13 @@ public abstract class PhysicalBody extends MovingObject {
 
     public void setMass(double mass) {
         this.mass = mass;
+    }
+    
+    public double getGravitationParameter() {
+    	if (mi == 0) {
+    		mi = this.mass * MathUtils.G; 
+    	}
+    	return mi;
     }
 
 }

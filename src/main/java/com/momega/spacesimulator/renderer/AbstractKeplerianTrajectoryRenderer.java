@@ -16,7 +16,7 @@ public abstract class AbstractKeplerianTrajectoryRenderer extends AbstractRender
 
     protected void drawTrajectory(GL2 gl, KeplerianElements keplerianElements) {
         // the order is important, at first move to focus
-        GLUtils.translate(gl, keplerianElements.getKeplerianOrbit().getCentralObject().getCartesianState().getPosition());
+        GLUtils.translate(gl, keplerianElements.getKeplerianOrbit().getReferenceFrame().getCartesianState().getPosition());
         GLUtils.rotate(gl, keplerianElements);
 
         double a = keplerianElements.getKeplerianOrbit().getSemimajorAxis();

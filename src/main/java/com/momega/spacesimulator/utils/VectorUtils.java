@@ -33,7 +33,7 @@ public final class VectorUtils {
      * @return the new instance of the cartesian state
      */
     public static CartesianState relativeCartesianState(MovingObject movingObject) {
-        return movingObject.getCartesianState().subtract(movingObject.getKeplerianElements().getKeplerianOrbit().getCentralObject().getCartesianState());
+        return movingObject.getCartesianState().subtract(movingObject.getKeplerianElements().getKeplerianOrbit().getReferenceFrame().getCartesianState());
     }
 
     public static boolean equals(Vector3d v1, Vector3d v2, double precision) {

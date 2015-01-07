@@ -25,14 +25,14 @@ public class KeplerianOrbitSerializer extends AbstractSerializer<KeplerianOrbit>
 
 	@Override
 	public void write(JsonObject object, KeplerianOrbit value) {
-		object.addProperty(CENTRAL_OBJECT, value.getCentralObject().getName());
+		object.addProperty(CENTRAL_OBJECT, value.getReferenceFrame().getName());
 	}
 
 	@Override
 	public void read(JsonObject object, KeplerianOrbit value) {
 		MovingObject mo = getNamedObject(object, CENTRAL_OBJECT);
 		Assert.notNull(mo);
-		value.setCentralObject(mo);
+		value.setReferenceFrame(mo);
 	}
 
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.HistoryPointOrigin;
 import com.momega.spacesimulator.model.Maneuver;
-import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.utils.TimeUtils;
@@ -50,7 +50,7 @@ public class HistoryPointService {
         spacecraft.getNamedHistoryPoints().add(hp);
     }
     
-    public void changeSoi(Spacecraft spacecraft, Timestamp timestamp, MovingObject oldSoi, MovingObject newSoi) {
+    public void changeSoi(Spacecraft spacecraft, Timestamp timestamp, PositionProvider oldSoi, PositionProvider newSoi) {
     	if (oldSoi == null) {
     		return; // this happens when the SOI is not initialized
     	}

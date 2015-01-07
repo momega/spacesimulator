@@ -112,7 +112,7 @@ public class NewtonianPropagator implements Propagator {
         }
 
     	// if central of my trajectory is equal target
-    	if (spacecraft.getKeplerianElements().getKeplerianOrbit().getCentralObject() == target.getTargetBody()) {
+    	if (spacecraft.getKeplerianElements().getKeplerianOrbit().getReferenceFrame() == target.getTargetBody()) {
     		targetService.clear(spacecraft);
     		return;
     	}
@@ -126,8 +126,8 @@ public class NewtonianPropagator implements Propagator {
         targetService.computeClosestPoint(spacecraft, newTimestamp);
 
         // compute trajectory relative to the target body
-        KeplerianElements targetKeplerianElements = spacecraft.getCartesianState().computeRelativeKeplerianElements(target.getTargetBody(),target.getTargetBody().getCartesianState(), newTimestamp);
-        target.setKeplerianElements(targetKeplerianElements);
+//        KeplerianElements targetKeplerianElements = spacecraft.getCartesianState().computeRelativeKeplerianElements(target.getTargetBody(), newTimestamp);
+//        target.setKeplerianElements(targetKeplerianElements);
     }
 
     /**
@@ -162,8 +162,8 @@ public class NewtonianPropagator implements Propagator {
         CelestialBody soiBody = findSoiResult.getSphereOfInfluence().getBody();
 
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
-        if (keplerianElements!=null && keplerianElements.getKeplerianOrbit().getCentralObject() != soiBody) {
-            historyPointService.changeSoi(spacecraft, newTimestamp, keplerianElements.getKeplerianOrbit().getCentralObject(), soiBody);
+        if (keplerianElements!=null && keplerianElements.getKeplerianOrbit().getReferenceFrame() != soiBody) {
+            historyPointService.changeSoi(spacecraft, newTimestamp, keplerianElements.getKeplerianOrbit().getReferenceFrame(), soiBody);
             logger.info("changing soi to {} for spacecraft {}", soiBody.getName(), spacecraft.getName());
         }
         

@@ -163,7 +163,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     	Assert.notNull(centralObject);
     	
         KeplerianOrbit orbit = new KeplerianOrbit();
-        orbit.setCentralObject(centralObject);
+        orbit.setReferenceFrame(centralObject);
         orbit.setSemimajorAxis(semimajorAxis);
         orbit.setEccentricity(eccentricity);
         orbit.setArgumentOfPeriapsis(Math.toRadians(argumentOfPeriapsis));
