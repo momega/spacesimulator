@@ -12,7 +12,6 @@ import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.Ring;
 import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.TrajectoryType;
 
 /**
  * The composite renderer which prepares all the renderers for the single moving object
@@ -30,8 +29,12 @@ public class MovingObjectCompositeRenderer extends CompositeRenderer {
 	
     public List<Renderer> createRenderers(MovingObject mo) {
     	List<Renderer> list = new ArrayList<>();
-    	if (!TrajectoryType.STATIC.equals(mo.getTrajectory().getType())) {
-            addRenderer(new KeplerianTrajectoryRenderer(mo));
+    	if (!mo.isStatic()) {
+    		if (mo instanceof Spacecraft) {
+    			addRenderer(new KeplerianTrajectoryRenderer(mo));
+    		} else {
+    			addRenderer(new CachedKeplerianTrajectoryRenderer(mo));
+    		}
         }
         addRenderer(new UserOrbitalPointBitmapRenderer(mo));
         addRenderer(new MovingObjectOrbitPointsRenderer(mo));

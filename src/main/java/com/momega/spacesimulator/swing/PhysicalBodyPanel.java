@@ -19,7 +19,7 @@ public class PhysicalBodyPanel extends JPanel implements UpdatablePanel {
 
 	private static final long serialVersionUID = -5918341585588323813L;
 	private final static String[] LABELS = {"Name", "Mass", "Radius", "Rotation Period", "North Pole RA", "North Pole DEC", "Prime Meridian", "Prime Meridian JD2000"};
-    private final static String[] FIELDS = {"#obj.name", "#obj.mass", "#obj.radius", "#obj.rotationPeriod", "#toDegrees(#obj.orientation.v.toSphericalCoordinates().phi)", "#toDegrees(#obj.orientation.toSphericalCoordinates().theta)", "#toDegrees(#obj.primeMeridian)", "#toDegrees(#obj.primeMeridianJd2000)"};
+    private final static String[] FIELDS = {"#obj.name", "#obj.mass", "#obj.radius", "#obj.rotationPeriod", "#toDegrees(#obj.orientation.v.toSphericalCoordinates().phi)", "#toDegrees(#obj.orientation.v.toSphericalCoordinates().theta)", "#toDegrees(#obj.primeMeridian)", "#toDegrees(#obj.primeMeridianJd2000)"};
 
     private final AttributesPanel attrPanel;
 

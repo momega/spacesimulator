@@ -22,14 +22,12 @@ public class KeplerianTrajectoryRenderer extends AbstractKeplerianTrajectoryRend
             GL2 gl = drawable.getGL().getGL2();
             gl.glPushMatrix();
 
-        	MovingObject spacecraft  = (MovingObject) movingObject;
             gl.glEnable(GL2.GL_STENCIL_TEST);
             gl.glStencilOp(GL2.GL_KEEP, GL2.GL_KEEP, GL2.GL_REPLACE);
 
-            gl.glStencilFunc(GL2.GL_ALWAYS, spacecraft.getIndex(), 0xff); // 1 is variable
+            gl.glStencilFunc(GL2.GL_ALWAYS, movingObject.getIndex(), 0xff); // 1 is variable
 
             drawTrajectory(gl, movingObject.getKeplerianElements());
-
             gl.glDisable(GL2.GL_STENCIL_TEST);
 
             gl.glPopMatrix();
