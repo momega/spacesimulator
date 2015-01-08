@@ -11,6 +11,7 @@ public class ExitSoiOrbitalPoint extends AbstractTargetOrbitalPoint {
 
 	private KeplerianElements predictedKeplerianElements;
 	private double error;
+	private Apsis closestPoint;
 	
 	public KeplerianElements getPredictedKeplerianElements() {
 		return predictedKeplerianElements;
@@ -26,6 +27,14 @@ public class ExitSoiOrbitalPoint extends AbstractTargetOrbitalPoint {
 	
 	public void setError(double error) {
 		this.error = error;
+	}
+	
+	public Apsis getClosestPoint() {
+		return closestPoint;
+	}
+	
+	public void setClosestPoint(Apsis closestPoint) {
+		this.closestPoint = closestPoint;
 	}
 
 }

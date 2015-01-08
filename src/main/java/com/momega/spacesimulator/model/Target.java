@@ -16,7 +16,6 @@ public class Target {
     private transient Double angle = null;
     private transient Double distance = null;
     private KeplerianElements keplerianElements;
-    private TargetClosestPoint closestPoint;
 
     public CelestialBody getTargetBody() {
         return targetBody;
@@ -60,13 +59,5 @@ public class Target {
 
     public void setKeplerianElements(KeplerianElements keplerianElements) {
         this.keplerianElements = keplerianElements;
-    }
-
-    public void setClosestPoint(TargetClosestPoint closestPoint) {
-        this.closestPoint = closestPoint;
-    }
-
-    public TargetClosestPoint getClosestPoint() {
-        return closestPoint;
     }
 }

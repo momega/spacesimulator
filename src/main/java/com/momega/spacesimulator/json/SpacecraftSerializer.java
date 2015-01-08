@@ -2,6 +2,7 @@ package com.momega.spacesimulator.json;
 
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.Maneuver;
 import com.momega.spacesimulator.model.OrbitIntersection;
@@ -16,12 +17,12 @@ public class SpacecraftSerializer extends AbstractSerializer<Spacecraft> {
 	}
 
 	@Override
-	public void write(JsonObject object, Spacecraft value) {
+	public void write(JsonObject object, Spacecraft value, Gson gson) {
 		// do nothing
 	}
 
 	@Override
-	public void read(JsonObject object, Spacecraft value) {
+	public void read(JsonObject object, Spacecraft value, Gson gson) {
 		for(Maneuver maneuver : value.getManeuvers()) {
 			maneuver.getStart().setMovingObject(value);
 			maneuver.getEnd().setMovingObject(value);
@@ -30,9 +31,6 @@ public class SpacecraftSerializer extends AbstractSerializer<Spacecraft> {
 		if (target != null) {
 			for(OrbitIntersection oi : target.getOrbitIntersections()) {
 				oi.setMovingObject(value);
-			}
-			if (target.getClosestPoint()!=null) {
-				target.getClosestPoint().setMovingObject(value);
 			}
 		}
 	}

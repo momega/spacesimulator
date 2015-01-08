@@ -3,14 +3,15 @@
  */
 package com.momega.spacesimulator.renderer;
 
+import java.awt.Point;
+
+import javax.media.opengl.GL2;
+
+import org.springframework.util.Assert;
+
 import com.momega.spacesimulator.model.AbstractOrbitalPoint;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.GLUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
-import org.springframework.util.Assert;
-
-import javax.media.opengl.GL2;
-import java.awt.*;
 
 /**
  * @author martin
@@ -27,9 +28,9 @@ public abstract class AbstractOrbitalPositionProviderRenderer extends AbstractPo
             if (GLUtils.checkDepth(gl, viewCoordinates)) {
                 Point size = getTextSize(orbitalPositionProvider.getName());
                 drawString(orbitalPositionProvider.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);
-                String etaTime = TimeUtils.periodAsString(orbitalPositionProvider);
-                size = getTextSize(etaTime);
-                drawString(etaTime, viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 26);
+//                String etaTime = TimeUtils.periodAsString(orbitalPositionProvider);
+//                size = getTextSize(etaTime);
+//                drawString(etaTime, viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 26);
             }
         }
     }

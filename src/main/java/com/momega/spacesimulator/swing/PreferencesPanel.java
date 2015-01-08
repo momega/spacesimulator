@@ -16,7 +16,6 @@ public class PreferencesPanel extends AbstractDefaultPanel {
 	private static final long serialVersionUID = -1915023260172641370L;
 	private JCheckBox chkBeams;
     private JCheckBox chkSpacecraftAxis;
-    private JCheckBox chkTargetTrajectory;
     private JCheckBox chkCelestialBodyAxis;
 
     public PreferencesPanel() {
@@ -29,10 +28,6 @@ public class PreferencesPanel extends AbstractDefaultPanel {
         chkSpacecraftAxis = new JCheckBox("Show spacecraft orientation axis");
         add(chkSpacecraftAxis);
         chkSpacecraftAxis.setSelected(Preferences.getInstance().isDrawSpacecraftAxisActivated());
-        
-        chkTargetTrajectory = new JCheckBox("Show estimated trajectory to given target");
-        add(chkTargetTrajectory);
-        chkTargetTrajectory.setSelected(Preferences.getInstance().isDrawTargetTrajectory());
 
         chkCelestialBodyAxis = new JCheckBox("Show axis for celestial bodies");
         add(chkCelestialBodyAxis);
@@ -43,7 +38,6 @@ public class PreferencesPanel extends AbstractDefaultPanel {
     public boolean okPressed() {
         Preferences.getInstance().setDrawBeamsActivated(chkBeams.isSelected());
         Preferences.getInstance().setDrawSpacecraftAxisActivated(chkSpacecraftAxis.isSelected());
-        Preferences.getInstance().setDrawTargetTrajectory(chkTargetTrajectory.isSelected());
         Preferences.getInstance().setDrawCelestialBodyAxis(chkCelestialBodyAxis.isSelected());
         RendererModel.getInstance().setReloadRenderersRequired(true);
         return true;

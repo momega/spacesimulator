@@ -31,7 +31,7 @@ public abstract class DefaultWindow extends WindowAdapter {
 
     private static final int WINDOW_WIDTH = 1280;  // width of the drawable
     private static final int WINDOW_HEIGHT = 640; // height of the drawable
-    private static final int FPS = 30; // animator's target frames per second
+    private static final int FPS = 50; // animator's target frames per second
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultWindow.class);
     private GLCanvas canvas;

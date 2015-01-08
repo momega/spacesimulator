@@ -5,6 +5,7 @@ package com.momega.spacesimulator.json;
 
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.SphereOfInfluence;
@@ -23,12 +24,12 @@ public class SphereOfInfluenceSerializer extends AbstractSerializer<SphereOfInfl
 	}
 
 	@Override
-	public void write(JsonObject object, SphereOfInfluence value) {
+	public void write(JsonObject object, SphereOfInfluence value, Gson gson) {
 		object.addProperty(BODY, value.getBody().getName());
 	}
 
 	@Override
-	public void read(JsonObject object, SphereOfInfluence value) {
+	public void read(JsonObject object, SphereOfInfluence value, Gson gson) {
 		CelestialBody cb = getNamedObject(object, BODY);
 		value.setBody(cb);
 

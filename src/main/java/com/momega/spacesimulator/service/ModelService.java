@@ -22,7 +22,6 @@ import com.momega.spacesimulator.model.OrbitIntersection;
 import com.momega.spacesimulator.model.Planet;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.TargetClosestPoint;
 import com.momega.spacesimulator.model.UserOrbitalPoint;
 
 /**
@@ -84,11 +83,11 @@ public class ModelService {
                 for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
                     result.add(maneuverPoint);
                 }
-                for(TargetClosestPoint closestPoint : targetService.getTargetClosestPoints(spacecraft)) {
-                    result.add(closestPoint);
-                }
                 if (spacecraft.getExitSoiOrbitalPoint()!=null) {
                 	result.add(spacecraft.getExitSoiOrbitalPoint());
+                	if (spacecraft.getExitSoiOrbitalPoint().getClosestPoint()!=null){
+                		result.add(spacecraft.getExitSoiOrbitalPoint().getClosestPoint());
+                	}
                 }
             }
         }

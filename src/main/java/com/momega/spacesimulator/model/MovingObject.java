@@ -43,7 +43,11 @@ public abstract class MovingObject extends ReferenceFrame {
     	if (time.compareTo(getTimestamp())==0) {
     		return getPosition();
     	}
-        KeplerianElements ke = KeplerianElements.fromTimestamp(getKeplerianElements().getKeplerianOrbit(), time);
+    	if (isStatic()) {
+    		return getPosition();
+    	}
+    	KeplerianElements ke = getKeplerianElements();
+        ke = KeplerianElements.fromTimestamp(ke.getKeplerianOrbit(), time);
         Vector3d position = ke.getCartesianPosition();
         return position;
     }

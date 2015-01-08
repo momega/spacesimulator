@@ -1,8 +1,9 @@
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.utils.MathUtils;
 import org.apache.commons.math3.util.FastMath;
 import org.springframework.util.Assert;
+
+import com.momega.spacesimulator.utils.MathUtils;
 
 /**
  * The class holding keplerian elements of the trajectory
@@ -196,37 +197,56 @@ public class KeplerianElements {
      * @return new instance of cartesian state
      */
     public CartesianState toCartesianState() {
-        double E = getEccentricAnomaly();
+//    	boolean isHyperbolic = getKeplerianOrbit().isHyperbolic();
 
-        double omega = getKeplerianOrbit().getArgumentOfPeriapsis();
-        double OMEGA = getKeplerianOrbit().getAscendingNode();
-        double i = getKeplerianOrbit().getInclination();
-        double e = getKeplerianOrbit().getEccentricity();
-        double a = getKeplerianOrbit().getSemimajorAxis();
-        double n = getKeplerianOrbit().getMeanMotion();
+//        double omega = getKeplerianOrbit().getArgumentOfPeriapsis();
+//        double OMEGA = getKeplerianOrbit().getAscendingNode();
+//        double i = getKeplerianOrbit().getInclination();
+//        double e = getKeplerianOrbit().getEccentricity();
+//        double a = getKeplerianOrbit().getSemimajorAxis();
+//        double n = getKeplerianOrbit().getMeanMotion();
+//
+//        Vector3d P = new Vector3d(
+//        		FastMath.cos(omega) * FastMath.cos(OMEGA) - FastMath.sin(omega) * FastMath.cos(i) * FastMath.sin(OMEGA),
+//        		FastMath.cos(omega) * FastMath.sin(OMEGA) + FastMath.sin(omega) * FastMath.cos(i) * FastMath.cos(OMEGA),
+//        		FastMath.sin(omega) * FastMath.sin(i)
+//        );
+//
+//        Vector3d Q = new Vector3d(
+//                -FastMath.sin(omega) * FastMath.cos(OMEGA) - FastMath.cos(omega) * FastMath.cos(i) * FastMath.sin(OMEGA),
+//                -FastMath.sin(omega) * FastMath.sin(OMEGA) + FastMath.cos(omega) * FastMath.cos(i) * FastMath.cos(OMEGA),
+//                FastMath.cos(omega) * FastMath.sin(i)
+//        );
+        
+//        final double x,y,xDot,yDot;
+        
+//        if (!isHyperbolic) {
+//	        final double sqrte  = FastMath.sqrt(1 - e * e);
+//	        final double E = getEccentricAnomaly();
+//	        final double cosE = FastMath.cos(E);
+//	        final double sinE = FastMath.sin(E);
+//	
+//	        x = a * (cosE - e);
+//	        y = a * sinE * sqrte;
+//	        final double derE = a * n / (1 - e * cosE);
+//	        xDot = -sinE * derE;
+//	        yDot =  cosE * sqrte * derE;
+//        } else {
+//        	final double sinV = FastMath.sin(getTrueAnomaly());
+//            final double cosV = FastMath.cos(getTrueAnomaly());
+//            final double p = a * (1 - e * e);
+//            final double velFactor = FastMath.abs(a)*n * FastMath.sqrt(-a/p);
+//        	
+//        	xDot = -velFactor * sinV;
+//        	yDot = velFactor * (e + cosV);
+//        }
 
-        Vector3d P = new Vector3d(
-        		FastMath.cos(omega) * FastMath.cos(OMEGA) - FastMath.sin(omega) * FastMath.cos(i) * FastMath.sin(OMEGA),
-        		FastMath.cos(omega) * FastMath.sin(OMEGA) + FastMath.sin(omega) * FastMath.cos(i) * FastMath.cos(OMEGA),
-        		FastMath.sin(omega) * FastMath.sin(i)
-        );
-
-        Vector3d Q = new Vector3d(
-                -FastMath.sin(omega) * FastMath.cos(OMEGA) - FastMath.cos(omega) * FastMath.cos(i) * FastMath.sin(OMEGA),
-                -FastMath.sin(omega) * FastMath.sin(OMEGA) + FastMath.cos(omega) * FastMath.cos(i) * FastMath.cos(OMEGA),
-                FastMath.cos(omega) * FastMath.sin(i)
-        );
-
-        Vector3d r = P.scale(a * (FastMath.cos(E) - e)).scaleAdd(a * FastMath.sqrt(1 - e * e) * FastMath.sin(E), Q);
-
-        double derE = n / (1 - e * FastMath.cos(E));
-        Vector3d v = P.scale(-a * FastMath.sin(E) * derE).scaleAdd(a * FastMath.sqrt(1 - e * e) * FastMath.cos(E) * derE, Q);
+        Vector3d r = getCartesianPosition();
+        Vector3d v = getCartessianVelocity();
 
         CartesianState cartesianState = new CartesianState();
         cartesianState.setPosition(r);
         cartesianState.setVelocity(v);
-
-        cartesianState = cartesianState.add(getKeplerianOrbit().getReferenceFrame().getCartesianState());
 
         return cartesianState;
     }
@@ -238,6 +258,10 @@ public class KeplerianElements {
      */
     public Vector3d getCartesianPosition() {
         return keplerianOrbit.getCartesianPosition(getTrueAnomaly());
+    }
+    
+    public Vector3d getCartessianVelocity() {
+    	return keplerianOrbit.getCartesianVelocity(getTrueAnomaly());
     }
 
     /**
@@ -302,5 +326,10 @@ public class KeplerianElements {
         return r;
     }
 
+	@Override
+	public String toString() {
+		return "KeplerianElements [keplerianOrbit=" + keplerianOrbit
+				+ ", trueAnomaly=" + trueAnomaly + "]";
+	}
 
 }

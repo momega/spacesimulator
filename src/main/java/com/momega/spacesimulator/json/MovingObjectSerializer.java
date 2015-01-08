@@ -5,6 +5,7 @@ package com.momega.spacesimulator.json;
 
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.Apsis;
 import com.momega.spacesimulator.model.KeplerianTrajectory;
@@ -23,12 +24,12 @@ public class MovingObjectSerializer extends AbstractSerializer<MovingObject> {
 	}
 
 	@Override
-	public void write(JsonObject object, MovingObject value) {
+	public void write(JsonObject object, MovingObject value, Gson gson) {
 		// do nothing
 	}
 
 	@Override
-	public void read(JsonObject object, MovingObject value) {
+	public void read(JsonObject object, MovingObject value, Gson gson) {
 		// relink orbital points
 		for(UserOrbitalPoint userOrbitalPoint : value.getUserOrbitalPoints()) {
 			userOrbitalPoint.setMovingObject(value);

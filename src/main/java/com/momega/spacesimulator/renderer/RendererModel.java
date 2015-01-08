@@ -85,7 +85,7 @@ public class RendererModel {
 	private UserOrbitalPoint selectedUserOrbitalPoint;
 	private PropertyChangeSupport propertyChangeSupport;
 
-	private double warpFactor = 0.1;
+	private double warpFactor = 1;
 	
 	private Spacecraft newSpacecraft = null;
 	private Spacecraft deleteSpacecraft = null;

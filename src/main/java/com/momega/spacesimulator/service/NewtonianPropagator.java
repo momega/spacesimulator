@@ -67,9 +67,9 @@ public class NewtonianPropagator implements Propagator {
 
         computePrediction(spacecraft, newTimestamp);
         if (!ModelHolder.getModel().isRunningHeadless()) {
-	        computeApsides(spacecraft);
-	        computeTargetPoints(spacecraft, newTimestamp);
+	        computeApsides(spacecraft, newTimestamp);
 	        computeExitPoint(spacecraft, newTimestamp);
+	        computeTargetPoints(spacecraft, newTimestamp);
 	        computeManeuvers(spacecraft, newTimestamp);
 	        computeUserPoints(spacecraft, newTimestamp);
         }
@@ -123,28 +123,24 @@ public class NewtonianPropagator implements Propagator {
         }
 
    		targetService.computeOrbitIntersection(spacecraft, newTimestamp);
-        targetService.computeClosestPoint(spacecraft, newTimestamp);
-
-        // compute trajectory relative to the target body
-//        KeplerianElements targetKeplerianElements = spacecraft.getCartesianState().computeRelativeKeplerianElements(target.getTargetBody(), newTimestamp);
-//        target.setKeplerianElements(targetKeplerianElements);
+        //targetService.computeClosestPoint(spacecraft, newTimestamp);
     }
 
     /**
      * Computes apsides for the spacecraft trajectory
      * @param spacecraft the spacecraft
      */
-    protected void computeApsides(MovingObject spacecraft) {
+    protected void computeApsides(MovingObject spacecraft, Timestamp newTimestamp) {
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
 
         if (!keplerianElements.getKeplerianOrbit().isHyperbolic()) {
-        	apsisService.updateApoapsis(spacecraft);
-            apsisService.updatePeriapsis(spacecraft);
+        	apsisService.updateApoapsis(spacecraft, newTimestamp);
+            apsisService.updatePeriapsis(spacecraft, newTimestamp);
         } else {
         	Double HA = keplerianElements.getHyperbolicAnomaly();
         	KeplerianTrajectory keplerianTrajectory = spacecraft.getTrajectory();
         	if (HA<0) {
-        		apsisService.updatePeriapsis(spacecraft);
+        		apsisService.updatePeriapsis(spacecraft, newTimestamp);
         	} else {
         		keplerianTrajectory.setPeriapsis(null);
         	}

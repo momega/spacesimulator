@@ -25,7 +25,8 @@ public class KeplerianOrbit {
     private double period; // in seconds
 
     // computed elements
-    private transient Double meanMotion; // n
+    private transient double meanMotion; // n
+    private transient double mi; // mi
 
     /**
      * Semi-major axis in meters of the orbit
@@ -109,14 +110,14 @@ public class KeplerianOrbit {
         return (getEccentricity()>1);
     }
 
-    public Double getMeanMotion() {
-        if (meanMotion == null) {
+    public double getMeanMotion() {
+        if (meanMotion == 0.0) {
         	meanMotion = 2* Math.PI / period;
         }
         return meanMotion;
     }
     
-    public void setMeanMotion(Double meanMotion) {
+    public void setMeanMotion(double meanMotion) {
 		this.meanMotion = meanMotion;
 	}
 
@@ -147,14 +148,51 @@ public class KeplerianOrbit {
      * Focus of the ellipse reflects the [0,0] coordinates in 2D.
      * @return the 3d vector
      */
-    public Vector3d getCartesianPosition(double trueAnomaly) {
+	public Vector3d getCartesianPosition(double trueAnomaly) {
         double argumentOfPeriapsis = getArgumentOfPeriapsis();
         double e = getEccentricity();
         double r = getSemimajorAxis() * (1 - e * e) / (1 + e * FastMath.cos(trueAnomaly));
         double inclination = getInclination();
         double ascendingNode = getAscendingNode();
-        Vector3d v = getCartesianPosition(r, trueAnomaly, inclination, ascendingNode, argumentOfPeriapsis );
-        return getReferenceFrame().getCartesianState().getPosition().add(v);
+        Vector3d p = getCartesianPosition(r, trueAnomaly, inclination, ascendingNode, argumentOfPeriapsis );
+        return getReferenceFrame().getCartesianState().getPosition().add(p);
+    }
+	
+	public void setMi(double mi) {
+		this.mi = mi;
+	}
+	
+	private double getMi() {
+		double n = getMeanMotion();
+		double a = getSemimajorAxis();
+		if (mi == 0 ) {
+			mi = a*a*a*n*n;
+			if (isHyperbolic()) {
+				mi *= -1.0;
+			}
+		}
+		return mi;
+	}
+    
+    public Vector3d getCartesianVelocity(double trueAnomaly) {
+    	double e = getEccentricity();
+    	Vector3d v = getCartesianVelocity(getSemimajorAxis(), getMi(), trueAnomaly, e, inclination, ascendingNode, argumentOfPeriapsis);
+    	return getReferenceFrame().getCartesianState().getVelocity().add(v);
+    }
+    
+    public static Vector3d getCartesianVelocity(double a, double mi, double theta, double e, double inclination, double OMEGA, double omega) {
+    	double param = FastMath.cos(theta) + e;
+    	double p =a * (1-e*e);
+    	double sqrtMdivP = FastMath.sqrt(mi/p);
+    	
+        double x = sqrtMdivP * (param * (-FastMath.sin(omega)*FastMath.cos(OMEGA)-FastMath.cos(inclination)*FastMath.sin(OMEGA)*FastMath.cos(omega))
+        		- FastMath.sin(theta)*(FastMath.cos(omega)*FastMath.cos(OMEGA)-FastMath.cos(inclination)*FastMath.sin(OMEGA)*FastMath.sin(omega)));
+
+        double y = sqrtMdivP * (param * (-FastMath.sin(omega)*FastMath.sin(OMEGA)+FastMath.cos(inclination)*FastMath.cos(OMEGA)*FastMath.cos(omega))
+        		- FastMath.sin(theta)*(FastMath.cos(omega)*FastMath.sin(OMEGA)+FastMath.cos(inclination)*FastMath.cos(OMEGA)*FastMath.sin(omega)));
+        
+        double z = sqrtMdivP * (param * FastMath.sin(inclination) * FastMath.cos(omega) - FastMath.sin(theta)*FastMath.sin(inclination)*FastMath.sin(omega));
+        return new Vector3d(x, y, z);
     }
 
     public static Vector3d getCartesianPosition(double r, double theta, double inclination, double ascendingNode, double argumentOfPeriapsis) {
@@ -211,4 +249,5 @@ public class KeplerianOrbit {
         String result = String.format("(a=%6.2f, e=%6.2f, omega=%6.2f, i=%6.2f, OMEGA=%6.2f, Tp=%s)", semimajorAxis, eccentricity, argumentOfPeriapsis, inclination, ascendingNode, TimeUtils.timeAsString(timeOfPeriapsis));
         return result;
     }
+
 }

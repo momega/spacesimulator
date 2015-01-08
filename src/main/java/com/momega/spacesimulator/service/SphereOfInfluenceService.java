@@ -6,7 +6,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.Apsis;
+import com.momega.spacesimulator.model.ApsisType;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.DefaultTimeInterval;
 import com.momega.spacesimulator.model.ExitSoiOrbitalPoint;
@@ -28,6 +29,12 @@ public class SphereOfInfluenceService {
 
     @Autowired
     private SoiMapCache soiMap;
+    
+    @Autowired
+    private KeplerianElementsService keplerianElementsService;
+    
+    @Autowired
+    private ApsisService apsisService;
     
     private final static double EXIT_SOI_POINT_ERROR = Math.pow(10, 1);
 
@@ -88,11 +95,34 @@ public class SphereOfInfluenceService {
         	spacecraft.setExitSoiOrbitalPoint(null);
         } else {
         	spacecraft.setExitSoiOrbitalPoint(exitSoiPoint);
+        	
+        	CelestialBody targetBody = (CelestialBody) exitSoiPoint.getTargetObject();
+        	Timestamp soiTimestamp = exitSoiPoint.getTimestamp();
+        	KeplerianElements predictedKeplerianElements = keplerianElementsService.computeTargetKeplerianElements(spacecraft, targetBody, soiTimestamp);
+        	Apsis closestPoint = null;
+        	if (!targetBody.isStatic()) {
+        		Timestamp apsisTime = predictedKeplerianElements.timeToAngle(soiTimestamp, ApsisType.PERIAPSIS.getTrueAnomaly(), true);
+        		predictedKeplerianElements = keplerianElementsService.shiftTo(predictedKeplerianElements, apsisTime, targetBody);
+        		predictedKeplerianElements = keplerianElementsService.computeTargetKeplerianElements(predictedKeplerianElements, targetBody, apsisTime);
+        		closestPoint = exitSoiPoint.getClosestPoint();
+        		if (closestPoint == null) {
+        			closestPoint = new Apsis();
+        			closestPoint.setType(ApsisType.PERIAPSIS);
+        			closestPoint.setName(ApsisType.PERIAPSIS.getShortcut() + " of " + targetBody.getName());
+        			closestPoint.setVisible(true);
+        			closestPoint.setMovingObject(spacecraft);
+        		}
+        		apsisService.computeApsis(closestPoint, spacecraft, predictedKeplerianElements, targetBody, ApsisType.PERIAPSIS, apsisTime);
+        		predictedKeplerianElements = keplerianElementsService.shiftTo(predictedKeplerianElements, soiTimestamp);
+        	} 
+        	
+        	exitSoiPoint.setPredictedKeplerianElements(predictedKeplerianElements);
+        	exitSoiPoint.setClosestPoint(closestPoint);
         }
     }
     
-    public boolean findExitSoi(Spacecraft spacecraft, ExitSoiOrbitalPoint exitSoiOrbitalPoint, TimeInterval interval) {
-    	double dT = TimeUtils.getDuration(interval) / 100.0;
+    private boolean findExitSoi(Spacecraft spacecraft, ExitSoiOrbitalPoint exitSoiOrbitalPoint, TimeInterval interval) {
+    	double dT = TimeUtils.getDuration(interval) / 1000.0;
     	boolean soiChangeFound = solveExitSoiPoint(spacecraft, exitSoiOrbitalPoint, interval, dT);
         if (soiChangeFound && (exitSoiOrbitalPoint.getError() > EXIT_SOI_POINT_ERROR) && (dT > 1)) {
             Timestamp start = exitSoiOrbitalPoint.getTimestamp().subtract(dT);
@@ -103,9 +133,8 @@ public class SphereOfInfluenceService {
         return soiChangeFound;
     }
     
-    public boolean solveExitSoiPoint(Spacecraft spacecraft, ExitSoiOrbitalPoint exitSoiPoint, TimeInterval interval, double dT) {
+    private boolean solveExitSoiPoint(Spacecraft spacecraft, ExitSoiOrbitalPoint exitSoiPoint, TimeInterval interval, double dT) {
     	Timestamp t = interval.getStartTime();
-    	
     	ReferenceFrame currentSoi = spacecraft.getKeplerianElements().getKeplerianOrbit().getReferenceFrame();
     	
     	while(!t.after(interval.getEndTime())) {
@@ -114,24 +143,13 @@ public class SphereOfInfluenceService {
     			CelestialBody newSoiBody = findSoiResult.getSphereOfInfluence().getBody();
     			double distance = findSoiResult.getDistance();
     			double error = FastMath.abs(findSoiResult.getSphereOfInfluence().getRadius() - distance);
-    			KeplerianElements spacecraftKe = KeplerianElements.fromTimestamp(spacecraft.getKeplerianElements().getKeplerianOrbit(), t);
-    			KeplerianElements newSoiBodyKe = KeplerianElements.fromTimestamp(newSoiBody.getKeplerianElements().getKeplerianOrbit(), t);
-    			CartesianState spacecraftCartesianState = spacecraftKe.toCartesianState();
-    			CartesianState newSoiBodyCartesianState = newSoiBodyKe.toCartesianState();
+    			KeplerianElements spacecraftKe = KeplerianElements.fromTimestamp(spacecraft.getKeplerianElements().getKeplerianOrbit(), t);	
     			exitSoiPoint.setKeplerianElements(spacecraftKe);
-    			exitSoiPoint.setPosition(spacecraftCartesianState.getPosition());
+    			exitSoiPoint.setPosition(spacecraftKe.getCartesianPosition());
     			exitSoiPoint.setTimestamp(t);
     			exitSoiPoint.setTargetObject(newSoiBody);
     			exitSoiPoint.setError(error);
     			exitSoiPoint.setName("Enter Soi " + newSoiBody.getName());
-    			
-    			ReferenceFrame referenceFrame = new ReferenceFrame();
-    			referenceFrame.setCartesianState(newSoiBodyCartesianState);
-    			referenceFrame.setTimestamp(t);
-    			referenceFrame.setName("Future " + newSoiBody.getName());
-    			
-    			KeplerianElements predictedKeplerianElements = spacecraftCartesianState.computeRelativeKeplerianElements(referenceFrame, newSoiBody.getGravitationParameter(), t);
-    			exitSoiPoint.setPredictedKeplerianElements(predictedKeplerianElements);
     			return true;
     			
     		}

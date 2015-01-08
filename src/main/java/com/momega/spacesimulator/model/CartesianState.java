@@ -150,6 +150,7 @@ public class CartesianState {
             meanMotion = FastMath.sqrt(mi / (a * a * a));
         }
         double period = 2* Math.PI / meanMotion;
+        keplerianOrbit.setMi(mi);
         keplerianOrbit.setMeanMotion(Double.valueOf(meanMotion));
         keplerianOrbit.setPeriod(period);
 
@@ -172,5 +173,11 @@ public class CartesianState {
     	KeplerianElements relativeKeplerianElements = relativeCartesianState.toKeplerianElements(referenceFrame, timestamp, gravitationalParameter);
     	return relativeKeplerianElements;
     }
+
+	@Override
+	public String toString() {
+		return "CartesianState [position=" + position + ", velocity="
+				+ velocity + "]";
+	}
 
 }

@@ -31,6 +31,9 @@ public class ExitSoiPointBitmapRenderer extends PositionProvidersBitmapRenderer 
 		List<PositionProvider> list = new ArrayList<>();
 		if (spacecraft.getExitSoiOrbitalPoint()!=null) {
 			list.add(spacecraft.getExitSoiOrbitalPoint());
+			if (spacecraft.getExitSoiOrbitalPoint().getClosestPoint()!=null) {
+	            list.add(spacecraft.getExitSoiOrbitalPoint().getClosestPoint());
+	        }
 		}
 		return list;
 	}

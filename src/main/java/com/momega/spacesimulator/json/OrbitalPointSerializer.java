@@ -5,6 +5,7 @@ package com.momega.spacesimulator.json;
 
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.AbstractOrbitalPoint;
 import com.momega.spacesimulator.model.MovingObject;
@@ -25,12 +26,12 @@ public class OrbitalPointSerializer extends AbstractSerializer<AbstractOrbitalPo
 	}
 
 	@Override
-	public void write(JsonObject object, AbstractOrbitalPoint value) {
+	public void write(JsonObject object, AbstractOrbitalPoint value, Gson gson) {
 		object.addProperty(MOVING_OBJECT, value.getMovingObject().getName());
 	}
 
 	@Override
-	public void read(JsonObject object, AbstractOrbitalPoint value) {
+	public void read(JsonObject object, AbstractOrbitalPoint value, Gson gson) {
 		MovingObject mo = getNamedObject(object, MOVING_OBJECT);
 		value.setMovingObject(mo);
 	}

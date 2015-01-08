@@ -7,7 +7,7 @@ package com.momega.spacesimulator.model;
  * @author martin
  *
  */
-public class ReferenceFrame extends NamedObject implements PositionProvider {
+public abstract class ReferenceFrame extends NamedObject implements PositionProvider {
 
     private CartesianState cartesianState;
     private Timestamp timestamp;

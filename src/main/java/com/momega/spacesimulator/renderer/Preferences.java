@@ -8,7 +8,6 @@ public class Preferences {
 
     private boolean drawBeamsActivated = false;
     private boolean drawSpacecraftAxisActivated = false;
-    private boolean drawTargetTrajectory = false;
     private boolean drawCelestialBodyAxis = false;
 
     private static Preferences instance = new Preferences();
@@ -32,14 +31,6 @@ public class Preferences {
     public void setDrawSpacecraftAxisActivated(boolean drawSpacecraftAxisActivated) {
         this.drawSpacecraftAxisActivated = drawSpacecraftAxisActivated;
     }
-    
-    public void setDrawTargetTrajectory(boolean drawTargetAxis) {
-		this.drawTargetTrajectory = drawTargetAxis;
-	}
-    
-    public boolean isDrawTargetTrajectory() {
-		return drawTargetTrajectory;
-	}
 
     public void setDrawCelestialBodyAxis(boolean drawCelestialBodyAxis) {
         this.drawCelestialBodyAxis = drawCelestialBodyAxis;

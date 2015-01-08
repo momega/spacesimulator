@@ -5,6 +5,7 @@ package com.momega.spacesimulator.json;
 
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.Target;
@@ -23,12 +24,12 @@ public class TargetSerializer extends AbstractSerializer<Target> {
 	}
 
 	@Override
-	public void write(JsonObject object, Target value) {
+	public void write(JsonObject object, Target value, Gson gson) {
 		object.addProperty(TARGET_OBJECT, value.getTargetBody().getName());
 	}
 
 	@Override
-	public void read(JsonObject object, Target value) {
+	public void read(JsonObject object, Target value, Gson gson) {
 		CelestialBody cb = getNamedObject(object, TARGET_OBJECT);
 		value.setTargetBody(cb);
 	}

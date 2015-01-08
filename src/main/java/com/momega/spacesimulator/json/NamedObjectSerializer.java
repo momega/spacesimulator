@@ -5,6 +5,7 @@ package com.momega.spacesimulator.json;
 
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.momega.spacesimulator.model.NamedObject;
 
@@ -20,12 +21,12 @@ public class NamedObjectSerializer implements Serializer<NamedObject> {
 	public static final String PACKAGE = "com.momega.spacesimulator.model";
 
 	@Override
-	public void write(JsonObject object, NamedObject value) {
+	public void write(JsonObject object, NamedObject value, Gson gson) {
 		object.addProperty(TYPE, value.getClass().getSimpleName());
 	}
 
 	@Override
-	public void read(JsonObject object, NamedObject value) {
+	public void read(JsonObject object, NamedObject value, Gson gson) {
 		NamedObjectCache.getInstance().add(value);
 	}
 	

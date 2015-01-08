@@ -68,7 +68,7 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
                 try {
                     textValue = e.getValue(evaluationContext, String.class);
                 } catch (EvaluationException ee) {
-                    // do nothing
+                    throw ee;
                 }
                 if ( entry.getKey() instanceof JTextComponent) {
                     JTextComponent tc = (JTextComponent) entry.getKey();

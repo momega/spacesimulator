@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.model;
 
+import com.momega.spacesimulator.utils.TimeUtils;
+
 /**
  * The wrapper object which holds the current time and warp factor
  * Created by martin on 4/29/14.
@@ -45,6 +47,11 @@ public class Timestamp implements Comparable<Timestamp> {
 
     public boolean after(Timestamp o) {
         return (compareTo(o) >0);
+    }
+    
+    @Override
+    public String toString() {
+    	return "t = " + TimeUtils.timeAsString(this);
     }
 
 }

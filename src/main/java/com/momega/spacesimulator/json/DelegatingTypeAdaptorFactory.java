@@ -55,7 +55,7 @@ public class DelegatingTypeAdaptorFactory implements TypeAdapterFactory {
 				}
 				JsonObject object = (JsonObject) delegate.toJsonTree(value);
 				for(Serializer<T> serializer : list) {
-					serializer.write(object, value);
+					serializer.write(object, value, gson);
 				}
 				elementAdapter.write(writer, object);
 			}
@@ -86,7 +86,7 @@ public class DelegatingTypeAdaptorFactory implements TypeAdapterFactory {
 			    
 			    for(Serializer<T> serializer : list) {
 			    	if (serializer.getSuperClass().isAssignableFrom(value.getClass())) {
-			    		serializer.read(jsonObject, value);
+			    		serializer.read(jsonObject, value, gson);
 			    	}
 			    }
 				return value;
