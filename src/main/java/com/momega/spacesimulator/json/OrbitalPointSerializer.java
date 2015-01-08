@@ -27,7 +27,8 @@ public class OrbitalPointSerializer extends AbstractSerializer<AbstractOrbitalPo
 
 	@Override
 	public void write(JsonObject object, AbstractOrbitalPoint value, Gson gson) {
-		object.addProperty(MOVING_OBJECT, value.getMovingObject().getName());
+		MovingObject mo = value.getMovingObject();
+		object.addProperty(MOVING_OBJECT, mo.getName());
 	}
 
 	@Override

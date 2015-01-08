@@ -33,6 +33,12 @@ public class SpacecraftSerializer extends AbstractSerializer<Spacecraft> {
 				oi.setMovingObject(value);
 			}
 		}
+		if (value.getExitSoiOrbitalPoint()!=null) {
+			value.getExitSoiOrbitalPoint().setMovingObject(value);
+			if (value.getExitSoiOrbitalPoint().getClosestPoint()!=null) {
+				value.getExitSoiOrbitalPoint().getClosestPoint().setMovingObject(value);
+			}
+		}
 	}
 	
 	@Override

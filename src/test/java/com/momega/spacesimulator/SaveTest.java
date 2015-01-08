@@ -10,7 +10,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.momega.spacesimulator.builder.MediumSolarSystemModelBuilder;
+import com.momega.spacesimulator.builder.SimpleSolarSystemModelBuilder;
 import com.momega.spacesimulator.context.AppConfig;
 import com.momega.spacesimulator.context.DefaultApplication;
 import com.momega.spacesimulator.context.ModelHolder;
@@ -26,9 +26,11 @@ public class SaveTest {
 	@Test
 	public void simpleTest() {
 		DefaultApplication application = new DefaultApplication(AppConfig.class);
-        application.init(MediumSolarSystemModelBuilder.class);
-        for(int i=0; i<1000; i++)
-        	application.next(false,  1.0);
+        application.init(SimpleSolarSystemModelBuilder.class);
+        for(int i=0; i<4*60*60; i++) {
+        	application.next(true,  1.0);
+        }
+        application.next(false,  1.0);
         
         ModelSerializer serializer = application.getService(ModelSerializer.class);
         StringWriter writer = new StringWriter();
