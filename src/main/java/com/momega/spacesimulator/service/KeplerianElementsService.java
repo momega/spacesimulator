@@ -47,18 +47,8 @@ public class KeplerianElementsService {
     	KeplerianElements ke = KeplerianElements.fromTimestamp(movingObject.getKeplerianElements().getKeplerianOrbit(), timestamp);
     	CartesianState cartesianState = ke.toCartesianState();
     	FutureMovingObject futureMovingObject = createFutureMovingObject(movingObject, cartesianState, timestamp);
-    	return shiftTo(keplerianElements, timestamp, futureMovingObject);
+    	return keplerianElements.shiftTo(timestamp, futureMovingObject);
     }
-    
-    public KeplerianElements shiftTo(KeplerianElements keplerianElements, Timestamp timestamp, ReferenceFrame referenceFrame) {
-    	KeplerianElements result = KeplerianElements.fromTimestamp(keplerianElements.getKeplerianOrbit(), timestamp);
-    	result.getKeplerianOrbit().setReferenceFrame(referenceFrame);
-    	return result;
-    }
-    
-    public KeplerianElements shiftTo(KeplerianElements keplerianElements, Timestamp timestamp) {
-    	return shiftTo(keplerianElements, timestamp, keplerianElements.getKeplerianOrbit().getReferenceFrame());
-    }   
     
     protected FutureMovingObject createFutureMovingObject(MovingObject movingObject, CartesianState cartesianState, Timestamp timestamp) {
     	FutureMovingObject futureMovingObject = new FutureMovingObject();

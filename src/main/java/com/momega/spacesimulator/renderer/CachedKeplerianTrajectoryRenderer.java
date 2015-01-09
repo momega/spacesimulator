@@ -7,13 +7,15 @@ import javax.media.opengl.GL;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 
+import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.opengl.GLUtils;
 
 /**
  * The keplerian trajectory renderer which uses VBO to render ellipse
  * @author martin
  */
-public class CachedKeplerianTrajectoryRenderer extends AbstractKeplerianTrajectoryRenderer {
+public class CachedKeplerianTrajectoryRenderer extends AbstractRenderer {
 
 	private MovingObject movingObject;
 	private double a;
@@ -37,7 +39,7 @@ public class CachedKeplerianTrajectoryRenderer extends AbstractKeplerianTrajecto
 	
 	public void init(GL2 gl) {
         super.init(gl);
-        vbo = VBO.createVBOEllipse(gl, a, b, 7200, getColor());
+        vbo = VBO.createVBOEllipse(gl, a, b, 7200, movingObject.getTrajectory().getColor());
     }
 	
 	public void dispose(GL2 gl) {
@@ -59,10 +61,10 @@ public class CachedKeplerianTrajectoryRenderer extends AbstractKeplerianTrajecto
 	        gl.glPopMatrix();
 		}
 	}
-
-	@Override
-	public double[] getColor() {
-		return movingObject.getTrajectory().getColor();
-	}
+	
+	protected void setMatrix(GL2 gl, KeplerianElements keplerianElements) {
+    	GLUtils.translate(gl, keplerianElements.getKeplerianOrbit().getReferenceFrame().getCartesianState().getPosition());
+        GLUtils.rotate(gl, keplerianElements);
+    }
 
 }

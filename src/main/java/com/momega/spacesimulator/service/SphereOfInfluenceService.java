@@ -113,7 +113,6 @@ public class SphereOfInfluenceService {
         			closestPoint.setMovingObject(spacecraft);
         		}
         		apsisService.computeApsis(closestPoint, spacecraft, predictedKeplerianElements, targetBody, ApsisType.PERIAPSIS, apsisTime);
-        		predictedKeplerianElements = keplerianElementsService.shiftTo(predictedKeplerianElements, soiTimestamp);
         	} 
         	
         	exitSoiPoint.setPredictedKeplerianElements(predictedKeplerianElements);

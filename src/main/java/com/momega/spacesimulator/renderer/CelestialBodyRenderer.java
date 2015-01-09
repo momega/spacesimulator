@@ -1,17 +1,15 @@
 package com.momega.spacesimulator.renderer;
 
+import javax.media.opengl.GL2;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.jogamp.opengl.util.texture.Texture;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.SphericalCoordinates;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.opengl.GLUtils;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.media.opengl.GL2;
-import javax.media.opengl.glu.GLU;
-import javax.media.opengl.glu.GLUquadric;
 
 /**
  * The class renders the celestial body. It holds the {@link CelestialBody} instance and contains logic for rendering.
@@ -42,13 +40,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
         gl.glEnable(GL2.GL_CULL_FACE);
         gl.glShadeModel(GL2.GL_SMOOTH);
 
-        GLU glu = new GLU();
-        GLUquadric quadric = glu.gluNewQuadric();
-        glu.gluQuadricTexture(quadric, true);
-        glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
-        glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
-        glu.gluSphere(quadric, celestialBody.getRadius(), 64, 64);
-        glu.gluDeleteQuadric(quadric);
+        GLUtils.drawSphere(gl, celestialBody.getRadius(), true);
 
         gl.glShadeModel(GL2.GL_FLAT);
         gl.glDisable(GL2.GL_CULL_FACE);

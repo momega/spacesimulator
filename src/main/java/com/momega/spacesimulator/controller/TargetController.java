@@ -49,6 +49,9 @@ public class TargetController extends AbstractController {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+    	if (ModelHolder.getModel()==null) {
+    		return;
+    	}
         Point position = GLUtils.getPosition(e);
         logger.info("click count = {}, button  = {}", e.getClickCount(), e.getButton());
         final Timestamp timestamp = ModelHolder.getModel().getTime();

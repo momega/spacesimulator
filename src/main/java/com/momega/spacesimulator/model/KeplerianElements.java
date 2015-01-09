@@ -325,6 +325,16 @@ public class KeplerianElements {
         r = r - radius;
         return r;
     }
+    
+    public KeplerianElements shiftTo(Timestamp timestamp, ReferenceFrame referenceFrame) {
+    	KeplerianElements result = fromTimestamp(getKeplerianOrbit(), timestamp);
+    	result.getKeplerianOrbit().setReferenceFrame(referenceFrame);
+    	return result;
+    }
+    
+    public KeplerianElements shiftTo(Timestamp timestamp) {
+    	return shiftTo(timestamp, getKeplerianOrbit().getReferenceFrame());
+    }       
 
 	@Override
 	public String toString() {

@@ -17,12 +17,14 @@ import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLDrawable;
 import javax.media.opengl.GLProfile;
 import javax.media.opengl.glu.GLU;
+import javax.media.opengl.glu.GLUquadric;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.DoubleBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.HashMap;
@@ -83,6 +85,19 @@ public class GLUtils {
     		 gl.glVertex3dv(point.getPosition().asArray(), 0);
     	}
     	gl.glEnd();
+    }
+    
+    public static void drawSphere(GL2 gl2, double radius, boolean texture) {
+    	GLU glu = new GLU();
+        GLUquadric quadric = glu.gluNewQuadric();
+        glu.gluQuadricTexture(quadric, texture);
+        if (texture == false) {
+        	glu.gluQuadricDrawStyle(quadric, GLU.GLU_FILL);
+        }
+        glu.gluQuadricNormals(quadric, GLU.GLU_FLAT);
+        glu.gluQuadricOrientation(quadric, GLU.GLU_OUTSIDE);
+        glu.gluSphere(quadric, radius, 64, 64);
+        glu.gluDeleteQuadric(quadric);
     }
     
     /**
@@ -154,6 +169,25 @@ public class GLUtils {
         GLUtils.drawBeams(gl, 0, 0, r, num_beams);
     }
     
+    public static void drawBezier(GL2 gl, Vector3d start, Vector3d startCtrlPoint, Vector3d endCtrlPoint, Vector3d end, double[] color) {
+    	DoubleBuffer ctrlPointBuffer = DoubleBuffer.allocate(12);
+    	ctrlPointBuffer.put(start.asArray());
+    	ctrlPointBuffer.put(startCtrlPoint.asArray());
+    	ctrlPointBuffer.put(endCtrlPoint.asArray());
+    	ctrlPointBuffer.put(end.asArray());
+        ctrlPointBuffer.rewind();
+        
+        gl.glMap1d(GL2.GL_MAP1_VERTEX_3, 0.0d, 1.0d, 3, 4, ctrlPointBuffer);
+        gl.glColor3dv(color, 0);
+        gl.glEnable(GL2.GL_MAP1_VERTEX_3);
+        gl.glBegin(GL2.GL_LINE_STRIP);
+        for (int i = 0; i <= 600; i++) {
+            gl.glEvalCoord1d(i / 600.0d);
+        }
+        gl.glEnd();
+        gl.glDisable(GL2.GL_MAP1_VERTEX_3);
+    }
+    
     public static void drawAxis(GL2 gl, double lineWidth, double radius) {
     	gl.glLineWidth((float) lineWidth);
     	gl.glBegin(GL2.GL_LINES);
@@ -181,6 +215,30 @@ public class GLUtils {
         double DEG2RAD = 2.0 * Math.PI / num_segments;
 
         for (int i=0; i<=num_segments ; i++) {
+            double degInRad = DEG2RAD * i;
+            gl.glVertex2d(Math.cos(degInRad) * a, Math.sin(degInRad) * b);
+        }
+
+        gl.glEnd();
+    }
+    
+    /**
+     * Draw the ellipse partially. The center of the ellipse is at coordinates [0,0]
+     * @param gl the OpenGL context
+     * @param a the semi-major axis
+     * @param b the semi-minor axis
+     * @param startAngle
+     * @param stopAngle end angle
+     * @param color
+     * @param num_segments the number of the segments
+     */
+    public static void drawEllipse(GL2 gl, double a, double b, double startAngle, double stopAngle, int num_segments, double[] color) {
+    	gl.glColor3dv(color, 0);
+        gl.glBegin(GL_LINE_STRIP);
+        double DEG2RAD = 2.0 * Math.PI / num_segments;
+        int startIndex = (int) (startAngle / DEG2RAD);
+        int stopIndex = (int) (stopAngle / DEG2RAD);
+        for (int i= startIndex; i<=stopIndex; i++) {
             double degInRad = DEG2RAD * i;
             gl.glVertex2d(Math.cos(degInRad) * a, Math.sin(degInRad) * b);
         }
@@ -242,11 +300,6 @@ public class GLUtils {
             }
         }
         gl.glEnd();
-    }
-
-    public static void drawEllipse(GL2 gl, double cx, double cy, double a, double b, int num_segments, double[] color) {
-        gl.glTranslated(cx, cy, 0);
-        drawEllipse(gl, a, b, num_segments, color);
     }
 
     public static Point getPosition(MouseEvent e) {

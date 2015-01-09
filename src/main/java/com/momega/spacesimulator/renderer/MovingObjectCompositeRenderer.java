@@ -31,7 +31,7 @@ public class MovingObjectCompositeRenderer extends CompositeRenderer {
     	List<Renderer> list = new ArrayList<>();
     	if (!mo.isStatic()) {
     		if (mo instanceof Spacecraft) {
-    			addRenderer(new KeplerianTrajectoryRenderer(mo));
+    			addRenderer(new KeplerianTrajectoryRenderer((Spacecraft) mo));
     		} else {
     			addRenderer(new CachedKeplerianTrajectoryRenderer(mo));
     		}
