@@ -55,6 +55,21 @@ public class ModelService {
     }
 
     /**
+     * Finds the moving object by its name
+     * @param name the given name
+     * @return the moving object
+     */
+    public MovingObject findMovingObjectByName(String name) {
+        Assert.notNull(name);
+        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+            if (name.equals(dp.getName())) {
+                return dp;
+            }
+        }
+        return null;
+    }
+
+    /**
      * Returns the current valid position provider. The method returns very similar results ass @{#findAllMovingObjects}
      * except this method filters future maneuver points
      * @return the collection of the position providers

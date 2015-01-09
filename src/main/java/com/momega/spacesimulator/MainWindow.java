@@ -41,6 +41,8 @@ public class MainWindow extends DefaultWindow {
 	private static final Logger logger = LoggerFactory.getLogger(MainWindow.class);
 
 	private static final String BUILDER_CLASS_NAME_OPTION = "builderClassName";
+
+	private static final String FILE_NAME_OPTION = "fileName";
 	
     public MainWindow(String title) {
         super(title);
@@ -87,9 +89,16 @@ public class MainWindow extends DefaultWindow {
 		if (builderClassName != null) {
 			ModelBuilder modelBuilder = Application.getInstance().createBuilder(builderClassName);
 			RendererModel.getInstance().setModelBuilderRequested(modelBuilder);
+			return;
 		}
 
-		if (builderClassName==null && !rendererModel.isModelReady()) {
+		String fileName = (String) ps.getProperty(FILE_NAME_OPTION);
+		if (fileName!=null) {
+			RendererModel.getInstance().setLoadFileRequested(new File(fileName));
+			return;
+		}
+
+		if (!rendererModel.isModelReady()) {
 			ActionEvent event = new ActionEvent(window, ActionEvent.ACTION_FIRST, CreateFromBuilderController.CREATE_FROM_BUILDER_COMMAND);
 			controller.actionPerformed(event);
 		}

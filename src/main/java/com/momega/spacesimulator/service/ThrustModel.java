@@ -46,6 +46,7 @@ public class ThrustModel implements ForceModel {
 
         double dm = propulsion.getMassFlow() * maneuver.getThrottle() * dt;
         if (dm > propulsion.getFuel()) {
+            logger.debug("Out of fuel");
             endOfManeuver(spacecraft, currentManeuver);
             return Vector3d.ZERO;
         }

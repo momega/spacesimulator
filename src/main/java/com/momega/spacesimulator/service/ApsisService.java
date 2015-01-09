@@ -12,7 +12,7 @@ import org.springframework.util.Assert;
 @Component
 public class ApsisService {
 	
-	public void computeApsis(Apsis apsis, Spacecraft spacecraft, KeplerianElements keplerianElements, CelestialBody targetBody, ApsisType apsisType, Timestamp timestamp) {
+	public void computeApsis(Apsis apsis, KeplerianElements keplerianElements, ApsisType apsisType, Timestamp timestamp) {
         KeplerianElements apsisKeplerianElements = new KeplerianElements();
         keplerianElements.setTrueAnomaly(apsisType.getTrueAnomaly());
         apsis.setKeplerianElements(apsisKeplerianElements);
@@ -55,7 +55,7 @@ public class ApsisService {
         if (periapsis == null) {
             periapsis = createApsis(movingObject, ApsisType.PERIAPSIS);
         }
-        updateApsis(periapsis, movingObject.getKeplerianElements(), newTimestamp);
+        updateApsis(periapsis, movingObject, newTimestamp);
     }
 
     public void updateApoapsis(MovingObject movingObject, Timestamp newTimestamp) {
@@ -65,9 +65,24 @@ public class ApsisService {
         if (apoapsis == null) {
             apoapsis = createApsis(movingObject, ApsisType.APOAPSIS);
         }
-        updateApsis(apoapsis, movingObject.getKeplerianElements(), newTimestamp);
+        updateApsis(apoapsis, movingObject, newTimestamp);
     }
 
+    /**
+     * Updates the {@link com.momega.spacesimulator.model.Apsis} timespamp and position
+     * @param apsis the apsis
+     * @param movingObject the moving object
+     */
+    protected void updateApsis(Apsis apsis, MovingObject movingObject, Timestamp newTimestamp) {
+        KeplerianOrbit keplerianOrbit = movingObject.getKeplerianElements().getKeplerianOrbit();
+        apsis.getKeplerianElements().setKeplerianOrbit(keplerianOrbit);
+        Vector3d position = apsis.getKeplerianElements().getCartesianPosition();
+
+        Timestamp timestamp = movingObject.getKeplerianElements().timeToAngle(newTimestamp, apsis.getType().getTrueAnomaly(), true);
+
+        apsis.setPosition(position);
+        apsis.setTimestamp(timestamp);
+    }
 
     /**
      * Updates the {@link com.momega.spacesimulator.model.Apsis} timespamp and position
