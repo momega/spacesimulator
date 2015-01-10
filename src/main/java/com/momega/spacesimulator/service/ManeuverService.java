@@ -3,14 +3,8 @@ package com.momega.spacesimulator.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.momega.spacesimulator.model.*;
 import org.springframework.stereotype.Component;
-
-import com.momega.spacesimulator.model.KeplerianElements;
-import com.momega.spacesimulator.model.Maneuver;
-import com.momega.spacesimulator.model.ManeuverPoint;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.Timestamp;
 
 /**
  * The maneuver service contains helpful method to manipulate with
@@ -50,10 +44,10 @@ public class ManeuverService {
      * @param spacecraft the spacecraft
      * @param maneuver the maneuver to which the will belong
      * @param timestamp the timestamp of the point
-     * @param start indicates whether it is start or end of the maneuver
+     * @param maneuverPointType indicates whether it is start or end of the maneuver
      * @return new instance of the maneuver point
      */
-    public ManeuverPoint createManeuverPoint(MovingObject spacecraft, Maneuver maneuver, Timestamp timestamp, boolean start) {
+    public ManeuverPoint createManeuverPoint(MovingObject spacecraft, Maneuver maneuver, Timestamp timestamp, ManeuverPointType maneuverPointType) {
         ManeuverPoint m = new ManeuverPoint();
         KeplerianElements keplerianElements = new KeplerianElements();
         if (spacecraft.getKeplerianElements() != null) {
@@ -63,9 +57,9 @@ public class ManeuverService {
         m.setKeplerianElements(spacecraft.getKeplerianElements());
         m.setTimestamp(timestamp);
         m.setVisible(true);
-        m.setStart(start);
+        m.setType(maneuverPointType);
         m.setMovingObject(spacecraft);
-        m.setName((start ? "Start" : "End") + " of " + maneuver.getName());
+        m.setName(maneuverPointType.getName() + " of " + maneuver.getName());
         return m;
     }
 
@@ -75,8 +69,8 @@ public class ManeuverService {
 
         Timestamp start = initTime.add(startTime);
         Timestamp end = initTime.add(startTime + duration);
-        maneuver.setStart(createManeuverPoint(spacecraft, maneuver, start, true));
-        maneuver.setEnd(createManeuverPoint(spacecraft, maneuver, end, false));
+        maneuver.setStart(createManeuverPoint(spacecraft, maneuver, start, ManeuverPointType.START));
+        maneuver.setEnd(createManeuverPoint(spacecraft, maneuver, end, ManeuverPointType.END));
 
         maneuver.setThrottle(throttle);
         maneuver.setThrottleAlpha(throttleAlpha);

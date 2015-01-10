@@ -56,6 +56,7 @@ public class CachedKeplerianTrajectoryRenderer extends AbstractRenderer {
 	        gl.glStencilFunc(GL2.GL_ALWAYS, movingObject.getIndex(), 0xff); // 1 is variable
 	        setMatrix(gl, movingObject.getKeplerianElements());
 	        gl.glTranslated(-e, 0, 0); // move from foci to center
+			gl.glLineWidth((float) 1.0);
 	        vbo.draw(gl, GL.GL_LINE_LOOP);
 	        gl.glDisable(GL2.GL_STENCIL_TEST);
 	        gl.glPopMatrix();

@@ -1,50 +1,33 @@
 package com.momega.spacesimulator.renderer;
 
-import java.awt.Point;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.media.opengl.GL2;
-import javax.media.opengl.GLAutoDrawable;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-
 import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.AbstractOrbitalPoint;
-import com.momega.spacesimulator.model.Camera;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.HistoryPoint;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.model.RotatingObject;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.UserOrbitalPoint;
-import com.momega.spacesimulator.model.Vector3d;
+import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.GLUtils;
 import com.momega.spacesimulator.service.ModelSerializer;
 import com.momega.spacesimulator.service.ModelService;
 import com.momega.spacesimulator.service.UserPointService;
 import com.momega.spacesimulator.swing.PositionProvidersModel;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.Assert;
+
+import javax.media.opengl.GL2;
+import javax.media.opengl.GLAutoDrawable;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
 
 /**
  * The renderer model
@@ -76,7 +59,6 @@ public class RendererModel {
     
     private boolean spacecraftVisible; 
     private boolean celestialVisible;
-    private boolean historyPointsVisible;
     private boolean pointsVisible;
     
     private File modelFile;
@@ -110,7 +92,6 @@ public class RendererModel {
         spacecraftVisible = true;
 		celestialVisible = true;
 		pointsVisible = true;
-        historyPointsVisible = true;
         userPointService = Application.getInstance().getService(UserPointService.class);
         modelService = Application.getInstance().getService(ModelService.class);
 		movingObjectsModel = new PositionProvidersModel(selectPositionProviders());
@@ -296,10 +277,6 @@ public class RendererModel {
 		return pointsVisible;
 	}
 
-    public boolean isHistoryPointsVisible() {
-        return historyPointsVisible;
-    }
-
     public boolean isSpacecraftVisible() {
 		return spacecraftVisible;
 	}
@@ -307,10 +284,6 @@ public class RendererModel {
     public void setPointsVisible(boolean pointsVisible) {
 		this.pointsVisible = pointsVisible;
 	}
-
-    public void setHistoryPointsVisible(boolean historyPointsVisible) {
-        this.historyPointsVisible = historyPointsVisible;
-    }
 
     public void setSpacecraftVisible(boolean spacecraftVisible) {
 		this.spacecraftVisible = spacecraftVisible;
@@ -333,9 +306,6 @@ public class RendererModel {
     			if (orbitalPoint.isVisible()) {
     				result.add(positionProvider);
     			}
-    		}
-    		if (isHistoryPointsVisible() && positionProvider instanceof HistoryPoint) {
-    			result.add(positionProvider);
     		}
     		if (isSpacecraftVisible() && positionProvider instanceof Spacecraft) {
     			result.add(positionProvider);

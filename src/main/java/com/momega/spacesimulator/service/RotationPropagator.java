@@ -29,9 +29,8 @@ public class RotationPropagator implements Propagator {
 		}
 		RotatingObject rotatingObject = (RotatingObject) movingObject;
 		double dt = newTimestamp.subtract(TimeUtils.JD2000);
-        double phi = dt / rotatingObject.getRotationPeriod();
-        phi = MathUtils.normalizeAngle(phi * 2 * Math.PI);
-        phi += Math.PI/2; //TODO : why? because of texture?
+        double phi = dt / rotatingObject.getRotationPeriod() * 2 * Math.PI;
+        phi = MathUtils.normalizeAngle(phi);
 
         logger.debug("phi = {}", phi);
 

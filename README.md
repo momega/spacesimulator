@@ -25,18 +25,18 @@ If you do not want to execute the tests, run the following command:
 Features
 ========
 
+* All 8 planets and their moons + Pluto with moons, Ceres, Vesta and Halley Comet included in model
 * Orbital maneuvers with fuel consumption
-* Display closes point and planes intersections of the spacecraft and target celestial body
+* Sphere of Influences
+* Display, exit of sphere of influence, the closest point and the planes intersections of the spacecraft and target celestial body
 * Time warp
 * Display popup dialogs with detail information about all objects
-* All 8 planets and their moons + Pluto with moons, Ceres, Vesta and Halley Comet included in model
 * User defined points for on the spacecraft and planets trajectory
 * Create and remove the spacecraft
 * Take a screenshot
 * Headless computations
-* Sphere of Influence
 * Load and save models
-* Run the simulation from prepared models.
+* Run the simulation from the prepared models.
 * Interplanetary flight planner
 
 Screenshots

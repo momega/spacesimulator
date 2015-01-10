@@ -7,13 +7,18 @@ package com.momega.spacesimulator.model;
  */
 public class ManeuverPoint extends AbstractOrbitalPoint {
 
-    private boolean start;
+    private ManeuverPointType type;
 
-    public boolean isStart() {
-        return start;
+    public ManeuverPointType getType() {
+        return type;
     }
 
-    public void setStart(boolean start) {
-        this.start = start;
+    public void setType(ManeuverPointType type) {
+        this.type = type;
+    }
+
+    @Override
+    public String getIcon() {
+        return type.getIcon();
     }
 }

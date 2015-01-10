@@ -16,4 +16,8 @@ public class Apsis extends AbstractOrbitalPoint {
         this.type = type;
     }
 
+    @Override
+    public String getIcon() {
+        return type.getIcon();
+    }
 }

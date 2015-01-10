@@ -64,8 +64,7 @@ public class PlanetRingRenderer extends AbstractTextureRenderer {
 
 	@Override
 	protected void setMatrix(GL2 gl) {
-		SphericalCoordinates sphericalCoordinates = new SphericalCoordinates(
-				celestialBody.getOrientation().getV());
+		SphericalCoordinates sphericalCoordinates = new SphericalCoordinates(celestialBody.getOrientation().getV());
 		GLUtils.translate(gl, celestialBody.getCartesianState().getPosition());
 		GLUtils.rotate(gl, sphericalCoordinates);
 	}

@@ -27,6 +27,8 @@ public class ModelRenderer extends CompositeRenderer {
     		MovingObjectCompositeRenderer renderer = new MovingObjectCompositeRenderer(mo);
     		addRenderer(renderer);
         }
+		addRenderer(new BackgroundRenderer());
+		addRenderer(new SurfacePointRenderer());
     }
     
     public MovingObjectCompositeRenderer deleteMovingObject(MovingObject mo) {

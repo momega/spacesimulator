@@ -3,14 +3,10 @@
  */
 package com.momega.spacesimulator.swing;
 
-import javax.swing.ImageIcon;
-
-import com.momega.spacesimulator.model.Apsis;
-import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.IconProvider;
-import com.momega.spacesimulator.model.ManeuverPoint;
-import com.momega.spacesimulator.model.OrbitIntersection;
 import com.momega.spacesimulator.model.PositionProvider;
+
+import javax.swing.*;
 
 /**
  * @author martin
@@ -35,20 +31,7 @@ public class MovingObjectListRenderer extends AbstractObjectListRenderer<Positio
 		if (value instanceof IconProvider) {
 			IconProvider iconProvider = (IconProvider) value;
 			icon = SwingUtils.createImageIcon(iconProvider.getIcon());
-		} else if (value instanceof Apsis) {
-			icon = Icons.APSIS_POINT;
-		} else if (value instanceof OrbitIntersection) {
-			icon = Icons.INTERSECTION_POINT;
-		} else if (value instanceof HistoryPoint) {
-			icon = Icons.HISTORY_POINT;
-        } else if (value instanceof ManeuverPoint) {
-            ManeuverPoint mp = (ManeuverPoint) value;
-            if (mp.isStart()) {
-            	icon = Icons.START_MANEUVER_POINT;
-            } else {
-            	icon = Icons.END_MANEUVER_POINT;
-            }
-		}	
+		}
 		return icon;
 	}
 

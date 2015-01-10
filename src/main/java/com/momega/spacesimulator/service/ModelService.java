@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.momega.spacesimulator.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,22 +13,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.BaryCentre;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.HistoryPoint;
-import com.momega.spacesimulator.model.KeplerianTrajectory;
-import com.momega.spacesimulator.model.ManeuverPoint;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.OrbitIntersection;
-import com.momega.spacesimulator.model.Planet;
-import com.momega.spacesimulator.model.PositionProvider;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.UserOrbitalPoint;
 
-/**
- * The class contains set of the useful methods to manipulate with the model.
- * Created by martin on 12/29/14.
- */
+    /**
+     * The class contains set of the useful methods to manipulate with the model.
+     * Created by martin on 12/29/14.
+     */
 @Component
 public class ModelService {
 	
@@ -84,6 +74,13 @@ public class ModelService {
                 result.add(keplerianTrajectory.getPeriapsis());
                 for(UserOrbitalPoint userOrbitalPoint : dp.getUserOrbitalPoints()) {
                     result.add(userOrbitalPoint);
+                }
+            }
+
+            if (dp instanceof CelestialBody) {
+                CelestialBody body = (CelestialBody) dp;
+                for(SurfacePoint surfacePoint : body.getSurfacePoints()) {
+                    result.add(surfacePoint);
                 }
             }
 

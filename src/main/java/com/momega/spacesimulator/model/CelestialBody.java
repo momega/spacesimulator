@@ -1,5 +1,8 @@
 package com.momega.spacesimulator.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * The class represents the celestial such as planet. It is the {@link com.momega.spacesimulator.model.RotatingObject}
  * with defined texture
@@ -11,6 +14,7 @@ public class CelestialBody extends RotatingObject implements IconProvider {
     private String textureFileName;
     private String icon;
     private String wiki;
+    private List<SurfacePoint> surfacePoints = new ArrayList<>();
 
     public String getTextureFileName() {
         return textureFileName;
@@ -39,5 +43,14 @@ public class CelestialBody extends RotatingObject implements IconProvider {
     public void setIcon(String icon) {
         this.icon = icon;
     }
-     
+
+    public List<SurfacePoint> getSurfacePoints() {
+        return surfacePoints;
+    }
+
+    public void setSurfacePoints(List<SurfacePoint> surfacePoints) {
+        this.surfacePoints = surfacePoints;
+    }
+
+
 }

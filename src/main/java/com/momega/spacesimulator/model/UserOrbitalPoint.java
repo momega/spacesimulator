@@ -6,4 +6,8 @@ package com.momega.spacesimulator.model;
  */
 public class UserOrbitalPoint extends AbstractOrbitalPoint {
 
+    @Override
+    public String getIcon() {
+        return "/images/Letter-U-icon.png";
+    }
 }

@@ -7,7 +7,7 @@ package com.momega.spacesimulator.model;
  * @author martin
  *
  */
-public class AbstractTargetOrbitalPoint extends AbstractOrbitalPoint {
+public abstract class AbstractTargetOrbitalPoint extends AbstractOrbitalPoint {
 
 	private transient MovingObject targetObject;
 

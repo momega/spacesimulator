@@ -14,7 +14,8 @@ public abstract class PhysicalBody extends MovingObject {
     private double mi = 0;
 	
     /**
-     * Gets the orientation of the 3d object
+     * Gets the orientation of the 3d object. For planets vector V of the orientation
+     * points to north pole, vector N point to coordinated 00.00.000N, 000.00.000E.
      * @return the orientation
      */
     public Orientation getOrientation() {

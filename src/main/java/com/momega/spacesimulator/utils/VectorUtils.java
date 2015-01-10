@@ -4,6 +4,7 @@ import com.momega.spacesimulator.model.*;
 import org.apache.commons.math3.geometry.euclidean.threed.Rotation;
 import org.apache.commons.math3.geometry.euclidean.threed.RotationOrder;
 import org.apache.commons.math3.geometry.euclidean.threed.Vector3D;
+import org.apache.commons.math3.util.FastMath;
 import org.springframework.util.Assert;
 
 /**
@@ -53,7 +54,7 @@ public final class VectorUtils {
         Assert.isTrue(Math.abs(axis.length() - 1) < SMALL_EPSILON);
 
         // Main algorithm
-        double cosAngle = Math.cos(angle);
+        double cosAngle = FastMath.cos(angle);
         Vector3d cross = axis.cross(v);
 
         // ret = v cos radianAngle + (axis x v) sin radianAngle + axis(axis . v)(1 - cos radianAngle)

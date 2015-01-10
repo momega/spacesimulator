@@ -365,13 +365,6 @@ public class MainWindow extends DefaultWindow {
     	pointButton.setActionCommand(ToolbarController.POINT_TOGGLE_COMMAND);
     	pointButton.addActionListener(controller);
 
-        JToggleButton historyPointButton = new JToggleButton();
-        historyPointButton.setSelected(true);
-        historyPointButton.setIcon(Icons.HISTORY_POINT);
-        historyPointButton.setToolTipText("Activate the history points");
-        historyPointButton.setActionCommand(ToolbarController.HISTORY_POINT_TOGGLE_COMMAND);
-        historyPointButton.addActionListener(controller);
-    	
     	toolBar.add(warpDownButton);
     	toolBar.add(startStopButton);
     	toolBar.add(warpUp);
@@ -379,7 +372,6 @@ public class MainWindow extends DefaultWindow {
     	toolBar.add(spacecraftButton);
     	toolBar.add(celestialButton);
     	toolBar.add(pointButton);
-        toolBar.add(historyPointButton);
     	toolBar.add(movingObjectsBox);
     	
     	JButton detailButton = new JButton();

@@ -37,4 +37,9 @@ public class ExitSoiOrbitalPoint extends AbstractTargetOrbitalPoint {
 		this.closestPoint = closestPoint;
 	}
 
+	@Override
+	public String getIcon() {
+		return "/images/Letter-E-icon.png";
+	}
+
 }

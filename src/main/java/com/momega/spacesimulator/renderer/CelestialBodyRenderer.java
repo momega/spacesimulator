@@ -72,6 +72,7 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
         logger.debug("object = {}, ra = {}, dec = {}", new Object[] {celestialBody.getName(), Math.toDegrees(sphericalCoordinates.getPhi()), 90-Math.toDegrees(sphericalCoordinates.getTheta())});
 
         double phi = Math.toDegrees(celestialBody.getPrimeMeridian());
+        phi += 90; // because of texture
         gl.glRotated(phi, 0, 0, 1);
     }
 

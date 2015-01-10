@@ -54,6 +54,10 @@ public class MoonMission2ModelBuilder extends SimpleSolarSystemModelBuilder {
         addManeuver(spacecraft, "A7", 11290 * 60d, 600, 1d, Math.toRadians(180), Math.toRadians(0));
 
         setTarget(spacecraft, moon);
+
+        CrashSite crashSite = CrashSite.createFromLatLong(earth, model.getTime(), 14.5, 50);
+        crashSite.setName("Crash Site");
+        earth.getSurfacePoints().add(crashSite);
     }
 
     protected void initTime() {

@@ -21,9 +21,17 @@ public class BackgroundRenderer extends AbstractRenderer {
         gl.glPushMatrix();
         gl.glRotated(-Math.toDegrees(VectorUtils.ECLIPTIC), 1, 0, 0);
 
+        // mars pole star
         Vector3d v = new SphericalCoordinates(20d * MathUtils.AU,
                 Math.toRadians(90 - 52.88378),
                 Math.toRadians(317.67669)).toVector();
+
+        GLUtils.drawPoint(gl, 6, new double[] {1,1,1}, v);
+
+        // polaris
+        v = new SphericalCoordinates(20d * MathUtils.AU,
+                Math.toRadians(90 - 90),
+                Math.toRadians(0)).toVector();
 
         GLUtils.drawPoint(gl, 6, new double[] {1,1,1}, v);
 

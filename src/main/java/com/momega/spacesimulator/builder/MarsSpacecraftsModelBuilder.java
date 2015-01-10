@@ -62,7 +62,6 @@ public class MarsSpacecraftsModelBuilder extends MediumSolarSystemModelBuilder {
         addManeuver(spacecraft, "M12", 310495 * 60d, 500, 1d, Math.toRadians(180), Math.toRadians(0));
 
         setTarget(spacecraft, mars);
-
     }
 
     @Override

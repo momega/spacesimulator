@@ -85,6 +85,10 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         addManeuver(spacecraft, "M5", 5712 * 60d, 45, 1d, Math.toRadians(270), Math.toRadians(90));
         addManeuver(spacecraft, "M6", 5910 * 60d, 205, 1d, Math.toRadians(180), Math.toRadians(0));
 
+        CrashSite crashSite = CrashSite.createFromLatLong(earth, model.getTime(), 14.5, 50);
+        crashSite.setName("Crash Site");
+        earth.getSurfacePoints().add(crashSite);
+
         setTarget(spacecraft, moon);
     }
     

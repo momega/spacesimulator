@@ -21,7 +21,6 @@ public class ToolbarController extends AbstractController {
 	public static final String SPACECRAFT_TOGGLE_COMMAND = "toggle_spacecraft";
 	public static final String CELESTIAL_TOGGLE_COMMAND = "toggle_celestial";
 	public static final String POINT_TOGGLE_COMMAND = "toggle_point";
-    public static final String HISTORY_POINT_TOGGLE_COMMAND = "toggle_history_point";
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -50,14 +49,6 @@ public class ToolbarController extends AbstractController {
 				updateSelectableMovingObjects();
 			}
 			break;
-        case HISTORY_POINT_TOGGLE_COMMAND:
-            {
-                JToggleButton button = (JToggleButton) e.getSource();
-                boolean visible = button.getModel().isSelected();
-                RendererModel.getInstance().setHistoryPointsVisible(visible);
-                updateSelectableMovingObjects();
-            }
-            break;
 		default:
 			break;
 		}

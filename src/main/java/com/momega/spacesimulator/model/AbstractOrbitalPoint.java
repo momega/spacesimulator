@@ -8,7 +8,7 @@ package com.momega.spacesimulator.model;
  * The class is the superclass for all point associated with the orbit
  * @author martin
  */
-public abstract class AbstractOrbitalPoint extends NamedObject implements PositionProvider {
+public abstract class AbstractOrbitalPoint extends NamedObject implements PositionProvider, IconProvider {
 
     private Vector3d position;
     private Timestamp timestamp;
