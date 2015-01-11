@@ -54,8 +54,8 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
     	}
 
     	if (Preferences.getInstance().isDrawCelestialBodyAxis()) {
-	       double rad = celestialBody.getRadius() * 1.2;
-	       GLUtils.drawAxis(gl, 1.0d, rad);
+            double rad = celestialBody.getRadius() * 1.2;
+            GLUtils.drawAxis(gl, 1.0d, rad);
     	}
         
         if (!drawPlanet) {
@@ -69,10 +69,10 @@ public class CelestialBodyRenderer extends AbstractTextureRenderer {
 
         GLUtils.translate(gl, celestialBody.getCartesianState().getPosition());
         GLUtils.rotate(gl, sphericalCoordinates);
-        logger.debug("object = {}, ra = {}, dec = {}", new Object[] {celestialBody.getName(), Math.toDegrees(sphericalCoordinates.getPhi()), 90-Math.toDegrees(sphericalCoordinates.getTheta())});
+        logger.debug("object = {}, ra = {}, dec = {}", celestialBody.getName(), Math.toDegrees(sphericalCoordinates.getPhi()), 90-Math.toDegrees(sphericalCoordinates.getTheta()));
 
         double phi = Math.toDegrees(celestialBody.getPrimeMeridian());
-        phi += 90; // because of texture
+        phi += 90; // because of texture?
         gl.glRotated(phi, 0, 0, 1);
     }
 

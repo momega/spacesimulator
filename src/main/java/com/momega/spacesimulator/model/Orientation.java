@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 import com.momega.spacesimulator.utils.VectorUtils;
+import org.apache.commons.math3.util.FastMath;
 
 /**
  * Orientation class is used to define 3D orientation. It is defined with
@@ -104,5 +105,20 @@ public class Orientation {
         if(axis != getV()) {
             setV(VectorUtils.rotateAboutAxis(getV(), angle, axis));
         }
+    }
+
+    /**
+     * Gets the spherical coordinates defined by the vector and the orientation object (3 axis).
+     * The radius parameter will be used only for radius in result spherical coordinates
+     * @param point the given point
+     * @param radius
+     * @return
+     */
+    public SphericalCoordinates getCoordinatesOfVector(Vector3d point, double radius) {
+        double theta = FastMath.abs(getV().angle(point));
+        Plane xy = new Plane(Vector3d.ZERO, getV());
+        Vector3d projectionV = xy.projection(point);
+        double phi = getN().angle(projectionV);
+        return new SphericalCoordinates(radius, theta, phi);
     }
 }

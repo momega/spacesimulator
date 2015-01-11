@@ -194,7 +194,7 @@ public class ModelService {
      */
     public void removeMovingObject(MovingObject movingObject) {
     	Assert.notNull(movingObject);
-    	logger.info("moving object = {}", movingObject.getName());
+    	logger.info("removing object '{}' from model", movingObject.getName());
     	ModelHolder.getModel().getMovingObjects().remove(movingObject);
     }
 

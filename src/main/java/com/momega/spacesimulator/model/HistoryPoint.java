@@ -10,6 +10,7 @@ public class HistoryPoint extends NamedObject implements PositionProvider, IconP
     private Vector3d position;
     private Timestamp timestamp;
     private HistoryPointOrigin origin;
+    private transient Spacecraft spacecraft;
 
     public Vector3d getPosition() {
         return position;
@@ -35,7 +36,15 @@ public class HistoryPoint extends NamedObject implements PositionProvider, IconP
 		this.origin = origin;
 	}
 
-	@Override
+    public Spacecraft getSpacecraft() {
+        return spacecraft;
+    }
+
+    public void setSpacecraft(Spacecraft spacecraft) {
+        this.spacecraft = spacecraft;
+    }
+
+    @Override
 	public String getIcon() {
 		return origin.getIcon();
 	}

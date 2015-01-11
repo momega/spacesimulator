@@ -47,7 +47,7 @@ public abstract class RotatingObject extends PhysicalBody {
 
     /**
      * The angle of the prime meridian at the current timestamp
-     * @return
+     * @return the prime meridian angle in radians
      */
     public double getPrimeMeridian() {
         return primeMeridian;

@@ -37,7 +37,7 @@ public class SimpleSolarSystemModelBuilder extends AbstractModelBuilder {
         earth.setTextureFileName("earth_hi.jpg");
 
         CelestialBody moon = new CelestialBody();
-        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 6.687, "Moon", "/images/moon.png");
+        updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 269.9949, 66.5392, 38.3213d, "Moon", "/images/moon.png");
         createKeplerianElements(moon, earthMoonBarycenter, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.241500, 208.1199);
         createTrajectory(moon, new double[]{0.5,0.5,0.5});
         moon.setTextureFileName("moon_4k.jpg");

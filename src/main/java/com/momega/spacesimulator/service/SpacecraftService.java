@@ -3,23 +3,13 @@
  */
 package com.momega.spacesimulator.service;
 
-import java.util.List;
-
+import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.utils.VectorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.momega.spacesimulator.model.CartesianState;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.KeplerianTrajectory;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Orientation;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.SpacecraftSubsystem;
-import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.model.TrajectoryType;
-import com.momega.spacesimulator.model.Vector3d;
-import com.momega.spacesimulator.utils.VectorUtils;
+import java.util.List;
 
 /**
  * The service contain the methods to manipulate of the spacecrafts 
@@ -30,6 +20,9 @@ public class SpacecraftService {
 	
 	@Autowired
 	private HistoryPointService historyPointService;
+
+    @Autowired
+    private ModelService modelService;
 
 	/**
 	 * Creates the spacecraft
@@ -83,6 +76,6 @@ public class SpacecraftService {
         Assert.notNull(subsystem);
         spacecraft.getSubsystems().add(subsystem);
         spacecraft.setMass(spacecraft.getMass() + subsystem.getMass());
-    }	
+    }
 
 }

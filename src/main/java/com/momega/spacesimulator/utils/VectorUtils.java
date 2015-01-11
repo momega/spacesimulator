@@ -88,7 +88,7 @@ public final class VectorUtils {
         return o;
     }
 
-    public static Vector3D toVector3D(Vector3d v) {
+    private static Vector3D toVector3D(Vector3d v) {
         return new Vector3D(v.getX(), v.getY(),v.getZ());
     }
 

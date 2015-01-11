@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.model;
 
 /**
+ * The crash site is the surface point created after the crash of the satellite of the surface of any celestial body.
  * Created by martin on 1/9/15.
  */
 public class CrashSite extends SurfacePoint {

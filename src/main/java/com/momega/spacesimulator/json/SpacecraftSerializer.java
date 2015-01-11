@@ -1,13 +1,9 @@
 package com.momega.spacesimulator.json;
 
-import org.springframework.stereotype.Component;
-
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.momega.spacesimulator.model.Maneuver;
-import com.momega.spacesimulator.model.OrbitIntersection;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.Target;
+import com.momega.spacesimulator.model.*;
+import org.springframework.stereotype.Component;
 
 @Component
 public class SpacecraftSerializer extends AbstractSerializer<Spacecraft> {
@@ -26,6 +22,9 @@ public class SpacecraftSerializer extends AbstractSerializer<Spacecraft> {
 		for(Maneuver maneuver : value.getManeuvers()) {
 			maneuver.getStart().setMovingObject(value);
 			maneuver.getEnd().setMovingObject(value);
+		}
+		for(HistoryPoint historyPoint : value.getNamedHistoryPoints()) {
+			historyPoint.setSpacecraft(value);
 		}
 		Target target = value.getTarget();
 		if (target != null) {

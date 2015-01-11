@@ -5,6 +5,7 @@ import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.controller.*;
 import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.HistoryPointOrigin;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.opengl.DefaultWindow;
@@ -285,6 +286,15 @@ public class MainWindow extends DefaultWindow {
 				statusLabel.setText(message);
 				ImageIcon icon = historyPointListRenderer.getIcon(historyPoint);
 				statusLabel.setIcon(icon);
+			}
+		});
+
+		historyPointService.addHistoryPointListener(new HistoryPointListener() {
+			@Override
+			public void historyPointCreated(HistoryPoint historyPoint) {
+				if (HistoryPointOrigin.END.equals(historyPoint.getOrigin())) {
+					RendererModel.getInstance().setDeleteSpacecraft(historyPoint.getSpacecraft());
+				}
 			}
 		});
     	

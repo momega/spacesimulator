@@ -54,6 +54,10 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
             }
         }
 
+        if (positionProvider instanceof CrashSite) {
+            tabbedPane.addTab("Crash", SwingUtils.createImageIcon("/images/Letter-X-icon.png"), createCrashSitePanel(), "Crash Information");
+        }
+
         if (positionProvider instanceof Spacecraft) {
             tabbedPane.addTab("Maneuvers", SwingUtils.createImageIcon("/images/hourglass.png"), createManeuverPanel(), "Spacecraft Maneuvers");
             tabbedPane.addTab("Subsystems", SwingUtils.createImageIcon("/images/cog.png"), createSubsystemsPanel(), "Spacecraft Subsystems");
@@ -137,6 +141,12 @@ public class DetailDialog extends JDialog implements ModelChangeListener {
 
     protected JPanel createKeplerianPanel() {
         KeplerianPanel result =  new KeplerianPanel(positionProvider);
+        attributesPanelList.add(result);
+        return result;
+    }
+
+    protected JPanel createCrashSitePanel() {
+        CrashSitePanel result =  new CrashSitePanel((CrashSite) positionProvider);
         attributesPanelList.add(result);
         return result;
     }

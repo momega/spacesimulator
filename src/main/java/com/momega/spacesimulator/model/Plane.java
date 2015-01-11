@@ -30,6 +30,13 @@ public class Plane {
         double value = normal.dot(other.getNormal()); // |n|=1 and other.n=|1|
         return Math.acos(value);
     }
+
+	public Vector3d projection(Vector3d point) {
+		Vector3d v = point.subtract(origin);
+		Vector3d w = normal.scale(v.dot(normal));
+		Vector3d result = point.subtract(w);
+		return result;
+	}
 	
 	/**
 	 * Builds intersection of the two planes. The origin is used to setup new origin 

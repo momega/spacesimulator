@@ -2,6 +2,7 @@ package com.momega.spacesimulator.service;
 
 import java.util.List;
 
+import com.momega.spacesimulator.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,19 +10,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.CartesianState;
-import com.momega.spacesimulator.model.CelestialBody;
-import com.momega.spacesimulator.model.KeplerianElements;
-import com.momega.spacesimulator.model.KeplerianOrbit;
-import com.momega.spacesimulator.model.KeplerianTrajectory;
-import com.momega.spacesimulator.model.ManeuverPoint;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Orientation;
-import com.momega.spacesimulator.model.Spacecraft;
-import com.momega.spacesimulator.model.Target;
-import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.model.TrajectoryType;
-import com.momega.spacesimulator.model.Vector3d;
 
 /**
  * Computes the next position and velocity of the {@link com.momega.spacesimulator.model.MovingObject} along Newtonian Trajectory. The
@@ -66,6 +54,7 @@ public class NewtonianPropagator implements Propagator {
         movingObject.setTimestamp(newTimestamp);
 
         computePrediction(spacecraft, newTimestamp);
+        checkCollision(spacecraft, newTimestamp);
         if (!ModelHolder.getModel().isRunningHeadless()) {
 	        computeApsides(spacecraft, newTimestamp);
 	        computeExitPoint(spacecraft, newTimestamp);
@@ -75,7 +64,35 @@ public class NewtonianPropagator implements Propagator {
         }
     }
 
-	protected void computeUserPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
+    private void checkCollision(Spacecraft spacecraft, Timestamp newTimestamp) {
+        ReferenceFrame referenceFrame = spacecraft.getKeplerianElements().getKeplerianOrbit().getReferenceFrame();
+        Assert.isInstanceOf(CelestialBody.class, referenceFrame);
+        CelestialBody body = (CelestialBody) referenceFrame;
+        double radius = body.getRadius();
+        Vector3d v = spacecraft.getPosition().subtract(body.getPosition());
+        if (radius > v.length()) {
+            Orientation o = body.getOrientation().clone();
+            v = v.normalize();
+            logger.info("Collision of spacecraft {} with {}", spacecraft.getName(), body.getName());
+            String name = "Collision of " + spacecraft.getName() + " with " + body.getName();
+            CrashSite crashSite = new CrashSite();
+            crashSite.setTimestamp(newTimestamp);
+            crashSite.setCelestialBody(body);
+            crashSite.setName(name);
+
+            o.rotate(o.getV(), body.getPrimeMeridian() + Math.PI/2);
+
+            SphericalCoordinates sphericalCoordinates = o.getCoordinatesOfVector(v, body.getRadius());
+            logger.info("sphericalCoordinates = {}", sphericalCoordinates);
+            crashSite.setCoordinates(sphericalCoordinates);
+
+            body.getSurfacePoints().add(crashSite);
+
+            historyPointService.end(spacecraft, newTimestamp);
+        }
+    }
+
+    protected void computeUserPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
 		userPointService.computeUserPoints(spacecraft, newTimestamp);
 	}
 

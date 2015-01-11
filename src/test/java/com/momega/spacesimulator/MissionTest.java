@@ -1,12 +1,12 @@
 package com.momega.spacesimulator;
 
 import com.momega.spacesimulator.builder.MoonMission2ModelBuilder;
-import com.momega.spacesimulator.context.AppConfig;
-import com.momega.spacesimulator.context.DefaultApplication;
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
-import com.momega.spacesimulator.service.ModelService;
+import com.momega.spacesimulator.model.Apsis;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.Spacecraft;
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
  * Created by martin on 1/9/15.
  */
 
-public class MissionTest {
+public class MissionTest extends AbstractMissionTest {
 
     private static final int CHECK_TIME = 15*60*60;
 
@@ -29,16 +29,15 @@ public class MissionTest {
 
     private static final int CHECK_TIME_6 = 12300 * 60;
 
+    @Before
+    public void setup() {
+        setup(MoonMission2ModelBuilder.class);
+    }
+
     @Test
     public void runMission() {
-        DefaultApplication application = new DefaultApplication(AppConfig.class);
-        application.init(MoonMission2ModelBuilder.class);
+        runTo(CHECK_TIME);
 
-        Timestamp startTime = ModelHolder.getModel().getTime();
-
-        runTo(application, startTime, CHECK_TIME);
-
-        ModelService modelService = application.getService(ModelService.class);
         List<Spacecraft> list = modelService.findAllSpacecrafs();
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());
@@ -54,7 +53,7 @@ public class MissionTest {
         double altitude = closesPoint.getKeplerianElements().getAltitude();
         System.out.println("altitude 1 = " + (altitude - moon.getRadius()));
 
-        runTo(application, startTime, CHECK_TIME_2);
+        runTo(CHECK_TIME_2);
 
         Apsis periapsis = spacecraft.getTrajectory().getPeriapsis();
         altitude = periapsis.getKeplerianElements().getAltitude();
@@ -62,7 +61,7 @@ public class MissionTest {
         Assert.assertTrue(altitude > 0);
         Assert.assertTrue(altitude < moon.getRadius());
 
-        runTo(application, startTime, CHECK_TIME_3);
+        runTo(CHECK_TIME_3);
 
         periapsis = spacecraft.getTrajectory().getPeriapsis();
         altitude = periapsis.getKeplerianElements().getAltitude();
@@ -70,14 +69,14 @@ public class MissionTest {
         Assert.assertTrue(altitude > 0);
         Assert.assertTrue(altitude < moon.getRadius());
 
-        runTo(application, startTime, CHECK_TIME_4);
+        runTo(CHECK_TIME_4);
 
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
         double e = keplerianElements.getKeplerianOrbit().getEccentricity();
         System.out.println("eccentricity = " + e);
         Assert.assertTrue(e < 0.15);
 
-        runTo(application, startTime, CHECK_TIME_5);
+        runTo(CHECK_TIME_5);
 
         keplerianElements = spacecraft.getKeplerianElements();
         Assert.assertEquals(false, keplerianElements.getKeplerianOrbit().isHyperbolic());
@@ -89,7 +88,7 @@ public class MissionTest {
         Assert.assertTrue(altitude > 0);
         Assert.assertTrue(altitude < earth.getRadius());
 
-        runTo(application, startTime, CHECK_TIME_6);
+        runTo(CHECK_TIME_6);
 
         periapsis = spacecraft.getTrajectory().getPeriapsis();
         altitude = periapsis.getKeplerianElements().getAltitude();
@@ -98,13 +97,4 @@ public class MissionTest {
         Assert.assertTrue(altitude < 300 * 1000);
     }
 
-    protected void runTo(DefaultApplication application, Timestamp startTime, int seconds) {
-        Timestamp current = ModelHolder.getModel().getTime();
-        Timestamp requested = startTime.add(seconds);
-        int steps = (int) requested.subtract(current);
-        for(int i=0; i<steps; i++) {
-            application.next(true, 1.0);
-        }
-        application.next(false, 1.0);
-    }
 }

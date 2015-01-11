@@ -59,4 +59,13 @@ public class SphericalCoordinates {
                 r * Math.sin(theta) * Math.sin(phi),
                 r * Math.cos(theta));
     }
+
+    @Override
+    public String toString() {
+        return "SphericalCoordinates{" +
+                "r=" + r +
+                ", theta=" + theta +
+                ", phi=" + phi +
+                '}';
+    }
 }
