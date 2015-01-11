@@ -1,7 +1,5 @@
 package com.momega.spacesimulator.model;
 
-import com.momega.spacesimulator.utils.VectorUtils;
-
 /**
  * Created by martin on 1/9/15.
  */

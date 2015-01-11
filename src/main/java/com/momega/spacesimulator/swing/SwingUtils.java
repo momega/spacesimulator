@@ -3,12 +3,15 @@
  */
 package com.momega.spacesimulator.swing;
 
-import javax.swing.ImageIcon;
-import javax.swing.JDialog;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @author martin
@@ -43,6 +46,28 @@ public final class SwingUtils {
                 dialog.setVisible(true);
             }
         });
+	}
+
+	public static void openUrl(String url) {
+		try {
+			final URI uri = new URI(url);
+			if (Desktop.isDesktopSupported()) {
+				try {
+					Desktop.getDesktop().browse(uri);
+				} catch (IOException e) {
+					JOptionPane.showMessageDialog(null,
+							"Failed to launch the link, " +
+									"your computer is likely misconfigured.",
+							"Cannot Launch Link", JOptionPane.WARNING_MESSAGE);
+				}
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Java is not able to launch links on your computer.",
+						"Cannot Launch Link", JOptionPane.WARNING_MESSAGE);
+			}
+		} catch (URISyntaxException urie) {
+			throw new IllegalArgumentException(urie);
+		}
 	}
 
 }

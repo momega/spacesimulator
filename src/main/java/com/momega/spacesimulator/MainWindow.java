@@ -24,10 +24,7 @@ import org.springframework.core.env.SimpleCommandLinePropertySource;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
@@ -131,12 +128,14 @@ public class MainWindow extends DefaultWindow {
     	openItem.setMnemonic(KeyEvent.VK_O);
     	openItem.setIcon(SwingUtils.createImageIcon("/images/page_go.png"));
     	openItem.setActionCommand(LoadController.LOAD_COMMAND);
+		openItem.setAccelerator(KeyStroke.getKeyStroke("F3"));
     	openItem.addActionListener(controller);
     	
     	final JMenuItem saveItem = new JMenuItem("Save");
     	saveItem.setActionCommand(SaveController.SAVE_COMMAND);
     	saveItem.setMnemonic(KeyEvent.VK_S);
     	saveItem.addActionListener(controller);
+		saveItem.setAccelerator(KeyStroke.getKeyStroke("F2"));
     	saveItem.setIcon(SwingUtils.createImageIcon("/images/page_save.png"));
     	
     	final JMenuItem saveAsItem = new JMenuItem("Save As...");
@@ -149,7 +148,7 @@ public class MainWindow extends DefaultWindow {
     	
         final JMenuItem saveScreenshotItem = new JMenuItem("Save Screenshot");
         saveScreenshotItem.setActionCommand(TakeScreenshotController.COMMAND);
-        saveScreenshotItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_DOWN_MASK));
+        saveScreenshotItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, InputEvent.ALT_DOWN_MASK));
         saveScreenshotItem.addActionListener(controller);
 
     	JMenuItem preferencesItem = new JMenuItem("Preferences...");
@@ -178,6 +177,7 @@ public class MainWindow extends DefaultWindow {
     	JMenuItem timeItem = new JMenuItem("Time...");
     	timeItem.setIcon(Icons.TIME);
         timeItem.addActionListener(controller);
+		timeItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, InputEvent.ALT_DOWN_MASK));
         timeItem.setActionCommand(TimeController.TIME_DIALOG);
 
     	JMenuItem findItem = new JMenuItem("Find...");
@@ -209,14 +209,17 @@ public class MainWindow extends DefaultWindow {
     	
     	JMenu helpMenu = new JMenu("Help");
     	helpMenu.setMnemonic(KeyEvent.VK_H);
-    	JMenuItem contentsItem = new JMenuItem("Help Contents");
-    	JMenuItem keysItem = new JMenuItem("Key Assists");
-    	JMenuItem documentationItem = new JMenuItem("Documentation");
+    	JMenuItem documentationItem = new JMenuItem("Documentation...");
     	JMenuItem aboutItem = new JMenuItem("About...");
-    	helpMenu.add(contentsItem);
-    	helpMenu.add(keysItem);
     	helpMenu.add(documentationItem);
-    	helpMenu.addSeparator();
+		documentationItem.setAccelerator(KeyStroke.getKeyStroke("F1"));
+		documentationItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String url = "https://github.com/momega/spacesimulator/wiki/User-Documentation";
+				SwingUtils.openUrl(url);
+			}
+		});
     	helpMenu.add(aboutItem);
     	
     	menuBar.add(fileMenu);

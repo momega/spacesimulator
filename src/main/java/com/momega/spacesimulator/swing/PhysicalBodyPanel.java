@@ -4,13 +4,9 @@ import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
 
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 /**
  * Created by martin on 11/2/14.
@@ -33,18 +29,14 @@ public class PhysicalBodyPanel extends JPanel implements UpdatablePanel {
         JButton wikiButton = new JButton("Wiki...");
         wikiButton.setIcon(SwingUtils.createImageIcon("/images/wikipedia-icon.png"));
         if (celestialBody.getWiki() != null) {
-            try {
-                final URI wikiUri = new URI("http://en.wikipedia.org/wiki/" + celestialBody.getWiki());
-                wikiButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        open(wikiUri);
-                    }
-                });
-                buttonsPanel.add(wikiButton);
-            } catch (URISyntaxException urie) {
-                throw new IllegalArgumentException(urie);
-            }
+            final String wikiUrl = "http://en.wikipedia.org/wiki/" + celestialBody.getWiki();
+            wikiButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    SwingUtils.openUrl(wikiUrl);
+                }
+            });
+            buttonsPanel.add(wikiButton);
         }
 
         add(attrPanel, BorderLayout.CENTER);
@@ -61,20 +53,5 @@ public class PhysicalBodyPanel extends JPanel implements UpdatablePanel {
         // do nothing
     }
 
-    private static void open(URI uri) {
-        if (Desktop.isDesktopSupported()) {
-            try {
-                Desktop.getDesktop().browse(uri);
-            } catch (IOException e) {
-                JOptionPane.showMessageDialog(null,
-                        "Failed to launch the link, " +
-                                "your computer is likely misconfigured.",
-                        "Cannot Launch Link",JOptionPane.WARNING_MESSAGE); }
-        } else {
-            JOptionPane.showMessageDialog(null,
-                    "Java is not able to launch links on your computer.",
-                    "Cannot Launch Link",JOptionPane.WARNING_MESSAGE);
-        }
-    }
 
 }
