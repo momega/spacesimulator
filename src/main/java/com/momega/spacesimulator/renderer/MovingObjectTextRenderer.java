@@ -11,11 +11,11 @@ import com.momega.spacesimulator.opengl.GLUtils;
  * Renderer displays the the text at the moving position.
  * Created by martin on 4/28/14.
  */
-public class MovingObjectRenderer extends AbstractTextRenderer {
+public class MovingObjectTextRenderer extends AbstractTextRenderer {
 
     private final MovingObject movingObject;
 
-    public MovingObjectRenderer(MovingObject movingObject) {
+    public MovingObjectTextRenderer(MovingObject movingObject) {
         this.movingObject = movingObject;
     }
 

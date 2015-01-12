@@ -38,7 +38,7 @@ public class MovingObjectCompositeRenderer extends CompositeRenderer {
         }
         addRenderer(new UserOrbitalPointBitmapRenderer(mo));
         addRenderer(new MovingObjectOrbitPointsRenderer(mo));
-        addRenderer(new MovingObjectRenderer(mo));
+        addRenderer(new MovingObjectTextRenderer(mo));
         if (mo instanceof BaryCentre) {
             addRenderer(new ApsidesRenderer(mo));
         }

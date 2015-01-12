@@ -11,8 +11,8 @@ influences the trajectory of the spacecrafts.
 
 How to run the application?
 ===========================
-1. Application used maven to build, so download and install it.
-2. Type the following command to compile the application, run few tests and execute the main application.  
+1. The application is using maven to build, so download and install it.
+2. Type the following command compiles the application, runs few tests and execute the main application.
 ```
 	mvn clean test exec:java
 ```
@@ -25,8 +25,8 @@ If you do not want to execute the tests, run the following command:
 Features
 ========
 
-* All 8 planets and their moons + Pluto with moons, Ceres, Vesta and Halley Comet included in model
-* Orbital maneuvers with fuel consumption
+* All 8 planets and their moons, Pluto with moons, Ceres, Vesta and Halley Comet are included in model
+* Orbital maneuvers with the fuel consumption
 * Sphere of Influences
 * Display, exit of sphere of influence, the closest point and the planes intersections of the spacecraft and target celestial body
 * Time warp
@@ -34,6 +34,8 @@ Features
 * User defined points for on the spacecraft and planets trajectory
 * Create and remove the spacecraft
 * Take a screenshot
+* Create, edit and remove maneuvers.
+* Collision of the spacecraft with the celestial bodies + persistent crash site point.
 * Headless computations
 * Load and save models
 * Run the simulation from the prepared models.
