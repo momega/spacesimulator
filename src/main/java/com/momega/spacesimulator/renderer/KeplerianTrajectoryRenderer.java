@@ -44,12 +44,12 @@ public class KeplerianTrajectoryRenderer extends AbstractKeplerianTrajectoryRend
         
         gl.glLineWidth(1f);
         gl.glTranslated(-e, 0, 0); // move from foci to center
+        ExitSoiOrbitalPoint exitSoiOrbitalPoint = spacecraft.getExitSoiOrbitalPoint();
         if (!keplerianElements.getKeplerianOrbit().isHyperbolic()) {
-        	ExitSoiOrbitalPoint exitSoiOrbitalPoint = spacecraft.getExitSoiOrbitalPoint();
         	if (exitSoiOrbitalPoint==null) {
 	            GLUtils.drawEllipse(gl, a, b, 7200, getColor());
         	} else {
-        		double startAngle = spacecraft.getKeplerianElements().getEccentricAnomaly();
+        		double startAngle = keplerianElements.getEccentricAnomaly();
         		double endAngle = exitSoiOrbitalPoint.getKeplerianElements().getEccentricAnomaly();
         		if (startAngle > endAngle) {
         			startAngle -= 2*Math.PI;
@@ -57,8 +57,13 @@ public class KeplerianTrajectoryRenderer extends AbstractKeplerianTrajectoryRend
         		GLUtils.drawEllipse(gl, a, b, startAngle, endAngle, 7200, getColor());
         	}
         } else {
-            double HA = keplerianElements.getHyperbolicAnomaly();
-            GLUtils.drawHyperbolaPartial(gl, a, b, -2 * Math.PI, -HA, 7200, getColor()); // -HA because of a<0
+            double startAngle = keplerianElements.getHyperbolicAnomaly();
+            if (exitSoiOrbitalPoint==null) {
+                GLUtils.drawHyperbolaPartial(gl, a, b, -2 * Math.PI, -startAngle, 7200, getColor()); // -HA because of a<0
+            } else {
+                double endAngle = exitSoiOrbitalPoint.getKeplerianElements().getHyperbolicAnomaly();
+                GLUtils.drawHyperbolaPartial(gl, a, b, -endAngle, -startAngle, 7200, getColor());
+            }
         }
     }
 
