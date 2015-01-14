@@ -5,8 +5,8 @@ package com.momega.spacesimulator.model;
  */
 public enum ManeuverPointType {
 
-    START("Start", "/images/Letter-P-icon.png"),
-    END("End", "/images/Letter-A-icon.png");
+    START("Start", "/images/Math-greater-than-icon.png"),
+    END("End", "/images/Math-lower-than-icon.png");
 
     private final String name;
     private final String icon;
