@@ -8,7 +8,6 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.momega.spacesimulator</groupId>
     <artifactId>spacesimulator-client</artifactId>
 
     <build>
@@ -23,7 +22,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
             </plugin>
         </plugins>
     </build>

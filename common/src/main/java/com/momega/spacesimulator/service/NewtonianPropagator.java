@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 
 /**
@@ -43,24 +42,24 @@ public class NewtonianPropagator implements Propagator {
     private TargetService targetService;
 
     @Override
-    public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
+    public void computePosition(MovingObject movingObject, RunStep step) {
         Assert.isInstanceOf(Spacecraft.class, movingObject, "predication of trajectory is supported only for satellites");
         Spacecraft spacecraft = (Spacecraft) movingObject;
 
-        double dt = newTimestamp.subtract(movingObject.getTimestamp());
+        double dt = step.getDt();
 
-        CartesianState cartesianState = eulerSolver(spacecraft, newTimestamp, dt);
+        CartesianState cartesianState = eulerSolver(spacecraft, step.getNewTimestamp(), dt);
         movingObject.setCartesianState(cartesianState);
-        movingObject.setTimestamp(newTimestamp);
+        movingObject.setTimestamp(step.getNewTimestamp());
 
-        computePrediction(spacecraft, newTimestamp);
-        checkCollision(spacecraft, newTimestamp);
-        if (!ModelHolder.getModel().isRunningHeadless()) {
-	        computeApsides(spacecraft, newTimestamp);
-	        computeExitPoint(spacecraft, newTimestamp);
-	        computeTargetPoints(spacecraft, newTimestamp);
-	        computeManeuvers(spacecraft, newTimestamp);
-	        computeUserPoints(spacecraft, newTimestamp);
+        computePrediction(spacecraft, step.getNewTimestamp());
+        checkCollision(spacecraft, step.getNewTimestamp());
+        if (!step.isRunningHeadless()) {
+	        computeApsides(spacecraft, step.getNewTimestamp());
+	        computeExitPoint(spacecraft, step.getNewTimestamp());
+	        computeTargetPoints(spacecraft, step.getNewTimestamp());
+	        computeManeuvers(spacecraft, step.getNewTimestamp());
+	        computeUserPoints(spacecraft, step.getNewTimestamp());
         }
     }
 

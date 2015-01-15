@@ -60,11 +60,12 @@ public class ModelService {
     }
 
     /**
-     * Returns the current valid position provider. The method returns very similar results ass @{#findAllMovingObjects}
+     * Returns the current valid position provider. The method returns very similar results as @{#findAllMovingObjects}
      * except this method filters future maneuver points
+     * @param timestamp the current timestamp
      * @return the collection of the position providers
      */
-    public List<PositionProvider> findAllPositionProviders() {
+    public List<PositionProvider> findAllPositionProviders(Timestamp timestamp) {
         List<PositionProvider> result = new ArrayList<>();
         for(MovingObject dp : findAllMovingObjects()) {
             result.add(dp);
@@ -92,7 +93,7 @@ public class ModelService {
                 for(OrbitIntersection intersection : targetService.getOrbitIntersections(spacecraft)) {
                     result.add(intersection);
                 }
-                for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, ModelHolder.getModel().getTime())) {
+                for(ManeuverPoint maneuverPoint : maneuverService.findActiveOrNextPoints(spacecraft, timestamp)) {
                     result.add(maneuverPoint);
                 }
                 if (spacecraft.getExitSoiOrbitalPoint()!=null) {

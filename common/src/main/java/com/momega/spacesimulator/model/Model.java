@@ -12,7 +12,6 @@ public class Model {
 
     private Timestamp time;
     protected final List<MovingObject> movingObjects = new ArrayList<>();
-    private boolean runningHeadless;
     private SphereOfInfluence rootSoi;
     private Camera camera;
 
@@ -55,12 +54,5 @@ public class Model {
     public void setRootSoi(SphereOfInfluence rootSoi) {
         this.rootSoi = rootSoi;
     }
-    
-    public boolean isRunningHeadless() {
-		return runningHeadless;
-	}
-    
-    public void setRunningHeadless(boolean runningHeadless) {
-		this.runningHeadless = runningHeadless;
-	}
+
 }

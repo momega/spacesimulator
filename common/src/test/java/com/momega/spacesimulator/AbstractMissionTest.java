@@ -6,6 +6,7 @@ import com.momega.spacesimulator.context.DefaultApplication;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.HistoryPointOrigin;
+import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.service.HistoryPointListener;
 import com.momega.spacesimulator.service.HistoryPointService;
@@ -44,9 +45,12 @@ public abstract class AbstractMissionTest {
         Timestamp current = ModelHolder.getModel().getTime();
         Timestamp requested = startTime.add(seconds);
         int steps = (int) requested.subtract(current);
+        RunStep runStep = RunStep.create(current, 1.0, true);
         for(int i=0; i<steps; i++) {
-            application.next(true, 1.0);
+            application.next(runStep);
+            runStep.next();
         }
-        application.next(false, 1.0);
+        runStep.setRunningHeadless(false);
+        application.next(runStep);
     }
 }

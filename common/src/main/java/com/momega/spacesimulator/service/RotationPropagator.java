@@ -1,15 +1,14 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.RotatingObject;
-import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.utils.MathUtils;
-import com.momega.spacesimulator.utils.TimeUtils;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.RotatingObject;
+import com.momega.spacesimulator.model.RunStep;
+import com.momega.spacesimulator.utils.MathUtils;
+import com.momega.spacesimulator.utils.TimeUtils;
 
 /**
  * Rotation propagator is used to 
@@ -23,12 +22,12 @@ public class RotationPropagator implements Propagator {
     private static final Logger logger = LoggerFactory.getLogger(RotationPropagator.class);
 
 	@Override
-	public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
-		if (ModelHolder.getModel().isRunningHeadless()) {
+	public void computePosition(MovingObject movingObject, RunStep step) {
+		if (step.isRunningHeadless()) {
 			return;
 		}
 		RotatingObject rotatingObject = (RotatingObject) movingObject;
-		double dt = newTimestamp.subtract(TimeUtils.JD2000);
+		double dt = step.getNewTimestamp().subtract(TimeUtils.JD2000);
         double phi = dt / rotatingObject.getRotationPeriod() * 2 * Math.PI;
         phi = MathUtils.normalizeAngle(phi);
 

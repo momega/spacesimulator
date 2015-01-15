@@ -120,7 +120,8 @@ public class RendererModel {
 
     public void updateViewData(GLAutoDrawable drawable) {
     	Camera camera = ModelHolder.getModel().getCamera();
-        for(PositionProvider positionProvider : modelService.findAllPositionProviders()) {
+    	Timestamp time = ModelHolder.getModel().getTime();
+        for(PositionProvider positionProvider : modelService.findAllPositionProviders(time)) {
             addViewCoordinates(drawable, positionProvider, camera);
         }
     }
@@ -298,8 +299,12 @@ public class RendererModel {
 	}
 
     public List<PositionProvider> selectPositionProviders() {
-    	List<PositionProvider> list = modelService.findAllPositionProviders();
     	List<PositionProvider> result = new ArrayList<>();
+    	if (ModelHolder.getModel()==null) {
+    		return result;
+    	}
+    	Timestamp time = ModelHolder.getModel().getTime();
+    	List<PositionProvider> list = modelService.findAllPositionProviders(time);
     	for(PositionProvider positionProvider : list) {
     		if (isPointsVisible() && positionProvider instanceof AbstractOrbitalPoint) {
     			AbstractOrbitalPoint orbitalPoint = (AbstractOrbitalPoint) positionProvider;

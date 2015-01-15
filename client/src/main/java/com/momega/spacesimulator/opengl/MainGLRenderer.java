@@ -11,6 +11,7 @@ import com.momega.spacesimulator.MainWindow;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Camera;
+import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.renderer.ModelRenderer;
 import com.momega.spacesimulator.renderer.RendererModel;
@@ -98,7 +99,8 @@ public class MainGLRenderer extends AbstractGLRenderer {
 
     @Override
     protected void computeScene() {
-        Application.getInstance().next(false, RendererModel.getInstance().getWarpFactor());
+    	RunStep step = RunStep.create(ModelHolder.getModel().getTime(), RendererModel.getInstance().getWarpFactor(), false);
+        Application.getInstance().next(step);
 
         //        // TODO: place this into the method
         //        double x = drawable.getWidth();

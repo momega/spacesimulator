@@ -1,10 +1,14 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.context.ModelHolder;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.momega.spacesimulator.model.*;
+
+import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.KeplerianOrbit;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.RunStep;
+import com.momega.spacesimulator.model.TrajectoryType;
 
 /**
  * Computes the position of the {@link com.momega.spacesimulator.model.MovingObject} along the keplerian trajectory.
@@ -22,20 +26,20 @@ public class KeplerianPropagator implements Propagator {
     private UserPointService userPointService;
 
     @Override
-    public void computePosition(MovingObject movingObject, Timestamp newTimestamp) {
+    public void computePosition(MovingObject movingObject, RunStep step) {
         KeplerianOrbit keplerianOrbit = movingObject.getKeplerianElements().getKeplerianOrbit();
 
-        KeplerianElements keplerianElements = KeplerianElements.fromTimestamp(keplerianOrbit, newTimestamp);
+        KeplerianElements keplerianElements = KeplerianElements.fromTimestamp(keplerianOrbit, step.getNewTimestamp());
         CartesianState cartesianState = keplerianElements.toCartesianState();
 
         movingObject.setKeplerianElements(keplerianElements);
         movingObject.setCartesianState(cartesianState);
-        movingObject.setTimestamp(newTimestamp);
+        movingObject.setTimestamp(step.getNewTimestamp());
         
-        if (!ModelHolder.getModel().isRunningHeadless()) {
-	        apsisService.updatePeriapsis(movingObject, newTimestamp);
-	        apsisService.updateApoapsis(movingObject, newTimestamp);
-        	userPointService.computeUserPoints(movingObject, newTimestamp);
+        if (!step.isRunningHeadless()) {
+	        apsisService.updatePeriapsis(movingObject, step.getNewTimestamp());
+	        apsisService.updateApoapsis(movingObject, step.getNewTimestamp());
+        	userPointService.computeUserPoints(movingObject, step.getNewTimestamp());
         }
     }
 

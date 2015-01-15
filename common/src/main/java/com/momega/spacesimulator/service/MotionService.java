@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
 import com.momega.spacesimulator.model.MovingObject;
-import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.model.RunStep;
 
 /**
  * The motion service is responsible for computing new position of moving objects such as planets and satellites.
@@ -30,28 +30,29 @@ public class MotionService {
     @Autowired
     private List<Propagator> propagators = new ArrayList<>();
 
-    public Timestamp move(Timestamp time, double warpFactor) {
-        Timestamp newTimestamp = time.add(warpFactor);
-        logger.debug("time={}", newTimestamp.getValue());
-        if (warpFactor > 0) {
+    /**
+     * Moves all the moving object of the model
+     * @param step the computation step
+     */
+    public void move(RunStep step) {
+        logger.debug("time={}", step.getNewTimestamp().getValue());
+        if (step.getDt() > 0) {
             for (MovingObject mo : modelService.findAllMovingObjects()) {
-                move(mo, newTimestamp);
+                move(mo, step);
             }
         }
-        return newTimestamp;
     }
     
     /**
      * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation
      * @param movingObject the moving objects
-     * @param newTimestamp new timestamp
+     * @param step the computation step 
      */
-    public void move(MovingObject movingObject, Timestamp newTimestamp) {
-        logger.debug("new time = {}", newTimestamp);
+    public void move(MovingObject movingObject, RunStep step) {
         Assert.notNull(movingObject);
         for (Propagator propagator : propagators) {
             if (propagator.supports(movingObject)) {
-                propagator.computePosition(movingObject, newTimestamp);
+                propagator.computePosition(movingObject, step);
             }
         }
     }    

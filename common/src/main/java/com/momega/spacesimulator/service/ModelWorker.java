@@ -2,6 +2,7 @@ package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.model.Timestamp;
 
 import org.slf4j.Logger;
@@ -25,20 +26,19 @@ public class ModelWorker {
 
     /**
      * Next step of the model iteration
-     * @param runningHeadless running headless
-     * @param warpFactor the warp factor
+     * @param step TODO
      */
-    public void next(boolean runningHeadless, double warpFactor) {
+    public void next(RunStep step) {
         Model model = ModelHolder.getModel();
         if (model == null) {
             return;
         }
-        model.setRunningHeadless(runningHeadless);
-        Timestamp t = motionService.move(model.getTime(), warpFactor);
+        motionService.move(step);
+        Timestamp t = step.getNewTimestamp();
+        logger.debug("time = {}", t);
         model.setTime(t);
-        if (!model.isRunningHeadless()) {
+        if (!step.isRunningHeadless()) {
 	        cameraService.updatePosition(model.getCamera());
-	        logger.debug("time = {}", model.getTime());
         }
     }
 

@@ -8,6 +8,7 @@ import java.io.StringWriter;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.momega.spacesimulator.builder.SimpleSolarSystemModelBuilder;
@@ -21,16 +22,19 @@ import com.momega.spacesimulator.service.ModelSerializer;
  * @author martin
  *
  */
-public class SaveTest {
+public class SaveTest extends AbstractMissionTest {
+	
+	 private static final int CHECK_TIME = 4*60*60;
+	
+	@Before
+    public void setup() {
+        setup(SimpleSolarSystemModelBuilder.class);
+    }
 
 	@Test
 	public void simpleTest() {
 		DefaultApplication application = new DefaultApplication(AppConfig.class);
-        application.init(SimpleSolarSystemModelBuilder.class);
-        for(int i=0; i<4*60*60; i++) {
-        	application.next(true,  1.0);
-        }
-        application.next(false,  1.0);
+		runTo(CHECK_TIME);
         
         ModelSerializer serializer = application.getService(ModelSerializer.class);
         StringWriter writer = new StringWriter();

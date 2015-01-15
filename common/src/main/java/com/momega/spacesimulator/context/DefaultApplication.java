@@ -7,6 +7,7 @@ import org.springframework.util.Assert;
 import com.momega.common.AbstractSpringApplication;
 import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.service.ModelWorker;
 import com.momega.spacesimulator.utils.TimeUtils;
 
@@ -26,8 +27,8 @@ public class DefaultApplication extends AbstractSpringApplication {
         modelWorker = getService(ModelWorker.class);
     }
 
-    public void next(boolean runningHeadless, double warpFactor) {
-        modelWorker.next(runningHeadless, warpFactor);
+    public void next(RunStep step) {
+        modelWorker.next(step);
     }
 
     public ModelBuilder createBuilder(String builderClassName) {
@@ -50,7 +51,8 @@ public class DefaultApplication extends AbstractSpringApplication {
         ModelHolder.setModel(model);
         logger.info("execute first second at time = {}", TimeUtils.timeAsString(model.getTime()));
 
-        modelWorker.next(true, 1.0);
+        RunStep step = RunStep.create(model.getTime(), 1.0, true);
+        next(step);
         logger.info("model data built");
     }
 
