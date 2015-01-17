@@ -26,7 +26,7 @@ public class ModelWorker {
 
     /**
      * Next step of the model iteration
-     * @param step TODO
+     * @param step the run step
      */
     public void next(RunStep step) {
         Model model = ModelHolder.getModel();
