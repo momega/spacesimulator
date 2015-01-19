@@ -15,12 +15,17 @@ function initScene() {
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize( canvasWidth, canvasHeight );
 	container.appendChild( renderer.domElement );
+	
+	camera.position.z = 5;
+	camera.position.y = 1;
+	camera.position.x = 1;
 
-	controls = new THREE.OrbitControls( camera );
+	controls = new THREE.OrbitControls( camera, container );
+	//controls.target = 
 	controls.damping = 0.2;
 	controls.addEventListener( 'change', render );
 
-	var geometry = new THREE.SphereGeometry( 0.5, 64, 64 );
+	var geometry = new THREE.SphereGeometry( 1, 64, 64 );
 	
 	// instantiate a loader
 	var loader = new THREE.TextureLoader();
@@ -34,7 +39,8 @@ function initScene() {
 			var material = new THREE.MeshBasicMaterial( { map: texture } );
 			var sphere = new THREE.Mesh( geometry, material );
 			scene.add( sphere );
-			console.log("Textures loaded")
+			console.log("Textures loaded");
+			render();
 			animate();
 		},
 		// Function called when download progresses
@@ -46,15 +52,15 @@ function initScene() {
 			console.log( 'An error happened' );
 		}
 	);
-			
-	camera.position.z = 5;
-//	camera.position.y = 1;
-//	camera.position.x = 1;
 	
-//	vector3 = new THREE.Vector3(-1, 1, 1 );
-//	camera.lookAt(vector3);
-	
-	
+	var geometry2 = new THREE.BoxGeometry( 1, 1, 1 );
+	var material2 = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+	var cube = new THREE.Mesh( geometry2, material2 );
+	cube.position.x = 1;
+	cube.position.y = 1;
+	cube.updateMatrix();
+	cube.matrixAutoUpdate = false;
+	scene.add( cube );
 
 /*			var render = function () {
 				requestAnimationFrame( render );
@@ -73,5 +79,6 @@ function animate() {
 }
 
 function render() {
+	console.log("Render called");
 	renderer.render( scene, camera );
 }
