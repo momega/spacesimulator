@@ -30,10 +30,12 @@ function initScene() {
 	camera.position.z = 5;
 	camera.position.y = 1;
 	camera.position.x = 1;
+	
+	var t = new THREE.Vector3(-4.0, 0, 0);
 
 	controls = new THREE.OrbitControls( camera, container );
-	//controls.target = 
 	controls.damping = 0.2;
+	controls.target = t;
 	controls.addEventListener( 'change', render );
 
 	var geometry = new THREE.SphereGeometry( 1, 64, 64 );
@@ -42,7 +44,7 @@ function initScene() {
 	var sphere = new THREE.Mesh( geometry, material );
 	scene.add( sphere );
 	
-	var geometry2 = new THREE.BoxGeometry( 1, 1, 1 );
+	var geometry2 = new THREE.BoxGeometry( 0.5, 1, 1 );
 	var material2 = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
 	var cube = new THREE.Mesh( geometry2, material2 );
 	cube.position.x = 1;
@@ -61,15 +63,6 @@ function initScene() {
 	mars.matrixAutoUpdate = false;
 	scene.add( mars );
 
-/*			var render = function () {
-				requestAnimationFrame( render );
-
-				cube.rotation.x += 0.1;
-				cube.rotation.y += 0.1;
-
-				
-			};
-*/
 	render();
 	animate();
 }
