@@ -27,12 +27,10 @@ function loadAllTextures() {
 
 function initScene() {
 	
-	camera.position.z = 5;
-	camera.position.y = 1;
-	camera.position.x = 1;
+	var p = new THREE.Vector3(1,1,4);
+	camera.position.copy(p);
 	
 	var t = new THREE.Vector3(-4.0, 0, 0);
-
 	controls = new THREE.OrbitControls( camera, container );
 	controls.damping = 0.2;
 	controls.target = t;
@@ -58,7 +56,7 @@ function initScene() {
 	var material = new THREE.MeshBasicMaterial( { map: texture2 } );
 	var mars = new THREE.Mesh( geometry3, material );
 	mars.position.x = -2;
-	mars.position.y = 0;
+	mars.position.y = 1;
 	mars.updateMatrix();
 	mars.matrixAutoUpdate = false;
 	scene.add( mars );
