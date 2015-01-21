@@ -8,26 +8,26 @@ spaceSimulatorApp.controller('CameraCtrl', function($scope) {
 	
   $scope.bodies = [
 	                 {'name': 'earth',
-	                  'value': 'Earth'},
+	                  'value': 'Earth', 'position': new THREE.Vector3(0.0, 0, 0)},
 	                 {'name': 'mars',
-	                  'value': 'Mars'}
+	                  'value': 'Mars', 'position': new THREE.Vector3(-2.0, 1.0, 0)}
 	               ];
   
-  $scope.positions = [
-					{'name': 'earth',
-					    'position': new THREE.Vector3(0.0, 0, 0)},
-					   {'name': 'mars',
-					    'position': new THREE.Vector3(-2.0, 1.0, 0)}
-                     ];
+  $scope.positionMap = [];
+  for (var i = 0; i < $scope.bodies.length; i++) {
+	  var body = $scope.bodies[i];
+	  $scope.positionMap[body.name]=body.position;
+  }
   
   $scope.selectedBody = 'earth';
-  $scope.selectedPosition = new THREE.Vector3(-2.0, 1.0, 0);
-  $scope.selectedPositionX = $scope.selectedPosition.toArray();
   
   $scope.bodyChanged = function () {
 	  console.log('body = ' + $scope.selectedBody);
-	  $scope.selectedPosition = $scope.positions[$scope.selectedBody];
-	  $scope.selectedPositionX = $scope.selectedPosition.toArray();
+	  console.log('position = ' +  $scope.positionMap[$scope.selectedBody].toArray());
+	  
+	  cameraTarget = $scope.positionMap[$scope.selectedBody];
+	  updateCameraPosition(cameraTarget);
+	  render();
   }
 
 });

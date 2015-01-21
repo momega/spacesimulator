@@ -3,6 +3,10 @@ var renderer;
 var camera;
 var controls;
 
+var cameraTarget;
+var cameraPosition;
+var cameraDiff;
+
 function init() {
 	container = document.getElementById( 'container' );
 	document.getElementById( 'container' ).innerHTML = "";
@@ -25,15 +29,23 @@ function loadAllTextures() {
 	loadTextures(names, sources, initScene);
 }
 
+function updateCameraPosition(cameraTarget) {
+	console.log('cameraTarget = ' + cameraTarget.toArray());
+	cameraPosition = new THREE.Vector3(0, 0, 0);
+	cameraPosition.addVectors(cameraTarget, cameraDiff);
+	console.log('cameraPosition = ' + cameraPosition.toArray());
+	camera.position.copy(cameraPosition);
+	controls.target = cameraTarget;
+}
+
 function initScene() {
 	
-	var p = new THREE.Vector3(1,1,4);
-	camera.position.copy(p);
+	cameraTarget = new THREE.Vector3(0, 0, 0);
+	cameraDiff = new THREE.Vector3(0, 0, 5);
 	
-	var t = new THREE.Vector3(-4.0, 0, 0);
 	controls = new THREE.OrbitControls( camera, container );
 	controls.damping = 0.2;
-	controls.target = t;
+	updateCameraPosition(cameraTarget);
 	controls.addEventListener( 'change', render );
 
 	var geometry = new THREE.SphereGeometry( 1, 64, 64 );
