@@ -2,11 +2,12 @@
 
 /* Controllers */
 
-var spaceSimulatorApp = angular.module('spaceSimulatorApp', []);
+var spaceSimulatorControllers = angular.module('spaceSimulatorControllers', []);
 
-spaceSimulatorApp.controller('CameraCtrl', function($scope) {
-	
-  $scope.bodies = [
+
+spaceSimulatorControllers.controller('MainController', ['$scope',  function($scope) {
+
+	$scope.bodies = [
 	                 {'name': 'earth',
 	                  'value': 'Earth', 'position': new THREE.Vector3(0.0, 0, 0)},
 	                 {'name': 'mars',
@@ -29,5 +30,9 @@ spaceSimulatorApp.controller('CameraCtrl', function($scope) {
 	  updateCameraPosition(cameraTarget);
 	  render();
   }
-
-});
+  
+  $scope.$on('$viewContentLoaded', function(){
+	  init();
+  });
+  
+}]);

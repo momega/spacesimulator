@@ -24,8 +24,8 @@ function init() {
 }
 
 function loadAllTextures() {
-	var names = ['earth', 'mars'];
-	var sources = ['textures/earth_hi.jpg', 'textures/mars_hi.jpg'];
+	var names = [ 'mars'];
+	var sources = ['textures/mars_hi.jpg'];
 	loadTextures(names, sources, initScene);
 }
 
@@ -50,7 +50,7 @@ function initScene() {
 
 	var geometry = new THREE.SphereGeometry( 1, 64, 64 );
 	var texture = texturesMap['earth'];
-	var material = new THREE.MeshBasicMaterial( { map: texture } );
+	var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture('textures/earth_hi.jpg') } );
 	var sphere = new THREE.Mesh( geometry, material );
 	scene.add( sphere );
 	
