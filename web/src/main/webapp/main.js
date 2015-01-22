@@ -14,7 +14,7 @@ function init() {
 	var canvasHeight = 480;
 	
 	scene = new THREE.Scene();
-	camera = new THREE.PerspectiveCamera( 45, canvasWidth/canvasHeight, 0.1, 1000 );
+	camera = new THREE.PerspectiveCamera( 45, canvasWidth/canvasHeight, 0.01, 1000 );
 
 	renderer = new THREE.WebGLRenderer();
 	renderer.setSize( canvasWidth, canvasHeight );
@@ -24,8 +24,8 @@ function init() {
 }
 
 function loadAllTextures() {
-	var names = [ 'mars'];
-	var sources = ['textures/mars_hi.jpg'];
+	var names = ['earth', 'mars', '1'];
+	var sources = ['textures/earth_hi.jpg', 'textures/mars_hi.jpg', 'icons/Number-1-icon.png'];
 	loadTextures(names, sources, initScene);
 }
 
@@ -50,7 +50,7 @@ function initScene() {
 
 	var geometry = new THREE.SphereGeometry( 1, 64, 64 );
 	var texture = texturesMap['earth'];
-	var material = new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture('textures/earth_hi.jpg') } );
+	var material = new THREE.MeshBasicMaterial( { map: texture } );
 	var sphere = new THREE.Mesh( geometry, material );
 	scene.add( sphere );
 	
@@ -62,6 +62,12 @@ function initScene() {
 	cube.updateMatrix();
 	cube.matrixAutoUpdate = false;
 	scene.add( cube );
+	
+	var crateMaterial = new THREE.SpriteMaterial( { map: texturesMap['1'], useScreenCoordinates: false } );
+	var sprite2 = new THREE.Sprite( crateMaterial );
+	sprite2.position.set( 2, 2, 0 );
+	sprite2.scale.set( 0.1, 0.1, 1.0 ); // imageWidth, imageHeight
+	scene.add( sprite2 );
 	
 	var geometry3 = new THREE.SphereGeometry( 0.3, 64, 64 );
 	var texture2 = texturesMap['mars'];
