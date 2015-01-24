@@ -19,6 +19,8 @@ spaceSimulatorApp.directive( 'goClick', function ( $location ) {
 
 spaceSimulatorApp.config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
-	  when('/main', {templateUrl: 'partials/main.html', controller: 'MainController'}).
-	  otherwise({redirectTo: '/main'});
+	  when('/simulation', {templateUrl: 'partials/simulation.html', controller: 'SimulationController'}).
+	  when('/project', {templateUrl: 'partials/project.html', controller: 'ProjectController'}).
+	  when('/help', {templateUrl: 'partials/help.html', controller: 'HelpController'}).
+	  otherwise({redirectTo: '/simulation'});
 }]);
