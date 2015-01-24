@@ -7,36 +7,7 @@ var cameraTarget;
 var cameraPosition;
 var cameraDiff;
 
-function init() {
-	container = document.getElementById( 'container' );
-	document.getElementById( 'container' ).innerHTML = "";
-	var canvasWidth = container.offsetWidth;
-	var canvasHeight = 480;
-	
-	scene = new THREE.Scene();
-	camera = new THREE.PerspectiveCamera( 45, canvasWidth/canvasHeight, 0.01, 1000 );
 
-	renderer = new THREE.WebGLRenderer();
-	renderer.setSize( canvasWidth, canvasHeight );
-	container.appendChild( renderer.domElement );
-	
-	loadAllTextures();
-}
-
-function loadAllTextures() {
-	var names = ['earth', 'mars', '1'];
-	var sources = ['textures/earth_hi.jpg', 'textures/mars_hi.jpg', 'icons/Number-1-icon.png'];
-	loadTextures(names, sources, initScene);
-}
-
-function updateCameraPosition(cameraTarget) {
-	console.log('cameraTarget = ' + cameraTarget.toArray());
-	cameraPosition = new THREE.Vector3(0, 0, 0);
-	cameraPosition.addVectors(cameraTarget, cameraDiff);
-	console.log('cameraPosition = ' + cameraPosition.toArray());
-	camera.position.copy(cameraPosition);
-	controls.target = cameraTarget;
-}
 
 function initScene() {
 	
@@ -93,19 +64,10 @@ function initScene() {
 	mars.matrixAutoUpdate = false;
 	scene.add( mars );
 	
-	var axisHelper = new THREE.AxisHelper( 5 );
-	scene.add( axisHelper );
+	
 
 	render();
 	animate();
 }
 
-function animate() {
-	requestAnimationFrame(animate);
-	controls.update();
-}
 
-function render() {
-	console.log("Render called");
-	renderer.render( scene, camera );
-}

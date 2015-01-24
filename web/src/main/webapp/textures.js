@@ -1,23 +1,12 @@
-var texturesMap = {};
 var imagesLoaded = 0;
 var imagesCount = 0;
 
-function loadTextures(names, sources, callback) {
-	imagesCount = sources.length;
-	console.log(imagesCount +' about to load');
-	for(var i=0; i<imagesCount; i++) {
-		var name = names[i];
-		console.log('Texture for ' + names[i] + ' sources '+ sources[i]);
-		loadTexture(name, sources[i], callback);
-	}
-}
-
-function loadTexture(name, source, callback) {
+function loadTexture(name, source, texturesMap, callback) {
 	var textureLoader = new THREE.TextureLoader();
 	textureLoader.load(
 		source,
 		function ( texture ) {
-			console.log('Texture for ' + texture + ' name=' + name);
+			console.log('Texture for name=' + name + ' loaded.');
 			texturesMap[name]=texture;
 			imagesLoaded++;
 			if (imagesLoaded>=imagesCount) {
