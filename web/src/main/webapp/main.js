@@ -66,8 +66,22 @@ function initScene() {
 	var crateMaterial = new THREE.SpriteMaterial( { map: texturesMap['1'], useScreenCoordinates: false } );
 	var sprite2 = new THREE.Sprite( crateMaterial );
 	sprite2.position.set( 2, 2, 0 );
-	sprite2.scale.set( 0.1, 0.1, 1.0 ); // imageWidth, imageHeight
+	sprite2.scale.set( 0.1, 0.1, 0.5 ); // imageWidth, imageHeight
 	scene.add( sprite2 );
+	
+	var curve = new THREE.EllipseCurve(
+			0,  0,            // ax, aY
+			3, 5,           // xRadius, yRadius
+			0,  2 * Math.PI,  // aStartAngle, aEndAngle
+			false             // aClockwise
+		);
+	var path = new THREE.Path( curve.getPoints( 50 ) );
+	var geometry5 = path.createPointsGeometry( 50 );
+	var material5 = new THREE.LineBasicMaterial( { color : 0xff5500 } );
+	// Create the final Object3d to add to the scene
+	var ellipse = new THREE.Line( geometry5, material5 );
+	ellipse.rotation.x = -0.5; 
+	scene.add(ellipse);
 	
 	var geometry3 = new THREE.SphereGeometry( 0.3, 64, 64 );
 	var texture2 = texturesMap['mars'];
@@ -78,6 +92,9 @@ function initScene() {
 	mars.updateMatrix();
 	mars.matrixAutoUpdate = false;
 	scene.add( mars );
+	
+	var axisHelper = new THREE.AxisHelper( 5 );
+	scene.add( axisHelper );
 
 	render();
 	animate();
