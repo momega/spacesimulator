@@ -1,13 +1,3 @@
-var scene;
-var renderer;
-var camera;
-var controls;
-
-var cameraTarget;
-var cameraPosition;
-var cameraDiff;
-
-
 
 function initScene() {
 	
@@ -63,11 +53,7 @@ function initScene() {
 	mars.updateMatrix();
 	mars.matrixAutoUpdate = false;
 	scene.add( mars );
-	
-	
 
-	render();
-	animate();
 }
 
 

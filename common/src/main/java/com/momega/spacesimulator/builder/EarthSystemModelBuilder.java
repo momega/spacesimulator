@@ -30,17 +30,16 @@ public class EarthSystemModelBuilder extends AbstractModelBuilder {
     @Override
     public void initPlanets() {
         earth = new Planet();
-        earth.setName("Earth");
         updateDynamicalPoint(earth, "Earth", 5.97219, 0.997269, 6.378, 23.5, "Earth", "/images/earth.png");
-        createTrajectory(earth, new double[]{0, 0.5, 1});
-        earth.setTextureFileName("/textures//textures/earth.jpg");
         setCentralPoint(earth);
+        createTrajectory(earth, new double[]{0, 0.5, 1});
+        earth.setTextureFileName("/textures/earth_hi.jpg");
 
         CelestialBody moon = new CelestialBody();
         updateDynamicalPoint(moon, "Moon", 0.07349, 27.321, 1.737, 269.9949, 66.5392, "Moon", "/images/moon.png");
         createKeplerianElements(moon, earth, 384.399 * 1E6, 0.055557, 84.7609, 27.427302, 2456796.39770989, 5.145, 208.1199);
         createTrajectory(moon, new double[] {0.5,0.5,0.5});
-        moon.setTextureFileName("/textures/moon.jpg");
+        moon.setTextureFileName("/textures/moon_4k.jpg");
 
         addMovingObject(earth);
         addMovingObject(moon);

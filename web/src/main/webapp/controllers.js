@@ -43,12 +43,19 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     		var celestialBody = celestialBodies[i].value;
     		var position = celestialBody.cartesianState.position;
     		var geometry = new THREE.SphereGeometry( celestialBody.radius, 32, 32 );
+   		
+    		// change orientation, north pole is in Z direction
+    		var t = new THREE.Matrix4();
+    		t.makeRotationX(Math.PI/2);
+    		geometry.applyMatrix(t);
+    		
     		var texture = $scope.texturesMap[celestialBody.name];
     		var material = new THREE.MeshBasicMaterial( { map: texture } );
     		var sphere = new THREE.Mesh( geometry, material );
     		sphere.position.x = position.x;
     		sphere.position.y = position.y;
     		sphere.position.z = position.z;
+    		
     		console.log('position=' + sphere.position.toArray());
     		$scope.scene.add( sphere );
     	}
@@ -57,7 +64,9 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     	$scope.scene.add( axisHelper );
     	
     	console.log('Scene created');
-    	$scope.render();
+    	
+    	$scope.selectCameraTarget($scope.findByName($scope.cameraTarget));
+    	
     	$scope.animate();
     }
     
@@ -71,9 +80,9 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     	cameraTarget = new THREE.Vector3(0,0,0);
     	cameraTarget.copy(newCameraPosition);
     	
-    	var cameraDiff = new THREE.Vector3(0, 0, newRadius);
+    	var cameraDiff = new THREE.Vector3(newRadius, 0, 0);
     	
-    	cameraPosition = new THREE.Vector3(0,0,0);
+    	var cameraPosition = new THREE.Vector3(0,0,0);
     	cameraPosition.copy(newCameraPosition);
     	cameraPosition.add(cameraDiff);
     	
@@ -87,7 +96,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 
 	  var targetBody = $scope.findByName($scope.cameraTarget);
 	  console.log('targetBody='+targetBody.name);
-	  $scope.updateCameraPosition(targetBody.cartesianState.position, targetBody.radius * 3);
+	  $scope.updateCameraPosition(targetBody.cartesianState.position, targetBody.radius * 10);
 	  $scope.render();
     }
   
@@ -104,15 +113,14 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 		
 		$scope.scene = new THREE.Scene();
 		$scope.camera = new THREE.PerspectiveCamera( 45, canvasWidth/canvasHeight, 1000000, AU * 10 );
-		
-		// this will be removed
-		$scope.camera.position.z = AU;
+		$scope.camera.up.copy(new THREE.Vector3(0,0,1));	
 		
 		$scope.renderer = new THREE.WebGLRenderer();
 		$scope.renderer.setSize( canvasWidth, canvasHeight );
 		container.appendChild( $scope.renderer.domElement );
 		
 		$scope.controls = new THREE.OrbitControls( $scope.camera, container );
+		$scope.controls.noPan = true;
 		$scope.controls.addEventListener( 'change', $scope.render );
 	}  
   
