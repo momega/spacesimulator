@@ -11,7 +11,6 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.model = data;
 	    $scope.db = SpahQL.db(data);
 	    $scope.time = data.time.value;
-	    $scope.movingObjects = data.movingObjects;
 	    $scope.cameraTarget = data.camera.targetObject;
 	    $scope.texturesMap = {};
 	    console.log("camera target:" + $scope.cameraTarget);
@@ -58,6 +57,26 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     		
     		console.log('position=' + sphere.position.toArray());
     		$scope.scene.add( sphere );
+    		
+    		if (celestialBody.keplerianElements!=null) {
+    			// the object has a trajectory
+//    			var ke = celestialBody.keplerianElements;
+//    			var a = ke.
+//    			var curve = new THREE.EllipseCurve(
+//    					0,  0,            // ax, aY
+//    					3, 5,           // xRadius, yRadius
+//    					0,  2 * Math.PI,  // aStartAngle, aEndAngle
+//    					false             // aClockwise
+//    				);
+//    			var path = new THREE.Path( curve.getPoints( 50 ) );
+//    			var geometry5 = path.createPointsGeometry( 50 );
+//    			var material5 = new THREE.LineBasicMaterial( { color : 0xff5500 } );
+//    			// Create the final Object3d to add to the scene
+//    			var ellipse = new THREE.Line( geometry5, material5 );
+//    			ellipse.rotation.x = -0.5; 
+//    			scene.add(ellipse);
+    			
+    		}
     	}
     	
     	var axisHelper = new THREE.AxisHelper( AU );
@@ -77,7 +96,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     }
     
     $scope.updateCameraPosition = function(newCameraPosition, newRadius) {
-    	cameraTarget = new THREE.Vector3(0,0,0);
+    	var cameraTarget = new THREE.Vector3(0,0,0);
     	cameraTarget.copy(newCameraPosition);
     	
     	var cameraDiff = new THREE.Vector3(newRadius, 0, 0);
