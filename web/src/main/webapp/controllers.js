@@ -13,6 +13,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.time = data.time.value;
 	    $scope.cameraTarget = data.camera.targetObject;
 	    $scope.texturesMap = {};
+	    $scope.spritesMap = [];
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
 	    var textureObjects = $scope.db.select("//movingObjects/*[/textureFileName!=null]");
@@ -20,15 +21,17 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
    });
    
    $scope.loadTextures = function(textureObjects, callback) {
-		imagesCount = textureObjects.length;
+		imagesCount = textureObjects.length + 1;
 		console.log(imagesCount +' about to load');
-		for(var i=0; i<imagesCount; i++) {
+		for(var i=0; i<textureObjects.length; i++) {
 			var to = textureObjects[i].value;
 			var name = to.name;
 			var source = "." + to.textureFileName;
 			console.log('Texture for ' + name + ' sources '+ source);
 			loadTexture(name, source, $scope.texturesMap, callback);
 		}
+		
+		loadTexture('P', 'icons/Letter-P-icon.png', $scope.texturesMap, callback);
 	}
    
     $scope.texturesLoaded = function() {
@@ -58,24 +61,40 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     		console.log('position=' + sphere.position.toArray());
     		$scope.scene.add( sphere );
     		
+    		var geometrySmall = new THREE.SphereGeometry( 1, 16, 16 );
+    		var colorSmall = new THREE.Color(celestialBody.trajectory.color[0],celestialBody.trajectory.color[1],celestialBody.trajectory.color[2]);
+    		console.log('color= ' + colorSmall.getHexString());
+    		var materialSmall = new THREE.MeshBasicMaterial( { color: colorSmall } );
+    		var sprite = new THREE.Mesh( geometrySmall, materialSmall );
+    		sprite.position.copy(sphere.position);
+    		$scope.spritesMap.push(sprite);
+    		$scope.scene.add( sprite );
+    		
     		if (celestialBody.keplerianElements!=null) {
     			// the object has a trajectory
-//    			var ke = celestialBody.keplerianElements;
-//    			var a = ke.
-//    			var curve = new THREE.EllipseCurve(
-//    					0,  0,            // ax, aY
-//    					3, 5,           // xRadius, yRadius
-//    					0,  2 * Math.PI,  // aStartAngle, aEndAngle
-//    					false             // aClockwise
-//    				);
-//    			var path = new THREE.Path( curve.getPoints( 50 ) );
-//    			var geometry5 = path.createPointsGeometry( 50 );
-//    			var material5 = new THREE.LineBasicMaterial( { color : 0xff5500 } );
-//    			// Create the final Object3d to add to the scene
-//    			var ellipse = new THREE.Line( geometry5, material5 );
-//    			ellipse.rotation.x = -0.5; 
-//    			scene.add(ellipse);
+    			var ke = celestialBody.keplerianElements;
+    			var a = ke.keplerianOrbit.semimajorAxis;
+    			console.log('a = ' + a);
+    			var ec = ke.keplerianOrbit.eccentricity;
+    			var b = a * Math.sqrt(1 - ec*ec);
+    			var e = a * ec;
+    			var centerObject = $scope.findByName(ke.keplerianOrbit.centralObject);
     			
+    			var curve = new THREE.EllipseCurve(
+    					-e,  0,            // ax, aY
+    					a, b,           // xRadius, yRadius
+    					0,  2 * Math.PI,  // aStartAngle, aEndAngle
+    					false             // aClockwise
+    				);
+    			var path = new THREE.Path( curve.getPoints( 3600 ) );
+    			var geometry5 = path.createPointsGeometry( 3600 );
+    			var material5 = new THREE.LineBasicMaterial( { color: colorSmall } );
+    			var ellipse = new THREE.Line( geometry5, material5 );
+    			ellipse.position.add(centerObject.cartesianState.position);
+    			
+    			//var euler = new THREE.Euler(0, 0, 0.1, 'XYZ');
+    			//ellipse.rotation.set(0,0,1);
+    			$scope.scene.add(ellipse);
     		}
     	}
     	
@@ -149,6 +168,11 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	}
   	
   	$scope.animate = function() {
+  		var v = new THREE.Vector3();
+  		for(var i=0; i<$scope.spritesMap.length; i++) {
+  			var sprite = $scope.spritesMap[i];
+  			sprite.scale.x = sprite.scale.y = sprite.scale.z = v.subVectors( sprite.position, $scope.camera.position ).length() / 200;
+  		}
   		requestAnimationFrame($scope.animate);
   		$scope.controls.update();
   	}

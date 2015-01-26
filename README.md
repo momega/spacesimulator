@@ -1,6 +1,5 @@
 Space Simulator
 ===============
-
 The Space Simulator is OPENGL application written in Java. It simulates the motion (and rotation) of the planets
 and spacecraft(s).
 
@@ -8,6 +7,11 @@ The planets are moving based on Keplerian law (simplified elliptical) trajectory
 
 The position and velocity of spacecraft(s) are computed based on Newtonian gravitational law. The gravitation of all the planets
 influences the trajectory of the spacecrafts.
+
+News
+====
+The web application used (based on THREE.JS) is currently under construction. The link 
+for the application will be revelead soon.
 
 How to run the application?
 ===========================
