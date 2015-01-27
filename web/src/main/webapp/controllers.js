@@ -88,12 +88,18 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     				);
     			var path = new THREE.Path( curve.getPoints( 3600 ) );
     			var geometry5 = path.createPointsGeometry( 3600 );
+    			
+    			// ZXZ is not fuly supported
+				var m1 = new THREE.Matrix4().makeRotationZ(ke.keplerianOrbit.ascendingNode);
+				var m2 = new THREE.Matrix4().makeRotationX(ke.keplerianOrbit.inclination);
+				var m3 = new THREE.Matrix4().makeRotationZ(ke.keplerianOrbit.argumentOfPeriapsis);
+				var m = m1.multiply(m2).multiply(m3);
+    			geometry5.applyMatrix(m);
+    			
     			var material5 = new THREE.LineBasicMaterial( { color: colorSmall } );
     			var ellipse = new THREE.Line( geometry5, material5 );
     			ellipse.position.add(centerObject.cartesianState.position);
     			
-    			//var euler = new THREE.Euler(0, 0, 0.1, 'XYZ');
-    			//ellipse.rotation.set(0,0,1);
     			$scope.scene.add(ellipse);
     		}
     	}
