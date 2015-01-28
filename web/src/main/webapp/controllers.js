@@ -16,7 +16,9 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.spritesMap = [];
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
-	    var textureObjects = $scope.db.select("//movingObjects/*[/textureFileName!=null]");
+	    var celestialBodies = $scope.db.select("//movingObjects/*[/textureFileName!=null]").values();
+	    var spacecrafts = $scope.db.select("//movingObjects/*[/subsystems!=null]").values();
+	    var textureObjects = celestialBodies.concat(spacecrafts);
 	    $scope.loadTextures(textureObjects, $scope.texturesLoaded);
    });
    
@@ -24,9 +26,14 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 		imagesCount = textureObjects.length + 1;
 		console.log(imagesCount +' about to load');
 		for(var i=0; i<textureObjects.length; i++) {
-			var to = textureObjects[i].value;
+			var to = textureObjects[i];
 			var name = to.name;
-			var source = "." + to.textureFileName;
+			var source = "";
+			if (to.textureFileName!=null) {
+				source = "." + to.textureFileName; 
+			} else if (to.subsystems != null) {
+				source = "./icons/Number-" + to.index + "-icon.png";
+			}
 			console.log('Texture for ' + name + ' sources '+ source);
 			loadTexture(name, source, $scope.texturesMap, callback);
 		}
@@ -40,41 +47,53 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     }
     
     $scope.createScene = function() {
-    	var celestialBodies = $scope.db.select("//movingObjects/*[/radius>0]");
+    	var celestialBodies = $scope.db.select("//movingObjects/*");
     	for(var i=0; i<celestialBodies.length; i++) {
     		var celestialBody = celestialBodies[i].value;
     		var position = celestialBody.cartesianState.position;
-    		var geometry = new THREE.SphereGeometry( celestialBody.radius, 32, 32 );
-   		
-    		// change orientation, north pole is in Z direction
-    		var t = new THREE.Matrix4();
-    		t.makeRotationX(Math.PI/2);
-    		geometry.applyMatrix(t);
+    		if (celestialBody.radius != null) {
+	    		var geometry = new THREE.SphereGeometry( celestialBody.radius, 32, 32 );
+	   		
+	    		// change orientation, north pole is in Z direction
+	    		var t = new THREE.Matrix4();
+	    		t.makeRotationX(Math.PI/2);
+	    		geometry.applyMatrix(t);
+	    		
+	    		var texture = $scope.texturesMap[celestialBody.name];
+	    		var material = new THREE.MeshBasicMaterial( { map: texture } );
+	    		var sphere = new THREE.Mesh( geometry, material );
+	    		sphere.position.x = position.x;
+	    		sphere.position.y = position.y;
+	    		sphere.position.z = position.z;
+	    		
+	    		$scope.scene.add( sphere );
+	    		
+	    		var geometrySmall = new THREE.SphereGeometry( 1, 16, 16 );
+	    		var colorSmall = new THREE.Color(celestialBody.trajectory.color[0],celestialBody.trajectory.color[1],celestialBody.trajectory.color[2]);
+	    		var materialSmall = new THREE.MeshBasicMaterial( { color: colorSmall } );
+	    		var sprite = new THREE.Mesh( geometrySmall, materialSmall );
+	    		sprite.position.copy(sphere.position);
+	    		$scope.spritesMap.push(sprite);
+	    		$scope.scene.add( sprite );
+    		}
     		
-    		var texture = $scope.texturesMap[celestialBody.name];
-    		var material = new THREE.MeshBasicMaterial( { map: texture } );
-    		var sphere = new THREE.Mesh( geometry, material );
-    		sphere.position.x = position.x;
-    		sphere.position.y = position.y;
-    		sphere.position.z = position.z;
-    		
-    		console.log('position=' + sphere.position.toArray());
-    		$scope.scene.add( sphere );
-    		
-    		var geometrySmall = new THREE.SphereGeometry( 1, 16, 16 );
-    		var colorSmall = new THREE.Color(celestialBody.trajectory.color[0],celestialBody.trajectory.color[1],celestialBody.trajectory.color[2]);
-    		console.log('color= ' + colorSmall.getHexString());
-    		var materialSmall = new THREE.MeshBasicMaterial( { color: colorSmall } );
-    		var sprite = new THREE.Mesh( geometrySmall, materialSmall );
-    		sprite.position.copy(sphere.position);
-    		$scope.spritesMap.push(sprite);
-    		$scope.scene.add( sprite );
+    		if (celestialBody.subsystems != null) {
+    			var iconTexture = $scope.texturesMap[celestialBody.name];
+	    		console.log('position=' + sphere.position.toArray());
+        		var spriteMaterial = new THREE.SpriteMaterial({map: iconTexture, useScreenCoordinates: false});
+        		var sprite = new THREE.Sprite( spriteMaterial );
+        		sprite.position.x = position.x;
+        		sprite.position.y = position.y;
+        		sprite.position.z = position.z;
+        		sprite.scale.set( 64, 64, 1.0 );
+        		$scope.spritesMap.push(sprite);
+        		$scope.scene.add( sprite );
+    		}
     		
     		if (celestialBody.keplerianElements!=null) {
     			// the object has a trajectory
     			var ke = celestialBody.keplerianElements;
     			var a = ke.keplerianOrbit.semimajorAxis;
-    			console.log('a = ' + a);
     			var ec = ke.keplerianOrbit.eccentricity;
     			var b = a * Math.sqrt(1 - ec*ec);
     			var e = a * ec;
@@ -96,6 +115,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 				var m = m1.multiply(m2).multiply(m3);
     			geometry5.applyMatrix(m);
     			
+	    		var colorSmall = new THREE.Color(celestialBody.trajectory.color[0],celestialBody.trajectory.color[1],celestialBody.trajectory.color[2]);
     			var material5 = new THREE.LineBasicMaterial( { color: colorSmall } );
     			var ellipse = new THREE.Line( geometry5, material5 );
     			ellipse.position.add(centerObject.cartesianState.position);
@@ -116,7 +136,6 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     
     $scope.findByName = function(name) {
     	var movingObject = $scope.db.select("//movingObjects/*[/name=='" + name + "']").value();
-    	console.log('mo:' + movingObject.name);
     	return movingObject;
     }
     
@@ -177,7 +196,9 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
   		var v = new THREE.Vector3();
   		for(var i=0; i<$scope.spritesMap.length; i++) {
   			var sprite = $scope.spritesMap[i];
-  			sprite.scale.x = sprite.scale.y = sprite.scale.z = v.subVectors( sprite.position, $scope.camera.position ).length() / 200;
+  			//sprite.scale.x = sprite.scale.y = sprite.scale.z = v.subVectors( sprite.position, $scope.camera.position ).length() / 200;
+  			
+  			sprite.scale.x = sprite.scale.y = sprite.scale.z = v.subVectors( sprite.position, $scope.camera.position ).length() / 30;
   		}
   		requestAnimationFrame($scope.animate);
   		$scope.controls.update();
