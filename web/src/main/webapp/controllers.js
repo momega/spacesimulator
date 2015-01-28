@@ -14,6 +14,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.cameraTarget = data.camera.targetObject;
 	    $scope.texturesMap = {};
 	    $scope.spritesMap = [];
+	    $scope.spacecraftsMap = [];
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
 	    var celestialBodies = $scope.db.select("//movingObjects/*[/textureFileName!=null]").values();
@@ -38,7 +39,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 			loadTexture(name, source, $scope.texturesMap, callback);
 		}
 		
-		loadTexture('P', 'icons/Letter-P-icon.png', $scope.texturesMap, callback);
+		loadTexture('CIRCLE', 'icons/circle.png', $scope.texturesMap, callback);
 	}
    
     $scope.texturesLoaded = function() {
@@ -51,6 +52,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     	for(var i=0; i<celestialBodies.length; i++) {
     		var celestialBody = celestialBodies[i].value;
     		var position = celestialBody.cartesianState.position;
+    		var isSpacecraft = (celestialBody.subsystems != null);
     		if (celestialBody.radius != null) {
 	    		var geometry = new THREE.SphereGeometry( celestialBody.radius, 32, 32 );
 	   		
@@ -62,31 +64,24 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    		var texture = $scope.texturesMap[celestialBody.name];
 	    		var material = new THREE.MeshBasicMaterial( { map: texture } );
 	    		var sphere = new THREE.Mesh( geometry, material );
-	    		sphere.position.x = position.x;
-	    		sphere.position.y = position.y;
-	    		sphere.position.z = position.z;
-	    		
+	    		sphere.position.copy(position);
 	    		$scope.scene.add( sphere );
 	    		
-	    		var geometrySmall = new THREE.SphereGeometry( 1, 16, 16 );
-	    		var colorSmall = new THREE.Color(celestialBody.trajectory.color[0],celestialBody.trajectory.color[1],celestialBody.trajectory.color[2]);
-	    		var materialSmall = new THREE.MeshBasicMaterial( { color: colorSmall } );
-	    		var sprite = new THREE.Mesh( geometrySmall, materialSmall );
-	    		sprite.position.copy(sphere.position);
-	    		$scope.spritesMap.push(sprite);
-	    		$scope.scene.add( sprite );
+	    		var circleTexture = $scope.texturesMap['CIRCLE'];
+	    		var spriteMaterial = new THREE.SpriteMaterial({map: circleTexture, useScreenCoordinates: false});
+        		var sprite = new THREE.Sprite( spriteMaterial );
+        		sprite.position.copy(position);
+        		$scope.spritesMap.push(sprite);
+        		$scope.scene.add( sprite );
     		}
     		
-    		if (celestialBody.subsystems != null) {
+    		if (isSpacecraft) {
     			var iconTexture = $scope.texturesMap[celestialBody.name];
 	    		console.log('position=' + sphere.position.toArray());
         		var spriteMaterial = new THREE.SpriteMaterial({map: iconTexture, useScreenCoordinates: false});
         		var sprite = new THREE.Sprite( spriteMaterial );
-        		sprite.position.x = position.x;
-        		sprite.position.y = position.y;
-        		sprite.position.z = position.z;
-        		sprite.scale.set( 64, 64, 1.0 );
-        		$scope.spritesMap.push(sprite);
+        		sprite.position.copy(position);
+        		$scope.spacecraftsMap.push(sprite);
         		$scope.scene.add( sprite );
     		}
     		
@@ -108,24 +103,29 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     			var path = new THREE.Path( curve.getPoints( 3600 ) );
     			var geometry5 = path.createPointsGeometry( 3600 );
     			
-    			// ZXZ is not fuly supported
+    			// ZXZ is not fully supported
 				var m1 = new THREE.Matrix4().makeRotationZ(ke.keplerianOrbit.ascendingNode);
 				var m2 = new THREE.Matrix4().makeRotationX(ke.keplerianOrbit.inclination);
 				var m3 = new THREE.Matrix4().makeRotationZ(ke.keplerianOrbit.argumentOfPeriapsis);
 				var m = m1.multiply(m2).multiply(m3);
     			geometry5.applyMatrix(m);
     			
-	    		var colorSmall = new THREE.Color(celestialBody.trajectory.color[0],celestialBody.trajectory.color[1],celestialBody.trajectory.color[2]);
-    			var material5 = new THREE.LineBasicMaterial( { color: colorSmall } );
+    			var theColor;
+    			if (isSpacecraft) {
+    				theColor = 0xFFFF00;
+    			} else {
+    				theColor = 0x606060;
+    			}
+    			var material5 = new THREE.LineBasicMaterial( { color: theColor } );
     			var ellipse = new THREE.Line( geometry5, material5 );
     			ellipse.position.add(centerObject.cartesianState.position);
-    			
     			$scope.scene.add(ellipse);
+    			
     		}
     	}
     	
-    	var axisHelper = new THREE.AxisHelper( AU );
-    	$scope.scene.add( axisHelper );
+//    	var axisHelper = new THREE.AxisHelper( AU );
+//    	$scope.scene.add( axisHelper );
     	
     	console.log('Scene created');
     	
@@ -193,15 +193,21 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	}
   	
   	$scope.animate = function() {
-  		var v = new THREE.Vector3();
   		for(var i=0; i<$scope.spritesMap.length; i++) {
   			var sprite = $scope.spritesMap[i];
-  			//sprite.scale.x = sprite.scale.y = sprite.scale.z = v.subVectors( sprite.position, $scope.camera.position ).length() / 200;
-  			
-  			sprite.scale.x = sprite.scale.y = sprite.scale.z = v.subVectors( sprite.position, $scope.camera.position ).length() / 30;
+  			$scope.scaleSprite(sprite, 40);
+  		}
+  		for(var i=0; i<$scope.spacecraftsMap.length; i++) {
+  			var spacecraft = $scope.spacecraftsMap[i];
+  			$scope.scaleSprite(spacecraft, 30);
   		}
   		requestAnimationFrame($scope.animate);
   		$scope.controls.update();
+  	}
+  	
+  	$scope.scaleSprite = function(sprite, scale) {
+  		var v = new THREE.Vector3();
+  		sprite.scale.x = sprite.scale.y = sprite.scale.z = v.subVectors( sprite.position, $scope.camera.position ).length() / scale;
   	}
   	
 }]);
