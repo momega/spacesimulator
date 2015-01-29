@@ -14,6 +14,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.cameraTarget = data.camera.targetObject;
 	    $scope.texturesMap = {};
 	    $scope.spritesMap = [];
+	    $scope.labelsMap = [];
 	    $scope.spacecraftsMap = [];
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
@@ -73,6 +74,11 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
         		sprite.position.copy(position);
         		$scope.spritesMap.push(sprite);
         		$scope.scene.add( sprite );
+        		
+        		var spritey = makeTextSprite(celestialBody.name, { } );
+        		spritey.position.copy(position);
+        		$scope.labelsMap.push(spritey);
+        		$scope.scene.add( spritey );
     		}
     		
     		if (isSpacecraft) {
@@ -114,7 +120,8 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     			if (isSpacecraft) {
     				theColor = 0xFFFF00;
     			} else {
-    				theColor = 0x606060;
+    				var theColor = arrayToColor(celestialBody.trajectory.color);
+    				theColor = darken(theColor, 0.6);
     			}
     			var material5 = new THREE.LineBasicMaterial( { color: theColor } );
     			var ellipse = new THREE.Line( geometry5, material5 );
@@ -130,6 +137,23 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     	console.log('Scene created');
     	
     	$scope.selectCameraTarget($scope.findByName($scope.cameraTarget));
+    	
+    	////////////////////////////////////////
+    	// create a canvas element
+    	var canvas1 = document.createElement('canvas');
+    	var context1 = canvas1.getContext('2d');
+    	context1.font = "Bold 20px Arial";
+    	context1.fillStyle = "rgba(1,1,1,1)";
+        context1.fillText('Hello, world!', 0, 20);
+    	var texture1 = new THREE.Texture(canvas1) 
+    	texture1.needsUpdate = true;
+    	texture1.minFilter = THREE.NearestFilter;
+    	texture1.magFilter = THREE.NearestFilter;
+    	var spriteMaterial = new THREE.SpriteMaterial( { map: texture1, useScreenCoordinates: true } );
+    	var sprite1 = new THREE.Sprite( spriteMaterial );
+    	sprite1.scale.set(200,100,1.0);
+    	sprite1.position.set( 50, 50, 0 );
+    	$scope.scene.add( sprite1 );
     	
     	$scope.animate();
     }
@@ -200,6 +224,10 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
   		for(var i=0; i<$scope.spacecraftsMap.length; i++) {
   			var spacecraft = $scope.spacecraftsMap[i];
   			$scope.scaleSprite(spacecraft, 30);
+  		}
+  		for(var i=0; i<$scope.labelsMap.length; i++) {
+  			var label = $scope.labelsMap[i];
+  			$scope.scaleSprite(label, 5);
   		}
   		requestAnimationFrame($scope.animate);
   		$scope.controls.update();
