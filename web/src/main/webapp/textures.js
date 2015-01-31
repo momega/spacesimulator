@@ -30,15 +30,15 @@ function makeTextSprite( message, parameters )
     if ( parameters === undefined ) parameters = {};
     var fontface = parameters.hasOwnProperty("fontface") ? parameters["fontface"] : "Arial";
     var fontsize = parameters.hasOwnProperty("fontsize") ? parameters["fontsize"] : 18;
-    var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 4;
-    var borderColor = parameters.hasOwnProperty("borderColor") ?parameters["borderColor"] : { r:255, g:255, b:255, a:1.0 };
-    var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?parameters["backgroundColor"] : { r:0, g:0, b:0, a:1.0 };
-    //var textColor = parameters.hasOwnProperty("textColor") ?parameters["textColor"] : { r:255, g:255, b:255, a:1.0 };
-    var textColor = 0xffffff;
+    var borderThickness = parameters.hasOwnProperty("borderThickness") ? parameters["borderThickness"] : 2;
+    var borderColor = parameters.hasOwnProperty("borderColor") ?parameters["borderColor"] : { r:200, g:200, b:200, a:1.0 };
+    var backgroundColor = parameters.hasOwnProperty("backgroundColor") ?parameters["backgroundColor"] : { r:1, g:1, b:1, a:1.0 };
+    var textColor = parameters.hasOwnProperty("textColor") ?parameters["textColor"] : { r:255, g:255, b:255, a:1.0 };
+    //var textColor = 0xffffff;
     
     var canvas = document.createElement('canvas');
     var context = canvas.getContext('2d');
-    context.font = "Bold " + fontsize + "px " + fontface;
+    context.font = fontsize + "px " + fontface;
     var metrics = context.measureText( message );
     var textWidth = metrics.width;
 
@@ -52,9 +52,9 @@ function makeTextSprite( message, parameters )
     context.fillText( message, borderThickness, fontsize + borderThickness);
 
     var texture = new THREE.Texture(canvas) 
-    //texture.needsUpdate = true;
+    texture.needsUpdate = true;
     texture.minFilter = THREE.NearestFilter;
-    texture.magFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.LinearFilter;
 
     var spriteMaterial = new THREE.SpriteMaterial( { map: texture, useScreenCoordinates: false } );
     var sprite = new THREE.Sprite( spriteMaterial );
