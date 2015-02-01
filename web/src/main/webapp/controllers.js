@@ -15,7 +15,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.texturesMap = {};
 	    $scope.spritesMap = [];
 	    $scope.labelsMap = [];
-	    $scope.spacecraftsMap = [];
+	    $scope.orthoMap = [];
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
 	    var celestialBodies = $scope.db.select("//movingObjects/*[/textureFileName!=null]").values();
@@ -25,7 +25,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
    });
    
    $scope.loadTextures = function(textureObjects, callback) {
-		imagesCount = textureObjects.length + 1;
+		imagesCount = textureObjects.length + 3 // + 3 icons;
 		console.log(imagesCount +' about to load');
 		for(var i=0; i<textureObjects.length; i++) {
 			var to = textureObjects[i];
@@ -40,6 +40,8 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 			loadTexture(name, source, $scope.texturesMap, callback);
 		}
 		
+		loadTexture('APOAPSIS', 'icons/Letter-A-icon.png', $scope.texturesMap, callback);
+		loadTexture('PERIAPSIS', 'icons/Letter-P-icon.png', $scope.texturesMap, callback);
 		loadTexture('CIRCLE', 'icons/circle.png', $scope.texturesMap, callback);
 	}
    
@@ -54,6 +56,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     		var celestialBody = celestialBodies[i].value;
     		var position = celestialBody.cartesianState.position;
     		var isSpacecraft = (celestialBody.subsystems != null);
+    		
     		if (celestialBody.radius != null) {
 	    		var geometry = new THREE.SphereGeometry( celestialBody.radius, 32, 32 );
 	   		
@@ -75,20 +78,15 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
         		$scope.spritesMap.push(sprite);
         		$scope.scene.add( sprite );
         		
-        		var spritey = makeTextSprite(celestialBody.name, { } );
-        		spritey.position.copy(position);
-        		$scope.labelsMap.push(spritey);
-        		$scope.scene.add( spritey );
+        		var planetLabel = makeTextSprite(celestialBody.name, {} );
+        		planetLabel.position.copy(position);
+        		$scope.labelsMap.push(planetLabel);
+        		$scope.scene.add( planetLabel );
     		}
     		
     		if (isSpacecraft) {
-    			var iconTexture = $scope.texturesMap[celestialBody.name];
-	    		console.log('position=' + sphere.position.toArray());
-        		var spriteMaterial = new THREE.SpriteMaterial({map: iconTexture, useScreenCoordinates: false});
-        		var sprite = new THREE.Sprite( spriteMaterial );
-        		sprite.position.copy(position);
-        		$scope.spacecraftsMap.push(sprite);
-        		$scope.scene.add( sprite );
+    			var spacecraft = celestialBody;
+    			$scope.createTexturePoint(spacecraft);
     		}
     		
     		if (celestialBody.keplerianElements!=null) {
@@ -131,14 +129,55 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     		}
     	}
     	
-//    	var axisHelper = new THREE.AxisHelper( AU );
-//    	$scope.scene.add( axisHelper );
+    	var ptexture = $scope.texturesMap['PERIAPSIS'];
+    	var material2 = new THREE.SpriteMaterial( { map: ptexture } );
+    	var spriteTL = new THREE.Sprite( material2 );
+		spriteTL.scale.set( 16, 16, 1 );
+		spriteTL.position.set(300,50,1);
+		$scope.sceneOrtho.add( spriteTL );
     	
     	console.log('Scene created');
     	
     	$scope.selectCameraTarget($scope.findByName($scope.cameraTarget));
     	
     	$scope.animate();
+    }
+    
+    $scope.createTexturePoint = function(obj) {
+    	var texture = $scope.texturesMap[obj.name];
+    	var material = new THREE.SpriteMaterial( { map: texture } );
+    	var spriteTL = new THREE.Sprite( material );
+		spriteTL.scale.set( 16, 16, 1 );
+		var p = $scope.getOrthoPosition(obj);
+		spriteTL.position.copy(p);
+		spriteTL.body = obj;
+		$scope.sceneOrtho.add( spriteTL );
+		$scope.orthoMap.push(spriteTL);
+    } 
+    
+    $scope.getOrthoPosition = function(obj) {
+    	var p = new THREE.Vector3();
+		p.copy(obj.cartesianState.position);
+		p = p.project($scope.camera);
+		console.log('position = ' + p.toArray());
+		
+		var result = new THREE.Vector3();
+		result.x = p.x;
+		result.y = p.y;
+		result.z = 1;
+		
+		console.log('canvas = ' + result.toArray());
+		
+		result = result.unproject($scope.cameraOrtho);
+		
+		console.log('ortho = ' + result.toArray());
+		return result;
+    }
+    
+    $scope.updateTexturePoint = function(sprite) {
+    	var obj = sprite.body;
+    	var position = $scope.getOrthoPosition(obj);
+    	sprite.position.copy(position);
     }
     
     $scope.findByName = function(name) {
@@ -187,16 +226,26 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 		
 		$scope.renderer = new THREE.WebGLRenderer();
 		$scope.renderer.setSize( canvasWidth, canvasHeight );
+		$scope.renderer.autoClear = false;
 		container.appendChild( $scope.renderer.domElement );
 		
 		$scope.controls = new THREE.OrbitControls( $scope.camera, container );
 		$scope.controls.noPan = true;
 		$scope.controls.addEventListener( 'change', $scope.render );
+		
+		$scope.sceneOrtho = new THREE.Scene();
+		$scope.cameraOrtho = new THREE.OrthographicCamera( - canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, - canvasHeight / 2, 0, 10 );
+		$scope.cameraOrtho.position.z = 10;
+		
+		$scope.canvasWidth = canvasWidth;
+		$scope.canvasHeight = canvasHeight;
 	}  
   
   	$scope.render = function() {
-		//console.log("Render called");
+  		$scope.renderer.clear();
 		$scope.renderer.render( $scope.scene, $scope.camera );
+		$scope.renderer.clearDepth();
+		$scope.renderer.render( $scope.sceneOrtho, $scope.cameraOrtho );
 	}
   	
   	$scope.animate = function() {
@@ -204,21 +253,38 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
   			var sprite = $scope.spritesMap[i];
   			$scope.scaleSprite(sprite, 40);
   		}
-  		for(var i=0; i<$scope.spacecraftsMap.length; i++) {
-  			var spacecraft = $scope.spacecraftsMap[i];
-  			$scope.scaleSprite(spacecraft, 30);
+  		for(var i=0; i<$scope.orthoMap.length; i++) {
+  			var sprite = $scope.orthoMap[i];
+  			$scope.updateTexturePoint(sprite);
   		}
   		for(var i=0; i<$scope.labelsMap.length; i++) {
   			var label = $scope.labelsMap[i];
-  			$scope.scaleSprite(label, 5);
+  			$scope.scaleSpriteAllScales(label, 15, 12, 15);
   		}
   		requestAnimationFrame($scope.animate);
   		$scope.controls.update();
   	}
   	
+  	$scope.isObjectVisible = function(position, camera, controls) {
+  		var viewVector = new THREE.Vector3();
+  		viewVector.subVectors(camera.position, controls.target);
+  		
+  		var diffVector = new THREE.Vector3();
+  		diffVector.subVectors(position, camera.position);
+  		
+  		return (viewVector.dot(diffVector) < 0);
+  	}
+  	
   	$scope.scaleSprite = function(sprite, scale) {
+  		$scope.scaleSpriteAllScales(sprite, scale, scale, scale);
+  	}
+
+  	$scope.scaleSpriteAllScales = function(sprite, scaleX, scaleY, scaleZ) {
   		var v = new THREE.Vector3();
-  		sprite.scale.x = sprite.scale.y = sprite.scale.z = v.subVectors( sprite.position, $scope.camera.position ).length() / scale;
+  		var dist = v.subVectors( sprite.position, $scope.camera.position ).length();
+  		sprite.scale.x = dist / scaleX;
+  		sprite.scale.y = dist / scaleY;
+  		sprite.scale.z = dist / scaleZ;
   	}
   	
 }]);
