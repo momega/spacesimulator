@@ -12,8 +12,10 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.db = SpahQL.db(data);
 	    $scope.time = data.time.value;
 	    $scope.cameraTarget = data.camera.targetObject;
+	    $scope.selectedObject = null;
 	    $scope.texturesMap = {};
 	    $scope.orthoMap = [];
+	    $scope.pointsMap = [];
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
 	    $scope.positionProviders = [];
@@ -186,15 +188,17 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     $scope.createTexturePoint = function(obj, textureName) {
     	var texture = $scope.texturesMap[textureName];
     	texture.needsUpdate = true;
-    	var material = new THREE.SpriteMaterial( { map: texture } );
-    	var spriteTL = new THREE.Sprite( material );
-		spriteTL.scale.set( 16, 16, 1 );
-		var p = $scope.getOrthoPosition(obj);
-		spriteTL.position.copy(p);
-		spriteTL.body = obj;
-		spriteTL.alwaysVisible = true;
-		$scope.sceneOrtho.add(spriteTL);
-		$scope.orthoMap.push(spriteTL);
+		var spriteMaterial = new THREE.SpriteMaterial({map: texture});
+		var sprite = new THREE.Sprite( spriteMaterial );
+
+		var p = new THREE.Vector3();
+		p.copy($scope.getPosition(obj));
+
+		sprite.position.copy(p);
+		sprite.body = obj;
+		sprite.scale.set( 16, 16, 1 );
+		$scope.pointsMap.push(sprite);
+		$scope.scene.add( sprite );
     } 
     
     $scope.getPosition = function(obj) {
@@ -247,6 +251,10 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     	
     	$scope.camera.position.copy(cameraPosition);
     	$scope.controls.target = cameraTarget;
+    }
+    
+    $scope.selectObject = function(obj) {
+    	$scope.selectedObject = obj.name;
     }
   
     $scope.selectCameraTarget = function(obj) {
@@ -307,11 +315,12 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     	
     	$scope.raycaster.setFromCamera( $scope.mouse, $scope.camera );
     	var intersects = $scope.raycaster.intersectObjects( $scope.scene.children );
-    	console.log('touch ' + intersects);
-    	for ( var intersect in intersects ) {
-    		for (x in intersect) {
-    		    console(x);
-    		}
+    	if (intersects.length>0) {
+    		var intersect = intersects[0];
+    		$scope.$apply(function() {
+    			console.log('selected object = ' + intersect.object.body.name);
+    			$scope.selectedObject = intersect.object.body.name;
+    		});
     	}
     }
   
@@ -323,6 +332,10 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	}
   	
   	$scope.animate = function() {
+  		for(var i=0; i<$scope.pointsMap.length; i++) {
+  			var pointSprite = $scope.pointsMap[i];
+  			$scope.scaleSprite(pointSprite, 32);
+  		}
   		for(var i=0; i<$scope.orthoMap.length; i++) {
   			var sprite = $scope.orthoMap[i];
   			var visible = $scope.isObjectVisible(sprite.body);
@@ -341,6 +354,11 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
   		}
   		requestAnimationFrame($scope.animate);
   		$scope.controls.update();
+  	}
+  	
+  	$scope.scaleSprite = function(sprite, scale) {
+  		var v = new THREE.Vector3();
+  		sprite.scale.x = sprite.scale.y = sprite.scale.z = v.subVectors( sprite.position, $scope.camera.position ).length() / scale;
   	}
   	
   	/**
