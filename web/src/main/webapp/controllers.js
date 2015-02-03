@@ -80,6 +80,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    		var texture = $scope.texturesMap[celestialBody.name];
 	    		var material = new THREE.MeshBasicMaterial( { map: texture } );
 	    		var sphere = new THREE.Mesh( geometry, material );
+	    		sphere.body = celestialBody;
 	    		sphere.position.copy(position);
 	    		$scope.scene.add( sphere );
 	    		
@@ -125,13 +126,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 				var m = m1.multiply(m2).multiply(m3);
     			geometry5.applyMatrix(m);
     			
-    			var theColor;
-    			if ($scope.isSpacecraft(celestialBody)) {
-    				theColor = 0xFFFF00;
-    			} else {
-    				var theColor = arrayToColor(celestialBody.trajectory.color);
-    				theColor = darken(theColor, 0.8);
-    			}
+    			var theColor = arrayToColor(celestialBody.trajectory.color);
     			var material5 = new THREE.LineBasicMaterial( { color: theColor } );
     			var ellipse = new THREE.Line( geometry5, material5 );
     			ellipse.position.add(centerObject.cartesianState.position);
@@ -295,7 +290,30 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 		
 		$scope.canvasWidth = canvasWidth;
 		$scope.canvasHeight = canvasHeight;
+		
+		$scope.raycaster = new THREE.Raycaster();
+		$scope.mouse = new THREE.Vector2();
+		
+		container.addEventListener( 'mousedown', $scope.mouseClick, false );
 	}  
+    
+    $scope.mouseClick = function( event ) {
+    	event.preventDefault();
+    	
+    	var mousePos = getMousePos($scope.renderer.domElement, event);
+    	$scope.mouse.x = ( mousePos.x / $scope.canvasWidth ) * 2 - 1;
+    	$scope.mouse.y = - ( mousePos.y / $scope.canvasHeight ) * 2 + 1;
+    	console.log('x = ' + $scope.mouse.x + ' y = ' + $scope.mouse.y);
+    	
+    	$scope.raycaster.setFromCamera( $scope.mouse, $scope.camera );
+    	var intersects = $scope.raycaster.intersectObjects( $scope.scene.children );
+    	console.log('touch ' + intersects);
+    	for ( var intersect in intersects ) {
+    		for (x in intersect) {
+    		    console(x);
+    		}
+    	}
+    }
   
   	$scope.render = function() {
   		$scope.renderer.clear();

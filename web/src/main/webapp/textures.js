@@ -83,8 +83,10 @@ function arrayToColor(array) {
 	return c;
 }
 
-function darken(color, factor){
-	var c = new THREE.Color();
-	c.setRGB(color.r * 1-factor, color.g * factor, color.b * factor);
-	return c;
-}
+function getMousePos(canvas, evt) {
+    var rect = canvas.getBoundingClientRect();
+    return {
+      x: evt.clientX - rect.left,
+      y: evt.clientY - rect.top
+    };
+  }
