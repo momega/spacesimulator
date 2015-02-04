@@ -13,6 +13,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.time = data.time.value;
 	    $scope.cameraTarget = data.camera.targetObject;
 	    $scope.selectedObject = null;
+	    $scope.selectedObjectName = null;
 	    $scope.texturesMap = {};
 	    $scope.orthoMap = [];
 	    $scope.pointsMap = [];
@@ -254,7 +255,8 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     }
     
     $scope.selectObject = function(obj) {
-    	$scope.selectedObject = obj.name;
+    	$scope.selectedObjectName = obj.name; 
+    	$scope.selectedObject = $scope.findByName(obj.name);
     }
   
     $scope.selectCameraTarget = function(obj) {
@@ -307,20 +309,22 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     
     $scope.mouseClick = function( event ) {
     	event.preventDefault();
-    	
-    	var mousePos = getMousePos($scope.renderer.domElement, event);
-    	$scope.mouse.x = ( mousePos.x / $scope.canvasWidth ) * 2 - 1;
-    	$scope.mouse.y = - ( mousePos.y / $scope.canvasHeight ) * 2 + 1;
-    	console.log('x = ' + $scope.mouse.x + ' y = ' + $scope.mouse.y);
-    	
-    	$scope.raycaster.setFromCamera( $scope.mouse, $scope.camera );
-    	var intersects = $scope.raycaster.intersectObjects( $scope.scene.children );
-    	if (intersects.length>0) {
-    		var intersect = intersects[0];
-    		$scope.$apply(function() {
-    			console.log('selected object = ' + intersect.object.body.name);
-    			$scope.selectedObject = intersect.object.body.name;
-    		});
+    	if (event.button & 2) {
+	    	var mousePos = getMousePos($scope.renderer.domElement, event);
+	    	$scope.mouse.x = ( mousePos.x / $scope.canvasWidth ) * 2 - 1;
+	    	$scope.mouse.y = - ( mousePos.y / $scope.canvasHeight ) * 2 + 1;
+	    	console.log('x = ' + $scope.mouse.x + ' y = ' + $scope.mouse.y);
+	    	
+	    	$scope.raycaster.setFromCamera( $scope.mouse, $scope.camera );
+	    	var intersects = $scope.raycaster.intersectObjects( $scope.scene.children );
+	    	if (intersects.length>0) {
+	    		var intersect = intersects[0];
+	    		$scope.$apply(function() {
+	    			console.log('selected object = ' + intersect.object.body.name);
+	    			$scope.selectedObjectName = intersect.object.body.name;
+	    			$scope.selectedObject = $scope.findByName($scope.selectedObjectName);
+	    		});
+	    	}
     	}
     }
   
