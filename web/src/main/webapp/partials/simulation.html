@@ -65,24 +65,21 @@
 			<div id="container">WEBGL container</div>
 		</div>
 		<div class="col-lg-4">
-			<p>
-			    <button class="btn btn-default btn-sm" ng-click="firstDetailOpen = !firstDetailOpen">Toggle last panel</button>
-			  </p>
-			<accordion close-others="false" ng-show="selectedObject !== null">
-			    <accordion-group is-open="firstDetailOpen">
+			<accordion close-others="false">
+			    <accordion-group is-open="details.basic.open" ng-show="!details.basic.disabled">
 			        <accordion-heading>
-			            Basic Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': firstDetailOpen, 'glyphicon-chevron-right': !firstDetailOpen}"></i>
+			            Basic Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.basic.open, 'glyphicon-chevron-right': !details.basic.open}"></i>
 			        </accordion-heading>
 			        <div class="container-fluid">
 			        	<div class="row">
 							<div class="col-lg-6"><small>Name</small></div>
-							<div class="col-lg-6"><small>{{selectedObject.name}}</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.name}}</small>&nbsp;<button ng-click="selectCameraTarget(selectedObject)" type="button" class="btn btn-default btn-xs">Camera</button></div>
 						</div>
 			        </div>
 			    </accordion-group>
-			    <accordion-group is-disabled="selectedObject.radius === null">
+			    <accordion-group is-open="details.physical.open" ng-show="!details.physical.disabled">
 			        <accordion-heading>
-			            Physical Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            Physical Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.physical.open, 'glyphicon-chevron-right': !details.physical.open}"></i>
 			        </accordion-heading>
 			        <div class="container-fluid">
 			        	<div class="row">
@@ -96,20 +93,35 @@
 							<div class="col-lg-6"><small>{{selectedObject.radius}}</small></div>
 						</div>
 						<div class="row">
-			        		<div class="col-lg-1"><small>r</small></div>
+			        		<div class="col-lg-1"><small>t</small></div>
 							<div class="col-lg-5"><small>Rotation Period</small></div>
 							<div class="col-lg-6"><small>{{selectedObject.rotationPeriod}}</small></div>
 						</div>
 						<div class="row">
 			        		<div class="col-lg-1"><small>&nbsp;</small></div>
 							<div class="col-lg-5"><small>Wiki</small></div>
-							<div class="col-lg-6"><small><button type="button" class="btn btn-link btn-xs">Link</button></small></div>
+							<div class="col-lg-6"><small><button type="button" ng-click="openWiki()" class="btn btn-link btn-xs">Link</button></small></div>
 						</div>
 			        </div>
 			    </accordion-group>
-			    <accordion-group is-disabled="selectedObject.keplerianElements == null">
+			    <accordion-group is-open="details.spacecraft.open" ng-show="!details.spacecraft.disabled">
 			        <accordion-heading>
-			            Orbital Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			            Spacecraft Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.spacecraft.open, 'glyphicon-chevron-right': !details.spacecraft.open}"></i>
+			        </accordion-heading>
+			        <div class="container-fluid">
+			        	<div class="row">
+							<div class="col-lg-6"><small>Mass</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.mass}}</small></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-6"><small>Target</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.target.targetObject}}</small>&nbsp;<button ng-click="selectCameraByTargetName(selectedObject.target.targetObject)" type="button" class="btn btn-default btn-xs">Camera</button></div>
+						</div>
+			        </div>
+			    </accordion-group>
+			    <accordion-group is-open="details.orbital.open" ng-show="!details.orbital.disabled">
+			        <accordion-heading>
+			            Orbital Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.orbital.open, 'glyphicon-chevron-right': !details.orbital.open}"></i>
 			        </accordion-heading>
 			        <div class="container-fluid">
 			        	<div class="row">

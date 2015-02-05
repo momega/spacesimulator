@@ -17,7 +17,14 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.texturesMap = {};
 	    $scope.orthoMap = [];
 	    $scope.pointsMap = [];
-	    $scope.firstDetailOpen = false;
+	    
+	    $scope.details = {
+	    		basic: {open: true, disabled: true},
+	    		spacecraft: {open: false, disabled: true},
+	    		physical: {open: false, disabled: true},
+	    	    orbital: {open: false, disabled: true}
+	    };
+	    
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
 	    $scope.positionProviders = [];
@@ -26,12 +33,18 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    	var obj = rootObjects[i];
 	    	$scope.positionProviders.push(obj);
 	    	if ($scope.isSpacecraft(obj)) {
-	    		if (obj.trajectory.apoapsis!=null) {
-	    			$scope.positionProviders.push(obj.trajectory.apoapsis);
+	    		var spacecraft = obj;
+	    		if (spacecraft.trajectory.apoapsis!=null) {
+	    			$scope.positionProviders.push(spacecraft.trajectory.apoapsis);
 	    		}
-	    		if (obj.trajectory.periapsis!=null) {
-	    			$scope.positionProviders.push(obj.trajectory.periapsis);
+	    		if (spacecraft.trajectory.periapsis!=null) {
+	    			$scope.positionProviders.push(spacecraft.trajectory.periapsis);
 	    		}
+	    		var maneuver = $scope.findActiveOrNextManeuver(spacecraft, $scope.time);
+    			if (maneuver != null) {
+    				$scope.positionProviders.push(maneuver.start);
+    				$scope.positionProviders.push(maneuver.end);
+    			}
 	    	}
 	    }
 	    
@@ -42,7 +55,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
    });
    
    $scope.loadTextures = function(textureObjects, callback) {
-		imagesCount = textureObjects.length + 3 // + 3 icons;
+		imagesCount = textureObjects.length + 5 // + 5 icons;
 		console.log(imagesCount +' about to load');
 		for(var i=0; i<textureObjects.length; i++) {
 			var to = textureObjects[i];
@@ -59,6 +72,8 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 		
 		loadTexture('APOAPSIS', 'icons/Letter-A-icon.png', $scope.texturesMap, callback);
 		loadTexture('PERIAPSIS', 'icons/Letter-P-icon.png', $scope.texturesMap, callback);
+		loadTexture('M_START', 'icons/Math-lower-than-icon.png', $scope.texturesMap, callback);
+		loadTexture('M_END', 'icons/Math-greater-than-icon.png', $scope.texturesMap, callback);
 		loadTexture('CIRCLE', 'icons/circle.png', $scope.texturesMap, callback);
 	}
    
@@ -103,6 +118,12 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     			if (spacecraft.trajectory.periapsis) {
     				$scope.createTexturePoint(spacecraft.trajectory.periapsis, 'PERIAPSIS');
     			}
+    			
+    			var maneuver = $scope.findActiveOrNextManeuver(spacecraft, $scope.time);
+    			if (maneuver != null) {
+    				$scope.createTexturePoint(maneuver.start, 'M_START');
+    				$scope.createTexturePoint(maneuver.end, 'M_END');
+    			}
     		}
     		
     		if (celestialBody.keplerianElements!=null) {
@@ -143,6 +164,22 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     	$scope.selectCameraTarget($scope.findByName($scope.cameraTarget));
     	$scope.animate();
     	console.log('Animation started');
+    }
+    
+    $scope.findActiveOrNextManeuver = function(spacecraft, timestamp) {
+        var min = null;
+        var result = null;
+        for(var i=0; i<spacecraft.maneuvers.length; i++) {
+        	var maneuver = spacecraft.maneuvers[i];
+            var timeDiff = maneuver.end.timestamp.value - timestamp;
+            if (timeDiff > 0) {
+                if (min == null || (timeDiff < min)) {
+                    result = maneuver;
+                    min = timeDiff;
+                }
+            }
+        }
+        return result;
     }
     
     $scope.createBodyLabel = function(obj) {
@@ -240,6 +277,11 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     	var result = (obj.subsystems != null);
     	return result;
     }
+
+    $scope.isCelestialBody = function(obj) {
+    	var result = (obj.radius != null);
+    	return result;
+    }
     
     $scope.updateCameraPosition = function(newCameraPosition, newRadius) {
     	var cameraTarget = new THREE.Vector3(0,0,0);
@@ -258,7 +300,25 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     $scope.selectObject = function(obj) {
     	$scope.selectedObjectName = obj.name; 
     	$scope.selectedObject = $scope.findByName(obj.name);
-    	$scope.firstDetailOpen = true;
+    	$scope.setDetails(obj);
+    }
+    
+    $scope.setDetails = function(obj) {
+    	$scope.details.basic.disabled = false;
+    	$scope.details.orbital.disabled = false;
+    	$scope.details.spacecraft.disabled = !$scope.isSpacecraft(obj);
+    	$scope.details.physical.disabled = !$scope.isCelestialBody(obj);
+    	$scope.details.basic.open = true;
+    }
+    
+    $scope.openWiki = function() {
+    	var wiki = 'http://en.wikipedia.org/wiki/' + $scope.selectedObject.wiki;
+    	window.open(wiki, '_blank');
+    }
+    
+    $scope.selectCameraByTargetName = function(name) {
+    	var body = $scope.findByName(name);
+    	$scope.selectCameraTarget(body);
     }
   
     $scope.selectCameraTarget = function(obj) {
@@ -323,9 +383,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    		var intersect = intersects[0];
 	    		$scope.$apply(function() {
 	    			console.log('selected object = ' + intersect.object.body.name);
-	    			$scope.selectedObjectName = intersect.object.body.name;
-	    			$scope.selectedObject = $scope.findByName($scope.selectedObjectName);
-	    			$scope.firstDetailOpen=true;
+	    			$scope.selectObject(intersect.object.body);
 	    		});
 	    	}
     	}
