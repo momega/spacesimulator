@@ -12,7 +12,6 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     };
     
     $scope.prepareModel = function(model) {
-    	console.log('x');
 	    $scope.time = model.time.value;
 	    $scope.timeInMillis = new Date($scope.time * 1000);
 	    $scope.cameraTarget = model.camera.targetObject;
@@ -23,26 +22,10 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
-	    $scope.positionProviders = [];
 	    var textureObjects = [];
-	    var rootObjects = modelService.getRootObjects();
-	    for(var i=0; i<rootObjects.length; i++) {
-	    	var obj = rootObjects[i];
-	    	$scope.positionProviders.push(obj);
-	    	if ($scope.isSpacecraft(obj)) {
-	    		var spacecraft = obj;
-	    		if (spacecraft.trajectory.apoapsis!=null) {
-	    			$scope.positionProviders.push(spacecraft.trajectory.apoapsis);
-	    		}
-	    		if (spacecraft.trajectory.periapsis!=null) {
-	    			$scope.positionProviders.push(spacecraft.trajectory.periapsis);
-	    		}
-	    		var maneuver = modelService.findActiveOrNextManeuver(spacecraft, $scope.time);
-    			if (maneuver != null) {
-    				$scope.positionProviders.push(maneuver.start);
-    				$scope.positionProviders.push(maneuver.end);
-    			}
-	    	}
+	    var objs = modelService.getPositionProviders($scope.time);
+	    for(var i=0; i<objs.length; i++) {
+	    	var obj = objs[i];
 	    	if (obj.textureFileName != null) {
 	    		textureObjects.push(obj);
 	    	} else if (obj.subsystems != null) {
@@ -111,7 +94,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     			$scope.createBodyLabel(celestialBody);
     		}
     		
-    		if ($scope.isSpacecraft(celestialBody)) {
+    		if (modelService.isSpacecraft(celestialBody)) {
     			var spacecraft = celestialBody;
     			$scope.createSpacecraft(spacecraft);
     			
@@ -255,21 +238,6 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     	sprite.position.copy(position);
     }
     
-    $scope.isSpacecraft = function(obj) {
-    	var result = (obj.subsystems != null);
-    	return result;
-    }
-
-    $scope.isCelestialBody = function(obj) {
-    	var result = (obj.radius != null);
-    	return result;
-    }
-    
-    $scope.hasTrajectory = function(obj) {
-    	var result = (obj.keplerianElements != null);
-    	return result;
-    }
-    
     $scope.updateCameraPosition = function(newCameraPosition, newRadius) {
     	var cameraTarget = new THREE.Vector3(0,0,0);
     	cameraTarget.copy(newCameraPosition);
@@ -291,9 +259,9 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     
     $scope.setDetails = function(obj) {
     	$scope.details.basic.disabled = false;
-    	$scope.details.orbital.disabled = !$scope.hasTrajectory(obj);
-    	$scope.details.spacecraft.disabled = !$scope.isSpacecraft(obj);
-    	$scope.details.physical.disabled = !$scope.isCelestialBody(obj);
+    	$scope.details.orbital.disabled = !modelService.hasTrajectory(obj);
+    	$scope.details.spacecraft.disabled = !modelService.isSpacecraft(obj);
+    	$scope.details.physical.disabled = !modelService.isCelestialBody(obj);
     	$scope.details.basic.open = true;
     }
     

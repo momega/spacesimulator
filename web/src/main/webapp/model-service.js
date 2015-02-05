@@ -21,6 +21,45 @@ spaceSimulatorApp.factory('modelService', ['$http', function($http) {
 		return rootObjects;
 	}
 	
+	factory.getPositionProviders = function(timestamp) {
+		var result = [];
+		var list = factory.getRootObjects();
+	    for(var i=0; i<list.length; i++) {
+	    	var obj = list[i];
+	    	result.push(obj);
+	    	if (factory.isSpacecraft(obj)) {
+	    		var spacecraft = obj;
+	    		if (spacecraft.trajectory.apoapsis!=null) {
+	    			result.push(spacecraft.trajectory.apoapsis);
+	    		}
+	    		if (spacecraft.trajectory.periapsis!=null) {
+	    			result.push(spacecraft.trajectory.periapsis);
+	    		}
+	    		var maneuver = factory.findActiveOrNextManeuver(spacecraft, timestamp);
+    			if (maneuver != null) {
+    				result.push(maneuver.start);
+    				result.push(maneuver.end);
+    			}
+	    	}
+	    }
+	    return result;
+	}
+	
+    factory.isSpacecraft = function(obj) {
+    	var result = (obj.subsystems != null);
+    	return result;
+    }
+
+    factory.isCelestialBody = function(obj) {
+    	var result = (obj.radius != null);
+    	return result;
+    }
+    
+    factory.hasTrajectory = function(obj) {
+    	var result = (obj.keplerianElements != null);
+    	return result;
+    }	
+	
 	factory.findByName = function(name) {
 		var movingObject = db.select("//*[/name=='" + name + "']").value();
     	return movingObject;
