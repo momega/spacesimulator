@@ -2,30 +2,26 @@
 
 var AU = 149597870700.0;
 
-/* Controllers */
-var spaceSimulatorControllers = angular.module('spaceSimulatorControllers', []);
-
-spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http', function($scope, $http) {
+spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', function($scope, modelService) {
 	
-   $http.get('data/1.json').success(function(data) {
-	    $scope.model = data;
-	    $scope.db = SpahQL.db(data);
-	    $scope.time = data.time.value;
+    $scope.details = {
+    		basic: {open: true, disabled: true},
+    		spacecraft: {open: false, disabled: true},
+    		physical: {open: false, disabled: true},
+    	    orbital: {open: false, disabled: true}
+    };
+    
+    $scope.prepareModel = function(model) {
+    	console.log('x');
+	    $scope.db = SpahQL.db(model);
+	    $scope.time = model.time.value;
 	    $scope.timeInMillis = new Date($scope.time * 1000);
-	    $scope.cameraTarget = data.camera.targetObject;
+	    $scope.cameraTarget = model.camera.targetObject;
 	    $scope.selectedObject = null;
-	    $scope.selectedObjectName = null;
 	    $scope.texturesMap = {};
 	    $scope.orthoMap = [];
 	    $scope.pointsMap = [];
-	    
-	    $scope.details = {
-	    		basic: {open: true, disabled: true},
-	    		spacecraft: {open: false, disabled: true},
-	    		physical: {open: false, disabled: true},
-	    	    orbital: {open: false, disabled: true}
-	    };
-	    
+
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
 	    $scope.positionProviders = [];
@@ -53,7 +49,9 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    var spacecrafts = $scope.db.select("//movingObjects/*[/subsystems!=null]").values();
 	    var textureObjects = celestialBodies.concat(spacecrafts);
 	    $scope.loadTextures(textureObjects, $scope.texturesLoaded);
-   });
+   };
+   
+   modelService.load('1', null, $scope.prepareModel);
    
    $scope.loadTextures = function(textureObjects, callback) {
 		imagesCount = textureObjects.length + 5 // + 5 icons;
@@ -304,8 +302,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     }
     
     $scope.selectObject = function(obj) {
-    	$scope.selectedObjectName = obj.name; 
-    	$scope.selectedObject = $scope.findByName(obj.name);
+    	$scope.selectedObject = obj;
     	$scope.setDetails(obj);
     }
     
@@ -350,7 +347,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 		var canvasHeight = 400;
 		
 		$scope.scene = new THREE.Scene();
-		$scope.camera = new THREE.PerspectiveCamera( 45, canvasWidth/canvasHeight, 1000000, AU * 10 );
+		$scope.camera = new THREE.PerspectiveCamera( 45, canvasWidth/canvasHeight, 100000, AU * 10 );
 		$scope.camera.up.copy(new THREE.Vector3(0,0,1));	
 		
 		$scope.renderer = new THREE.WebGLRenderer();
@@ -455,10 +452,10 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
   	
 }]);
 
-spaceSimulatorControllers.controller('ProjectController', ['$scope', function($scope) {
+spaceSimulatorApp.controller('ProjectController', ['$scope', function($scope) {
 	
 }]);
 
-spaceSimulatorControllers.controller('HelpController', ['$scope', function($scope) {
+spaceSimulatorApp.controller('HelpController', ['$scope', function($scope) {
 	
 }]);
