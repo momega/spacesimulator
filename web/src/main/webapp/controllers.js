@@ -23,9 +23,9 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
 	    var textureObjects = [];
-	    var objs = modelService.getPositionProviders($scope.time);
-	    for(var i=0; i<objs.length; i++) {
-	    	var obj = objs[i];
+	    $scope.positionProviders = modelService.getPositionProviders($scope.time);
+	    for(var i=0; i<$scope.positionProviders.length; i++) {
+	    	var obj = $scope.positionProviders[i];
 	    	if (obj.textureFileName != null) {
 	    		textureObjects.push(obj);
 	    	} else if (obj.subsystems != null) {
