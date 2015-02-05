@@ -11,6 +11,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.model = data;
 	    $scope.db = SpahQL.db(data);
 	    $scope.time = data.time.value;
+	    $scope.timeInMillis = new Date($scope.time * 1000);
 	    $scope.cameraTarget = data.camera.targetObject;
 	    $scope.selectedObject = null;
 	    $scope.selectedObjectName = null;
@@ -283,6 +284,11 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     	return result;
     }
     
+    $scope.hasTrajectory = function(obj) {
+    	var result = (obj.keplerianElements != null);
+    	return result;
+    }
+    
     $scope.updateCameraPosition = function(newCameraPosition, newRadius) {
     	var cameraTarget = new THREE.Vector3(0,0,0);
     	cameraTarget.copy(newCameraPosition);
@@ -305,7 +311,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     
     $scope.setDetails = function(obj) {
     	$scope.details.basic.disabled = false;
-    	$scope.details.orbital.disabled = false;
+    	$scope.details.orbital.disabled = !$scope.hasTrajectory(obj);
     	$scope.details.spacecraft.disabled = !$scope.isSpacecraft(obj);
     	$scope.details.physical.disabled = !$scope.isCelestialBody(obj);
     	$scope.details.basic.open = true;
