@@ -17,6 +17,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    $scope.texturesMap = {};
 	    $scope.orthoMap = [];
 	    $scope.pointsMap = [];
+	    $scope.firstDetailOpen = false;
 	    console.log("camera target:" + $scope.cameraTarget);
 	    
 	    $scope.positionProviders = [];
@@ -257,6 +258,7 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
     $scope.selectObject = function(obj) {
     	$scope.selectedObjectName = obj.name; 
     	$scope.selectedObject = $scope.findByName(obj.name);
+    	$scope.firstDetailOpen = true;
     }
   
     $scope.selectCameraTarget = function(obj) {
@@ -323,9 +325,14 @@ spaceSimulatorControllers.controller('SimulationController', ['$scope',  '$http'
 	    			console.log('selected object = ' + intersect.object.body.name);
 	    			$scope.selectedObjectName = intersect.object.body.name;
 	    			$scope.selectedObject = $scope.findByName($scope.selectedObjectName);
+	    			$scope.firstDetailOpen=true;
 	    		});
 	    	}
     	}
+    }
+    
+    $scope.toDegrees = function(rad) {
+    	return rad * 180 / Math.PI;
     }
   
   	$scope.render = function() {

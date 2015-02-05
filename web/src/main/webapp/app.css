@@ -1,9 +1,5 @@
-.container
-{
-    width: 100%;
-}
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
 
-.fullrow
-{
-	height: 100%;
+.panel-body {
+	padding: 5px;
 }

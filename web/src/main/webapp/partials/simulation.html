@@ -29,7 +29,7 @@
 				<div class="form-group form-group-sm">
 					<label class="control-label" for="txtTime">Time:</label>
 					<div class="input-group" id="txtTime">
-						<input type="text" class="form-control input-sm" ng-model="time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'">
+						<input type="text" class="form-control input-sm input-large" ng-model="time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'">
 						<span class="input-group-btn">
 							<button class="btn btn-default input-sm" type="button">Take!</button>
 						</span>
@@ -61,24 +61,100 @@
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-lg-9">
+		<div class="col-lg-8">
 			<div id="container">WEBGL container</div>
 		</div>
-		<div class="col-lg-3">
-			<table class="table table-condensed table-hover" ng-show="selectedObject !== null">
-			<tr>
-				<td>Name</td><td>{{selectedObject.name}}</td>
-			</tr>
-			<tr ng-show="selectedObject.mass !== null">
-				<td>Mass</td><td>{{selectedObject.mass}}</td>
-			</tr>
-			<tr ng-show="selectedObject.keplerianElements !== null && selectedObject.keplerianElements.keplerianOrbit !== null">
-				<td>Semimajor Axis</td><td>{{selectedObject.keplerianElements.keplerianOrbit.semimajorAxis}}</td>
-			</tr>
-			<tr ng-show="selectedObject.keplerianElements !== null && selectedObject.keplerianElements.keplerianOrbit !== null">
-				<td>Eccentricity</td><td>{{selectedObject.keplerianElements.keplerianOrbit.eccentricity}}</td>
-			</tr>
-			</table>
+		<div class="col-lg-4">
+			<p>
+			    <button class="btn btn-default btn-sm" ng-click="firstDetailOpen = !firstDetailOpen">Toggle last panel</button>
+			  </p>
+			<accordion close-others="false" ng-show="selectedObject !== null">
+			    <accordion-group is-open="firstDetailOpen">
+			        <accordion-heading>
+			            Basic Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': firstDetailOpen, 'glyphicon-chevron-right': !firstDetailOpen}"></i>
+			        </accordion-heading>
+			        <div class="container-fluid">
+			        	<div class="row">
+							<div class="col-lg-6"><small>Name</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.name}}</small></div>
+						</div>
+			        </div>
+			    </accordion-group>
+			    <accordion-group is-disabled="selectedObject.radius === null">
+			        <accordion-heading>
+			            Physical Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			        </accordion-heading>
+			        <div class="container-fluid">
+			        	<div class="row">
+			        		<div class="col-lg-1"><small>m</small></div>
+							<div class="col-lg-5"><small>Mass</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.mass}}</small></div>
+						</div>
+						<div class="row">
+			        		<div class="col-lg-1"><small>r</small></div>
+							<div class="col-lg-5"><small>Radius</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.radius}}</small></div>
+						</div>
+						<div class="row">
+			        		<div class="col-lg-1"><small>r</small></div>
+							<div class="col-lg-5"><small>Rotation Period</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.rotationPeriod}}</small></div>
+						</div>
+						<div class="row">
+			        		<div class="col-lg-1"><small>&nbsp;</small></div>
+							<div class="col-lg-5"><small>Wiki</small></div>
+							<div class="col-lg-6"><small><button type="button" class="btn btn-link btn-xs">Link</button></small></div>
+						</div>
+			        </div>
+			    </accordion-group>
+			    <accordion-group is-disabled="selectedObject.keplerianElements == null">
+			        <accordion-heading>
+			            Orbital Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+			        </accordion-heading>
+			        <div class="container-fluid">
+			        	<div class="row">
+							<div class="col-lg-1"><small>a</small></div>
+							<div class="col-lg-5"><small>Semimajor Axis</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.keplerianElements.keplerianOrbit.semimajorAxis}}</small></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-1"><small>e</small></div>
+							<div class="col-lg-5"><small>Eccentricity</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.keplerianElements.keplerianOrbit.eccentricity}}</small></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-1"><small>&omega;</small></div>
+							<div class="col-lg-5"><small>Argument Of Periapsis</small></div>
+							<div class="col-lg-6"><small>{{toDegrees(selectedObject.keplerianElements.keplerianOrbit.argumentOfPeriapsis)}}</small></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-1"><small>i</small></div>
+							<div class="col-lg-5"><small>Inclination</small></div>
+							<div class="col-lg-6"><small>{{toDegrees(selectedObject.keplerianElements.keplerianOrbit.inclination)}}</small></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-1"><small>&Omega;</small></div>
+							<div class="col-lg-5"><small>Ascending Node</small></div>
+							<div class="col-lg-6"><small>{{toDegrees(selectedObject.keplerianElements.keplerianOrbit.ascendingNode)}}</small></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-1"><small>T</small></div>
+							<div class="col-lg-5"><small>Time Of Periapsis</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.keplerianElements.keplerianOrbit.timeOfPeriapsis.value | date:'yyyy-MM-dd HH:mm:ss Z' }}</small></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-1"><small>P</small></div>
+							<div class="col-lg-5"><small>Period</small></div>
+							<div class="col-lg-6"><small>{{selectedObject.keplerianElements.keplerianOrbit.period }}</small></div>
+						</div>
+						<div class="row">
+							<div class="col-lg-1"><small>&theta;</small></div>
+							<div class="col-lg-5"><small>True Anomaly</small></div>
+							<div class="col-lg-6"><small>{{toDegrees(selectedObject.keplerianElements.trueAnomaly) }}</small></div>
+						</div>
+			        </div>
+			    </accordion-group>
+			 </accordion>
 		</div>
 	</div>
 </div>
