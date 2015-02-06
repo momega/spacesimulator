@@ -36,10 +36,10 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 	    $scope.loadTextures(textureObjects, $scope.texturesLoaded);
    };
    
-   modelService.load('1-6', null, $scope.prepareModel);
+   modelService.load('1', '10', $scope.prepareModel);
    
    $scope.loadTextures = function(textureObjects, callback) {
-		imagesCount = textureObjects.length + 5 // + 5 icons;
+		imagesCount = textureObjects.length + 7 // + 7 icons;
 		console.log(imagesCount +' about to load');
 		for(var i=0; i<textureObjects.length; i++) {
 			var to = textureObjects[i];
@@ -59,6 +59,8 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 		loadTexture('M_START', 'icons/Math-lower-than-icon.png', $scope.texturesMap, callback);
 		loadTexture('M_END', 'icons/Math-greater-than-icon.png', $scope.texturesMap, callback);
 		loadTexture('CIRCLE', 'icons/circle.png', $scope.texturesMap, callback);
+		loadTexture('EXIT_SOI', 'icons/Letter-E-icon.png', $scope.texturesMap, callback);
+		loadTexture('T_INTERSECTION', 'icons/Math-divide-icon.png', $scope.texturesMap, callback);
 	}
    
     $scope.texturesLoaded = function() {
@@ -111,6 +113,19 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     				$scope.createTexturePoint(maneuver.start, 'M_START');
     				$scope.createTexturePoint(maneuver.end, 'M_END');
     			}
+    			
+    			var target = spacecraft.target;
+    			if (target != null) {
+    				for(var j=0; j<target.orbitIntersections.length; j++) {
+    					var intersection = target.orbitIntersections[j];
+    					$scope.createTexturePoint(intersection, 'T_INTERSECTION');
+    				}
+    			}
+    			
+    			var exitSoi = spacecraft.exitSoiOrbitalPoint;
+				if (exitSoi != null) {
+					$scope.createTexturePoint(exitSoi, 'EXIT_SOI');
+				}
     		}
     		
     		if (celestialBody.keplerianElements!=null) {
@@ -125,8 +140,8 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     			if (ec<1) {
     				var b = a * Math.sqrt(1 - ec*ec);
     				var curve = new THREE.EllipseCurve(
-	    					-e,  0,            // ax, aY
-	    					a, b,           // xRadius, yRadius
+	    					-e,  0,           // ax, aY
+	    					a, b,             // xRadius, yRadius
 	    					0,  2 * Math.PI,  // aStartAngle, aEndAngle
 	    					false             // aClockwise
 	    				);
@@ -135,9 +150,11 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     			} else {
     				var b = a * Math.sqrt(ec*ec-1);
     				var startAngle = -2 * Math.PI;
-    				var ha = solveHA(ec, ke.trueAnomaly);
-    				var stopAngle = -ha;
-    				geometry5 = $scope.createHyperbola(a, b, startAngle, stopAngle, 7200, e);
+    				if (celestialBody.exitSoiOrbitalPoint != null) {
+    					startAngle = -solveHA(ec, celestialBody.exitSoiOrbitalPoint.keplerianElements.trueAnomaly);
+    				}
+    				var stopAngle = -solveHA(ec, ke.trueAnomaly);
+    				geometry5 = $scope.createHyperbola(a, b, startAngle, stopAngle, 3600, e);
     			}
     			
     			// ZXZ is not fully supported
@@ -328,6 +345,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 		
 		$scope.controls = new THREE.OrbitControls( $scope.camera, container );
 		$scope.controls.noPan = true;
+		$scope.controls.mouseButtons.ORBIT = THREE.MOUSE.RIGHT;
 		$scope.controls.addEventListener( 'change', $scope.render );
 		
 		$scope.cameraOrtho = new THREE.OrthographicCamera( - canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, - canvasHeight / 2, 0, 10 );
@@ -344,7 +362,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     
     $scope.mouseClick = function( event ) {
     	event.preventDefault();
-    	if (event.button & 2) {
+    	if (event.which==1) {
 	    	var mousePos = getMousePos($scope.renderer.domElement, event);
 	    	$scope.mouse.x = ( mousePos.x / $scope.canvasWidth ) * 2 - 1;
 	    	$scope.mouse.y = - ( mousePos.y / $scope.canvasHeight ) * 2 + 1;

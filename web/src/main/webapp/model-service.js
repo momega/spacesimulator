@@ -6,14 +6,21 @@ spaceSimulatorApp.factory('modelService', ['$http', function($http) {
 	var db;
 	var time;
 	
+
 	factory.load = function(project, snapshot, callback) {
-		 $http.get('data/' + project + '.json').success(function(data) {
-			 model = data;
-			 db = SpahQL.db(model);
-			 time = model.time.value;
-			 console.log('time = ' + time);
-			 callback(model);
-		 });
+		var file = 'data/' + project;
+		if (snapshot != null) {
+			file = file.concat('-');
+			file = file.concat(snapshot);
+		}
+		file = file.concat('.json')
+		$http.get(file).success(function(data) {
+			model = data;
+			db = SpahQL.db(model);
+			time = model.time.value;
+			console.log('time = ' + time);
+			callback(model);
+		});
 	}
 	
 	factory.getRootObjects = function() {
@@ -39,6 +46,17 @@ spaceSimulatorApp.factory('modelService', ['$http', function($http) {
     			if (maneuver != null) {
     				result.push(maneuver.start);
     				result.push(maneuver.end);
+    			}
+    			var target = spacecraft.target;
+    			if (target != null) {
+    				for(var j=0; j<target.orbitIntersections.length; j++) {
+    					var intersection = target.orbitIntersections[j];
+    					result.push(intersection);
+    				}
+    			}
+    			var exitSoi = spacecraft.exitSoiOrbitalPoint;
+    			if (exitSoi != null) {
+    				result.push(exitSoi);
     			}
 	    	}
 	    }
