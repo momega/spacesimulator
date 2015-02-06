@@ -36,7 +36,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 	    $scope.loadTextures(textureObjects, $scope.texturesLoaded);
    };
    
-   modelService.load('1', null, $scope.prepareModel);
+   modelService.load('1-6', null, $scope.prepareModel);
    
    $scope.loadTextures = function(textureObjects, callback) {
 		imagesCount = textureObjects.length + 5 // + 5 icons;
@@ -118,18 +118,27 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     			var ke = celestialBody.keplerianElements;
     			var a = ke.keplerianOrbit.semimajorAxis;
     			var ec = ke.keplerianOrbit.eccentricity;
-    			var b = a * Math.sqrt(1 - ec*ec);
     			var e = a * ec;
     			var centerObject = modelService.findByName(ke.keplerianOrbit.centralObject);
     			
-    			var curve = new THREE.EllipseCurve(
-    					-e,  0,            // ax, aY
-    					a, b,           // xRadius, yRadius
-    					0,  2 * Math.PI,  // aStartAngle, aEndAngle
-    					false             // aClockwise
-    				);
-    			var path = new THREE.Path( curve.getPoints( 3600 ) );
-    			var geometry5 = path.createPointsGeometry( 3600 );
+    			var geometry5;
+    			if (ec<1) {
+    				var b = a * Math.sqrt(1 - ec*ec);
+    				var curve = new THREE.EllipseCurve(
+	    					-e,  0,            // ax, aY
+	    					a, b,           // xRadius, yRadius
+	    					0,  2 * Math.PI,  // aStartAngle, aEndAngle
+	    					false             // aClockwise
+	    				);
+	    			var path = new THREE.Path( curve.getPoints( 3600 ) );
+	    			geometry5 = path.createPointsGeometry( 3600 );
+    			} else {
+    				var b = a * Math.sqrt(ec*ec-1);
+    				var startAngle = -2 * Math.PI;
+    				var ha = solveHA(ec, ke.trueAnomaly);
+    				var stopAngle = -ha;
+    				geometry5 = $scope.createHyperbola(a, b, startAngle, stopAngle, 7200, e);
+    			}
     			
     			// ZXZ is not fully supported
 				var m1 = new THREE.Matrix4().makeRotationZ(ke.keplerianOrbit.ascendingNode);
@@ -151,6 +160,20 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
     	$scope.selectCameraTarget(modelService.findByName($scope.cameraTarget));
     	$scope.animate();
     	console.log('Animation started');
+    }
+    
+    $scope.createHyperbola = function(a, b, startAngle, stopAngle, num_segments, e) {
+    	var DEG2RAD = 2 * Math.PI / num_segments;
+        var startIndex = (startAngle / DEG2RAD)|0;
+        var stopIndex = (stopAngle / DEG2RAD)|0;
+        var points = [];
+        for (var i= startIndex; i<=stopIndex; i++) {
+            var degInRad = DEG2RAD * i;
+            points.push({x : Math.cosh(degInRad) * a - e, y : Math.sinh(degInRad) * b, z:0});
+        }
+        var path = new THREE.CurvePath();
+        var result = path.createGeometry(points);
+        return result;
     }
     
     $scope.createBodyLabel = function(obj) {
