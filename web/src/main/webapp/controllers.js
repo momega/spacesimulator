@@ -18,6 +18,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 	    $scope.selectedObject = null;
 	    $scope.texturesMap = {};
 	    $scope.orthoMap = [];
+	    $scope.locatorMap = [];
 	    $scope.pointsMap = [];
 
 	    console.log("camera target:" + $scope.cameraTarget);
@@ -28,18 +29,16 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 	    	var obj = $scope.positionProviders[i];
 	    	if (obj.textureFileName != null) {
 	    		textureObjects.push(obj);
-	    	} else if (obj.subsystems != null) {
-	    		textureObjects.push(obj);
 	    	}
 	    }
 	    
 	    $scope.loadTextures(textureObjects, $scope.texturesLoaded);
    };
    
-   modelService.load('1', '10', $scope.prepareModel);
+   modelService.load('1', '8', $scope.prepareModel);
    
    $scope.loadTextures = function(textureObjects, callback) {
-		imagesCount = textureObjects.length + 7 // + 7 icons;
+		imagesCount = textureObjects.length + 9 + 7; // + 7 icons;
 		console.log(imagesCount +' about to load');
 		for(var i=0; i<textureObjects.length; i++) {
 			var to = textureObjects[i];
@@ -47,11 +46,14 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 			var source = "";
 			if (to.textureFileName!=null) {
 				source = "." + to.textureFileName; 
-			} else if (to.subsystems != null) {
-				source = "./icons/Number-" + to.index + "-icon.png";
 			}
 			console.log('Texture for ' + name + ' sources '+ source);
 			loadTexture(name, source, $scope.texturesMap, callback);
+		}
+		
+		for(var j=1; j<=9; j++) {
+			var source = "./icons/Number-" + j + "-icon.png";
+			loadTexture('SPACECRAFT' + j, source, $scope.texturesMap, callback);
 		}
 		
 		loadTexture('APOAPSIS', 'icons/Letter-A-icon.png', $scope.texturesMap, callback);
@@ -92,7 +94,14 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 	    		sphere.position.copy(position);
 	    		$scope.scene.add( sphere );
 	    		
-	    		$scope.createBodyLocator(celestialBody);
+	    		var circleTexture = $scope.texturesMap['CIRCLE'];
+	    		var spriteMaterial = new THREE.SpriteMaterial({map: circleTexture});
+        		var sprite = new THREE.Sprite( spriteMaterial );
+        		sprite.position.copy(position);
+        		sprite.body = celestialBody;
+        		$scope.locatorMap.push(sprite);
+        		$scope.scene.add( sprite );
+	    		
     			$scope.createBodyLabel(celestialBody);
     		}
     		
@@ -207,32 +216,8 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 		$scope.orthoMap.push(spriteL); 
     }
     
-    $scope.createBodyLocator = function(obj) {
-    	var material = new THREE.LineBasicMaterial({
-    		color: 0x808080
-    	});
-    	
-    	var curve = new THREE.EllipseCurve(
-    			0,  0,            // ax, aY
-    			8, 8,           // xRadius, yRadius
-    			0,  2 * Math.PI,  // aStartAngle, aEndAngle
-    			false             // aClockwise
-    		);
-    	
-    	var path = new THREE.Path( curve.getPoints( 32 ) );
-    	var circleGeometry = path.createPointsGeometry( 32 );
-    	
-    	var circle = new THREE.Line( circleGeometry, material );
-    	var p = $scope.getOrthoPosition(obj);
-    	circle.position.copy(p);
-    	circle.body = obj;
-    	
-    	$scope.sceneOrtho.add(circle);
-		$scope.orthoMap.push(circle);
-    }
-    
     $scope.createSpacecraft = function(obj) {
-    	$scope.createTexturePoint(obj, obj.name);
+    	$scope.createTexturePoint(obj, 'SPACECRAFT' + obj.index);
     } 
     
     $scope.createTexturePoint = function(obj, textureName) {
@@ -366,7 +351,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 	    	var mousePos = getMousePos($scope.renderer.domElement, event);
 	    	$scope.mouse.x = ( mousePos.x / $scope.canvasWidth ) * 2 - 1;
 	    	$scope.mouse.y = - ( mousePos.y / $scope.canvasHeight ) * 2 + 1;
-	    	console.log('x = ' + $scope.mouse.x + ' y = ' + $scope.mouse.y);
+	    	console.debug('x = ' + $scope.mouse.x + ' y = ' + $scope.mouse.y);
 	    	
 	    	$scope.raycaster.setFromCamera( $scope.mouse, $scope.camera );
 	    	var intersects = $scope.raycaster.intersectObjects( $scope.scene.children );
@@ -390,7 +375,11 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
   	$scope.animate = function() {
   		for(var i=0; i<$scope.pointsMap.length; i++) {
   			var pointSprite = $scope.pointsMap[i];
-  			$scope.scaleSprite(pointSprite, 32);
+  			$scope.scaleSprite(pointSprite, 40);
+  		}
+  		for(var i=0; i<$scope.locatorMap.length; i++) {
+  			var sprite = $scope.locatorMap[i];
+  			$scope.scaleSprite(sprite, 40);
   		}
   		for(var i=0; i<$scope.orthoMap.length; i++) {
   			var sprite = $scope.orthoMap[i];
