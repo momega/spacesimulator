@@ -35,7 +35,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 	    $scope.loadTextures(textureObjects, $scope.texturesLoaded);
    };
    
-   modelService.load('1', '8', $scope.prepareModel);
+   modelService.load('2', '13', $scope.prepareModel);
    
    $scope.loadTextures = function(textureObjects, callback) {
 		imagesCount = textureObjects.length + 9 + 7; // + 7 icons;

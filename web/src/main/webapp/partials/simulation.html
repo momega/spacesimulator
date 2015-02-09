@@ -24,10 +24,11 @@
 </nav>
 <div class="container-fluid">
 	<div class="row main-row">
-		<div class="col-lg-12">
+		<div class="col-lg-8">
 			<form class="form-inline">
+				<small>Time:{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
 				<div class="form-group form-group-sm">
-					<label class="control-label" for="txtTime">Time:</label>
+					<label class="control-label" for="txtTime">Next Time:</label>
 					<div class="input-group" id="txtTime">
 						<input type="datetime-local" class="form-control input-sm input-large" ng-model="timeInMillis">
 						<span class="input-group-btn">
@@ -35,6 +36,11 @@
 						</span>
 					</div>
 				</div>
+			</form>
+		</div>
+		
+		<div class="col-lg-4 detail-panel">
+			<form class="form-inline">
 				<div class="form-group form-group-sm">
 					<label class="control-label" for="cmbCamera">Selected Target:</label>
 					<div class="btn-group" id="cmbCamera">
