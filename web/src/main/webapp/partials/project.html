@@ -23,3 +23,20 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
+
+<div class="container-fluid">
+	<div class="row">
+		<table class="table table-hover table-condensed">
+			<tr>
+				<th>Project</th>
+				<th>Identification</th>
+				<th>Actions</th>
+			</tr>
+ 			<tr ng-repeat="p in projects">
+ 				<td>{{p.name}}</td>
+ 				<td>{{p.id}}</td>
+ 				<td><a class="btn btn-default btn-xs" href="#/simulation/{{p.id}}" role="button">Open</a></td>
+ 			</tr> 
+		</table>
+	</div>
+</div>

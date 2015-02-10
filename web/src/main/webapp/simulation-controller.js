@@ -2,7 +2,7 @@
 
 var AU = 149597870700.0;
 
-spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', function($scope, modelService) {
+spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 'modelService', function($scope, $routeParams, modelService) {
 	
     $scope.details = {
     		basic: {open: true, disabled: true},
@@ -35,10 +35,16 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
 	    $scope.loadTextures(textureObjects, $scope.texturesLoaded);
    };
    
-   modelService.load('2', '13', $scope.prepareModel);
+   $scope.projectName = $routeParams.projectName;
+   if ($scope.projectName === undefined) {
+	   $scope.projectName = '1';
+   }
+   console.log('project name = ' + $scope.projectName);
+   modelService.load($scope.projectName, '1', $scope.prepareModel);
    
    $scope.loadTextures = function(textureObjects, callback) {
-		imagesCount = textureObjects.length + 9 + 7; // + 7 icons;
+	    imagesLoaded = 0;
+	    imagesCount = textureObjects.length + 9 + 7; // + 7 icons;
 		console.log(imagesCount +' about to load');
 		for(var i=0; i<textureObjects.length; i++) {
 			var to = textureObjects[i];
@@ -425,10 +431,3 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', 'modelService', 
   	
 }]);
 
-spaceSimulatorApp.controller('ProjectController', ['$scope', function($scope) {
-	
-}]);
-
-spaceSimulatorApp.controller('HelpController', ['$scope', function($scope) {
-	
-}]);

@@ -9,6 +9,7 @@ function loadTexture(name, source, texturesMap, callback) {
 			console.log('Texture for name=' + name + ' loaded.');
 			texturesMap[name]=texture;
 			imagesLoaded++;
+			console.log('imagesLoaded=' + imagesLoaded + ' imagesCount='+imagesCount);
 			if (imagesLoaded>=imagesCount) {
 				callback();
 			}
