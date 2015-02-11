@@ -4,8 +4,6 @@ spaceSimulatorApp.factory('modelService', ['$http', function($http) {
 	var factory = {};
 	var model;
 	var db;
-	var time;
-	
 
 	factory.load = function(project, snapshot, callback) {
 		var file = 'data/' + project;
@@ -17,15 +15,32 @@ spaceSimulatorApp.factory('modelService', ['$http', function($http) {
 		$http.get(file).success(function(data) {
 			model = data;
 			db = SpahQL.db(model);
-			time = model.time.value;
-			console.log('time = ' + time);
-			callback(model);
+			console.log('time = ' + model.time.value);
+			callback();
 		});
 	}
 	
+	/**
+	 * Gets all root objects of the model
+	 */
 	factory.getRootObjects = function() {
 		var rootObjects = db.select("//movingObjects/*").values();
 		return rootObjects;
+	}
+	
+	/**
+	 * Returns all celestial bodies of the model
+	 */
+	factory.getCelestialBodies = function() {
+		var objs = factory.getRootObjects();
+		var result = [];
+		for(var i=0; i<objs.length; i++) {
+	    	var obj = objs[i];
+	    	if (obj.textureFileName != null) {
+	    		result.push(obj);
+	    	}
+	    }
+		return result;
 	}
 	
 	factory.getPositionProviders = function(timestamp) {
@@ -105,7 +120,11 @@ spaceSimulatorApp.factory('modelService', ['$http', function($http) {
     }    
 	
 	factory.getTime = function() {
-		return time;
+		return model.time.value;
+	}
+	
+	factory.getCamera = function() {
+		return model.camera;
 	}
 	
 	return factory;

@@ -11,36 +11,30 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	    orbital: {open: false, disabled: true}
     };
     
-    $scope.prepareModel = function(model) {
-	    $scope.time = model.time.value;
+    $scope.prepareModel = function() {
+    	console.log("Preparing model...");
+    	$scope.time = modelService.getTime();
 	    $scope.timeInMillis = new Date($scope.time * 1000);
-	    $scope.cameraTarget = model.camera.targetObject;
+	    $scope.positionProviders = modelService.getPositionProviders($scope.time);
+    }
+    
+    $scope.prepareTextures = function() {
+    	$scope.prepareModel();
+	    $scope.cameraTarget = modelService.getCamera().targetObject;
 	    $scope.selectedObject = null;
 	    $scope.texturesMap = {};
-	    $scope.orthoMap = [];
-	    $scope.locatorMap = [];
-	    $scope.pointsMap = [];
-
+	    
 	    console.log("camera target:" + $scope.cameraTarget);
-	    
-	    var textureObjects = [];
-	    $scope.positionProviders = modelService.getPositionProviders($scope.time);
-	    for(var i=0; i<$scope.positionProviders.length; i++) {
-	    	var obj = $scope.positionProviders[i];
-	    	if (obj.textureFileName != null) {
-	    		textureObjects.push(obj);
-	    	}
-	    }
-	    
-	    $scope.loadTextures(textureObjects, $scope.texturesLoaded);
+	    $scope.loadTextures(modelService.getCelestialBodies(), $scope.texturesLoaded);
    };
-   
+
+   $scope.snapshot = 3;
    $scope.projectName = $routeParams.projectName;
    if ($scope.projectName === undefined) {
 	   $scope.projectName = '1';
    }
    console.log('project name = ' + $scope.projectName);
-   modelService.load($scope.projectName, '1', $scope.prepareModel);
+   modelService.load($scope.projectName, $scope.snapshot, $scope.prepareTextures);
    
    $scope.loadTextures = function(textureObjects, callback) {
 	    imagesLoaded = 0;
@@ -77,12 +71,24 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     }
     
     $scope.createScene = function() {
-		$scope.scene = new THREE.Scene();
-		$scope.sceneOrtho = new THREE.Scene();
+    	console.log('Creating scene...');
 
-		var celestialBodies = modelService.getRootObjects();
-    	for(var i=0; i<celestialBodies.length; i++) {
-    		var celestialBody = celestialBodies[i];
+    	while($scope.scene.children.length > 0) {
+    		var obj = $scope.scene.children[0];
+    		$scope.scene.remove(obj);
+    	}
+	    while($scope.sceneOrtho.children.length>0) {
+	    	var obj = $scope.sceneOrtho.children[0];
+	    	$scope.sceneOrtho.remove(obj);
+	    }
+	    
+	    $scope.locatorMap = [];
+	    $scope.pointsMap = [];
+	    $scope.orthoMap = [];
+    	
+		var rootObjects = modelService.getRootObjects();
+    	for(var i=0; i<rootObjects.length; i++) {
+    		var celestialBody = rootObjects[i];
     		var position = celestialBody.cartesianState.position;
     		
     		if (celestialBody.radius != null) {
@@ -192,6 +198,15 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	$scope.selectCameraTarget(modelService.findByName($scope.cameraTarget));
     	$scope.animate();
     	console.log('Animation started');
+    }
+
+    $scope.reloadScene = function() {
+    	$scope.snapshot++;
+    	console.log('Snapshot = ' + $scope.snapshot);
+    	modelService.load($scope.projectName, $scope.snapshot, function() {
+    		$scope.prepareModel();
+    		$scope.createScene();
+    	});
     }
     
     $scope.createHyperbola = function(a, b, startAngle, stopAngle, num_segments, e) {
@@ -307,7 +322,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     }
   
     $scope.selectCameraTarget = function(obj) {
-	  console.log('body = ' + obj.name);
+	  console.log('camera target = ' + obj.name);
 	  $scope.cameraTarget = obj.name;
 	  var targetBody = obj;
 	  var newRadius = targetBody.hasOwnProperty("radius") ? targetBody["radius"] : 100000;
@@ -349,6 +364,9 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 		$scope.mouse = new THREE.Vector2();
 		
 		container.addEventListener( 'mousedown', $scope.mouseClick, false );
+		
+		$scope.scene = new THREE.Scene();
+		$scope.sceneOrtho = new THREE.Scene();
 	}  
     
     $scope.mouseClick = function( event ) {
