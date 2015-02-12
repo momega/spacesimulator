@@ -2,7 +2,7 @@
 
 var AU = 149597870700.0;
 
-spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 'modelService', function($scope, $routeParams, modelService) {
+spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 'modelService', 'projectService', function($scope, $routeParams, modelService, projectService) {
 	
     $scope.details = {
     		basic: {open: true, disabled: true},
@@ -16,17 +16,10 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	$scope.time = modelService.getTime();
 	    $scope.timeInMillis = new Date($scope.time * 1000);
 	    $scope.positionProviders = modelService.getPositionProviders($scope.time);
-    }
-    
-    $scope.prepareTextures = function() {
-    	$scope.prepareModel();
 	    $scope.cameraTarget = modelService.getCamera().targetObject;
 	    $scope.selectedObject = null;
-	    $scope.texturesMap = {};
-	    
 	    console.log("camera target:" + $scope.cameraTarget);
-	    $scope.loadTextures(modelService.getCelestialBodies(), $scope.texturesLoaded);
-   };
+    }
 
    $scope.snapshot = 3;
    $scope.projectName = $routeParams.projectName;
@@ -34,43 +27,14 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	   $scope.projectName = '1';
    }
    console.log('project name = ' + $scope.projectName);
-   modelService.load($scope.projectName, $scope.snapshot, $scope.prepareTextures);
-   
-   $scope.loadTextures = function(textureObjects, callback) {
-	    imagesLoaded = 0;
-	    imagesCount = textureObjects.length + 9 + 7; // + 7 icons;
-		console.log(imagesCount +' about to load');
-		for(var i=0; i<textureObjects.length; i++) {
-			var to = textureObjects[i];
-			var name = to.name;
-			var source = "";
-			if (to.textureFileName!=null) {
-				source = "." + to.textureFileName; 
-			}
-			console.log('Texture for ' + name + ' sources '+ source);
-			loadTexture(name, source, $scope.texturesMap, callback);
-		}
-		
-		for(var j=1; j<=9; j++) {
-			var source = "./icons/Number-" + j + "-icon.png";
-			loadTexture('SPACECRAFT' + j, source, $scope.texturesMap, callback);
-		}
-		
-		loadTexture('APOAPSIS', 'icons/Letter-A-icon.png', $scope.texturesMap, callback);
-		loadTexture('PERIAPSIS', 'icons/Letter-P-icon.png', $scope.texturesMap, callback);
-		loadTexture('M_START', 'icons/Math-lower-than-icon.png', $scope.texturesMap, callback);
-		loadTexture('M_END', 'icons/Math-greater-than-icon.png', $scope.texturesMap, callback);
-		loadTexture('CIRCLE', 'icons/circle.png', $scope.texturesMap, callback);
-		loadTexture('EXIT_SOI', 'icons/Letter-E-icon.png', $scope.texturesMap, callback);
-		loadTexture('T_INTERSECTION', 'icons/Math-divide-icon.png', $scope.texturesMap, callback);
-	}
-   
-    $scope.texturesLoaded = function() {
-	   console.log('All texture loaded');
-	   $scope.createScene();
-    }
+   projectService.load($scope.projectName, function() {
+	   modelService.load($scope.projectName, $scope.snapshot, function() {
+		   $scope.prepareModel();
+		   $scope.createScene();
+	   });
+   });
     
-    $scope.createScene = function() {
+   $scope.createScene = function() {
     	console.log('Creating scene...');
 
     	while($scope.scene.children.length > 0) {
@@ -99,14 +63,14 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	    		t.makeRotationX(Math.PI/2);
 	    		geometry.applyMatrix(t);
 	    		
-	    		var texture = $scope.texturesMap[celestialBody.name];
+	    		var texture = projectService.getTextureName(celestialBody.name);
 	    		var material = new THREE.MeshBasicMaterial( { map: texture } );
 	    		var sphere = new THREE.Mesh( geometry, material );
 	    		sphere.body = celestialBody;
 	    		sphere.position.copy(position);
 	    		$scope.scene.add( sphere );
 	    		
-	    		var circleTexture = $scope.texturesMap['CIRCLE'];
+	    		var circleTexture = projectService.getTextureName('CIRCLE');
 	    		var spriteMaterial = new THREE.SpriteMaterial({map: circleTexture});
         		var sprite = new THREE.Sprite( spriteMaterial );
         		sprite.position.copy(position);
@@ -242,7 +206,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     } 
     
     $scope.createTexturePoint = function(obj, textureName) {
-    	var texture = $scope.texturesMap[textureName];
+    	var texture = projectService.getTextureName(textureName);
     	texture.needsUpdate = true;
 		var spriteMaterial = new THREE.SpriteMaterial({map: texture});
 		var sprite = new THREE.Sprite( spriteMaterial );
