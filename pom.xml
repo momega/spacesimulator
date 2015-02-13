@@ -10,6 +10,7 @@
         <module>common</module>
         <module>client</module>
 	<module>web</module>
+	<module>server</module>
     </modules>
 
     <properties>
