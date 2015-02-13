@@ -26,6 +26,7 @@
 
 <div class="container-fluid">
 	<div class="row">
+		<h2>Running Projects</h2>
 		<table class="table table-hover table-condensed">
 			<tr>
 				<th>Project</th>
@@ -36,6 +37,21 @@
  				<td>{{p.name}}</td>
  				<td>{{p.id}}</td>
  				<td><a class="btn btn-default btn-xs" href="#/simulation/{{p.id}}" role="button">Open</a></td>
+ 			</tr> 
+		</table>
+	</div>
+	<div class="row">
+		<h2>Builders</h2>
+		<table class="table table-hover table-condensed">
+			<tr>
+				<th>Project</th>
+				<th>Identification</th>
+				<th>Actions</th>
+			</tr>
+ 			<tr ng-repeat="b in builders">
+ 				<td>{{b.name}}</td>
+ 				<td>{{b.id}}</td>
+ 				<td><a class="btn btn-default btn-xs" href="#/simulation/{{b.id}}" role="button">Build</a></td>
  			</tr> 
 		</table>
 	</div>
