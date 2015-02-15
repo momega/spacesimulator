@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.swing;
 
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.renderer.ModelChangeEvent;
@@ -86,11 +87,13 @@ public class AttributesPanel extends JPanel implements UpdatablePanel {
     protected EvaluationContext createContext() {
         try {
             StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
+            Timestamp time = ModelHolder.getModel().getTime();
             evaluationContext.setVariable("obj", object);
+            evaluationContext.setVariable("time", time);
             evaluationContext.registerFunction("toDegrees", Math.class.getDeclaredMethod("toDegrees", double.class));
             evaluationContext.registerFunction("toDegrees2", MathUtils.class.getDeclaredMethod("toDegrees", Double.class));
             evaluationContext.registerFunction("timeAsString", TimeUtils.class.getDeclaredMethod("timeAsString", Timestamp.class));
-            evaluationContext.registerFunction("periodAsString", TimeUtils.class.getDeclaredMethod("periodAsString", PositionProvider.class));
+            evaluationContext.registerFunction("periodAsString", TimeUtils.class.getDeclaredMethod("periodAsString", PositionProvider.class, Timestamp.class));
             return evaluationContext;
         } catch (NoSuchMethodException nsme) {
             throw new IllegalArgumentException(nsme);

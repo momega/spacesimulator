@@ -12,7 +12,6 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.springframework.util.Assert;
 
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.TimeInterval;
 import com.momega.spacesimulator.model.Timestamp;
@@ -143,8 +142,8 @@ public class TimeUtils {
         return UTC_FORMATTER.print(TimeUtils.toDateTime(timestamp));
     }
     
-    public static String periodAsString(PositionProvider positionProvider) {
-        double period = getETA(positionProvider);
+    public static String periodAsString(PositionProvider positionProvider, Timestamp time) {
+        double period = getETA(positionProvider, time);
         if (period>DateTimeConstants.SECONDS_PER_DAY) {
             return timeAsString(positionProvider.getTimestamp());
         }
@@ -156,12 +155,12 @@ public class TimeUtils {
     /**
      * Returns ETA time in seconds between current time and planned time of the orbital point
      * @return the ETA in seconds
-     * @positionProvider position provider
+     * @param positionProvider position provider
+     * @param time the current time
      */
-    private static double getETA(PositionProvider positionProvider) {
-        Timestamp current = ModelHolder.getModel().getTime();
+    private static double getETA(PositionProvider positionProvider, Timestamp time) {
         Timestamp future = positionProvider.getTimestamp();
-        return future.subtract(current);
+        return future.subtract(time);
     }
 
 }
