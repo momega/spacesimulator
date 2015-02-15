@@ -1,13 +1,16 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.SurfacePoint;
 import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.service.ModelService;
 import com.momega.spacesimulator.swing.Icons;
 
 import javax.swing.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +33,8 @@ public class SurfacePointRenderer extends AbstractBitmapRenderer {
     @Override
     public List<Vector3d> getPositions() {
         List<Vector3d> list = new ArrayList<>();
-        for(CelestialBody body: modelService.findAllCelestialBodies()) {
+        Model model = ModelHolder.getModel(); 
+        for(CelestialBody body: modelService.findAllCelestialBodies(model)) {
             for(SurfacePoint surfacePoint : body.getSurfacePoints()) {
                 list.add(surfacePoint.getPosition());
             }

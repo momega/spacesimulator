@@ -1,17 +1,20 @@
 package com.momega.spacesimulator.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.math3.util.FastMath;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Apsis;
 import com.momega.spacesimulator.model.ApsisType;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.DefaultTimeInterval;
 import com.momega.spacesimulator.model.ExitSoiOrbitalPoint;
 import com.momega.spacesimulator.model.KeplerianElements;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.ReferenceFrame;
 import com.momega.spacesimulator.model.Spacecraft;
@@ -26,9 +29,6 @@ import com.momega.spacesimulator.utils.TimeUtils;
  */
 @Component
 public class SphereOfInfluenceService {
-
-    @Autowired
-    private SoiMapCache soiMap;
     
     @Autowired
     private KeplerianElementsService keplerianElementsService;
@@ -40,12 +40,13 @@ public class SphereOfInfluenceService {
 
     /**
      * The method find the sphere of influence of the given moving object (typically spacecraft)
+     * @param model the model
      * @param movingObject the moving object
      * @param timestamp the given time frame (current timestamp or future one)
      * @return the instance of the sphere of influence
      */
-    public FindSoiResult findSoi(MovingObject movingObject, Timestamp timestamp) {
-        return checkSoiOfPlanet(movingObject, timestamp, ModelHolder.getModel().getRootSoi());
+    public FindSoiResult findSoi(Model model, MovingObject movingObject, Timestamp timestamp) {
+        return checkSoiOfPlanet(movingObject, timestamp, model.getRootSoi());
     }
 
     protected FindSoiResult checkSoiOfPlanet(MovingObject movingObject, Timestamp timestamp, SphereOfInfluence parentSoi) {
@@ -67,8 +68,26 @@ public class SphereOfInfluenceService {
         return result;
     }
 
-    public CelestialBody findParentBody(CelestialBody celestialBody) {
-        return soiMap.get(celestialBody);
+    public CelestialBody findParentBody(Model model, CelestialBody celestialBody) {
+    	if (model.getSoiMap() == null) {
+            model.setSoiMap(getAllChildren(model.getRootSoi()));
+        }
+        SphereOfInfluence soi = model.getSoiMap().get(celestialBody);
+        Assert.notNull(soi);
+        return soi.getParent().getBody();
+    }
+    
+    public synchronized void clear(Model model) {
+        model.setSoiMap(null);
+    }
+    
+    protected Map<CelestialBody, SphereOfInfluence> getAllChildren(SphereOfInfluence parentSoi) {
+        Map<CelestialBody, SphereOfInfluence> result = new HashMap<>();
+        result.put(parentSoi.getBody(), parentSoi);
+        for(SphereOfInfluence soi : parentSoi.getChildren()) {
+            result.putAll(getAllChildren(soi));
+        }
+        return result;
     }
     
     /**
@@ -76,7 +95,7 @@ public class SphereOfInfluenceService {
      * The method set the point directly to the spacecraft instance
      * @param newTimestamp the current timestamp
      */
-    public void findExitSoi(Spacecraft spacecraft, Timestamp newTimestamp) {
+    public void findExitSoi(Model model, Spacecraft spacecraft, Timestamp newTimestamp) {
         Assert.notNull(spacecraft);
         Assert.notNull(newTimestamp);
 
@@ -90,7 +109,7 @@ public class SphereOfInfluenceService {
         double period = spacecraft.getKeplerianElements().getKeplerianOrbit().getPeriod();
         TimeInterval interval = new DefaultTimeInterval(newTimestamp, newTimestamp.add(period));
 
-        boolean soiChangeFound = findExitSoi(spacecraft, exitSoiPoint, interval);
+        boolean soiChangeFound = findExitSoi(model, spacecraft, exitSoiPoint, interval);
         if (!soiChangeFound) {
         	spacecraft.setExitSoiOrbitalPoint(null);
         } else {
@@ -120,24 +139,24 @@ public class SphereOfInfluenceService {
         }
     }
     
-    private boolean findExitSoi(Spacecraft spacecraft, ExitSoiOrbitalPoint exitSoiOrbitalPoint, TimeInterval interval) {
+    private boolean findExitSoi(Model model, Spacecraft spacecraft, ExitSoiOrbitalPoint exitSoiOrbitalPoint, TimeInterval interval) {
     	double dT = TimeUtils.getDuration(interval) / 1000.0;
-    	boolean soiChangeFound = solveExitSoiPoint(spacecraft, exitSoiOrbitalPoint, interval, dT);
+    	boolean soiChangeFound = solveExitSoiPoint(model, spacecraft, exitSoiOrbitalPoint, interval, dT);
         if (soiChangeFound && (exitSoiOrbitalPoint.getError() > EXIT_SOI_POINT_ERROR) && (dT > 1)) {
             Timestamp start = exitSoiOrbitalPoint.getTimestamp().subtract(dT);
             Timestamp end = exitSoiOrbitalPoint.getTimestamp().add(dT);
             TimeInterval newInterval = new DefaultTimeInterval(start, end);
-            return findExitSoi(spacecraft, exitSoiOrbitalPoint, newInterval);
+            return findExitSoi(model, spacecraft, exitSoiOrbitalPoint, newInterval);
         }
         return soiChangeFound;
     }
     
-    private boolean solveExitSoiPoint(Spacecraft spacecraft, ExitSoiOrbitalPoint exitSoiPoint, TimeInterval interval, double dT) {
+    private boolean solveExitSoiPoint(Model model, Spacecraft spacecraft, ExitSoiOrbitalPoint exitSoiPoint, TimeInterval interval, double dT) {
     	Timestamp t = interval.getStartTime();
     	ReferenceFrame currentSoi = spacecraft.getKeplerianElements().getKeplerianOrbit().getReferenceFrame();
     	
     	while(!t.after(interval.getEndTime())) {
-    		FindSoiResult findSoiResult = findSoi(spacecraft, t);
+    		FindSoiResult findSoiResult = findSoi(model, spacecraft, t);
     		if (!findSoiResult.getSphereOfInfluence().getBody().equals(currentSoi)) {
     			CelestialBody newSoiBody = findSoiResult.getSphereOfInfluence().getBody();
     			double distance = findSoiResult.getDistance();

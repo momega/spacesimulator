@@ -1,14 +1,13 @@
 package com.momega.spacesimulator.service;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.model.RunStep;
-import com.momega.spacesimulator.model.Timestamp;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.RunStep;
+import com.momega.spacesimulator.model.Timestamp;
 
 /**
  * Created by martin on 10/5/14.
@@ -26,14 +25,14 @@ public class ModelWorker {
 
     /**
      * Next step of the model iteration
+     * @param model the model
      * @param step the run step
      */
-    public void next(RunStep step) {
-        Model model = ModelHolder.getModel();
+    public void next(Model model, RunStep step) {
         if (model == null) {
             return;
         }
-        motionService.move(step);
+        motionService.move(model, step);
         Timestamp t = step.getNewTimestamp();
         logger.debug("time = {}", t);
         model.setTime(t);

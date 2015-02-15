@@ -2,6 +2,7 @@ package com.momega.spacesimulator.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The model is the POJO object containing all the data. It contains current timestamp, all dynamical points,
@@ -13,6 +14,7 @@ public class Model {
     private Timestamp time;
     protected final List<MovingObject> movingObjects = new ArrayList<>();
     private SphereOfInfluence rootSoi;
+    private transient Map<CelestialBody, SphereOfInfluence> soiMap = null;
     private Camera camera;
 
     public Camera getCamera() {
@@ -54,5 +56,13 @@ public class Model {
     public void setRootSoi(SphereOfInfluence rootSoi) {
         this.rootSoi = rootSoi;
     }
+    
+    public Map<CelestialBody, SphereOfInfluence> getSoiMap() {
+		return soiMap;
+	}
+    
+    public void setSoiMap(Map<CelestialBody, SphereOfInfluence> soiMap) {
+		this.soiMap = soiMap;
+	}
 
 }

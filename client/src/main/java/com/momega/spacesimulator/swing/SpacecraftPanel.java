@@ -4,6 +4,7 @@
 package com.momega.spacesimulator.swing;
 
 import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.PositionProvider;
 import com.momega.spacesimulator.model.Spacecraft;
@@ -12,10 +13,12 @@ import com.momega.spacesimulator.renderer.ModelChangeEvent;
 import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.service.ModelService;
 import com.momega.spacesimulator.service.TargetService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -136,7 +139,7 @@ public class SpacecraftPanel extends JPanel implements UpdatablePanel {
 		public CelestialBodyModel() {
 			super();
 			addElement(null);
-			for (CelestialBody cb : Application.getInstance().getService(ModelService.class).findCelestialBodies(false)) {
+			for (CelestialBody cb : Application.getInstance().getService(ModelService.class).findCelestialBodies(ModelHolder.getModel(), false)) {
 				addElement(cb.getName());
 			}
 		}

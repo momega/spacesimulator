@@ -42,21 +42,21 @@ public class NewtonianPropagator implements Propagator {
     private TargetService targetService;
 
     @Override
-    public void computePosition(MovingObject movingObject, RunStep step) {
+    public void computePosition(Model model, MovingObject movingObject, RunStep step) {
         Assert.isInstanceOf(Spacecraft.class, movingObject, "predication of trajectory is supported only for satellites");
         Spacecraft spacecraft = (Spacecraft) movingObject;
 
         double dt = step.getDt();
 
-        CartesianState cartesianState = eulerSolver(spacecraft, step.getNewTimestamp(), dt);
+        CartesianState cartesianState = eulerSolver(model, spacecraft, step.getNewTimestamp(), dt);
         movingObject.setCartesianState(cartesianState);
         movingObject.setTimestamp(step.getNewTimestamp());
 
-        computePrediction(spacecraft, step.getNewTimestamp());
+        computePrediction(model, spacecraft, step.getNewTimestamp());
         checkCollision(spacecraft, step.getNewTimestamp());
         if (!step.isRunningHeadless()) {
 	        computeApsides(spacecraft, step.getNewTimestamp());
-	        computeExitPoint(spacecraft, step.getNewTimestamp());
+	        computeExitPoint(model, spacecraft, step.getNewTimestamp());
 	        computeTargetPoints(spacecraft, step.getNewTimestamp());
 	        computeManeuvers(spacecraft, step.getNewTimestamp());
 	        computeUserPoints(spacecraft, step.getNewTimestamp());
@@ -110,8 +110,8 @@ public class NewtonianPropagator implements Propagator {
         maneuverPoint.setKeplerianElements(keplerianElements);
     }
     
-    protected void computeExitPoint(Spacecraft spacecraft, Timestamp newTimestamp) {
-    	sphereOfInfluenceService.findExitSoi(spacecraft, newTimestamp);
+    protected void computeExitPoint(Model model, Spacecraft spacecraft, Timestamp newTimestamp) {
+    	sphereOfInfluenceService.findExitSoi(model, spacecraft, newTimestamp);
 	}
 
     protected void computeTargetPoints(Spacecraft spacecraft, Timestamp newTimestamp) {
@@ -166,11 +166,12 @@ public class NewtonianPropagator implements Propagator {
 
     /**
      * Computes the prediction of the trajectory. Currently the supports work only for {@link com.momega.spacesimulator.model.Spacecraft}s.
+     * @param the model
      * @param spacecraft the spacecraft object which.
      * @param newTimestamp new timestamp
      */
-    public void computePrediction(Spacecraft spacecraft, Timestamp newTimestamp) {
-        FindSoiResult findSoiResult = sphereOfInfluenceService.findSoi(spacecraft, newTimestamp);
+    public void computePrediction(Model model, Spacecraft spacecraft, Timestamp newTimestamp) {
+        FindSoiResult findSoiResult = sphereOfInfluenceService.findSoi(model, spacecraft, newTimestamp);
         CelestialBody soiBody = findSoiResult.getSphereOfInfluence().getBody();
 
         KeplerianElements keplerianElements = spacecraft.getKeplerianElements();
@@ -196,7 +197,7 @@ public class NewtonianPropagator implements Propagator {
      * @param dt time interval
      * @return the position
      */
-    protected CartesianState eulerSolver(Spacecraft spacecraft, Timestamp newTimestamp, double dt) {
+    protected CartesianState eulerSolver(Model model, Spacecraft spacecraft, Timestamp newTimestamp, double dt) {
         // Euler's method
         Vector3d position = spacecraft.getCartesianState().getPosition();
         Vector3d velocity = spacecraft.getCartesianState().getVelocity();
@@ -204,7 +205,7 @@ public class NewtonianPropagator implements Propagator {
         // iterate all force models
         Vector3d acceleration = Vector3d.ZERO;
         for(ForceModel forceModel : forceModels) {
-            acceleration = acceleration.add(forceModel.getAcceleration(spacecraft, dt));
+            acceleration = acceleration.add(forceModel.getAcceleration(model, spacecraft, dt));
         }
 
         velocity = velocity.scaleAdd(dt, acceleration); // velocity: v(i) = v(i) + a(i) * dt

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.RunStep;
 
@@ -32,27 +33,29 @@ public class MotionService {
 
     /**
      * Moves all the moving object of the model
+     * @param model TODO
      * @param step the computation step
      */
-    public void move(RunStep step) {
+    public void move(Model model, RunStep step) {
         logger.debug("time={}", step.getNewTimestamp().getValue());
         if (step.getDt() > 0) {
-            for (MovingObject mo : modelService.findAllMovingObjects()) {
-                move(mo, step);
+            for (MovingObject mo : modelService.findAllMovingObjects(model)) {
+                move(model, mo, step);
             }
         }
     }
     
     /**
      * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation
+     * @param model TODO
      * @param movingObject the moving objects
      * @param step the computation step 
      */
-    public void move(MovingObject movingObject, RunStep step) {
+    public void move(Model model, MovingObject movingObject, RunStep step) {
         Assert.notNull(movingObject);
         for (Propagator propagator : propagators) {
             if (propagator.supports(movingObject)) {
-                propagator.computePosition(movingObject, step);
+                propagator.computePosition(model, movingObject, step);
             }
         }
     }    

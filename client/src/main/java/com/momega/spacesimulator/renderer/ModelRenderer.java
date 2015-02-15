@@ -1,8 +1,11 @@
 package com.momega.spacesimulator.renderer;
 
 import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.service.ModelService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +26,8 @@ public class ModelRenderer extends CompositeRenderer {
     }
     
     public void createRenderers() {
-    	for(MovingObject mo : modelService.findAllMovingObjects()) {
+    	Model model = ModelHolder.getModel();
+    	for(MovingObject mo : modelService.findAllMovingObjects(model)) {
     		MovingObjectCompositeRenderer renderer = new MovingObjectCompositeRenderer(mo);
     		addRenderer(renderer);
         }

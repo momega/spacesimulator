@@ -1,4 +1,4 @@
-    package com.momega.spacesimulator.service;
+package com.momega.spacesimulator.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,13 +11,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
-import com.momega.spacesimulator.context.ModelHolder;
-import com.momega.spacesimulator.model.*;
+import com.momega.spacesimulator.model.BaryCentre;
+import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.KeplerianTrajectory;
+import com.momega.spacesimulator.model.ManeuverPoint;
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.OrbitIntersection;
+import com.momega.spacesimulator.model.Planet;
+import com.momega.spacesimulator.model.PositionProvider;
+import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.model.SurfacePoint;
+import com.momega.spacesimulator.model.Timestamp;
+import com.momega.spacesimulator.model.UserOrbitalPoint;
 
-    /**
-     * The class contains set of the useful methods to manipulate with the model.
-     * Created by martin on 12/29/14.
-     */
+/**
+ * The class contains set of the useful methods to manipulate with the model.
+ * Created by martin on 12/29/14.
+ */
 @Component
 public class ModelService {
 	
@@ -31,14 +43,15 @@ public class ModelService {
 
     /**
      * Returns all moving object withing the model
+     * @param model model
      * @return the list of the moving object
      */
-    public List<MovingObject> findAllMovingObjects() {
+    public List<MovingObject> findAllMovingObjects(Model model) {
         List<MovingObject> result = new ArrayList<>();
-        if (ModelHolder.getModel() == null) {
+        if (model == null) {
             return result;
         }
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+        for(MovingObject dp : model.getMovingObjects()) {
             result.add(dp);
         }
         return result;
@@ -46,12 +59,13 @@ public class ModelService {
 
     /**
      * Finds the moving object by its name
+     * @param model the model
      * @param name the given name
      * @return the moving object
      */
-    public MovingObject findMovingObjectByName(String name) {
+    public MovingObject findMovingObjectByName(Model model, String name) {
         Assert.notNull(name);
-        for(MovingObject dp : ModelHolder.getModel().getMovingObjects()) {
+        for(MovingObject dp : model.getMovingObjects()) {
             if (name.equals(dp.getName())) {
                 return dp;
             }
@@ -62,12 +76,13 @@ public class ModelService {
     /**
      * Returns the current valid position provider. The method returns very similar results as @{#findAllMovingObjects}
      * except this method filters future maneuver points
+     * @param model the model
      * @param timestamp the current timestamp
      * @return the collection of the position providers
      */
-    public List<PositionProvider> findAllPositionProviders(Timestamp timestamp) {
+    public List<PositionProvider> findAllPositionProviders(Model model, Timestamp timestamp) {
         List<PositionProvider> result = new ArrayList<>();
-        for(MovingObject dp : findAllMovingObjects()) {
+        for(MovingObject dp : findAllMovingObjects(model)) {
             result.add(dp);
             KeplerianTrajectory keplerianTrajectory = dp.getTrajectory();
             if (dp instanceof CelestialBody || dp instanceof BaryCentre || dp instanceof Spacecraft) {
@@ -109,12 +124,13 @@ public class ModelService {
 
     /**
      * Returns the object by its index
+     * @param model TODO
      * @param index index of the object
      * @return the moving object inctance
      */
-    public MovingObject findMovingObjectByIndex(int index) {
+    public MovingObject findMovingObjectByIndex(Model model, int index) {
         Assert.isTrue(index > 0);
-        for(MovingObject body : findAllMovingObjects()) {
+        for(MovingObject body : findAllMovingObjects(model)) {
             if (body.getIndex()==index) {
                 return body;
             }
@@ -124,11 +140,12 @@ public class ModelService {
 
     /**
      * Gets all celestial bodies within the model
+     * @param model TODO
      * @return the list of the celestial bodies
      */
-    public List<CelestialBody> findAllCelestialBodies() {
+    public List<CelestialBody> findAllCelestialBodies(Model model) {
         List<CelestialBody> result = new ArrayList<>();
-        for(MovingObject dp : findAllMovingObjects()) {
+        for(MovingObject dp : findAllMovingObjects(model)) {
             if (dp instanceof CelestialBody) {
                 result.add((CelestialBody) dp);
             }
@@ -138,12 +155,13 @@ public class ModelService {
 
     /**
      * Returns the celestial objects
+     * @param model TODO
      * @param onlyMoving if true only moving objects are returned
      * @return the list of celestial bodies
      */
-    public List<CelestialBody> findCelestialBodies(boolean onlyMoving) {
+    public List<CelestialBody> findCelestialBodies(Model model, boolean onlyMoving) {
         List<CelestialBody> list = new ArrayList<>();
-        for (MovingObject mo : findAllMovingObjects()) {
+        for (MovingObject mo : findAllMovingObjects(model)) {
             if (mo instanceof CelestialBody) {
                 CelestialBody cb = (CelestialBody) mo;
                 if (!onlyMoving || !cb.isStatic()) {
@@ -167,11 +185,12 @@ public class ModelService {
 
     /**
      * Returns all the planets within the model
+     * @param model the model
      * @return all planet instances
      */
-    public List<Planet> findAllPlanets() {
+    public List<Planet> findAllPlanets(Model model) {
         List<Planet> result = new ArrayList<>();
-        for(MovingObject dp : findAllMovingObjects()) {
+        for(MovingObject dp : findAllMovingObjects(model)) {
             if (dp instanceof Planet) {
                 result.add((Planet) dp);
             }
@@ -179,9 +198,9 @@ public class ModelService {
         return result;
     }
 
-    public List<Spacecraft> findAllSpacecrafs() {
+    public List<Spacecraft> findAllSpacecrafs(Model model) {
         List<Spacecraft> result = new ArrayList<>();
-        for(MovingObject dp : findAllMovingObjects()) {
+        for(MovingObject dp : findAllMovingObjects(model)) {
             if (dp instanceof Spacecraft) {
                 result.add((Spacecraft) dp);
             }
@@ -191,12 +210,13 @@ public class ModelService {
     
     /**
      * Removes the moving object from the model
+     * @param model TODO
      * @param movingObject the moving object
      */
-    public void removeMovingObject(MovingObject movingObject) {
+    public void removeMovingObject(Model model, MovingObject movingObject) {
     	Assert.notNull(movingObject);
     	logger.info("removing object '{}' from model", movingObject.getName());
-    	ModelHolder.getModel().getMovingObjects().remove(movingObject);
+    	model.getMovingObjects().remove(movingObject);
     }
 
 }

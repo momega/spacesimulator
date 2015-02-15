@@ -12,6 +12,7 @@ import java.awt.*;
  */
 public class CrashSitePanel extends JPanel implements UpdatablePanel {
 
+	private static final long serialVersionUID = 5119995511797663781L;
 	private static final String[] LABELS = {"Timestamp", "Crash On", "Longitude", "Latitude"};
     private static final String[] FIELDS = {"#timeAsString(#obj.timestamp)", "#obj.celestialBody.name", "#toDegrees(#obj.coordinates.phi)", "90 - #toDegrees(#obj.coordinates.theta)"};
 

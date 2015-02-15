@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import com.momega.spacesimulator.model.CartesianState;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.KeplerianOrbit;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.model.TrajectoryType;
@@ -26,7 +27,7 @@ public class KeplerianPropagator implements Propagator {
     private UserPointService userPointService;
 
     @Override
-    public void computePosition(MovingObject movingObject, RunStep step) {
+    public void computePosition(Model model, MovingObject movingObject, RunStep step) {
         KeplerianOrbit keplerianOrbit = movingObject.getKeplerianElements().getKeplerianOrbit();
 
         KeplerianElements keplerianElements = KeplerianElements.fromTimestamp(keplerianOrbit, step.getNewTimestamp());

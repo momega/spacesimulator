@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.momega.spacesimulator.model.Maneuver;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.Orientation;
 import com.momega.spacesimulator.model.Propulsion;
 import com.momega.spacesimulator.model.Spacecraft;
@@ -29,7 +30,7 @@ public class ThrustModel implements ForceModel {
     private HistoryPointService historyPointService;
 
     @Override
-    public Vector3d getAcceleration(Spacecraft spacecraft, double dt) {
+    public Vector3d getAcceleration(Model model, Spacecraft spacecraft, double dt) {
         Propulsion propulsion = findPropulsion(spacecraft);
 
         if (propulsion == null) {

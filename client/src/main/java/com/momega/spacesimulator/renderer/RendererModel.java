@@ -10,6 +10,7 @@ import com.momega.spacesimulator.service.ModelSerializer;
 import com.momega.spacesimulator.service.ModelService;
 import com.momega.spacesimulator.service.UserPointService;
 import com.momega.spacesimulator.swing.PositionProvidersModel;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +20,7 @@ import javax.media.opengl.GL2;
 import javax.media.opengl.GLAutoDrawable;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
 import java.awt.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -119,9 +121,10 @@ public class RendererModel {
     }
 
     public void updateViewData(GLAutoDrawable drawable) {
-    	Camera camera = ModelHolder.getModel().getCamera();
-    	Timestamp time = ModelHolder.getModel().getTime();
-        for(PositionProvider positionProvider : modelService.findAllPositionProviders(time)) {
+    	Model model = ModelHolder.getModel(); 
+    	Camera camera = model.getCamera();
+    	Timestamp time = model.getTime();
+        for(PositionProvider positionProvider : modelService.findAllPositionProviders(model, time)) {
             addViewCoordinates(drawable, positionProvider, camera);
         }
     }
@@ -300,11 +303,12 @@ public class RendererModel {
 
     public List<PositionProvider> selectPositionProviders() {
     	List<PositionProvider> result = new ArrayList<>();
-    	if (ModelHolder.getModel()==null) {
+    	Model model = ModelHolder.getModel(); 
+    	if (model==null) {
     		return result;
     	}
-    	Timestamp time = ModelHolder.getModel().getTime();
-    	List<PositionProvider> list = modelService.findAllPositionProviders(time);
+    	Timestamp time = model.getTime();
+    	List<PositionProvider> list = modelService.findAllPositionProviders(model, time);
     	for(PositionProvider positionProvider : list) {
     		if (isPointsVisible() && positionProvider instanceof AbstractOrbitalPoint) {
     			AbstractOrbitalPoint orbitalPoint = (AbstractOrbitalPoint) positionProvider;
@@ -333,7 +337,8 @@ public class RendererModel {
             Vector3d modelCoordinates = GLUtils.getModelCoordinates(gl, screenCoordinates);
             logger.info("model coordinates = {}", modelCoordinates.asArray());
 
-            MovingObject movingObject = modelService.findMovingObjectByIndex(entry.getKey().intValue());
+            Model model = ModelHolder.getModel(); 
+            MovingObject movingObject = modelService.findMovingObjectByIndex(model, entry.getKey().intValue());
             UserPointService userPointService = Application.getInstance().getService(UserPointService.class);
             userPointService.createUserOrbitalPoint(movingObject, modelCoordinates, ModelHolder.getModel().getTime());
         }
@@ -605,7 +610,7 @@ public class RendererModel {
     }
 
     public void createFromBuilder(ModelBuilder modelBuilder) {
-        Application.getInstance().init(modelBuilder);
+        ModelHolder.setModel(Application.getInstance().init(modelBuilder));
         setModelReady(true);
 
         fireModelEvent(new StatusBarEvent(ModelHolder.getModel(), "Model created from builder '" + modelBuilder.getName() + "'"));
@@ -616,7 +621,7 @@ public class RendererModel {
     }
     
     public void removeSpacecraft(Spacecraft spacecraft) {
-    	modelService.removeMovingObject(spacecraft);
+    	modelService.removeMovingObject(ModelHolder.getModel(), spacecraft);
     }
     
     public void runDelayedActions(GLAutoDrawable drawable, ModelRenderer renderer, DefaultWindow window) {

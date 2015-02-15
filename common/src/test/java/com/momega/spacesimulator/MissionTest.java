@@ -1,15 +1,17 @@
 package com.momega.spacesimulator;
 
+import java.util.List;
+
+import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
+
 import com.momega.spacesimulator.builder.MoonMission2ModelBuilder;
 import com.momega.spacesimulator.model.Apsis;
 import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.Spacecraft;
-import junit.framework.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import java.util.List;
 
 /**
  * Created by martin on 1/9/15.
@@ -37,13 +39,12 @@ public class MissionTest extends AbstractMissionTest {
     @Test
     public void runMission() {
         runTo(CHECK_TIME);
-
-        List<Spacecraft> list = modelService.findAllSpacecrafs();
+        List<Spacecraft> list = modelService.findAllSpacecrafs(model);
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());
 
-        CelestialBody moon = (CelestialBody) modelService.findMovingObjectByName("Moon");
-        CelestialBody earth = (CelestialBody) modelService.findMovingObjectByName("Earth");
+        CelestialBody moon = (CelestialBody) modelService.findMovingObjectByName(model, "Moon");
+        CelestialBody earth = (CelestialBody) modelService.findMovingObjectByName(model, "Earth");
 
         Spacecraft spacecraft = list.get(0);
         Assert.assertNotNull(spacecraft.getExitSoiOrbitalPoint());

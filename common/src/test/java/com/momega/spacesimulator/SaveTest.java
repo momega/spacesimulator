@@ -14,7 +14,6 @@ import org.junit.Test;
 import com.momega.spacesimulator.builder.SimpleSolarSystemModelBuilder;
 import com.momega.spacesimulator.context.AppConfig;
 import com.momega.spacesimulator.context.DefaultApplication;
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.service.ModelSerializer;
 
@@ -38,7 +37,7 @@ public class SaveTest extends AbstractMissionTest {
         
         ModelSerializer serializer = application.getService(ModelSerializer.class);
         StringWriter writer = new StringWriter();
-        serializer.save(ModelHolder.getModel(), writer);
+        serializer.save(model, writer);
         String s = writer.getBuffer().toString();
         StringReader reader = new StringReader(s);
         Model m = serializer.load(reader);

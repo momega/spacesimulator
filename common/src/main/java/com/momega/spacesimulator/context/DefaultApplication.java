@@ -18,7 +18,7 @@ import com.momega.spacesimulator.utils.TimeUtils;
  */
 public class DefaultApplication extends AbstractSpringApplication {
 
-    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultApplication.class);
 
     private final ModelWorker modelWorker;
 
@@ -27,8 +27,8 @@ public class DefaultApplication extends AbstractSpringApplication {
         modelWorker = getService(ModelWorker.class);
     }
 
-    public void next(RunStep step) {
-        modelWorker.next(step);
+    public void next(Model model, RunStep step) {
+        modelWorker.next(model, step);
     }
 
     public ModelBuilder createBuilder(String builderClassName) {
@@ -41,22 +41,23 @@ public class DefaultApplication extends AbstractSpringApplication {
         }
     }
 
-    public void init(Class<? extends ModelBuilder> modelBuilderClass) {
+    public Model init(Class<? extends ModelBuilder> modelBuilderClass) {
         ModelBuilder modelBuilder = getBeanOfClass(modelBuilderClass);
-        init(modelBuilder);
+        Model model = init(modelBuilder);
+        return model;
     }
 
-    public void init(ModelBuilder modelBuilder) {
+    public Model init(ModelBuilder modelBuilder) {
         Model model = modelBuilder.build();
-        ModelHolder.setModel(model);
         logger.info("execute first second at time = {}", TimeUtils.timeAsString(model.getTime()));
 
         RunStep step = RunStep.create(model.getTime(), 1.0, true);
-        next(step);
+        next(model, step);
         logger.info("model data built");
+        return model;
     }
 
     public void dispose() {
-        logger.info("dispose time = {}",  TimeUtils.timeAsString(ModelHolder.getModel().getTime()));
+    	super.dispose();
     }
 }

@@ -35,8 +35,8 @@ import com.momega.spacesimulator.model.Vector3d;
 import com.momega.spacesimulator.service.HistoryPointService;
 import com.momega.spacesimulator.service.KeplerianPropagator;
 import com.momega.spacesimulator.service.ManeuverService;
-import com.momega.spacesimulator.service.SoiMapCache;
 import com.momega.spacesimulator.service.SpacecraftService;
+import com.momega.spacesimulator.service.SphereOfInfluenceService;
 import com.momega.spacesimulator.service.TargetService;
 import com.momega.spacesimulator.utils.MathUtils;
 import com.momega.spacesimulator.utils.TimeUtils;
@@ -44,9 +44,6 @@ import com.momega.spacesimulator.utils.VectorUtils;
 
 /**
  * Super class for all model builders.
- * Implementation note:
- * The builder should never used {@link com.momega.spacesimulator.context.ModelHolder}. The reason is obvious. The ModelHolder
- * contains the current running model and builder should not manipulate instance within the running model
  * Created by martin on 6/18/14.
  */
 public abstract class AbstractModelBuilder implements ModelBuilder {
@@ -75,7 +72,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
     private SpacecraftService spacecraftService;
 
     @Autowired
-    private SoiMapCache soiMapCache;
+    private SphereOfInfluenceService sphereOfInfluenceService;
     
     /**
      * Initialize model and  returns the instance
@@ -86,7 +83,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
         initPlanets();
         initSpacecrafts();
         initCamera();
-        soiMapCache.clear();
+        sphereOfInfluenceService.clear(model);
         logger.info("model initialized");
         return model;
     }

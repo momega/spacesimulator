@@ -1,5 +1,6 @@
 package com.momega.spacesimulator.service;
 
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.RunStep;
 
@@ -11,10 +12,11 @@ public interface Propagator {
     /**
      * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation.
      * Some propagator may also set new timestamp
+     * @param model the model
      * @param movingObject the moving object
      * @param step new timestamp
      */
-    void computePosition(MovingObject movingObject, RunStep step);
+    void computePosition(Model model, MovingObject movingObject, RunStep step);
 
     /**
      * Indicates whether or not the propagator supports the trajectory of the moving object 

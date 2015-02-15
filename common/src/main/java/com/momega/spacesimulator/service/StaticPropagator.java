@@ -2,6 +2,7 @@ package com.momega.spacesimulator.service;
 
 import org.springframework.stereotype.Component;
 
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.model.TrajectoryType;
@@ -15,7 +16,7 @@ import com.momega.spacesimulator.model.TrajectoryType;
 public class StaticPropagator implements Propagator {
 
     @Override
-    public void computePosition(MovingObject movingObject, RunStep step) {
+    public void computePosition(Model model, MovingObject movingObject, RunStep step) {
     	movingObject.setTimestamp(step.getNewTimestamp());
     }
 

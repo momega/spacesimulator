@@ -1,8 +1,10 @@
 package com.momega.spacesimulator.service;
 
 import com.momega.spacesimulator.model.CelestialBody;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Vector3d;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,10 +24,10 @@ public class GravityModel implements ForceModel {
      * @param spacecraft the spacecraft
      * @return total acceleration/force
      */
-    public Vector3d getAcceleration(Spacecraft spacecraft, double dt) {
+    public Vector3d getAcceleration(Model model, Spacecraft spacecraft, double dt) {
         Vector3d position = spacecraft.getPosition();
         Vector3d a = Vector3d.ZERO;
-        for(CelestialBody celestialBody : modelService.findAllCelestialBodies()) {
+        for(CelestialBody celestialBody : modelService.findAllCelestialBodies(model)) {
             Vector3d r = celestialBody.getCartesianState().getPosition().subtract(position);
             double dist3 = r.lengthSquared() * r.length();
             a = a.scaleAdd(celestialBody.getGravitationParameter() / dist3, r); // a(i) = a(i) + G*M * r(i) / r^3

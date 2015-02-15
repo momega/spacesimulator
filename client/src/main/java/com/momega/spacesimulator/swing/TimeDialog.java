@@ -33,6 +33,7 @@ import org.springframework.util.CollectionUtils;
 import com.momega.spacesimulator.context.Application;
 import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.HistoryPoint;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.opengl.DefaultWindow;
@@ -284,10 +285,11 @@ public class TimeDialog extends JDialog {
         @Override
         protected Void doInBackground() throws Exception {
         	double warpFactor = RendererModel.getInstance().getWarpFactor();
-        	RunStep runStep = RunStep.create(ModelHolder.getModel().getTime(), warpFactor, true);
-            while(ModelHolder.getModel().getTime().compareTo(endTime)<=0) {
-                Application.getInstance().next(runStep);
-                publish(ModelHolder.getModel().getTime());
+        	Model model = ModelHolder.getModel();
+        	RunStep runStep = RunStep.create(model.getTime(), warpFactor, true);
+            while(model.getTime().compareTo(endTime)<=0) {
+                Application.getInstance().next(model, runStep);
+                publish(model.getTime());
                 if (Thread.interrupted()) {
                 	return null;
                 }

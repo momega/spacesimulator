@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.RotatingObject;
 import com.momega.spacesimulator.model.RunStep;
@@ -22,7 +23,7 @@ public class RotationPropagator implements Propagator {
     private static final Logger logger = LoggerFactory.getLogger(RotationPropagator.class);
 
 	@Override
-	public void computePosition(MovingObject movingObject, RunStep step) {
+	public void computePosition(Model model, MovingObject movingObject, RunStep step) {
 		if (step.isRunningHeadless()) {
 			return;
 		}

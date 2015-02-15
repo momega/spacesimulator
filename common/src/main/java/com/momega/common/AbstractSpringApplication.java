@@ -46,4 +46,8 @@ public abstract class AbstractSpringApplication {
         throw new IllegalArgumentException("no exact match bean found in the context");
     }
 
+	public void dispose() {
+		// do nothing
+	}
+
 }

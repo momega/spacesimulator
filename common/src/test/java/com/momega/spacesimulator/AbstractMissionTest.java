@@ -3,9 +3,9 @@ package com.momega.spacesimulator;
 import com.momega.spacesimulator.builder.AbstractModelBuilder;
 import com.momega.spacesimulator.context.AppConfig;
 import com.momega.spacesimulator.context.DefaultApplication;
-import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.HistoryPointOrigin;
+import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.service.HistoryPointListener;
@@ -22,35 +22,37 @@ public abstract class AbstractMissionTest {
     private Timestamp startTime;
 
     protected ModelService modelService;
+    
+    protected Model model;
 
     protected HistoryPointService historyPointService;
 
     protected void setup(Class<? extends AbstractModelBuilder> modelBuilderClass) {
         application = new DefaultApplication(AppConfig.class);
-        application.init(modelBuilderClass);
-        startTime = ModelHolder.getModel().getTime();
+        model = application.init(modelBuilderClass);
+        startTime = model.getTime();
         modelService = application.getService(ModelService.class);
         historyPointService = application.getService(HistoryPointService.class);
         historyPointService.addHistoryPointListener(new HistoryPointListener() {
             @Override
             public void historyPointCreated(HistoryPoint historyPoint) {
                 if (HistoryPointOrigin.END.equals(historyPoint.getOrigin())) {
-                    modelService.removeMovingObject(historyPoint.getSpacecraft());
+                    modelService.removeMovingObject(model, historyPoint.getSpacecraft());
                 }
             }
         });
     }
 
     protected void runTo(int seconds) {
-        Timestamp current = ModelHolder.getModel().getTime();
+        Timestamp current = model.getTime();
         Timestamp requested = startTime.add(seconds);
         int steps = (int) requested.subtract(current);
         RunStep runStep = RunStep.create(current, 1.0, true);
         for(int i=0; i<steps; i++) {
-            application.next(runStep);
+            application.next(model, runStep);
             runStep.next();
         }
         runStep.setRunningHeadless(false);
-        application.next(runStep);
+        application.next(model, runStep);
     }
 }
