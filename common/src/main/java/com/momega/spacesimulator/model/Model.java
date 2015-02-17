@@ -16,6 +16,7 @@ public class Model {
     private SphereOfInfluence rootSoi;
     private transient Map<CelestialBody, SphereOfInfluence> soiMap = null;
     private Camera camera;
+    private String name;
 
     public Camera getCamera() {
         return camera;
@@ -63,6 +64,14 @@ public class Model {
     
     public void setSoiMap(Map<CelestialBody, SphereOfInfluence> soiMap) {
 		this.soiMap = soiMap;
+	}
+    
+    public void setName(String name) {
+		this.name = name;
+	}
+    
+    public String getName() {
+		return name;
 	}
 
 }

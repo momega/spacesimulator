@@ -24,7 +24,7 @@ public class ModelWorker {
     private CameraService cameraService;
 
     /**
-     * Next step of the model iteration
+     * Next step of the model iteration. If the model is unspecified, the method does nothing
      * @param model the model
      * @param step the run step
      */

@@ -30,10 +30,14 @@ public class MotionService {
     
     @Autowired
     private List<Propagator> propagators = new ArrayList<>();
+    
+    public MotionService() {
+    	logger.info("Motion service started...");
+    }
 
     /**
      * Moves all the moving object of the model
-     * @param model TODO
+     * @param model the model
      * @param step the computation step
      */
     public void move(Model model, RunStep step) {
@@ -47,7 +51,7 @@ public class MotionService {
     
     /**
      * Computes the position of and object in the time newTimestamp. The set new position, velocity and orientation
-     * @param model TODO
+     * @param model the model
      * @param movingObject the moving objects
      * @param step the computation step 
      */
