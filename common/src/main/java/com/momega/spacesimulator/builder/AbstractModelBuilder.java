@@ -79,6 +79,7 @@ public abstract class AbstractModelBuilder implements ModelBuilder {
      */
     public final Model build() {
         model = new Model();
+        model.setName(getName());
         initTime();
         initPlanets();
         initSpacecrafts();

@@ -1,4 +1,4 @@
-package com.momega.spacesimulator.conroller;
+package com.momega.spacesimulator.server.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;

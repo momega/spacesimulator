@@ -12,6 +12,7 @@ import com.momega.spacesimulator.context.DefaultApplication;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.model.Spacecraft;
+import com.momega.spacesimulator.service.ModelBuilderFactory;
 import com.momega.spacesimulator.service.ModelService;
 import com.momega.spacesimulator.service.UserPointService;
 
@@ -23,7 +24,7 @@ public class ApplicationTest {
     @Test
     public void runTest() {
         DefaultApplication application = new DefaultApplication(AppConfig.class);
-        Model model = application.init(SimpleSolarSystemModelBuilder.class);
+        Model model = application.getService(ModelBuilderFactory.class).init(SimpleSolarSystemModelBuilder.class);
         RunStep step = RunStep.create(model.getTime(), 1.0, true);
         for(int i=0; i<10000; i++) {
             application.next(model, step);

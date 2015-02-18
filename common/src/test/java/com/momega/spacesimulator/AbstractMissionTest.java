@@ -10,6 +10,7 @@ import com.momega.spacesimulator.model.RunStep;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.service.HistoryPointListener;
 import com.momega.spacesimulator.service.HistoryPointService;
+import com.momega.spacesimulator.service.ModelBuilderFactory;
 import com.momega.spacesimulator.service.ModelService;
 
 /**
@@ -29,7 +30,7 @@ public abstract class AbstractMissionTest {
 
     protected void setup(Class<? extends AbstractModelBuilder> modelBuilderClass) {
         application = new DefaultApplication(AppConfig.class);
-        model = application.init(modelBuilderClass);
+        model = application.getService(ModelBuilderFactory.class).init(modelBuilderClass);
         startTime = model.getTime();
         modelService = application.getService(ModelService.class);
         historyPointService = application.getService(HistoryPointService.class);

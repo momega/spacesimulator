@@ -15,15 +15,19 @@ import com.momega.spacesimulator.renderer.RendererModel;
 import com.momega.spacesimulator.renderer.StatusBarEvent;
 import com.momega.spacesimulator.service.HistoryPointListener;
 import com.momega.spacesimulator.service.HistoryPointService;
+import com.momega.spacesimulator.service.ModelBuilderFactory;
 import com.momega.spacesimulator.utils.TimeUtils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.SimpleCommandLinePropertySource;
+
 import com.momega.spacesimulator.controller.*;
 import com.momega.spacesimulator.swing.*;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
@@ -85,7 +89,7 @@ public class MainWindow extends DefaultWindow {
 		PropertySource<?> ps = new SimpleCommandLinePropertySource(args);
 		String builderClassName = (String) ps.getProperty(BUILDER_CLASS_NAME_OPTION);
 		if (builderClassName != null) {
-			ModelBuilder modelBuilder = Application.getInstance().createBuilder(builderClassName);
+			ModelBuilder modelBuilder = Application.getInstance().getService(ModelBuilderFactory.class).createBuilder(builderClassName);
 			RendererModel.getInstance().setModelBuilderRequested(modelBuilder);
 			return;
 		}

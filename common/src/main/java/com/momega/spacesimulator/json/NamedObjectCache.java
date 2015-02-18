@@ -10,7 +10,7 @@ import com.momega.spacesimulator.model.NamedObject;
 
 /**
  * @author martin
- *
+ * NOTE: The class is not thread safe
  */
 public class NamedObjectCache {
 

@@ -6,6 +6,7 @@ import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.*;
 import com.momega.spacesimulator.opengl.DefaultWindow;
 import com.momega.spacesimulator.opengl.GLUtils;
+import com.momega.spacesimulator.service.ModelBuilderFactory;
 import com.momega.spacesimulator.service.ModelSerializer;
 import com.momega.spacesimulator.service.ModelService;
 import com.momega.spacesimulator.service.UserPointService;
@@ -610,7 +611,7 @@ public class RendererModel {
     }
 
     public void createFromBuilder(ModelBuilder modelBuilder) {
-        ModelHolder.setModel(Application.getInstance().init(modelBuilder));
+        ModelHolder.setModel(Application.getInstance().getService(ModelBuilderFactory.class).init(modelBuilder));
         setModelReady(true);
 
         fireModelEvent(new StatusBarEvent(ModelHolder.getModel(), "Model created from builder '" + modelBuilder.getName() + "'"));
