@@ -32,4 +32,8 @@ public class ModelDatabase {
 		Integer i = Integer.valueOf(id);
 		models.remove(i);
 	}
+	
+	public Map<Integer, Model> getModels() {
+		return models;
+	}
 }
