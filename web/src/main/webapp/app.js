@@ -1,4 +1,4 @@
-var spaceSimulatorApp = angular.module('spaceSimulatorApp', ['ngRoute', 'ui.bootstrap']);
+var spaceSimulatorApp = angular.module('spaceSimulatorApp', ['ngRoute', 'ngResource', 'ui.bootstrap']);
 
 spaceSimulatorApp.directive( 'goClick', function ( $location ) {
 	  return function ( scope, element, attrs ) {

@@ -1,6 +1,6 @@
 'use strict';
 
-spaceSimulatorApp.factory('projectService', ['$http', 'modelService', function($http, modelService) {
+spaceSimulatorApp.factory('textureService', ['$http', 'modelService', function($http, modelService) {
 	
 	var factory = {};
 	var texturesMap = {};

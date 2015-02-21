@@ -2,7 +2,7 @@
 
 var AU = 149597870700.0;
 
-spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 'modelService', 'projectService', function($scope, $routeParams, modelService, projectService) {
+spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 'modelService', 'textureService', function($scope, $routeParams, modelService, textureService) {
 	
     $scope.details = {
     		basic: {open: true, disabled: true},
@@ -27,7 +27,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	   $scope.projectName = '1';
    }
    console.log('project name = ' + $scope.projectName);
-   projectService.load($scope.projectName, function() {
+   textureService.load($scope.projectName, function() {
 	   modelService.load($scope.projectName, $scope.snapshot, function() {
 		   $scope.prepareModel();
 		   $scope.createScene();
@@ -63,14 +63,14 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	    		t.makeRotationX(Math.PI/2);
 	    		geometry.applyMatrix(t);
 	    		
-	    		var texture = projectService.getTextureName(celestialBody.name);
+	    		var texture = textureService.getTextureName(celestialBody.name);
 	    		var material = new THREE.MeshBasicMaterial( { map: texture } );
 	    		var sphere = new THREE.Mesh( geometry, material );
 	    		sphere.body = celestialBody;
 	    		sphere.position.copy(position);
 	    		$scope.scene.add( sphere );
 	    		
-	    		var circleTexture = projectService.getTextureName('CIRCLE');
+	    		var circleTexture = textureService.getTextureName('CIRCLE');
 	    		var spriteMaterial = new THREE.SpriteMaterial({map: circleTexture});
         		var sprite = new THREE.Sprite( spriteMaterial );
         		sprite.position.copy(position);
@@ -206,7 +206,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     } 
     
     $scope.createTexturePoint = function(obj, textureName) {
-    	var texture = projectService.getTextureName(textureName);
+    	var texture = textureService.getTextureName(textureName);
     	texture.needsUpdate = true;
 		var spriteMaterial = new THREE.SpriteMaterial({map: texture});
 		var sprite = new THREE.Sprite( spriteMaterial );

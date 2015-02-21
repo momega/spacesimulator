@@ -16,9 +16,9 @@ public class ModelController {
 	@Autowired
 	private ModelDatabase modelDatabase;
 	
-	@RequestMapping(value = "/get.do/{id}", method = RequestMethod.GET)
+	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 	public Model getModel(@PathVariable("id") int id) {
-		Model m =  modelDatabase.getModel(id);
+		Model m =  modelDatabase.getModel(id).getModel();
 		return m;
 	}
 }
