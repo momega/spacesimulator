@@ -18,6 +18,10 @@ spaceSimulatorApp.controller('ProjectController', ['$scope', '$routeParams', 'Bu
 		})
 	}
 	
+	$scope.refreshProjects = function() {
+		$scope.projects = Project.query();
+	}
+	
 }]);
 
 spaceSimulatorApp.controller('HelpController', ['$scope', function($scope) {
