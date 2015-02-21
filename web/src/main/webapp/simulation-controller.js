@@ -5,30 +5,27 @@ var AU = 149597870700.0;
 spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 'modelService', 'textureService', function($scope, $routeParams, modelService, textureService) {
 	
     $scope.details = {
-    		basic: {open: true, disabled: true},
-    		spacecraft: {open: false, disabled: true},
-    		physical: {open: false, disabled: true},
-    	    orbital: {open: false, disabled: true}
+    	basic: {open: true, disabled: true},
+    	spacecraft: {open: false, disabled: true},
+    	physical: {open: false, disabled: true},
+    	orbital: {open: false, disabled: true}
     };
     
     $scope.prepareModel = function() {
     	console.log("Preparing model...");
     	$scope.time = modelService.getTime();
 	    $scope.timeInMillis = new Date($scope.time * 1000);
+	    $scope.rootObjects = modelService.getRootObjects();
 	    $scope.positionProviders = modelService.getPositionProviders($scope.time);
 	    $scope.cameraTarget = modelService.getCamera().targetObject;
 	    $scope.selectedObject = null;
 	    console.log("camera target:" + $scope.cameraTarget);
     }
 
-   $scope.snapshot = 3;
-   $scope.projectName = $routeParams.projectName;
-   if ($scope.projectName === undefined) {
-	   $scope.projectName = '1';
-   }
-   console.log('project name = ' + $scope.projectName);
-   textureService.load($scope.projectName, function() {
-	   modelService.load($scope.projectName, $scope.snapshot, function() {
+   $scope.pid = $routeParams.pid;
+   console.log('project id = ' + $scope.pid);
+   textureService.load($scope.pid, function() {
+	   modelService.load($scope.pid, function() {
 		   $scope.prepareModel();
 		   $scope.createScene();
 	   });

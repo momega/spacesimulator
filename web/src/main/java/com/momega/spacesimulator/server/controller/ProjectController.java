@@ -53,8 +53,8 @@ public class ProjectController {
 	}
 
 	@RequestMapping(value = "/item/{id}", method = RequestMethod.GET)
-	public Project getItem(@PathVariable("id") int id) {
-		logger.info("id = {}", id);
+	public Project get(@PathVariable("id") int id) {
+		logger.info("get id = {}", id);
 		Model m = modelDatabase.getModel(id).getModel();
 		Project p = createProject(id, m);
 		return p;
@@ -71,7 +71,7 @@ public class ProjectController {
 				CelestialBody celestialBody = (CelestialBody) mo;
 				texture.setName(mo.getName());
 				texture.setTextureFileName(celestialBody.getTextureFileName());
-				p.getMovingObjects().add(texture);
+				p.getCelestialBodies().add(texture);
 			}
 		}
 		return p;

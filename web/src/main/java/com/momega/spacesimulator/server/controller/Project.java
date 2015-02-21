@@ -12,14 +12,21 @@ import java.util.List;
  */
 public class Project extends ProjectDetail {
 
-	private List<Texture> movingObjects = new ArrayList<>();
+	private List<Texture> celestialBodies = new ArrayList<>();
 
-	public List<Texture> getMovingObjects() {
-		return movingObjects;
+	/**
+	 * @return the celestialBodies
+	 */
+	public List<Texture> getCelestialBodies() {
+		return celestialBodies;
 	}
 
-	public void setMovingObjects(List<Texture> movingObjects) {
-		this.movingObjects = movingObjects;
+	/**
+	 * @param celestialBodies
+	 *            the celestialBodies to set
+	 */
+	public void setCelestialBodies(List<Texture> celestialBodies) {
+		this.celestialBodies = celestialBodies;
 	}
 
 }

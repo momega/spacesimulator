@@ -1,15 +1,16 @@
 'use strict';
 
-spaceSimulatorApp.factory('textureService', ['$http', 'modelService', function($http, modelService) {
+spaceSimulatorApp.factory('textureService', ['$http', 'Project', function($http, Project) {
 	
 	var factory = {};
 	var texturesMap = {};
 	var imagesLoaded = 0;
-	var imagesCount = 0;	
+	var imagesCount = 0;
+	var project;
 	
-	factory.load = function(projectName, callback) {
-		modelService.load(projectName, null, function() {
-			var objs = modelService.getCelestialBodies();
+	factory.load = function(pid, callback) {
+		project = Project.item({id: pid}, function() {
+			var objs = project.celestialBodies;
 			factory.loadTextures(objs, function() {
 				console.log('All texture loaded');
 				callback();
@@ -22,8 +23,8 @@ spaceSimulatorApp.factory('textureService', ['$http', 'modelService', function($
 	}
 	
 	factory.loadTextures = function(textureObjects, callback) {
-		    imagesLoaded = 0;
-		    imagesCount = textureObjects.length + 9 + 7; // + 7 icons;
+		   imagesLoaded = 0;
+		   imagesCount = textureObjects.length + 9 + 7; // + 7 icons;
 			console.log(imagesCount +' about to load');
 			for(var i=0; i<textureObjects.length; i++) {
 				var to = textureObjects[i];

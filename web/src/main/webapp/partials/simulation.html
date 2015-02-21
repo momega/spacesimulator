@@ -25,18 +25,8 @@
 <div class="container-fluid">
 	<div class="row main-row">
 		<div class="col-lg-8">
-			<form class="form-inline">
-				<small>Time:{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
-				<div class="form-group form-group-sm">
-					<label class="control-label" for="txtTime">Next Time:</label>
-					<div class="input-group" id="txtTime">
-						<input type="datetime-local" class="form-control input-sm input-large" ng-model="timeInMillis">
-						<span class="input-group-btn">
-							<button class="btn btn-default input-sm" type="button" ng-click="reloadScene()">Take!</button>
-						</span>
-					</div>
-				</div>
-			</form>
+			<small>Time:{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
+			<button type="button" class="btn btn-primary btn-xs" ng-click="reloadScene()">Get Current</button>
 		</div>
 		
 		<div class="col-lg-4 detail-panel">
@@ -44,7 +34,7 @@
 				<div class="form-group form-group-sm">
 					<label class="control-label" for="cmbCamera">Selected Target:</label>
 					<div class="btn-group" id="cmbCamera">
-						<button class="btn btn-default btn-sm dropdown-toggle"
+						<button class="btn btn-default btn-xs dropdown-toggle"
 							type="button" data-toggle="dropdown" aria-expanded="false">{{cameraTarget}}<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu" role="menu">
@@ -55,7 +45,7 @@
 				<div class="form-group form-group-sm">
 					<label class="control-label" for="cmbSelected">Selected Object:</label>
 					<div class="btn-group" id="cmbSelected">
-						<button class="btn btn-default btn-sm dropdown-toggle"
+						<button class="btn btn-default btn-xs dropdown-toggle"
 							type="button" data-toggle="dropdown" aria-expanded="false">{{selectedObject.name}}<span class="caret"></span>
 						</button>
 						<ul class="dropdown-menu" role="menu">

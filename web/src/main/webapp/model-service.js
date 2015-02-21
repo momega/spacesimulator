@@ -1,22 +1,14 @@
 'use strict';
 
-spaceSimulatorApp.factory('modelService', ['$http', function($http) {
+spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 	var factory = {};
 	var model;
 	var db;
 
-	factory.load = function(project, snapshot, callback) {
-		var file = 'data/' + project;
-		if (snapshot != null) {
-			file = file.concat('-');
-			file = file.concat(snapshot);
-		}
-		file = file.concat('.json')
-		$http.get(file).success(function(data) {
-			model = data;
-			db = SpahQL.db(model);
-			console.log('time = ' + model.time.value);
-			callback();
+	factory.load = function(pid, callback) {
+		model = Model.get({id:pid}, function() {
+	      	db = SpahQL.db(model);
+			callback();  
 		});
 	}
 	

@@ -52,7 +52,7 @@ public class BuilderController {
 		
 		ModelRunnable runnable = new ModelRunnable(modelWorker, model, 1.0, true);
 		int id = modelDatabase.add(runnable);
-		taskExecutor.execute(runnable);
+		//taskExecutor.execute(runnable);
 		
 		logger.info("model with id executed {}", id);
 		

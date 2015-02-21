@@ -45,7 +45,7 @@ public class ModelBuilderFactory {
         Model model = modelBuilder.build();
         logger.info("execute first second at time = {}", TimeUtils.timeAsString(model.getTime()));
 
-        RunStep step = RunStep.create(model.getTime(), 1.0, true);
+        RunStep step = RunStep.create(model.getTime(), 1.0, false);
         modelWorker.next(model, step);
         logger.info("model data built");
         return model;
