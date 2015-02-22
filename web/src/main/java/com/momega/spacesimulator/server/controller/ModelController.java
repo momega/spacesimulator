@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.server.data.ModelDatabase;
 import com.momega.spacesimulator.server.data.ModelExecutor;
 import com.momega.spacesimulator.server.data.ModelRunnable;
@@ -40,4 +41,12 @@ public class ModelController {
 		modelExecutor.start(id, runnable);
 		return result;
 	}
+	
+	@RequestMapping(value = "/time/{id}", method = RequestMethod.GET)
+	public Timestamp time(@PathVariable("id") int id) {
+		logger.info("get time for id = {}", id);
+		ModelRunnable runnable = modelDatabase.get(id);
+		return runnable.getModel().getTime();
+	}
+	
 }

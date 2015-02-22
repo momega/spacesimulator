@@ -24,5 +24,6 @@ spaceSimulatorApp.factory('Model', ['$resource',
     function($resource){
 	    return $resource('', {}, {
          get: {method:'GET', params:{id: '@id', time: '@time'}, url:'model/get/:id?time=:time'},
+         time: {method:'GET', params:{id: '@id', time: '@time'}, url:'model/time/:id?time=:time'},
 	});
 }]);

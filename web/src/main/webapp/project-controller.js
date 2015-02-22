@@ -34,8 +34,16 @@ spaceSimulatorApp.controller('ProjectController', ['$scope', '$routeParams', 'Bu
 		$scope.projects = Project.query();
 	}
 	
+	if (loopId != null) {
+		clearTimeout(loopId);
+	}
+	
 }]);
 
 spaceSimulatorApp.controller('HelpController', ['$scope', function($scope) {
+	
+	if (loopId != null) {
+		clearTimeout(loopId);
+	}
 	
 }]);

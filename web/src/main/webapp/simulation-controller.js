@@ -14,6 +14,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     $scope.prepareModel = function() {
     	console.log("Preparing model...");
     	$scope.time = modelService.getTime();
+    	$scope.currentTime = $scope.time;
 	    $scope.timeInMillis = new Date($scope.time * 1000);
 	    $scope.positionProviders = modelService.getPositionProviders($scope.time);
     }
@@ -31,8 +32,17 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 		   console.log("camera target:" + $scope.cameraTarget);
 
 		   $scope.createScene();
+		   
+		   //loopId = setTimeout($scope.getCurrentTime, 1000);
 	   });
    });
+   
+   $scope.getCurrentTime = function() {
+	   modelService.getCurrentTime($scope.pid, function(time) {
+		   $scope.currentTime = time.value;
+	   });
+	   loopId = setTimeout($scope.getCurrentTime, 1000);
+   }
     
    $scope.createScene = function() {
     	console.log('Creating scene...');

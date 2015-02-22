@@ -1,3 +1,4 @@
+var loopId = null;
 
 function makeLabelTexture( message, parameters ) {
     if ( parameters === undefined ) parameters = {};

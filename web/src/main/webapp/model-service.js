@@ -12,6 +12,12 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 		});
 	}
 	
+	factory.getCurrentTime = function(pid, callback) {
+		var time = Model.time({id:pid, time: Date.now()}, function() {
+			callback(time);  
+		});
+	}
+	
 	/**
 	 * Gets all root objects of the model
 	 */

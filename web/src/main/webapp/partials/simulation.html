@@ -29,6 +29,10 @@
 		</div>
 		
 		<div class="col-lg-2">
+			<small>Current Time:{{currentTime*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>	
+		</div>
+		
+		<div class="col-lg-2">
 			<button ng-show="project.running" type="button" class="btn btn-default btn-xs" ng-click="reloadScene()">Get Current</button>
 		</div>
 		
@@ -37,9 +41,7 @@
 			<span ng-show="!project.running" class="label label-default">Stopped</span>
 		</div>
 
-		<div class="col-lg-2">
-			
-		</div>
+		
 		
 		<div class="col-lg-4 detail-panel">
 			<form class="form-inline">
