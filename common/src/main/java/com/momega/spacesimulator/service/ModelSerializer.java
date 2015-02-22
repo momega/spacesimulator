@@ -4,6 +4,8 @@
 package com.momega.spacesimulator.service;
 
 import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import org.slf4j.Logger;
@@ -39,12 +41,32 @@ public class ModelSerializer {
 		logger.info("model serialized");
 	}
 	
+	/**
+	 * Loads the model from the reader. The method is not thread safe
+	 * @param reader the reader
+	 * @return new instance
+	 */
 	public Model load(Reader reader) {
 		NamedObjectCache.getInstance().clear();
 		Gson gson = gsonFactory.getGson();
 		Model model = gson.fromJson(reader, Model.class);
 		logger.info("model deserialized");
 		return model;
+	}
+	
+	/**
+	 * Closes the model
+	 * @param model
+	 * @return
+	 * @see #save(Model, Writer)
+	 * @see #load(Reader)
+	 */
+	public Model clone(Model model) {
+		StringWriter sw = new StringWriter();
+		save(model, sw);
+		StringReader sr = new StringReader(sw.toString());
+		Model result = load(sr);
+		return result;
 	}
 
 }

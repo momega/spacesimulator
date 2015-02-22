@@ -24,12 +24,24 @@
 </nav>
 <div class="container-fluid">
 	<div class="row main-row">
-		<div class="col-lg-9">
+		<div class="col-lg-2">
 			<small>Time:{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
-			<button type="button" class="btn btn-default btn-xs" ng-click="reloadScene()">Get Current</button>
 		</div>
 		
-		<div class="col-lg-3 detail-panel">
+		<div class="col-lg-2">
+			<button ng-show="project.running" type="button" class="btn btn-default btn-xs" ng-click="reloadScene()">Get Current</button>
+		</div>
+		
+		<div class="col-lg-2">
+			<span ng-show="project.running" class="label label-default">Running</span>
+			<span ng-show="!project.running" class="label label-default">Stopped</span>
+		</div>
+
+		<div class="col-lg-2">
+			
+		</div>
+		
+		<div class="col-lg-4 detail-panel">
 			<form class="form-inline">
 				<div class="form-group form-group-sm">
 					<label class="control-label" for="cmbCamera">Selected Target:</label>
@@ -58,10 +70,10 @@
 	</div>
 	
 	<div class="row">
-		<div class="col-lg-9">
+		<div class="col-lg-8">
 			<div id="container">WEBGL container</div>
 		</div>
-		<div class="col-lg-3 detail-panel">
+		<div class="col-lg-4 detail-panel">
 			<accordion close-others="false">
 			    <accordion-group is-open="details.basic.open" ng-show="!details.basic.disabled">
 			        <accordion-heading>

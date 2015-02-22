@@ -22,7 +22,7 @@ public class CelestialBodySerializer extends AbstractSerializer<CelestialBody> {
 
     @Override
     public void write(JsonObject object, CelestialBody value, Gson gson) {
-        logger.info("name = {}, surface points = {}", value.getName(), value.getSurfacePoints().size());
+        logger.debug("name = {}, surface points = {}", value.getName(), value.getSurfacePoints().size());
     }
 
     @Override

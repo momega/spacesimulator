@@ -23,6 +23,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
    $scope.cameraDiff = null;
    console.log('project id = ' + $scope.pid);
    textureService.load($scope.pid, function() {
+	   $scope.project = textureService.getProject();
 	   modelService.load($scope.pid, function() {
 		   $scope.prepareModel();
 		   
@@ -84,32 +85,32 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     			var spacecraft = celestialBody;
     			$scope.createSpacecraft(spacecraft);
     			
-//    			if (spacecraft.trajectory.apoapsis) {
-//    				$scope.createTexturePoint(spacecraft.trajectory.apoapsis, 'APOAPSIS');
-//    			}
-//    			
-//    			if (spacecraft.trajectory.periapsis) {
-//    				$scope.createTexturePoint(spacecraft.trajectory.periapsis, 'PERIAPSIS');
-//    			}
+    			if (spacecraft.trajectory.apoapsis) {
+    				$scope.createTexturePoint(spacecraft.trajectory.apoapsis, 'APOAPSIS');
+    			}
     			
-//    			var maneuver = modelService.findActiveOrNextManeuver(spacecraft, $scope.time);
-//    			if (maneuver != null) {
-//    				$scope.createTexturePoint(maneuver.start, 'M_START');
-//    				$scope.createTexturePoint(maneuver.end, 'M_END');
-//    			}
-//    			
-//    			var target = spacecraft.target;
-//    			if (target != null) {
-//    				for(var j=0; j<target.orbitIntersections.length; j++) {
-//    					var intersection = target.orbitIntersections[j];
-//    					$scope.createTexturePoint(intersection, 'T_INTERSECTION');
-//    				}
-//    			}
-//    			
-//    			var exitSoi = spacecraft.exitSoiOrbitalPoint;
-//				if (exitSoi != null) {
-//					$scope.createTexturePoint(exitSoi, 'EXIT_SOI');
-//				}
+    			if (spacecraft.trajectory.periapsis) {
+    				$scope.createTexturePoint(spacecraft.trajectory.periapsis, 'PERIAPSIS');
+    			}
+    			
+    			var maneuver = modelService.findActiveOrNextManeuver(spacecraft, $scope.time);
+    			if (maneuver != null) {
+    				$scope.createTexturePoint(maneuver.start, 'M_START');
+    				$scope.createTexturePoint(maneuver.end, 'M_END');
+    			}
+    			
+    			var target = spacecraft.target;
+    			if (target != null) {
+    				for(var j=0; j<target.orbitIntersections.length; j++) {
+    					var intersection = target.orbitIntersections[j];
+    					$scope.createTexturePoint(intersection, 'T_INTERSECTION');
+    				}
+    			}
+    			
+    			var exitSoi = spacecraft.exitSoiOrbitalPoint;
+				if (exitSoi != null) {
+					$scope.createTexturePoint(exitSoi, 'EXIT_SOI');
+				}
     		}
     		
     		if (celestialBody.keplerianElements!=null) {

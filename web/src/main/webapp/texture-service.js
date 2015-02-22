@@ -18,6 +18,10 @@ spaceSimulatorApp.factory('textureService', ['$http', 'Project', function($http,
 		});
 	}
 	
+	factory.getProject = function() {
+		return project;
+	}
+	
 	factory.getTextureName = function(textureName) {
 		return texturesMap[textureName];
 	}

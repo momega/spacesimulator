@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.server.data.ModelDatabase;
+import com.momega.spacesimulator.server.data.ModelExecutor;
+import com.momega.spacesimulator.server.data.ModelRunnable;
+import com.momega.spacesimulator.service.ModelSerializer;
 
 @RestController
 @RequestMapping("/model")
@@ -20,10 +23,21 @@ public class ModelController {
 	@Autowired
 	private ModelDatabase modelDatabase;
 	
+	@Autowired
+	private ModelExecutor modelExecutor;
+	
+	@Autowired
+	private ModelSerializer modelSerializer;
+	
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 	public Model get(@PathVariable("id") int id) {
-   	logger.info("get id = {}", id);
-		Model m =  modelDatabase.get(id).getModel();
-		return m;
+		logger.info("get id = {}", id);
+		ModelRunnable runnable = modelDatabase.get(id);
+		Model m = modelExecutor.stop(id, runnable);
+		Model result = modelSerializer.clone(m);
+		runnable = modelExecutor.create(m);
+		modelDatabase.add(id, runnable);
+		modelExecutor.start(id, runnable);
+		return result;
 	}
 }
