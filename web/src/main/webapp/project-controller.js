@@ -18,6 +18,18 @@ spaceSimulatorApp.controller('ProjectController', ['$scope', '$routeParams', 'Bu
 		})
 	}
 	
+	$scope.resumeProject = function(project) {
+		Project.resume({id: project.id}, function () {
+			$scope.projects = Project.query();
+		})
+	}
+	
+	$scope.stopProject = function(project) {
+		Project.stop({id: project.id}, function () {
+			$scope.projects = Project.query();
+		})
+	}
+	
 	$scope.refreshProjects = function() {
 		$scope.projects = Project.query();
 	}

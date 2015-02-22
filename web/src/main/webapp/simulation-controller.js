@@ -162,9 +162,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     }
 
     $scope.reloadScene = function() {
-    	$scope.snapshot++;
-    	console.log('Snapshot = ' + $scope.snapshot);
-    	modelService.load($scope.projectName, $scope.snapshot, function() {
+    	modelService.load($scope.projectName, function() {
     		$scope.prepareModel();
     		$scope.createScene();
     	});

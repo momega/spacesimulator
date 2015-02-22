@@ -23,7 +23,7 @@ public class ModelController {
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 	public Model get(@PathVariable("id") int id) {
    	logger.info("get id = {}", id);
-		Model m =  modelDatabase.getModel(id).getModel();
+		Model m =  modelDatabase.get(id).getModel();
 		return m;
 	}
 }

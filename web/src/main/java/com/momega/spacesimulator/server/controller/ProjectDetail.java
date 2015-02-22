@@ -14,6 +14,7 @@ public class ProjectDetail {
 	private int id;
 	private String name;
 	private Timestamp time;
+	private boolean running;
 	
 	public int getId() {
 		return id;
@@ -32,6 +33,14 @@ public class ProjectDetail {
 	}
 	public void setTime(Timestamp time) {
 		this.time = time;
+	}
+	
+	public void setRunning(boolean running) {
+		this.running = running;
+	}
+	
+	public boolean isRunning() {
+		return running;
 	}
 
 }

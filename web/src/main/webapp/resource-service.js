@@ -13,7 +13,9 @@ spaceSimulatorApp.factory('Project', ['$resource',
 	    return $resource('', {}, {
 	    	query: {method:'GET', isArray:true, url:'project/list'},
 	    	close: {method:'GET', params:{id: '@id'}, url:'project/close/:id'},
-         item: {method:'GET', params:{id: '@id'}, url:'project/item/:id'},
+	    	item: {method:'GET', params:{id: '@id'}, url:'project/item/:id'},
+	    	resume: {method:'GET', params:{id: '@id'}, url:'project/resume/:id'},
+	    	stop: {method:'GET', params:{id: '@id'}, url:'project/stop/:id'},
 	});
 }]);
 

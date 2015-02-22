@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.server.data.ModelDatabase;
+import com.momega.spacesimulator.server.data.ModelExecutor;
+import com.momega.spacesimulator.server.data.ModelRunnable;
 import com.momega.spacesimulator.service.ModelBuilderFactory;
-import com.momega.spacesimulator.service.ModelRunnable;
-import com.momega.spacesimulator.service.ModelWorker;
 
 @RestController
 @RequestMapping("/builder")
@@ -36,13 +35,10 @@ public class BuilderController {
 	private ModelDatabase modelDatabase;
 	
 	@Autowired
+	private ModelExecutor modelExecutor;
+	
+	@Autowired
 	private ModelBuilderFactory modelBuilderFactory;
-	
-	@Autowired
-	private ModelWorker modelWorker;
-	
-	@Autowired
-	private TaskExecutor taskExecutor;
 
 	@RequestMapping(value = "/build/{builderName}", method = RequestMethod.GET)
 	public int build(@PathVariable("builderName") String builderName) {
@@ -50,10 +46,9 @@ public class BuilderController {
 		ModelBuilder modelBuilder = modelBuilderFactory.createBuilder(BUILDERS_PACKAGE + "." + builderName);
 		Model model = modelBuilderFactory.init(modelBuilder);
 		
-		ModelRunnable runnable = new ModelRunnable(modelWorker, model, 1.0, true);
+		ModelRunnable runnable = modelExecutor.create(model);
 		int id = modelDatabase.add(runnable);
-		//taskExecutor.execute(runnable);
-		
+		modelExecutor.start(id, runnable);
 		logger.info("model with id executed {}", id);
 		
 		return id;

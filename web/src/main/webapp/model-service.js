@@ -6,7 +6,7 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 	var db;
 
 	factory.load = function(pid, callback) {
-		model = Model.get({id:pid}, function() {
+		model = Model.get({id:pid, time: Date.now()}, function() {
 	      	db = SpahQL.db(model);
 			callback();  
 		});

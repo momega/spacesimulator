@@ -5,33 +5,25 @@ import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.task.TaskExecutor;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.GsonHttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import com.momega.spacesimulator.json.GsonFactory;
-import com.momega.spacesimulator.server.data.ModelDatabase;
 import com.momega.spacesimulator.server.util.ExtendedGsonHttpMessageConverter;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = "com.momega.spacesimulator.server.controller")
+@ComponentScan(basePackages = {"com.momega.spacesimulator.server.controller", "com.momega.spacesimulator.server.data"})
 public class ControllerConfiguration extends WebMvcConfigurerAdapter {
 	
 	@Bean
-	public TaskExecutor taskExecutor() {
+	public AsyncTaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(5);
 		return executor;
-	}
-	
-	@Bean
-	public ModelDatabase modelDatabase() {
-		return new ModelDatabase();
 	}
 	
 	@Bean
