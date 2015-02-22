@@ -15,18 +15,20 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	console.log("Preparing model...");
     	$scope.time = modelService.getTime();
 	    $scope.timeInMillis = new Date($scope.time * 1000);
-	    $scope.rootObjects = modelService.getRootObjects();
 	    $scope.positionProviders = modelService.getPositionProviders($scope.time);
-	    $scope.cameraTarget = modelService.getCamera().targetObject;
-	    $scope.selectedObject = null;
-	    console.log("camera target:" + $scope.cameraTarget);
     }
 
    $scope.pid = $routeParams.pid;
+   $scope.selectedObject = null;
+   $scope.cameraDiff = null;
    console.log('project id = ' + $scope.pid);
    textureService.load($scope.pid, function() {
 	   modelService.load($scope.pid, function() {
 		   $scope.prepareModel();
+		   
+		   $scope.cameraTarget = modelService.getCamera().targetObject;
+		   console.log("camera target:" + $scope.cameraTarget);
+
 		   $scope.createScene();
 	   });
    });
@@ -82,32 +84,32 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     			var spacecraft = celestialBody;
     			$scope.createSpacecraft(spacecraft);
     			
-    			if (spacecraft.trajectory.apoapsis) {
-    				$scope.createTexturePoint(spacecraft.trajectory.apoapsis, 'APOAPSIS');
-    			}
+//    			if (spacecraft.trajectory.apoapsis) {
+//    				$scope.createTexturePoint(spacecraft.trajectory.apoapsis, 'APOAPSIS');
+//    			}
+//    			
+//    			if (spacecraft.trajectory.periapsis) {
+//    				$scope.createTexturePoint(spacecraft.trajectory.periapsis, 'PERIAPSIS');
+//    			}
     			
-    			if (spacecraft.trajectory.periapsis) {
-    				$scope.createTexturePoint(spacecraft.trajectory.periapsis, 'PERIAPSIS');
-    			}
-    			
-    			var maneuver = modelService.findActiveOrNextManeuver(spacecraft, $scope.time);
-    			if (maneuver != null) {
-    				$scope.createTexturePoint(maneuver.start, 'M_START');
-    				$scope.createTexturePoint(maneuver.end, 'M_END');
-    			}
-    			
-    			var target = spacecraft.target;
-    			if (target != null) {
-    				for(var j=0; j<target.orbitIntersections.length; j++) {
-    					var intersection = target.orbitIntersections[j];
-    					$scope.createTexturePoint(intersection, 'T_INTERSECTION');
-    				}
-    			}
-    			
-    			var exitSoi = spacecraft.exitSoiOrbitalPoint;
-				if (exitSoi != null) {
-					$scope.createTexturePoint(exitSoi, 'EXIT_SOI');
-				}
+//    			var maneuver = modelService.findActiveOrNextManeuver(spacecraft, $scope.time);
+//    			if (maneuver != null) {
+//    				$scope.createTexturePoint(maneuver.start, 'M_START');
+//    				$scope.createTexturePoint(maneuver.end, 'M_END');
+//    			}
+//    			
+//    			var target = spacecraft.target;
+//    			if (target != null) {
+//    				for(var j=0; j<target.orbitIntersections.length; j++) {
+//    					var intersection = target.orbitIntersections[j];
+//    					$scope.createTexturePoint(intersection, 'T_INTERSECTION');
+//    				}
+//    			}
+//    			
+//    			var exitSoi = spacecraft.exitSoiOrbitalPoint;
+//				if (exitSoi != null) {
+//					$scope.createTexturePoint(exitSoi, 'EXIT_SOI');
+//				}
     		}
     		
     		if (celestialBody.keplerianElements!=null) {
@@ -162,7 +164,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     }
 
     $scope.reloadScene = function() {
-    	modelService.load($scope.projectName, function() {
+    	modelService.load($scope.pid, function() {
     		$scope.prepareModel();
     		$scope.createScene();
     	});
@@ -243,15 +245,13 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	sprite.position.copy(position);
     }
     
-    $scope.updateCameraPosition = function(newCameraPosition, newRadius) {
+    $scope.updateCameraPosition = function(newCameraPosition) {
     	var cameraTarget = new THREE.Vector3(0,0,0);
     	cameraTarget.copy(newCameraPosition);
     	
-    	var cameraDiff = new THREE.Vector3(newRadius, 0, 0);
-    	
     	var cameraPosition = new THREE.Vector3(0,0,0);
     	cameraPosition.copy(newCameraPosition);
-    	cameraPosition.add(cameraDiff);
+    	cameraPosition.add($scope.cameraDiff);
     	
     	$scope.camera.position.copy(cameraPosition);
     	$scope.controls.target = cameraTarget;
@@ -277,6 +277,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     
     $scope.selectCameraByTargetName = function(name) {
     	var body = modelService.findByName(name);
+    	$scope.cameraDiff = null;
     	$scope.selectCameraTarget(body);
     }
   
@@ -284,8 +285,11 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	  console.log('camera target = ' + obj.name);
 	  $scope.cameraTarget = obj.name;
 	  var targetBody = obj;
-	  var newRadius = targetBody.hasOwnProperty("radius") ? targetBody["radius"] : 100000;
-	  $scope.updateCameraPosition(modelService.getPosition(targetBody), newRadius * 10);
+	  if ($scope.cameraDiff == null) {
+		  var newRadius = targetBody.hasOwnProperty("radius") ? targetBody["radius"] : 100000;
+		  $scope.cameraDiff = new THREE.Vector3(newRadius * 10, 0, 0);
+	  }
+	  $scope.updateCameraPosition(modelService.getPosition(targetBody));
 	  $scope.render();
     }
   
@@ -349,6 +353,9 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     }
   
   	$scope.render = function() {
+  		$scope.cameraDiff = new THREE.Vector3();  		
+  		$scope.cameraDiff.subVectors($scope.camera.position, $scope.controls.target);
+  		
   		$scope.renderer.clear();
 		$scope.renderer.render( $scope.scene, $scope.camera );
 		$scope.renderer.clearDepth();
