@@ -5,7 +5,9 @@ var AU = 149597870700.0;
 spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 'modelService', 'textureService', function($scope, $routeParams, modelService, textureService) {
 	
     $scope.details = {
-    	basic: {open: true, disabled: true},
+    	time: {open: true, disabled: false},
+    	camera: {open: true, disabled: false},
+    	basic: {open: true, disabled: false},
     	spacecraft: {open: false, disabled: true},
     	physical: {open: false, disabled: true},
     	orbital: {open: false, disabled: true}
@@ -313,7 +315,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 		var container = document.getElementById( 'container' );
 		document.getElementById( 'container' ).innerHTML = "";
 		var canvasWidth = container.offsetWidth;
-		var canvasHeight = 400;
+		var canvasHeight = window.innerHeight - 70;
 		
 		$scope.camera = new THREE.PerspectiveCamera( 45, canvasWidth/canvasHeight, 100000, AU * 10 );
 		$scope.camera.up.copy(new THREE.Vector3(0,0,1));	
@@ -338,10 +340,21 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 		$scope.mouse = new THREE.Vector2();
 		
 		container.addEventListener( 'mousedown', $scope.mouseClick, false );
+		window.addEventListener( 'resize', $scope.onWindowResize, false );
 		
 		$scope.scene = new THREE.Scene();
 		$scope.sceneOrtho = new THREE.Scene();
 	}  
+    
+    $scope.onWindowResize = function() {
+    	$scope.canvasHeight = window.innerHeight - 70;
+    	
+    	$scope.camera.aspect = $scope.canvasWidth / $scope.canvasHeight;
+    	$scope.camera.updateProjectionMatrix();
+    	
+    	$scope.renderer.setSize( $scope.canvasWidth, $scope.canvasHeight );
+    	$scope.renderer.render( $scope.scene, $scope.camera );
+	}
     
     $scope.mouseClick = function( event ) {
     	event.preventDefault();

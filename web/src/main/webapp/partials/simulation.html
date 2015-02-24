@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse">
+<nav class="navbar navbar-inverse main-menu">
 	<div class="container-fluid">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle collapsed"
@@ -23,68 +23,66 @@
 	</div>
 </nav>
 <div class="container-fluid">
-	<div class="row main-row">
-		<div class="col-lg-2">
-			<small>Time:{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
-		</div>
-		
-		<div class="col-lg-2">
-			<small>Current Time:{{currentTime*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>	
-		</div>
-		
-		<div class="col-lg-2">
-			<button ng-show="project.running" type="button" class="btn btn-default btn-xs" ng-click="reloadScene()">Get Current</button>
-		</div>
-		
-		<div class="col-lg-2">
-			<span ng-show="project.running" class="label label-default">Running</span>
-			<span ng-show="!project.running" class="label label-default">Stopped</span>
-		</div>
-
-		
-		
-		<div class="col-lg-4 detail-panel">
-			<form class="form-inline">
-				<div class="form-group form-group-sm">
-					<label class="control-label" for="cmbCamera">Selected Target:</label>
-					<div class="btn-group" id="cmbCamera">
-						<button class="btn btn-default btn-xs dropdown-toggle"
-							type="button" data-toggle="dropdown" aria-expanded="false">{{cameraTarget}}<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li ng-repeat="pp in positionProviders"><a href="javascript:;" ng-click="selectCameraTarget(pp)">{{pp.name}}</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="form-group form-group-sm">
-					<label class="control-label" for="cmbSelected">Selected Object:</label>
-					<div class="btn-group" id="cmbSelected">
-						<button class="btn btn-default btn-xs dropdown-toggle"
-							type="button" data-toggle="dropdown" aria-expanded="false">{{selectedObject.name}}<span class="caret"></span>
-						</button>
-						<ul class="dropdown-menu" role="menu">
-							<li ng-repeat="pp in positionProviders"><a href="javascript:;" ng-click="selectObject(pp)">{{pp.name}}</a></li>
-						</ul>
-					</div>
-				</div>
-			</form>
-		</div>
-	</div>
-	
 	<div class="row">
-		<div class="col-lg-8">
+		<div class="col-lg-8 contairner-panel">
 			<div id="container">WEBGL container</div>
 		</div>
 		<div class="col-lg-4 detail-panel">
 			<accordion close-others="false">
+				<accordion-group is-open="details.time.open" ng-show="!details.time.disabled">
+			        <accordion-heading>
+			            Time Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.time.open, 'glyphicon-chevron-right': !details.time.open}"></i>
+			        </accordion-heading>
+			        <div class="container-fluid">
+			        	<div class="row">
+							<div class="col-lg-2"><small>Time</small></div>
+							<div class="col-lg-10">
+								<small>{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
+								<button ng-show="project.running" type="button" class="btn btn-default btn-xs" ng-click="reloadScene()">Get Current</button>
+								<span ng-show="project.running" class="label label-default">Running</span>
+								<span ng-show="!project.running" class="label label-default">Stopped</span>
+							</div>
+						</div>
+			        </div>
+			    </accordion-group>
+			    <accordion-group is-open="details.camera.open" ng-show="!details.camera.disabled">
+			        <accordion-heading>
+			            Camera Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.camera.open, 'glyphicon-chevron-right': !details.camera.open}"></i>
+			        </accordion-heading>
+			        <div class="container-fluid">
+			        	<div class="row">
+							<div class="col-lg-2"><small>Camera</small></div>
+							<div class="col-lg-10">
+								<div class="btn-group" id="cmbCamera">
+									<button class="btn btn-default btn-xs dropdown-toggle"
+										type="button" data-toggle="dropdown" aria-expanded="false">{{cameraTarget}}<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li ng-repeat="pp in positionProviders"><a href="javascript:;" ng-click="selectCameraTarget(pp)">{{pp.name}}</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+			        </div>
+			    </accordion-group>
 			    <accordion-group is-open="details.basic.open" ng-show="!details.basic.disabled">
 			        <accordion-heading>
 			            Basic Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.basic.open, 'glyphicon-chevron-right': !details.basic.open}"></i>
 			        </accordion-heading>
 			        <div class="container-fluid">
 			        	<div class="row">
-							<div class="col-lg-6"><small>Name</small></div>
-							<div class="col-lg-6"><small>{{selectedObject.name}}</small>&nbsp;<button ng-click="selectCameraTarget(selectedObject)" type="button" class="btn btn-default btn-xs">Camera</button></div>
+							<div class="col-lg-2"><small>Name</small></div>
+							<div class="col-lg-10">
+								<div class="btn-group" id="cmbSelected">
+									<button class="btn btn-default btn-xs dropdown-toggle"
+										type="button" data-toggle="dropdown" aria-expanded="false">{{selectedObject.name}}<span class="caret"></span>
+									</button>
+									<ul class="dropdown-menu" role="menu">
+										<li ng-repeat="pp in positionProviders"><a href="javascript:;" ng-click="selectObject(pp)">{{pp.name}}</a></li>
+									</ul>
+								</div>
+								<button ng-click="selectCameraTarget(selectedObject)" type="button" class="btn btn-default btn-xs">Camera</button>
+							</div>
 						</div>
 			        </div>
 			    </accordion-group>
