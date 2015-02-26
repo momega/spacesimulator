@@ -28,7 +28,7 @@ spaceSimulatorApp.factory('textureService', ['$http', 'Project', function($http,
 	
 	factory.loadTextures = function(textureObjects, callback) {
 		   imagesLoaded = 0;
-		   imagesCount = textureObjects.length + 9 + 7; // + 7 icons;
+		   imagesCount = textureObjects.length + 9 + 8; // + 8 icons;
 			console.log(imagesCount +' about to load');
 			for(var i=0; i<textureObjects.length; i++) {
 				var to = textureObjects[i];
@@ -39,17 +39,18 @@ spaceSimulatorApp.factory('textureService', ['$http', 'Project', function($http,
 			}
 			
 			for(var j=1; j<=9; j++) {
-				var source = "./icons/Number-" + j + "-icon.png";
+				var source = "./images/Number-" + j + "-icon.png";
 				factory.loadTexture('SPACECRAFT' + j, source, callback);
 			}
 			
-			factory.loadTexture('APOAPSIS', 'icons/Letter-A-icon.png', callback);
-			factory.loadTexture('PERIAPSIS', 'icons/Letter-P-icon.png', callback);
-			factory.loadTexture('M_START', 'icons/Math-lower-than-icon.png', callback);
-			factory.loadTexture('M_END', 'icons/Math-greater-than-icon.png', callback);
-			factory.loadTexture('CIRCLE', 'icons/circle.png', callback);
-			factory.loadTexture('EXIT_SOI', 'icons/Letter-E-icon.png', callback);
-			factory.loadTexture('T_INTERSECTION', 'icons/Math-divide-icon.png', callback);
+			factory.loadTexture('APOAPSIS', 'images/Letter-A-icon.png', callback);
+			factory.loadTexture('PERIAPSIS', 'images/Letter-P-icon.png', callback);
+			factory.loadTexture('M_START', 'images/Math-lower-than-icon.png', callback);
+			factory.loadTexture('M_END', 'images/Math-greater-than-icon.png', callback);
+			factory.loadTexture('CIRCLE', 'images/circle.png', callback);
+			factory.loadTexture('EXIT_SOI', 'images/Letter-E-icon.png', callback);
+			factory.loadTexture('T_INTERSECTION', 'images/Math-divide-icon.png', callback);
+			factory.loadTexture('START', 'images/Letter-S-icon.png', callback);
 	}
 	
 	factory.loadTexture = function(name, source, callback) {

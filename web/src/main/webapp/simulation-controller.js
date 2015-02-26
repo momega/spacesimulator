@@ -9,6 +9,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	camera: {open: true, disabled: false},
     	basic: {open: true, disabled: false},
     	spacecraft: {open: false, disabled: true},
+    	history: {open: false, disabled: true},
     	physical: {open: false, disabled: true},
     	orbital: {open: false, disabled: true}
     };
@@ -25,6 +26,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
    $scope.selectedObject = null;
    $scope.cameraDiff = null;
    console.log('project id = ' + $scope.pid);
+   
    textureService.load($scope.pid, function() {
 	   $scope.project = textureService.getProject();
 	   modelService.load($scope.pid, function() {
@@ -45,7 +47,10 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	   });
 	   loopId = setTimeout($scope.getCurrentTime, 1000);
    }
-    
+   
+   /**
+    * Creates the scene. The data comes from model service
+    */
    $scope.createScene = function() {
     	console.log('Creating scene...');
 
@@ -170,12 +175,26 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     		}
     	}
     	
+    	// reset the selected object
+    	if ($scope.selectedObject!=null) {
+    		for(var j=0; j<$scope.positionProviders.length;j++) {
+    			var obj = $scope.positionProviders[j];
+    			if (obj.name == $scope.selectedObject.name) {
+    				console.log('selected object re-set');
+    				$scope.selectedObject = obj;
+    			}
+    		}
+    	}
+    	
     	console.log('Scene created');
     	$scope.selectCameraTarget(modelService.findByName($scope.cameraTarget));
     	$scope.animate();
     	console.log('Animation started');
     }
 
+    /**
+     * Reloads the scene.
+     */
     $scope.reloadScene = function() {
     	modelService.load($scope.pid, function() {
     		$scope.prepareModel();
@@ -279,6 +298,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	$scope.details.basic.disabled = false;
     	$scope.details.orbital.disabled = !modelService.hasTrajectory(obj);
     	$scope.details.spacecraft.disabled = !modelService.isSpacecraft(obj);
+    	$scope.details.history.disabled = !modelService.isSpacecraft(obj);
     	$scope.details.physical.disabled = !modelService.isCelestialBody(obj);
     	$scope.details.basic.open = true;
     }
@@ -289,7 +309,8 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     }
     
     $scope.selectCameraByTargetName = function(name) {
-    	var body = modelService.findByName(name);
+    	console.log('camera target name = ' + name);
+    	var body = modelService.getCelestialBodyByName(name);
     	$scope.cameraDiff = null;
     	$scope.selectCameraTarget(body);
     }

@@ -41,6 +41,17 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 		return result;
 	}
 	
+	factory.getCelestialBodyByName = function(name) {
+		var objs = model.movingObjects;
+		for(var i=0; i<objs.length;i++) {
+			var obj = objs[i];
+			if (obj.name == name) {
+				return obj;
+			}
+		}
+		return null;
+	}
+	
 	factory.getPositionProviders = function(timestamp) {
 		var result = [];
 		var list = factory.getRootObjects();
