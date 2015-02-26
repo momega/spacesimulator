@@ -11,7 +11,7 @@ public enum HistoryPointOrigin {
 	
 	START_MANEUVER("/images/Math-lower-than-icon.png"),
 	END_MANEUVER("/images/Math-greater-than-icon.png"),
-	CHANGE_SPHERE_OF_INFLUENCE("/images/Arrow-icon.png"),
+	CHANGE_SPHERE_OF_INFLUENCE("/images/Letter-E-icon.png"),
 	START("/images/Letter-S-icon.png"),
 	END("/images/Letter-X-icon.png");
 	

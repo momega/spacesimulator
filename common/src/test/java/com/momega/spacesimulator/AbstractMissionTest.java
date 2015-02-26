@@ -47,8 +47,8 @@ public abstract class AbstractMissionTest {
     protected void runTo(int seconds) {
         Timestamp current = model.getTime();
         Timestamp requested = startTime.add(seconds);
-        int steps = (int) requested.subtract(current);
-        RunStep runStep = RunStep.create(current, 1.0, true);
+        int steps = (int) requested.subtract(current) * 10;
+        RunStep runStep = RunStep.create(current, 0.1, true);
         for(int i=0; i<steps; i++) {
             application.next(model, runStep);
             runStep.next();
