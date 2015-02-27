@@ -6,7 +6,6 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	
     $scope.details = {
     	time: {open: true, disabled: false},
-    	camera: {open: true, disabled: false},
     	basic: {open: true, disabled: false},
     	spacecraft: {open: false, disabled: true},
     	history: {open: false, disabled: true},

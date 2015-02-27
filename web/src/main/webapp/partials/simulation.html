@@ -34,7 +34,7 @@
 			            Time Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.time.open, 'glyphicon-chevron-right': !details.time.open}"></i>
 			        </accordion-heading>
 			        <div class="container-fluid">
-			        	<div class="row">
+			        	<div class="row" ng-show="time!=null">
 							<div class="col-lg-2"><small>Time</small></div>
 							<div class="col-lg-10">
 								<small>{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
@@ -43,13 +43,6 @@
 								<span ng-show="!project.running" class="label label-default">Stopped</span>
 							</div>
 						</div>
-			        </div>
-			    </accordion-group>
-			    <accordion-group is-open="details.camera.open" ng-show="!details.camera.disabled">
-			        <accordion-heading>
-			            Camera Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.camera.open, 'glyphicon-chevron-right': !details.camera.open}"></i>
-			        </accordion-heading>
-			        <div class="container-fluid">
 			        	<div class="row">
 							<div class="col-lg-2"><small>Camera</small></div>
 							<div class="col-lg-10">
@@ -128,18 +121,6 @@
 						</div>
 			        </div>
 			    </accordion-group>
-			    <accordion-group is-open="details.history.open" ng-show="!details.history.disabled">
-			        <accordion-heading>
-			            History Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.history.open, 'glyphicon-chevron-right': !details.history.open}"></i>
-			        </accordion-heading>
-			        <div class="container-fluid">
-			        	<div class="row" ng-repeat="hp in selectedObject.namedHistoryPoints">
-							<div class="col-lg-1"><img src=".{{hp.icon}}"></div>
-							<div class="col-lg-5"><small>{{hp.name}}</small></div>
-							<div class="col-lg-5"><small>{{hp.timestamp.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></div>
-						</div>
-			        </div>
-			    </accordion-group>
 			    <accordion-group is-open="details.orbital.open" ng-show="!details.orbital.disabled">
 			        <accordion-heading>
 			            Orbital Data <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.orbital.open, 'glyphicon-chevron-right': !details.orbital.open}"></i>
@@ -192,7 +173,19 @@
 						</div>
 			        </div>
 			    </accordion-group>
-			 </accordion>
+			    <accordion-group is-open="details.history.open" ng-show="!details.history.disabled">
+			        <accordion-heading>
+			            History Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.history.open, 'glyphicon-chevron-right': !details.history.open}"></i>
+			        </accordion-heading>
+			        <div class="container-fluid">
+			        	<div class="row" ng-repeat="hp in selectedObject.namedHistoryPoints">
+							<div class="col-lg-1"><img src=".{{hp.icon}}"></div>
+							<div class="col-lg-5"><small>{{hp.name}}</small></div>
+							<div class="col-lg-5"><small>{{hp.timestamp.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></div>
+						</div>
+			        </div>
+			    </accordion-group>
+			</accordion>
 		</div>
 	</div>
 </div>
