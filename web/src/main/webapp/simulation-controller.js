@@ -36,7 +36,10 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 
 		   $scope.createScene();
 		   
-		   //loopId = setTimeout($scope.getCurrentTime, 1000);
+		   if (loopId != null) {
+			   clearTimeout(loopId);
+		   }
+		   loopId = setTimeout($scope.getCurrentTime, 5000);
 	   });
    });
    
@@ -44,7 +47,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	   modelService.getCurrentTime($scope.pid, function(time) {
 		   $scope.currentTime = time.value;
 	   });
-	   loopId = setTimeout($scope.getCurrentTime, 1000);
+	   loopId = setTimeout($scope.getCurrentTime, 5000);
    }
    
    /**

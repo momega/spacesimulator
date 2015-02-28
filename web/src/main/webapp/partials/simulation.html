@@ -22,7 +22,7 @@
 		</div>
 	</div>
 </nav>
-<div class="container-fluid">
+<div class="container-fluid" id="main-element">
 	<div class="row">
 		<div class="col-lg-8 contairner-panel">
 			<div id="container">WEBGL container</div>
@@ -38,6 +38,12 @@
 							<div class="col-lg-2"><small>Time</small></div>
 							<div class="col-lg-10">
 								<small>{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
+							</div>
+						</div>
+						<div class="row"  ng-show="time!=null">
+							<div class="col-lg-2"><small>Time</small></div>
+							<div class="col-lg-10">
+								<small>{{currentTime*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
 								<button ng-show="project.running" type="button" class="btn btn-default btn-xs" ng-click="reloadScene()">Get Current</button>
 								<span ng-show="project.running" class="label label-default">Running</span>
 								<span ng-show="!project.running" class="label label-default">Stopped</span>
@@ -75,6 +81,12 @@
 									</ul>
 								</div>
 								<button ng-click="selectCameraTarget(selectedObject)" type="button" class="btn btn-default btn-xs">Camera</button>
+							</div>
+						</div>
+						<div class="row"  ng-show="selectedObject!=null">
+							<div class="col-lg-2"><small>Time</small></div>
+							<div class="col-lg-10">
+								<small>{{selectedObject.timestamp.value*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
 							</div>
 						</div>
 			        </div>
@@ -173,13 +185,13 @@
 						</div>
 			        </div>
 			    </accordion-group>
-			    <accordion-group is-open="details.history.open" ng-show="!details.history.disabled">
+			    <accordion-group is-open="details.history.open" ng-show="!details.history.disabled && selectedObject!=null">
 			        <accordion-heading>
 			            History Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.history.open, 'glyphicon-chevron-right': !details.history.open}"></i>
 			        </accordion-heading>
 			        <div class="container-fluid">
 			        	<div class="row" ng-repeat="hp in selectedObject.namedHistoryPoints">
-							<div class="col-lg-1"><img src=".{{hp.icon}}"></div>
+							<div class="col-lg-1"><img ng-src=".{{hp.icon}}"></div>
 							<div class="col-lg-5"><small>{{hp.name}}</small></div>
 							<div class="col-lg-5"><small>{{hp.timestamp.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></div>
 						</div>

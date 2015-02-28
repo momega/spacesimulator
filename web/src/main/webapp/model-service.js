@@ -22,7 +22,8 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 	 * Gets all root objects of the model
 	 */
 	factory.getRootObjects = function() {
-		var rootObjects = db.select("//movingObjects/*").values();
+		var objs = db.select("/movingObjects/*");
+		var rootObjects = objs.values();
 		return rootObjects;
 	}
 	
@@ -42,14 +43,8 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 	}
 	
 	factory.getCelestialBodyByName = function(name) {
-		var objs = model.movingObjects;
-		for(var i=0; i<objs.length;i++) {
-			var obj = objs[i];
-			if (obj.name == name) {
-				return obj;
-			}
-		}
-		return null;
+		var obj = db.select("/movingObjects/*[/name=='" + name + "']").value();
+		return obj;
 	}
 	
 	factory.getPositionProviders = function(timestamp) {
