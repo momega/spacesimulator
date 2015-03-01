@@ -32,6 +32,10 @@
             <artifactId>spacesimulator-common</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.momega.spacesimulator</groupId>
+            <artifactId>spacesimulator-resources</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jogamp.jogl</groupId>
             <artifactId>jogl-all-main</artifactId>
             <version>${jogl.version}</version>

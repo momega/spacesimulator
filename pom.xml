@@ -9,6 +9,7 @@
     <modules>
         <module>common</module>
         <module>client</module>
+	<module>resources</module>
 	<module>web</module>
     </modules>
 
@@ -43,6 +44,11 @@
             <dependency>
                 <groupId>com.momega.spacesimulator</groupId>
                 <artifactId>spacesimulator-common</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+	    <dependency>
+                <groupId>com.momega.spacesimulator</groupId>
+                <artifactId>spacesimulator-resources</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
         </dependencies>
