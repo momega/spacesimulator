@@ -114,6 +114,11 @@
 		    <artifactId>bootstrap-filestyle</artifactId>
 		    <version>1.1.2</version>
 		</dependency>
+		<dependency>
+		    <groupId>org.webjars</groupId>
+		    <artifactId>jmespath.js</artifactId>
+		    <version>0.1.0</version>
+		</dependency>
     </dependencies>    
     
 </project>

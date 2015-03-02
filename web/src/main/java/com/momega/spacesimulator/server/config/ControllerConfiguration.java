@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -35,6 +36,7 @@ public class ControllerConfiguration extends WebMvcConfigurerAdapter {
 	@Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(gsonHttpMessageConverter());
+        converters.add(new ResourceHttpMessageConverter());
     }	
 	
 	@Override
@@ -44,7 +46,7 @@ public class ControllerConfiguration extends WebMvcConfigurerAdapter {
 	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-	    registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
 	    registry.addResourceHandler("/textures/**").addResourceLocations("classpath:/textures/");
+	    registry.addResourceHandler("/images/**").addResourceLocations("classpath:/images/");
 	}	
 }

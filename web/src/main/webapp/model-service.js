@@ -3,11 +3,9 @@
 spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 	var factory = {};
 	var model;
-	var db;
 
 	factory.load = function(pid, callback) {
 		model = Model.get({id:pid, time: Date.now()}, function() {
-	      	db = SpahQL.db(model);
 			callback();  
 		});
 	}
@@ -22,8 +20,7 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 	 * Gets all root objects of the model
 	 */
 	factory.getRootObjects = function() {
-		var objs = db.select("/movingObjects/*");
-		var rootObjects = objs.values();
+		var rootObjects = jmespath.search(model, 'movingObjects');
 		return rootObjects;
 	}
 	
@@ -31,19 +28,12 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 	 * Returns all celestial bodies of the model
 	 */
 	factory.getCelestialBodies = function() {
-		var objs = factory.getRootObjects();
-		var result = [];
-		for(var i=0; i<objs.length; i++) {
-	    	var obj = objs[i];
-	    	if (obj.textureFileName != null) {
-	    		result.push(obj);
-	    	}
-	    }
+		var result = jmespath.search(model, 'movingObjects[?textureFileName!=null]');
 		return result;
 	}
 	
 	factory.getCelestialBodyByName = function(name) {
-		var obj = db.select("/movingObjects/*[/name=='" + name + "']").value();
+		var obj = factory.findByName(name);
 		return obj;
 	}
 	
@@ -98,8 +88,8 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
     }	
 	
 	factory.findByName = function(name) {
-		var movingObject = db.select("//*[/name=='" + name + "']").value();
-    	return movingObject;
+		var objs = jmespath.search(model, "movingObjects[?name==`" + name +"`]");
+		return objs[0];
 	}
 	
     factory.findActiveOrNextManeuver = function(spacecraft, timestamp) {
