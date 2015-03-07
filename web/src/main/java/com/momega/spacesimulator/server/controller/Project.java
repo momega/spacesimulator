@@ -6,6 +6,8 @@ package com.momega.spacesimulator.server.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.momega.spacesimulator.model.HistoryPoint;
+
 /**
  * @author martin
  *
@@ -13,6 +15,7 @@ import java.util.List;
 public class Project extends ProjectDetail {
 
 	private List<Texture> celestialBodies = new ArrayList<>();
+	private HistoryPoint lastHistoryPoint;
 
 	/**
 	 * @return the celestialBodies
@@ -27,6 +30,14 @@ public class Project extends ProjectDetail {
 	 */
 	public void setCelestialBodies(List<Texture> celestialBodies) {
 		this.celestialBodies = celestialBodies;
+	}
+	
+	public void setLastHistoryPoint(HistoryPoint lastHistoryPoint) {
+		this.lastHistoryPoint = lastHistoryPoint;
+	}
+	
+	public HistoryPoint getLastHistoryPoint() {
+		return lastHistoryPoint;
 	}
 
 }

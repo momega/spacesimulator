@@ -1,5 +1,7 @@
 package com.momega.spacesimulator.server.controller;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.server.data.ModelDatabase;
@@ -28,15 +31,17 @@ public class ModelController {
 	private ModelExecutor modelExecutor;
 	
 	@Autowired
-	private ModelSerializer modelSerializer;
+	private ModelSerializer modelSerializer;		
 	
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 	public Model get(@PathVariable("id") int id) {
 		logger.info("get id = {}", id);
 		ModelRunnable runnable = modelDatabase.get(id);
 		Model m = modelExecutor.stop(id, runnable);
+		List<HistoryPoint> historyPoints = runnable.getHistoryPoints(); // copy history points
 		Model result = modelSerializer.clone(m);
 		runnable = modelExecutor.create(m);
+		runnable.addHistoryPoints(historyPoints);
 		modelDatabase.add(id, runnable);
 		modelExecutor.start(id, runnable);
 		return result;

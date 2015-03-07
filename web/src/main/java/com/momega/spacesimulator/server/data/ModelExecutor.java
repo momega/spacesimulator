@@ -1,6 +1,7 @@
 package com.momega.spacesimulator.server.data;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -10,7 +11,10 @@ import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 
+import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.service.HistoryPointService;
+import com.momega.spacesimulator.service.ModelSerializer;
 import com.momega.spacesimulator.service.ModelWorker;
 
 @Component
@@ -24,8 +28,12 @@ public class ModelExecutor {
 	@Autowired
 	private AsyncTaskExecutor taskExecutor;	
 	
+	@Autowired
+	private HistoryPointService historyPointService;
+	
 	public ModelRunnable create(Model model) {
 		ModelRunnable runnable = new ModelRunnable(modelWorker, model, 1.0, true);
+		historyPointService.addHistoryPointListener(runnable);
 		return runnable;
 	}
  	
@@ -41,6 +49,7 @@ public class ModelExecutor {
 				@Override
 				public void run() {
 					modelRunnable.setRunning(false);
+					historyPointService.removedHistoryPointListener(modelRunnable);
 				}
 			});
 			try {

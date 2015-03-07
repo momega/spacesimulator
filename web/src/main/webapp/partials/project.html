@@ -26,47 +26,48 @@
 
 <div class="container-fluid">
 	<div class="row">
-		<h2>Running Projects</h2>
-		<div class="btn-group" role="group" aria-label="Actions">
-		  <button type="button" class="btn btn-default btn-xs"  ng-click="refreshProjects()">Refresh</button>
+		<div class="col-lg-9">
+			<h2>Running Projects</h2>
+			<table class="table table-hover table-condensed">
+				<tr>
+					<th>Id</th>
+					<th>Project</th>
+					<th>Time</th>
+					<th>Last Event</th>
+					<th>Actions</th>
+				</tr>
+	 			<tr ng-repeat="p in projects">
+	 				<td><small>{{p.id}}</small></td>
+	 				<td><small>{{p.name}}</small></td>
+	 				<td><small>{{p.time.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></td>
+	 				<td><div ng-show="p.lastHistoryPoint != null">
+							<img ng-src=".{{p.lastHistoryPoint.icon}}">
+							<small>{{p.lastHistoryPoint.name}}, {{p.lastHistoryPoint.timestamp.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></div>
+						</div></td>
+	 				<td><a class="btn btn-default btn-xs" href="#/simulation/{{p.id}}" role="button">Open</a>&nbsp;
+	 					<button ng-show="p.running" type="button" ng-click="stopProject(p)" class="btn btn-default btn-xs">Stop</button>
+	 					<button ng-show="!p.running" type="button" ng-click="resumeProject(p)" class="btn btn-default btn-xs">Resume</button>
+	 					<button type="button" ng-click="closeProject(p)" class="btn btn-default btn-xs">Close</button>
+	 				</td>
+	 			</tr> 
+			</table>
+			<div class="btn-group" role="group" aria-label="Actions">
+				  <button type="button" class="btn btn-default btn-xs"  ng-click="refreshProjects()">Refresh</button>
+			</div>
+			<input type="file" class="filestyle" data-icon="false" data-buttonName="btn-primary">
 		</div>
-	</div>
-	<div class="row">
-		<table class="table table-hover table-condensed">
-			<tr>
-				<th>Identification</th>
-				<th>Project</th>
-				<th>Time</th>
-				<th>Actions</th>
-			</tr>
- 			<tr ng-repeat="p in projects">
- 				<td>{{p.id}}</td>
- 				<td>{{p.name}}</td>
- 				<td>{{p.time.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</td>
- 				<td><a class="btn btn-default btn-xs" href="#/simulation/{{p.id}}" role="button">Open</a>&nbsp;
- 					<button ng-show="p.running" type="button" ng-click="stopProject(p)" class="btn btn-default btn-xs">Stop</button>
- 					<button ng-show="!p.running" type="button" ng-click="resumeProject(p)" class="btn btn-default btn-xs">Resume</button>
- 					<button type="button" ng-click="closeProject(p)" class="btn btn-default btn-xs">Close</button>
- 				</td>
- 			</tr> 
-		</table>
-	</div>
-	<div class="row">
-		<div class="col-lg-6">
-			<input type="file" class="filestyle" data-filename-placement="inside">
+		<div class="col-lg-3">
+			<h2>Builders</h2>
+			<table class="table table-hover table-condensed">
+				<tr>
+					<th>Project</th>
+					<th>Actions</th>
+				</tr>
+	 			<tr ng-repeat="b in builders">
+	 				<td><small>{{b.name}}</small></td>
+	 				<td><button type="button" ng-click="buildProject(b)" class="btn btn-default btn-xs">Build</button></td>
+	 			</tr> 
+			</table>
 		</div>
-	</div>
-	<div class="row">
-		<h2>Builders</h2>
-		<table class="table table-hover table-condensed">
-			<tr>
-				<th>Project</th>
-				<th>Actions</th>
-			</tr>
- 			<tr ng-repeat="b in builders">
- 				<td>{{b.name}}</td>
- 				<td><button type="button" ng-click="buildProject(b)" class="btn btn-default btn-xs">Build</button></td>
- 			</tr> 
-		</table>
 	</div>
 </div>

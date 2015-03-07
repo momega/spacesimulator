@@ -90,6 +90,7 @@ public class ProjectController {
 		p.setName(m.getName());
 		p.setTime(m.getTime());
 		p.setRunning(runnable.isRunning());
+		p.setLastHistoryPoint(runnable.getLastHistoryPoint());
 		for(MovingObject mo : m.getMovingObjects()) {
 			Texture texture = new Texture();
 			if (mo instanceof CelestialBody) {
