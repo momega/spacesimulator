@@ -1,6 +1,6 @@
 'use strict';
 
-spaceSimulatorApp.controller('ProjectController', ['$scope', '$upload', '$routeParams', 'Builder', 'Project', function($scope, $upload, $routeParams, Builder, Project) {
+spaceSimulatorApp.controller('ProjectController', ['$scope', '$upload', '$routeParams', 'Builder', 'Project', 'Model', function($scope, $upload, $routeParams, Builder, Project, Model) {
 
 	$scope.projects = Project.query();
 	
@@ -32,6 +32,12 @@ spaceSimulatorApp.controller('ProjectController', ['$scope', '$upload', '$routeP
 	
 	$scope.stopProject = function(project) {
 		Project.stop({id: project.id}, function () {
+			$scope.refreshProjects();
+		})
+	}
+	
+	$scope.downloadModel = function(project) {
+		Model.download({id: project.id}, function () {
 			$scope.refreshProjects();
 		})
 	}

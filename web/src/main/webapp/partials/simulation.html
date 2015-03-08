@@ -36,17 +36,22 @@
 			        <div class="container-fluid">
 			        	<div class="row" ng-show="time!=null">
 							<div class="col-lg-2"><small>Time</small></div>
-							<div class="col-lg-10">
+							<div class="col-lg-5">
 								<small>{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
 							</div>
-						</div>
-						<div class="row"  ng-show="time!=null">
-							<div class="col-lg-2"><small>Time</small></div>
-							<div class="col-lg-10">
-								<small>{{currentTime*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
-								<button ng-show="project.running" type="button" class="btn btn-default btn-xs" ng-click="reloadScene()">Get Current</button>
+							<div class="col-lg-5">
+								<a class="btn btn-default btn-xs" href="model/download/{{project.id}}" role="button">Download</a>
 								<span ng-show="project.running" class="label label-default">Running</span>
 								<span ng-show="!project.running" class="label label-default">Stopped</span>
+							</div>
+						</div>
+						<div class="row" ng-show="time!=null">
+							<div class="col-lg-2"><small>Time</small></div>
+							<div class="col-lg-5">
+								<small>{{currentTime*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
+							</div>
+							<div class="col-lg-5">
+								<button ng-show="project.running" type="button" class="btn btn-default btn-xs" ng-click="reloadScene()">Get Current</button>
 							</div>
 						</div>
 			        	<div class="row">
