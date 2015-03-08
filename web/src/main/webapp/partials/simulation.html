@@ -41,12 +41,15 @@
 							</div>
 							<div class="col-lg-5">
 								<a class="btn btn-default btn-xs" href="model/download/{{project.id}}" role="button">Download</a>
+								<button type="button" class="btn btn-default btn-xs" ng-click="takeScreenshot()">Screenshot</button>
 								<span ng-show="project.running" class="label label-default">Running</span>
 								<span ng-show="!project.running" class="label label-default">Stopped</span>
 							</div>
 						</div>
 						<div class="row" ng-show="time!=null">
-							<div class="col-lg-2"><small>Time</small></div>
+							<div class="col-lg-2">
+								<small>Time</small>
+							</div>
 							<div class="col-lg-5">
 								<small>{{currentTime*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
 							</div>
@@ -55,7 +58,9 @@
 							</div>
 						</div>
 			        	<div class="row">
-							<div class="col-lg-2"><small>Camera</small></div>
+							<div class="col-lg-2">
+								<small>Camera</small>
+							</div>
 							<div class="col-lg-10">
 								<div class="btn-group" id="cmbCamera">
 									<button class="btn btn-default btn-xs dropdown-toggle"
@@ -89,7 +94,9 @@
 							</div>
 						</div>
 						<div class="row"  ng-show="selectedObject!=null">
-							<div class="col-lg-2"><small>Time</small></div>
+							<div class="col-lg-2">
+								<small>Time</small>
+							</div>
 							<div class="col-lg-10">
 								<small>{{selectedObject.timestamp.value*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
 							</div>

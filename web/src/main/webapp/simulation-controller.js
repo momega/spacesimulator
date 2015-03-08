@@ -193,6 +193,12 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	$scope.animate();
     	console.log('Animation started');
     }
+   
+   	$scope.takeScreenshot = function() {
+   		$scope.renderer.domElement.toBlob(function(blob) {
+   	        saveAs(blob, modelService.getName()+".png");
+   	    });
+   	}
 
     /**
      * Reloads the scene.
@@ -343,7 +349,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 		$scope.camera = new THREE.PerspectiveCamera( 45, canvasWidth/canvasHeight, 100000, AU * 10 );
 		$scope.camera.up.copy(new THREE.Vector3(0,0,1));	
 		
-		$scope.renderer = new THREE.WebGLRenderer();
+		$scope.renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true});
 		$scope.renderer.setSize( canvasWidth, canvasHeight );
 		$scope.renderer.autoClear = false;
 		container.appendChild( $scope.renderer.domElement );

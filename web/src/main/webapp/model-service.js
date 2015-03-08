@@ -117,6 +117,10 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
 		return model.time.value;
 	}
 	
+	factory.getName = function() {
+		return model.name;
+	}
+	
 	factory.getCamera = function() {
 		return model.camera;
 	}
