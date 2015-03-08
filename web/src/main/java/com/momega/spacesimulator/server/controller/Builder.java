@@ -9,8 +9,19 @@ package com.momega.spacesimulator.server.controller;
  */
 public class Builder {
 
+	private int id;
 	private String name;
-	private String builderName;
+	private String builderClassName;
+	private String fileName;
+	private byte[] data;
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
 	
 	public String getName() {
 		return name;
@@ -18,11 +29,29 @@ public class Builder {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getBuilderName() {
-		return builderName;
+	
+	public void setBuilderClassName(String builderClassName) {
+		this.builderClassName = builderClassName;
 	}
-	public void setBuilderName(String builderName) {
-		this.builderName = builderName;
+	
+	public String getBuilderClassName() {
+		return builderClassName;
+	}
+	
+	public String getFileName() {
+		return fileName;
+	}
+	
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+	
+	public byte[] getData() {
+		return data;
+	}
+	
+	public void setData(byte[] data) {
+		this.data = data;
 	}
 
 }

@@ -26,7 +26,7 @@
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-lg-9">
+		<div class="col-lg-8">
 			<h2>Running Projects</h2>
 			<table class="table table-hover table-condensed">
 				<tr>
@@ -52,11 +52,24 @@
 	 			</tr> 
 			</table>
 			<div class="btn-group" role="group" aria-label="Actions">
-				  <button type="button" class="btn btn-default btn-xs"  ng-click="refreshProjects()">Refresh</button>
+				  <button type="button" class="btn btn-default btn-sm" ng-click="refreshProjects()">
+				  	<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>&nbsp;Refresh		
+				  </button>
 			</div>
-			<input type="file" class="filestyle" data-icon="false" data-buttonName="btn-primary">
+			<h2>Upload Model</h2>
+			<div class="row">
+				<div class="col-lg-3">
+					<input type="file" ng-file-select class="filestyle" accept="application/json" ng-model="uploadedFile"
+						data-iconName="glyphicon-open" data-size="sm" data-buttonText="Open">
+				</div>
+				<div class="col-lg-1">
+					<button type="submit" class="btn btn-default btn-sm" ng-click="uploadModel()">
+						<span class="glyphicon glyphicon-inbox" aria-hidden="true"></span>&nbsp;Submit
+					</button>
+				</div>
+			</div>
 		</div>
-		<div class="col-lg-3">
+		<div class="col-lg-4">
 			<h2>Builders</h2>
 			<table class="table table-hover table-condensed">
 				<tr>
@@ -65,7 +78,10 @@
 				</tr>
 	 			<tr ng-repeat="b in builders">
 	 				<td><small>{{b.name}}</small></td>
-	 				<td><button type="button" ng-click="buildProject(b)" class="btn btn-default btn-xs">Build</button></td>
+	 				<td>
+	 					<button type="button" ng-click="buildProject(b)" class="btn btn-default btn-xs">Build</button>
+	 					<button type="button" ng-show="b.fileName!=null" ng-click="removeBuilder(b)" class="btn btn-default btn-xs">Remove</button>
+	 				</td>
 	 			</tr> 
 			</table>
 		</div>

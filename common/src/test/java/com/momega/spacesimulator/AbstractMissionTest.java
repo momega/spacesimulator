@@ -41,6 +41,11 @@ public abstract class AbstractMissionTest {
                     modelService.removeMovingObject(model, historyPoint.getSpacecraft());
                 }
             }
+            
+            @Override
+			public boolean supports(HistoryPoint historyPoint) {
+				return true;
+			}
         });
     }
 

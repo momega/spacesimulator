@@ -36,7 +36,9 @@ public class HistoryPointService {
         hp.setSpacecraft(spacecraft);
         spacecraft.getNamedHistoryPoints().add(hp);
         for(HistoryPointListener listener : listeners) {
-        	listener.historyPointCreated(hp);
+        	if (listener.supports(hp)) {
+        		listener.historyPointCreated(hp);
+        	}
         }
         return hp;
     }

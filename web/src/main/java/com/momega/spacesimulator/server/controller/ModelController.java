@@ -37,6 +37,8 @@ public class ModelController {
 	public Model get(@PathVariable("id") int id) {
 		logger.info("get id = {}", id);
 		ModelRunnable runnable = modelDatabase.get(id);
+		
+		// TODO: re-factor this part of the code
 		Model m = modelExecutor.stop(id, runnable);
 		List<HistoryPoint> historyPoints = runnable.getHistoryPoints(); // copy history points
 		Model result = modelSerializer.clone(m);

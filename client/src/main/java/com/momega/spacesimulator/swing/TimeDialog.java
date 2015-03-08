@@ -229,6 +229,11 @@ public class TimeDialog extends JDialog {
 					}
 				});
 			}
+			
+			@Override
+			public boolean supports(HistoryPoint historyPoint) {
+				return true;
+			}
 		};
 
         addWindowListener(new WindowAdapter() {

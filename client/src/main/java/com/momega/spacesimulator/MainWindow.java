@@ -291,6 +291,11 @@ public class MainWindow extends DefaultWindow {
 				ImageIcon icon = historyPointListRenderer.getIcon(historyPoint);
 				statusLabel.setIcon(icon);
 			}
+			
+			@Override
+			public boolean supports(HistoryPoint historyPoint) {
+				return true;
+			}
 		});
 
 		historyPointService.addHistoryPointListener(new HistoryPointListener() {
@@ -299,6 +304,11 @@ public class MainWindow extends DefaultWindow {
 				if (HistoryPointOrigin.END.equals(historyPoint.getOrigin())) {
 					RendererModel.getInstance().setDeleteSpacecraft(historyPoint.getSpacecraft());
 				}
+			}
+			
+			@Override
+			public boolean supports(HistoryPoint historyPoint) {
+				return true;
 			}
 		});
     	

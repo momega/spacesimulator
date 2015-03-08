@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.RunStep;
+import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.service.HistoryPointListener;
 import com.momega.spacesimulator.service.ModelWorker;
 
@@ -68,6 +69,12 @@ public class ModelRunnable implements Callable<Model>, HistoryPointListener {
 		synchronized (historyPoints) {
 			this.historyPoints.add(historyPoint);
 		}
+	}
+	
+	@Override
+	public boolean supports(HistoryPoint historyPoint) {
+		Spacecraft spacecraft = historyPoint.getSpacecraft();
+		return model.getMovingObjects().contains(spacecraft);
 	}
 	
 	public void addHistoryPoints(List<HistoryPoint> list) {
