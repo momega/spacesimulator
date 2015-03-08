@@ -80,7 +80,22 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	    		// change orientation, north pole is in Z direction
 	    		var t = new THREE.Matrix4();
 	    		t.makeRotationX(Math.PI/2);
-	    		geometry.applyMatrix(t);
+	    		
+	    		var spherical = toSphericalCoordinates(celestialBody.orientation.v);
+	    		
+	    		var t2 = new THREE.Matrix4();
+	    		t2.makeRotationZ(spherical.phi);
+	    		
+	    		var t3 = new THREE.Matrix4();
+	    		t3.makeRotationY(spherical.theta);
+
+	    		var primeMeridian = celestialBody.primeMeridian;
+	    		var t5 = new THREE.Matrix4();
+	    		t5.makeRotationZ(primeMeridian);
+	    		
+	    		var t4 = t2.multiply(t3).multiply(t5).multiply(t);
+	    		
+	    		geometry.applyMatrix(t4);
 	    		
 	    		var texture = textureService.getTextureName(celestialBody.name);
 	    		var material = new THREE.MeshBasicMaterial( { map: texture } );
