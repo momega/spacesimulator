@@ -38,18 +38,17 @@
 				</tr>
 	 			<tr ng-repeat="p in projects">
 	 				<td><small>{{p.id}}</small></td>
-	 				<td><small>{{p.name}}</small></td>
+	 				<td><a href="#/simulation/{{p.id}}"><small>{{p.name}}</small></a></td>
 	 				<td><small>{{p.time.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></td>
 	 				<td><div ng-show="p.lastHistoryPoint != null">
 							<img ng-src=".{{p.lastHistoryPoint.icon}}">
 							<small>{{p.lastHistoryPoint.name}}, {{p.lastHistoryPoint.timestamp.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></div>
 						</div></td>
-	 				<td><a class="btn btn-default btn-xs" href="#/simulation/{{p.id}}" role="button">Open</a>&nbsp;
-	 					<a class="btn btn-default btn-xs" href="model/download/{{p.id}}" role="button">Download</a>&nbsp;
-	 					<button type="button" ng-click="takeSnapshot(p)" class="btn btn-default btn-xs">Snapshot</button>
-	 					<button ng-show="p.running" type="button" ng-click="stopProject(p)" class="btn btn-default btn-xs">Stop</button>
-	 					<button ng-show="!p.running" type="button" ng-click="resumeProject(p)" class="btn btn-default btn-xs">Resume</button>
-	 					<button type="button" ng-click="closeProject(p)" class="btn btn-default btn-xs">Close</button>
+	 				<td><a class="btn btn-default btn-xs" href="model/download/{{p.id}}" role="button">Download</a>&nbsp;
+	 					<img src="icons/disk.png" ng-click="takeSnapshot(p)">
+	 					<img src="icons/control_stop_blue.png" ng-show="p.running" ng-click="stopProject(p)">
+	 					<img src="icons/control_play_blue.png" ng-show="!p.running" ng-click="resumeProject(p)">
+	 					<img src="icons/delete.png" ng-click="closeProject(p)">
 	 				</td>
 	 			</tr> 
 			</table>
