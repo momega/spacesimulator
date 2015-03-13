@@ -44,8 +44,8 @@
 							<img ng-src=".{{p.lastHistoryPoint.icon}}">
 							<small>{{p.lastHistoryPoint.name}}, {{p.lastHistoryPoint.timestamp.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></div>
 						</div></td>
-	 				<td><a class="btn btn-default btn-xs" href="model/download/{{p.id}}" role="button">Download</a>&nbsp;
-	 					<img src="icons/disk.png" ng-click="takeSnapshot(p)">
+	 				<td><a href="model/download/{{p.id}}"><img src="icons/disk.png"></a>
+	 					<img src="icons/page_copy.png" ng-click="takeSnapshot(p)">
 	 					<img src="icons/control_stop_blue.png" ng-show="p.running" ng-click="stopProject(p)">
 	 					<img src="icons/control_play_blue.png" ng-show="!p.running" ng-click="resumeProject(p)">
 	 					<img src="icons/delete.png" ng-click="closeProject(p)">
