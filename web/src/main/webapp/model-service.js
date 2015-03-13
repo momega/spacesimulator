@@ -108,6 +108,11 @@ spaceSimulatorApp.factory('modelService', ['Model', function(Model) {
         return result;
     }	
     
+    factory.isManeuverActiveOrNext = function(spacecraft, theManeuver, timestamp) {
+        var m = factory.findActiveOrNextManeuver(spacecraft, timestamp);
+        return (m === theManeuver);
+    }	
+    
     factory.getPosition = function(obj) {
     	var position = obj.hasOwnProperty("position") ? obj["position"] : obj.cartesianState.position;
     	return position;

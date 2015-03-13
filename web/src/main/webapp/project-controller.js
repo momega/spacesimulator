@@ -1,8 +1,8 @@
 'use strict';
 
-spaceSimulatorApp.controller('ProjectController', ['$scope', '$upload', '$routeParams', 'Builder', 'Project', 'Model', function($scope, $upload, $routeParams, Builder, Project, Model) {
+spaceSimulatorApp.controller('ProjectController', ['$scope', '$upload', '$routeParams', 'Builder', 'Model', function($scope, $upload, $routeParams, Builder, Model) {
 
-	$scope.projects = Project.query();
+	$scope.projects = Model.query();
 	
 	$scope.builders = Builder.query();
 	
@@ -13,7 +13,7 @@ spaceSimulatorApp.controller('ProjectController', ['$scope', '$upload', '$routeP
 	}
 	
 	$scope.closeProject = function(project) {
-		Project.close({id: project.id}, function () {
+		Model.close({id: project.id}, function () {
 			$scope.refreshProjects();
 		})
 	}
@@ -25,13 +25,19 @@ spaceSimulatorApp.controller('ProjectController', ['$scope', '$upload', '$routeP
 	}
 	
 	$scope.resumeProject = function(project) {
-		Project.resume({id: project.id}, function () {
+		Model.resume({id: project.id}, function () {
 			$scope.refreshProjects();
 		})
 	}
 	
 	$scope.stopProject = function(project) {
-		Project.stop({id: project.id}, function () {
+		Model.stop({id: project.id}, function () {
+			$scope.refreshProjects();
+		})
+	}
+	
+	$scope.takeSnapshot = function(project) {
+		Model.snapshot({id: project.id}, function () {
 			$scope.refreshProjects();
 		})
 	}
@@ -43,7 +49,7 @@ spaceSimulatorApp.controller('ProjectController', ['$scope', '$upload', '$routeP
 	}
 	
 	$scope.refreshProjects = function() {
-		$scope.projects = Project.query();
+		$scope.projects = Model.query();
 	}
 	
 	$scope.refreshBuilders = function() {

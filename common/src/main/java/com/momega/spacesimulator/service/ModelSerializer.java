@@ -3,6 +3,7 @@
  */
 package com.momega.spacesimulator.service;
 
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -29,6 +30,18 @@ public class ModelSerializer {
 	
 	@Autowired
 	private GsonFactory gsonFactory;
+	
+	public byte[] toBytes(Model model) {
+		StringWriter writer = new StringWriter();
+		save(model, writer);
+		writer.flush();
+		try {
+			writer.close();
+		} catch (IOException e) {
+			throw new IllegalStateException("unable to serialize model", e);
+		}
+		return writer.getBuffer().toString().getBytes();
+	}
 
 	/**
 	 * Saves the model 

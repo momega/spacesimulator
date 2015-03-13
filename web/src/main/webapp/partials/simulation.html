@@ -197,6 +197,21 @@
 						</div>
 			        </div>
 			    </accordion-group>
+			    <accordion-group is-open="details.maneuver.open" ng-show="!details.maneuver.disabled && selectedObject!=null">
+			        <accordion-heading>
+			            Maneuver Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.maneuver.open, 'glyphicon-chevron-right': !details.maneuver.open}"></i>
+			        </accordion-heading>
+			        <div class="container-fluid">
+			        	<div class="row" ng-repeat="m in selectedObject.maneuvers">
+							<div class="col-lg-2"><small>{{m.name}}</small></div>
+							<div class="col-lg-5"><small>{{m.start.timestamp.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></div>
+							<div class="col-lg-2"><small>{{(m.end.timestamp.value - m.start.timestamp.value) / 60 | number:2 }}</small></div>
+							<div class="col-lg-3" ng-show="isManeuverCurrent(selectedObject, m)">
+								<button ng-click="selectDetailByName(m.start.name)" type="button" class="btn btn-default btn-xs">Start</button>&nbsp;<button ng-click="selectDetailByName(m.end.name)" type="button" class="btn btn-default btn-xs">End</button>
+							</div>
+						</div>
+			        </div>
+			    </accordion-group>
 			    <accordion-group is-open="details.history.open" ng-show="!details.history.disabled && selectedObject!=null">
 			        <accordion-heading>
 			            History Information <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': details.history.open, 'glyphicon-chevron-right': !details.history.open}"></i>

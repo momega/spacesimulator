@@ -10,6 +10,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	spacecraft: {open: false, disabled: true},
     	history: {open: false, disabled: true},
     	physical: {open: false, disabled: true},
+    	maneuver: {open: false, disabled: true},
     	orbital: {open: false, disabled: true}
     };
     
@@ -194,13 +195,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	
     	// reset the selected object
     	if ($scope.selectedObject!=null) {
-    		for(var j=0; j<$scope.positionProviders.length;j++) {
-    			var obj = $scope.positionProviders[j];
-    			if (obj.name == $scope.selectedObject.name) {
-    				console.log('selected object re-set');
-    				$scope.selectedObject = obj;
-    			}
-    		}
+    		$scope.selectDetailByName($scope.selectedObject.name);
     	}
     	
     	console.log('Scene created');
@@ -322,6 +317,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	$scope.details.orbital.disabled = !modelService.hasTrajectory(obj);
     	$scope.details.spacecraft.disabled = !modelService.isSpacecraft(obj);
     	$scope.details.history.disabled = !modelService.isSpacecraft(obj);
+    	$scope.details.maneuver.disabled = !modelService.isSpacecraft(obj);
     	$scope.details.physical.disabled = !modelService.isCelestialBody(obj);
     	$scope.details.basic.open = true;
     }
@@ -329,6 +325,16 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     $scope.openWiki = function() {
     	var wiki = 'http://en.wikipedia.org/wiki/' + $scope.selectedObject.wiki;
     	window.open(wiki, '_blank');
+    }
+    
+    $scope.selectDetailByName = function(name) {
+    	for(var j=0; j<$scope.positionProviders.length;j++) {
+			var obj = $scope.positionProviders[j];
+			if (obj.name == name) {
+				console.log('selected object re-set');
+				$scope.selectObject(obj);
+			}
+		}
     }
     
     $scope.selectCameraByTargetName = function(name) {
@@ -348,6 +354,10 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	  }
 	  $scope.updateCameraPosition(modelService.getPosition(targetBody));
 	  $scope.render();
+    }
+    
+    $scope.isManeuverCurrent = function(spacecraft, m) {
+    	return modelService.isManeuverActiveOrNext(spacecraft, m, modelService.getTime());
     }
   
     $scope.$on('$viewContentLoaded', function(){
