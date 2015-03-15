@@ -1,10 +1,10 @@
 var spaceSimulatorApp = angular.module('spaceSimulatorApp', ['ngRoute', 'ngResource', 'ui.bootstrap', 'angularFileUpload']);
 
-spaceSimulatorApp.directive( 'goClick', function ( $location ) {
+spaceSimulatorApp.directive( 'go-click', function ( $location ) {
 	  return function ( scope, element, attrs ) {
 		    var path;
 
-		    attrs.$observe( 'goClick', function (val) {
+		    attrs.$observe( 'go-click', function (val) {
 		      path = val;
 		    });
 

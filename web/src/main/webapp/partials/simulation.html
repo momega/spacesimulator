@@ -40,8 +40,8 @@
 								<small>{{time*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
 							</div>
 							<div class="col-lg-4">
-								<a href="model/download/{{project.id}}"><img src="icons/disk.png"></a>
-								<img src="icons/camera.png" ng-click="takeScreenshot()">
+								<a href="model/download/{{project.id}}"><img src="icons/disk.png" title="Save Model Snapshot"></a>
+								<img src="icons/camera.png" ng-click="takeScreenshot()" title="Take Screenshot">
 								<span ng-show="project.running" class="label label-default">Running</span>
 								<span ng-show="!project.running" class="label label-default">Stopped</span>
 							</div>
@@ -99,6 +99,7 @@
 							</div>
 							<div class="col-lg-10">
 								<small>{{selectedObject.timestamp.value*1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small>
+								<button ng-show="selectedObject.timestamp.value>currentTime" type="button" class="btn btn-default btn-xs">Wait For</button>
 							</div>
 						</div>
 			        </div>

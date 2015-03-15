@@ -43,12 +43,23 @@
 	 				<td><div ng-show="p.lastHistoryPoint != null">
 							<img ng-src=".{{p.lastHistoryPoint.icon}}">
 							<small>{{p.lastHistoryPoint.name}}, {{p.lastHistoryPoint.timestamp.value * 1000 | date:'yyyy-MM-dd HH:mm:ss Z'}}</small></div>
-						</div></td>
-	 				<td><a href="model/download/{{p.id}}"><img src="icons/disk.png"></a>
-	 					<img src="icons/page_copy.png" ng-click="takeSnapshot(p)">
-	 					<img src="icons/control_stop_blue.png" ng-show="p.running" ng-click="stopProject(p)">
-	 					<img src="icons/control_play_blue.png" ng-show="!p.running" ng-click="resumeProject(p)">
-	 					<img src="icons/delete.png" ng-click="closeProject(p)">
+						</td>
+	 				<td>
+	 					<div class="btn-group" dropdown>
+					      <button type="button" class="btn btn-default" ng-click="takeSnapshot(p)">Snapshot</button>
+					      <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+					        <span class="caret"></span>
+					        <span class="sr-only">Split button!</span>
+					      </button>
+					      <ul class="dropdown-menu" role="menu">
+					        <li><a href="" ng-click="takeSnapshot(p)">Snapshop</a></li>
+					        <li><a href="model/download/{{p.id}}">Save Model to JSON file</a></li>
+					        <li ng-if="p.running"><img src="icons/control_stop_blue.png"><a href="" ng-click="stopProject(p)">Stop Project</a></li>
+					        <li ng-if="!p.running"><a href="" ng-click="resumeProject(p)">Resume Project</a></li>
+					        <li class="divider"></li>
+					        <li><a href="" ng-click="closeProject(p)">Close Project</a></li>
+					      </ul>
+					    </div>
 	 				</td>
 	 			</tr> 
 			</table>

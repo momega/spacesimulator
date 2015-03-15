@@ -22,6 +22,7 @@ import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
+import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
 import com.momega.spacesimulator.server.data.BuilderDatabase;
 import com.momega.spacesimulator.server.data.ModelDatabase;
@@ -145,7 +146,7 @@ public class ModelController {
 		p.setName(m.getName());
 		p.setTime(m.getTime());
 		p.setRunning(runnable.isRunning());
-		p.setLastHistoryPoint(runnable.getLastHistoryPoint());
+		HistoryPoint lastHistoryPoint = null;
 		for(MovingObject mo : m.getMovingObjects()) {
 			Texture texture = new Texture();
 			if (mo instanceof CelestialBody) {
@@ -154,17 +155,36 @@ public class ModelController {
 				texture.setTextureFileName(celestialBody.getTextureFileName());
 				p.getCelestialBodies().add(texture);
 			}
+			else if (mo instanceof Spacecraft) {
+				Spacecraft spacecraft = (Spacecraft) mo;
+				if (!spacecraft.getNamedHistoryPoints().isEmpty()) {
+					lastHistoryPoint = compareHistoryPoint(lastHistoryPoint, spacecraft.getNamedHistoryPoints().get(spacecraft.getNamedHistoryPoints().size()-1));
+				}
+			}
 		}
+		p.setLastHistoryPoint(lastHistoryPoint);
 		return p;
 	}	
+	
+	protected HistoryPoint compareHistoryPoint(HistoryPoint hp1, HistoryPoint hp2) {
+		if (hp1 == null) {
+			return hp2;
+		} else if (hp2 == null) {
+			return hp1;
+		} else {
+			if (hp1.getTimestamp().compareTo(hp2.getTimestamp())>=0) {
+				return hp1;
+			} else {
+				return hp2;
+			}
+		}
+	}
 	
 	protected Model getModelSnapshot(int id, ModelRunnable runnable) {
 		if (runnable.isRunning()) {
 			Model m = modelExecutor.stop(id, runnable);
-			List<HistoryPoint> historyPoints = runnable.getHistoryPoints(); // copy history points
 			Model result = modelSerializer.clone(m);
 			runnable = modelExecutor.create(m);
-			runnable.addHistoryPoints(historyPoints);
 			modelDatabase.add(id, runnable);
 			modelExecutor.start(id, runnable);
 			return result;

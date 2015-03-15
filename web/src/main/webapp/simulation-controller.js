@@ -40,7 +40,9 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 		   if (loopId != null) {
 			   clearTimeout(loopId);
 		   }
-		   loopId = setTimeout($scope.getCurrentTime, 5000);
+		   if ($scope.project.running) {
+			   loopId = setTimeout($scope.getCurrentTime, 5000);
+		   };
 	   });
    });
    

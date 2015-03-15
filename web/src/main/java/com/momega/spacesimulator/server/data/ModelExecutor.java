@@ -30,7 +30,6 @@ public class ModelExecutor {
 	
 	public ModelRunnable create(Model model) {
 		ModelRunnable runnable = new ModelRunnable(modelWorker, model, 1.0, true);
-		historyPointService.addHistoryPointListener(runnable);
 		return runnable;
 	}
  	
@@ -46,7 +45,6 @@ public class ModelExecutor {
 				@Override
 				public void run() {
 					modelRunnable.setRunning(false);
-					historyPointService.removedHistoryPointListener(modelRunnable);
 				}
 			});
 			try {
