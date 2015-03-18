@@ -107,6 +107,11 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	    		sphere.position.copy(position);
 	    		$scope.scene.add( sphere );
 	    		
+	    		for(var j=0; j<celestialBody.surfacePoints.length; j++) {
+	    			var surfacePoint = celestialBody.surfacePoints[j];
+	    			$scope.createTexturePoint(surfacePoint, 'CRASHSITE');
+	    		}
+	    		
 	    		var circleTexture = textureService.getTextureName('CIRCLE');
 	    		var spriteMaterial = new THREE.SpriteMaterial({map: circleTexture});
         		var sprite = new THREE.Sprite( spriteMaterial );

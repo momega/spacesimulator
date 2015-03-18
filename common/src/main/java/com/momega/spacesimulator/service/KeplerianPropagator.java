@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.momega.spacesimulator.model.CartesianState;
+import com.momega.spacesimulator.model.CelestialBody;
 import com.momega.spacesimulator.model.KeplerianElements;
 import com.momega.spacesimulator.model.KeplerianOrbit;
 import com.momega.spacesimulator.model.Model;
@@ -25,6 +26,9 @@ public class KeplerianPropagator implements Propagator {
     
     @Autowired
     private UserPointService userPointService;
+    
+    @Autowired
+    private SurfacePointService surfacePointService;
 
     @Override
     public void computePosition(Model model, MovingObject movingObject, RunStep step) {
@@ -41,6 +45,10 @@ public class KeplerianPropagator implements Propagator {
 	        apsisService.updatePeriapsis(movingObject, step.getNewTimestamp());
 	        apsisService.updateApoapsis(movingObject, step.getNewTimestamp());
         	userPointService.computeUserPoints(movingObject, step.getNewTimestamp());
+        	if (movingObject instanceof CelestialBody) {
+        		CelestialBody celestialBody = (CelestialBody) movingObject;
+        		surfacePointService.updateSurfacePoints(celestialBody);
+        	}
         }
     }
 

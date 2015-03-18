@@ -28,7 +28,7 @@ spaceSimulatorApp.factory('textureService', ['$http', 'Model', function($http, M
 	
 	factory.loadTextures = function(textureObjects, callback) {
 		   imagesLoaded = 0;
-		   imagesCount = textureObjects.length + 9 + 8; // + 8 icons;
+		   imagesCount = textureObjects.length + 9 + 9; // + 8 icons;
 			console.log(imagesCount +' about to load');
 			for(var i=0; i<textureObjects.length; i++) {
 				var to = textureObjects[i];
@@ -51,6 +51,7 @@ spaceSimulatorApp.factory('textureService', ['$http', 'Model', function($http, M
 			factory.loadTexture('EXIT_SOI', 'images/Letter-E-icon.png', callback);
 			factory.loadTexture('T_INTERSECTION', 'images/Math-divide-icon.png', callback);
 			factory.loadTexture('START', 'images/Letter-S-icon.png', callback);
+			factory.loadTexture('CRASHSITE', 'images/Letter-X-icon.png', callback);
 	}
 	
 	factory.loadTexture = function(name, source, callback) {

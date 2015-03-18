@@ -9,6 +9,7 @@ public abstract class SurfacePoint extends NamedObject implements PositionProvid
 
     private SphericalCoordinates coordinates;
     private transient CelestialBody celestialBody;
+    private Vector3d position;
 
     public SphericalCoordinates getCoordinates() {
         return coordinates;
@@ -25,4 +26,13 @@ public abstract class SurfacePoint extends NamedObject implements PositionProvid
     public CelestialBody getCelestialBody() {
         return celestialBody;
     }
+    
+    @Override
+    public Vector3d getPosition() {
+    	return position;
+    }
+    
+    public void setPosition(Vector3d position) {
+		this.position = position;
+	}
 }

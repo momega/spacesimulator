@@ -83,5 +83,5 @@ public class Spacecraft extends PhysicalBody implements IconProvider {
     public void setExitSoiOrbitalPoint(ExitSoiOrbitalPoint exitSoiOrbitalPoint) {
 		this.exitSoiOrbitalPoint = exitSoiOrbitalPoint;
 	}
-    
+
 }

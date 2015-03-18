@@ -27,18 +27,6 @@ public class CrashSite extends SurfacePoint {
     }
 
     @Override
-    public Vector3d getPosition() {
-        Vector3d position = getCelestialBody().getPosition();
-        Orientation o = getCelestialBody().getOrientation().clone();
-        o.rotate(o.getV(), getCelestialBody().getPrimeMeridian() + Math.PI / 2);
-        o.rotate(o.getV(), getCoordinates().getPhi());
-        o.rotate(o.getU(), - Math.PI/2 + getCoordinates().getTheta() );
-        Vector3d n = o.getN();
-        position = position.scaleAdd(getCelestialBody().getRadius()+5000, n);
-        return position;
-    }
-
-    @Override
     public String getIcon() {
         return "/images/Letter-X-icon.png";
     }

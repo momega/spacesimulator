@@ -15,7 +15,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li class="active"><a href="#/project">Project <span class="sr-only">(current)</span></a></li>
-        <li><a href="#/simulation">Simulation</a></li>
+<!--       <li><a href="#/simulation">Simulation</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="#/help">Help</a></li>
@@ -46,18 +46,19 @@
 						</td>
 	 				<td>
 	 					<div class="btn-group" dropdown>
-					      <button type="button" class="btn btn-default" ng-click="takeSnapshot(p)">Snapshot</button>
-					      <button type="button" class="btn btn-default dropdown-toggle" dropdown-toggle>
+					      <button ng-if="p.running" type="button" class="btn btn-default btn-xs" ng-click="stopProject(p)">Stop</button>
+					      <button ng-if="!p.running" type="button" class="btn btn-default  btn-xs" ng-click="resumeProject(p)">Resume</button>
+					      <button type="button" class="btn btn-default dropdown-toggle btn-xs" dropdown-toggle>
 					        <span class="caret"></span>
 					        <span class="sr-only">Split button!</span>
 					      </button>
 					      <ul class="dropdown-menu" role="menu">
 					        <li><a href="" ng-click="takeSnapshot(p)">Snapshop</a></li>
 					        <li><a href="model/download/{{p.id}}">Save Model to JSON file</a></li>
-					        <li ng-if="p.running"><img src="icons/control_stop_blue.png"><a href="" ng-click="stopProject(p)">Stop Project</a></li>
-					        <li ng-if="!p.running"><a href="" ng-click="resumeProject(p)">Resume Project</a></li>
+					        <li ng-if="p.running"><a href="" ng-click="stopProject(p)">Stop</a></li>
+					        <li ng-if="!p.running"><a href="" ng-click="resumeProject(p)">Resume</a></li>
 					        <li class="divider"></li>
-					        <li><a href="" ng-click="closeProject(p)">Close Project</a></li>
+					        <li><a href="" ng-click="closeProject(p)">Delete</a></li>
 					      </ul>
 					    </div>
 	 				</td>

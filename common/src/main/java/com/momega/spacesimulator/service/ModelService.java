@@ -210,7 +210,7 @@ public class ModelService {
     
     /**
      * Removes the moving object from the model
-     * @param model TODO
+     * @param model the model
      * @param movingObject the moving object
      */
     public void removeMovingObject(Model model, MovingObject movingObject) {

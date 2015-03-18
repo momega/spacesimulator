@@ -34,19 +34,6 @@ public abstract class AbstractMissionTest {
         startTime = model.getTime();
         modelService = application.getService(ModelService.class);
         historyPointService = application.getService(HistoryPointService.class);
-        historyPointService.addHistoryPointListener(new HistoryPointListener() {
-            @Override
-            public void historyPointCreated(HistoryPoint historyPoint) {
-                if (HistoryPointOrigin.END.equals(historyPoint.getOrigin())) {
-                    modelService.removeMovingObject(model, historyPoint.getSpacecraft());
-                }
-            }
-            
-            @Override
-			public boolean supports(HistoryPoint historyPoint) {
-				return true;
-			}
-        });
     }
 
     protected void runTo(int seconds) {

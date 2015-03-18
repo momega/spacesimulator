@@ -33,6 +33,9 @@ public class NewtonianPropagator implements Propagator {
     private ManeuverService maneuverService;
     
     @Autowired
+    private ModelService modelService;
+    
+    @Autowired
     private UserPointService userPointService;
 
     @Autowired
@@ -53,7 +56,7 @@ public class NewtonianPropagator implements Propagator {
         movingObject.setTimestamp(step.getNewTimestamp());
 
         computePrediction(model, spacecraft, step.getNewTimestamp());
-        checkCollision(spacecraft, step.getNewTimestamp());
+        checkCollision(model, spacecraft, step.getNewTimestamp());
         if (!step.isRunningHeadless()) {
 	        computeApsides(spacecraft, step.getNewTimestamp());
 	        computeExitPoint(model, spacecraft, step.getNewTimestamp());
@@ -63,7 +66,7 @@ public class NewtonianPropagator implements Propagator {
         }
     }
 
-    private void checkCollision(Spacecraft spacecraft, Timestamp newTimestamp) {
+    private void checkCollision(Model model, Spacecraft spacecraft, Timestamp newTimestamp) {
         ReferenceFrame referenceFrame = spacecraft.getKeplerianElements().getKeplerianOrbit().getReferenceFrame();
         Assert.isInstanceOf(CelestialBody.class, referenceFrame);
         CelestialBody body = (CelestialBody) referenceFrame;
@@ -88,6 +91,7 @@ public class NewtonianPropagator implements Propagator {
             body.getSurfacePoints().add(crashSite);
 
             historyPointService.end(spacecraft, newTimestamp);
+            modelService.removeMovingObject(model, spacecraft);
         }
     }
 
