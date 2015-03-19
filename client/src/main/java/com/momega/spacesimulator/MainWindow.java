@@ -3,6 +3,7 @@ package com.momega.spacesimulator;
 import com.jogamp.newt.event.KeyEvent;
 import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.context.Application;
+import com.momega.spacesimulator.context.ModelHolder;
 import com.momega.spacesimulator.model.HistoryPoint;
 import com.momega.spacesimulator.model.HistoryPointOrigin;
 import com.momega.spacesimulator.model.Model;
@@ -302,6 +303,7 @@ public class MainWindow extends DefaultWindow {
 			@Override
 			public void historyPointCreated(HistoryPoint historyPoint) {
 				if (HistoryPointOrigin.END.equals(historyPoint.getOrigin())) {
+					RendererModel.getInstance().removeSpacecraft(historyPoint.getSpacecraft());
 					RendererModel.getInstance().setDeleteSpacecraft(historyPoint.getSpacecraft());
 				}
 			}

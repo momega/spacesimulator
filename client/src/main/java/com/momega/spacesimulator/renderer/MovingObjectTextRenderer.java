@@ -22,7 +22,7 @@ public class MovingObjectTextRenderer extends AbstractTextRenderer {
     @Override
     protected void renderTexts(GL2 gl, int width, int height) {
         ViewCoordinates viewCoordinates = RendererModel.getInstance().findViewCoordinates(movingObject);
-        if (viewCoordinates.isVisible()) {
+        if (viewCoordinates!=null && viewCoordinates.isVisible()) {
             Point size = getTextSize(movingObject.getName());
             if (GLUtils.checkDepth(gl, viewCoordinates)) {
                 drawString(movingObject.getName(), viewCoordinates.getPoint().getX() - size.getX() / 2.0, viewCoordinates.getPoint().getY() - 16);

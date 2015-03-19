@@ -3,6 +3,8 @@
  */
 package com.momega.spacesimulator.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.momega.spacesimulator.model.CelestialBody;
@@ -16,6 +18,8 @@ import com.momega.spacesimulator.model.Vector3d;
  */
 @Component
 public class SurfacePointService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(SurfacePointService.class);
 	
 	private static double GROUD_DISTANCE = 5000d;
 

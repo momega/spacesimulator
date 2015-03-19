@@ -109,6 +109,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	    		
 	    		for(var j=0; j<celestialBody.surfacePoints.length; j++) {
 	    			var surfacePoint = celestialBody.surfacePoints[j];
+	    			console.log('surface point = ' + surfacePoint.position.x + ', ' + surfacePoint.position.y+ ', ' + surfacePoint.position.z)
 	    			$scope.createTexturePoint(surfacePoint, 'CRASHSITE');
 	    		}
 	    		
