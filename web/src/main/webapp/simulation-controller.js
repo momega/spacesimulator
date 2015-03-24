@@ -71,6 +71,8 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	    $scope.locatorMap = [];
 	    $scope.pointsMap = [];
 	    $scope.orthoMap = [];
+	    $scope.trajectories = [];
+	    $scope.positionProvidersScene = [];
     	
 		var rootObjects = modelService.getRootObjects();
     	for(var i=0; i<rootObjects.length; i++) {
@@ -120,6 +122,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
         		sprite.body = celestialBody;
         		$scope.locatorMap.push(sprite);
         		$scope.scene.add( sprite );
+        		$scope.positionProvidersScene.push(sprite);
 	    		
     			$scope.createBodyLabel(celestialBody);
     		}
@@ -193,17 +196,19 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     			geometry5.applyMatrix(m);
     			
     			var theColor = arrayToColor(celestialBody.trajectory.color);
-    			var material5 = new THREE.LineBasicMaterial( { color: theColor } );
+    			var material5 = new THREE.LineBasicMaterial( { color: theColor, linewidth: 1 } );
     			var ellipse = new THREE.Line( geometry5, material5 );
     			ellipse.position.add(centerObject.cartesianState.position);
+    			ellipse.body = celestialBody;
     			$scope.scene.add(ellipse);
     			
+    			$scope.trajectories.push(ellipse);
     		}
     	}
     	
     	// reset the selected object
     	if ($scope.selectedObject!=null) {
-    		$scope.selectDetailByName($scope.selectedObject.name);
+    		$scope.selectDetailWEByName($scope.selectedObject.name);
     	}
     	
     	console.log('Scene created');
@@ -274,6 +279,8 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 		sprite.scale.set( 16, 16, 1 );
 		$scope.pointsMap.push(sprite);
 		$scope.scene.add( sprite );
+		
+		$scope.positionProvidersScene.push(sprite);
     } 
     
     /**
@@ -382,14 +389,14 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 		$scope.camera = new THREE.PerspectiveCamera( 45, canvasWidth/canvasHeight, 100000, AU * 10 );
 		$scope.camera.up.copy(new THREE.Vector3(0,0,1));	
 		
-		$scope.renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true});
+		$scope.renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true, antialias: true});
 		$scope.renderer.setSize( canvasWidth, canvasHeight );
 		$scope.renderer.autoClear = false;
 		container.appendChild( $scope.renderer.domElement );
 		
 		$scope.controls = new THREE.OrbitControls( $scope.camera, container );
 		$scope.controls.noPan = true;
-		$scope.controls.mouseButtons.ORBIT = THREE.MOUSE.RIGHT;
+		$scope.controls.mouseButtons.ORBIT = THREE.MOUSE.LEFT;
 		$scope.controls.addEventListener( 'change', $scope.render );
 		
 		$scope.cameraOrtho = new THREE.OrthographicCamera( - canvasWidth / 2, canvasWidth / 2, canvasHeight / 2, - canvasHeight / 2, 0, 10 );
@@ -398,8 +405,8 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 		$scope.canvasWidth = canvasWidth;
 		$scope.canvasHeight = canvasHeight;
 		
+		$scope.lastMouse = null;
 		$scope.raycaster = new THREE.Raycaster();
-		$scope.mouse = new THREE.Vector2();
 		
 		container.addEventListener( 'mousedown', $scope.mouseClick, false );
 		window.addEventListener( 'resize', $scope.onWindowResize, false );
@@ -418,16 +425,28 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
     	$scope.renderer.render( $scope.scene, $scope.camera );
 	}
     
+    $scope.getMousePosition = function (event) {
+    	var mousePos = getMousePos($scope.renderer.domElement, event);
+    	var mouse = new THREE.Vector2();
+    	mouse.x = ( mousePos.x / $scope.canvasWidth ) * 2 - 1;
+    	mouse.y = - ( mousePos.y / $scope.canvasHeight ) * 2 + 1;
+    	return mouse;
+    }
+    
+    $scope.getMouseIntersections = function (event, array, linePrecision) {
+    	var mouse = $scope.getMousePosition(event);
+    	$scope.raycaster.setFromCamera( mouse, $scope.camera );
+    	if (linePrecision !== undefined) {
+    		$scope.raycaster.linePrecision = linePrecision;
+    	}
+    	var intersects = $scope.raycaster.intersectObjects( array, true );
+    	return intersects;
+    }
+    
     $scope.mouseClick = function( event ) {
     	event.preventDefault();
     	if (event.which==1) {
-	    	var mousePos = getMousePos($scope.renderer.domElement, event);
-	    	$scope.mouse.x = ( mousePos.x / $scope.canvasWidth ) * 2 - 1;
-	    	$scope.mouse.y = - ( mousePos.y / $scope.canvasHeight ) * 2 + 1;
-	    	console.debug('x = ' + $scope.mouse.x + ' y = ' + $scope.mouse.y);
-	    	
-	    	$scope.raycaster.setFromCamera( $scope.mouse, $scope.camera );
-	    	var intersects = $scope.raycaster.intersectObjects( $scope.scene.children );
+	    	var intersects = $scope.getMouseIntersections( event, $scope.positionProvidersScene );
 	    	if (intersects.length>0) {
 	    		var intersect = intersects[0];
 	    		$scope.$apply(function() {
@@ -435,6 +454,9 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
 	    			$scope.selectObject(intersect.object.body);
 	    		});
 	    	}
+    	} else if (event.which==3) {
+    		console.log('right click');
+    		$scope.lastMouse = getMousePos($scope.renderer.domElement, event);
     	}
     }
   
@@ -444,9 +466,21 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
   		
   		$scope.renderer.clear();
 		$scope.renderer.render( $scope.scene, $scope.camera );
+		
 		$scope.renderer.clearDepth();
 		$scope.renderer.render( $scope.sceneOrtho, $scope.cameraOrtho );
 	}
+  	
+  	$scope.pick = function() {
+  		//create buffer for reading single pixel
+  		if ($scope.lastMouse != null) {
+	  		var arr = new Uint8Array( 5 * 5 * 4 );
+	  		var gl = $scope.renderer.getContext();
+	  		gl.readPixels( $scope.lastMouse.x, $scope.lastMouse.y, 5, 5, gl.RGBA, gl.UNSIGNED_BYTE, arr );
+	  		console.debug("arr.length: "+arr.length);
+	  		$scope.lastMouse = null;
+  		}
+  	}
   	
   	$scope.animate = function() {
   		for(var i=0; i<$scope.pointsMap.length; i++) {
@@ -475,6 +509,7 @@ spaceSimulatorApp.controller('SimulationController', ['$scope', '$routeParams', 
   		}
   		requestAnimationFrame($scope.animate);
   		$scope.controls.update();
+		$scope.pick();
   	}
   	
   	$scope.scaleSprite = function(sprite, scale) {

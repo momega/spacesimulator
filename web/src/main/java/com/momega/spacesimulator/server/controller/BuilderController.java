@@ -25,7 +25,6 @@ import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.server.data.BuilderDatabase;
 import com.momega.spacesimulator.server.data.ModelDatabase;
 import com.momega.spacesimulator.server.data.ModelExecutor;
-import com.momega.spacesimulator.server.data.ModelRunnable;
 import com.momega.spacesimulator.service.ModelBuilderFactory;
 
 @RestController
@@ -62,9 +61,9 @@ public class BuilderController implements InitializingBean {
 		}
 		Model model = modelBuilderFactory.init(modelBuilder);
 		
-		ModelRunnable runnable = modelExecutor.create(model);
-		int modelId = modelDatabase.add(runnable);
-		modelExecutor.start(modelId, runnable);
+		int modelId = modelDatabase.add(model);
+		modelExecutor.create(model, modelId);
+		
 		logger.info("model with id executed {}", modelId);
 		
 		return modelId;

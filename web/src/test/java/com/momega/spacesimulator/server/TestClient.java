@@ -10,7 +10,9 @@ import java.util.Set;
 import org.junit.Test;
 
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 
@@ -19,15 +21,34 @@ import com.mongodb.ServerAddress;
  *
  */
 public class TestClient {
-
+	
 	@Test
-	public void simpleTest() throws UnknownHostException {
+	public void herokuTest() throws UnknownHostException {
 		MongoCredential credential = MongoCredential.createMongoCRCredential("heroku_app25459577", "heroku_app25459577", "gsps2dbe8l7ovbot1jkto5lnid".toCharArray());
 		MongoClient mongoClient = new MongoClient(new ServerAddress("ds041841.mongolab.com" , 41841), 
 								Arrays.asList(credential));
 		DB db = mongoClient.getDB("heroku_app25459577");
 		Set<String> list = db.getCollectionNames();
+		System.out.println(list);		
+	}
+	
+	@Test
+	public void herokuUriTest() throws UnknownHostException {
+		MongoClientURI uri= new MongoClientURI("mongodb://heroku_app25459577:gsps2dbe8l7ovbot1jkto5lnid@ds041841.mongolab.com:41841/heroku_app25459577");
+		MongoClient mongoClient = new MongoClient(uri);
+		DB db = mongoClient.getDB(uri.getDatabase());
+		Set<String> list = db.getCollectionNames();
 		System.out.println(list);
+	}
+
+	@Test
+	public void simpleTest() throws UnknownHostException {
+		MongoCredential credential = MongoCredential.createMongoCRCredential("spacesimulator", "spacesimulator", "xmrkva23+".toCharArray());
+		MongoClient mongoClient = new MongoClient(new ServerAddress("ds041651.mongolab.com", 41651), Arrays.asList(credential));
+		DB db = mongoClient.getDB("spacesimulator");
+		Set<String> list = db.getCollectionNames();
+		System.out.println(list);
+		DBCollection projects = db.getCollection("projects");
 	}
 
 }

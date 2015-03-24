@@ -18,6 +18,8 @@ import com.momega.spacesimulator.service.ModelWorker;
 public class ModelExecutor {
 	
 	private Map<Integer, FutureTask<Model>> futures = new HashMap<>();
+	
+	private Map<Integer, ModelRunnable> runnables = new HashMap<>();
 
 	@Autowired
 	private ModelWorker modelWorker;
@@ -28,19 +30,36 @@ public class ModelExecutor {
 	@Autowired
 	private HistoryPointService historyPointService;
 	
-	public ModelRunnable create(Model model) {
+	public ModelRunnable create(Model model, int modelId) {
 		ModelRunnable runnable = new ModelRunnable(modelWorker, model, 1.0, true);
+		start(modelId, runnable);
 		return runnable;
+	}
+	
+	public ModelRunnable get(int id) {
+		ModelRunnable modelRunnable = runnables.get(Integer.valueOf(id));
+		return modelRunnable;
+	}
+	
+	protected ModelRunnable remove(int id) {
+		ModelRunnable modelRunnable = runnables.remove(Integer.valueOf(id));
+		return modelRunnable;
+	}
+	
+	public Map<Integer, ModelRunnable> getRunnables() {
+		return runnables;
 	}
  	
 	public void start(int id, ModelRunnable runnable) {
 		FutureTask<Model> task = new FutureTask<>(runnable);
 		taskExecutor.submit(task);
+		runnables.put(Integer.valueOf(id), runnable);
 		futures.put(Integer.valueOf(id), task);
 	}
 	
-	public Model stop(int id, final ModelRunnable modelRunnable) {
-		if (modelRunnable.isRunning()) {
+	public Model stop(int id) {
+		final ModelRunnable modelRunnable = remove(id);
+		if (modelRunnable!=null && modelRunnable.isRunning()) {
 			taskExecutor.execute(new Runnable() {
 				@Override
 				public void run() {
@@ -55,7 +74,7 @@ public class ModelExecutor {
 				throw new IllegalStateException("unable to stop the thread", e);
 			}
 		} else {
-			return modelRunnable.getModel();
+			return null;
 		}
 	}
 

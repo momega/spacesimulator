@@ -51,7 +51,7 @@ public class ModelController {
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
 	public Model get(@PathVariable("id") int id) {
 		logger.info("get id = {}", id);
-		ModelRunnable runnable = modelDatabase.get(id);
+		ModelRunnable runnable = modelExecutor.get(id);
 
 		return getModelSnapshot(id, runnable);
 	}
@@ -59,7 +59,7 @@ public class ModelController {
 	@RequestMapping(value = "/download/{id}", method = RequestMethod.GET)
 	public ResponseEntity<ByteArrayResource> download(@PathVariable("id") int id) throws IOException {
 		logger.info("get id = {}", id);
-		ModelRunnable runnable = modelDatabase.get(id);
+		ModelRunnable runnable = modelExecutor.get(id);
 		
 		Model m = getModelSnapshot(id, runnable);
 		byte[] bytes = modelSerializer.toBytes(m);
@@ -77,9 +77,10 @@ public class ModelController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public List<Project> list() {
 		List<Project> result = new ArrayList<>();
-		for(Map.Entry<Integer, ModelRunnable> entry : modelDatabase.getAll().entrySet()) {
-			ModelRunnable runnable = entry.getValue();
-			Project p = toProject(entry.getKey().intValue(), runnable);
+		for(Map.Entry<Integer, Model> entry : modelDatabase.getAll().entrySet()) {
+			Integer id = entry.getKey();
+			Model model = entry.getValue();
+			Project p = toProject(id, model);
 			result.add(p);
 		}
 		return result;
@@ -87,19 +88,15 @@ public class ModelController {
 	
 	@RequestMapping(value = "/stop/{id}", method = RequestMethod.GET)
 	public int stop(@PathVariable("id") int id) {
-		ModelRunnable runnable = modelDatabase.get(id);
-		if (runnable != null) {
-			modelExecutor.stop(id, runnable);
-		}
+		modelExecutor.stop(id);
 		return id;
 	}
 	
 	@RequestMapping(value = "/resume/{id}", method = RequestMethod.GET)
 	public int resume(@PathVariable("id") int id) {
-		Model model = modelDatabase.get(id).getModel();
-		ModelRunnable runnable = modelExecutor.create(model);
-		modelDatabase.add(id, runnable);
-		modelExecutor.start(id, runnable);
+		Model model = modelDatabase.get(id);
+		modelDatabase.add(id, model);
+		modelExecutor.create(model, id);
 		return id;
 	}
 	
@@ -114,38 +111,40 @@ public class ModelController {
 	@RequestMapping(value = "/item/{id}", method = RequestMethod.GET)
 	public Project getProject(@PathVariable("id") int id) {
 		logger.info("get project, id = {}", id);
-		ModelRunnable runable = modelDatabase.get(id);
-		Project p = toProject(id, runable);
+		Model model = modelDatabase.get(id);
+		Project p = toProject(id, model);
 		return p;
 	}
 	
 	@RequestMapping(value = "/time/{id}", method = RequestMethod.GET)
 	public Timestamp getTime(@PathVariable("id") int id) {
 		logger.info("get time, id = {}", id);
-		ModelRunnable runnable = modelDatabase.get(id);
+		ModelRunnable runnable = modelExecutor.get(id);
 		return runnable.getModel().getTime();
 	}	
 	
 	@RequestMapping(value = "/snapshot/{id}", method = RequestMethod.GET)
 	public int takeSnapshot(@PathVariable("id") int id) {
 		logger.info("create builder, id = {}", id);
-		ModelRunnable runnable = modelDatabase.get(id);
+		ModelRunnable runnable = modelExecutor.get(id);
 		Model m = getModelSnapshot(id, runnable);
-		
-		ModelRunnable newRunnable = modelExecutor.create(m);
-		newRunnable.setRunning(false);
-		int modelId = modelDatabase.add(newRunnable);
+		int modelId = modelDatabase.add(m);
 		logger.info("model with id created {}", modelId);
 		return modelId;
 	}
 	
-	protected Project toProject(int id, ModelRunnable runnable) {
+	protected Project toProject(int id, Model m) {
+		ModelRunnable runnable = modelExecutor.get(id);
+		boolean isRunning = false;
+		if (runnable != null) {
+			isRunning = runnable.isRunning();
+		}
+		
 		Project p = new Project();
-		Model m = runnable.getModel();
 		p.setId(id);
 		p.setName(m.getName());
 		p.setTime(m.getTime());
-		p.setRunning(runnable.isRunning());
+		p.setRunning(isRunning);
 		HistoryPoint lastHistoryPoint = null;
 		for(MovingObject mo : m.getMovingObjects()) {
 			Texture texture = new Texture();
@@ -182,11 +181,10 @@ public class ModelController {
 	
 	protected Model getModelSnapshot(int id, ModelRunnable runnable) {
 		if (runnable.isRunning()) {
-			Model m = modelExecutor.stop(id, runnable);
+			Model m = modelExecutor.stop(id);
 			Model result = modelSerializer.clone(m);
-			runnable = modelExecutor.create(m);
-			modelDatabase.add(id, runnable);
-			modelExecutor.start(id, runnable);
+			modelDatabase.add(id, m);
+			modelExecutor.create(m, id);
 			return result;
 		} else {
 			Model m = runnable.getModel();
