@@ -16,6 +16,11 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.momega.spacesimulator.model.Model;
+import com.momega.spacesimulator.server.controller.Builder;
+import com.momega.spacesimulator.server.data.Collection;
+import com.momega.spacesimulator.server.data.CollectionFactory;
+import com.momega.spacesimulator.server.data.MemoryCollectionFactory;
 import com.momega.spacesimulator.server.util.ExtendedGsonHttpMessageConverter;
 
 @EnableWebMvc
@@ -58,4 +63,19 @@ public class ControllerConfiguration extends WebMvcConfigurerAdapter {
         multipartResolver.setMaxUploadSize(100000);
         return multipartResolver;
     }
+	
+	@Bean
+	public CollectionFactory collectionFactory() {
+		return new MemoryCollectionFactory();
+	}
+	
+	@Bean
+	public Collection<Model> modelCollection() {
+		return collectionFactory().get("projects", Model.class);
+	}
+	
+	@Bean
+	public Collection<Builder> builderCollection() {
+		return collectionFactory().get("builders", Builder.class);
+	}
 }

@@ -24,8 +24,7 @@ import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.model.MovingObject;
 import com.momega.spacesimulator.model.Spacecraft;
 import com.momega.spacesimulator.model.Timestamp;
-import com.momega.spacesimulator.server.data.BuilderDatabase;
-import com.momega.spacesimulator.server.data.ModelDatabase;
+import com.momega.spacesimulator.server.data.Collection;
 import com.momega.spacesimulator.server.data.ModelExecutor;
 import com.momega.spacesimulator.server.data.ModelRunnable;
 import com.momega.spacesimulator.service.ModelSerializer;
@@ -37,10 +36,10 @@ public class ModelController {
   private static final Logger logger = LoggerFactory.getLogger(ModelController.class); 
 	
 	@Autowired
-	private ModelDatabase modelDatabase;
+	private Collection<Model> modelCollection;
 	
 	@Autowired
-	private BuilderDatabase builderDatabase;
+	private Collection<Builder> builderCollection;
 	
 	@Autowired
 	private ModelExecutor modelExecutor;
@@ -49,7 +48,7 @@ public class ModelController {
 	private ModelSerializer modelSerializer;		
 	
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-	public Model get(@PathVariable("id") int id) {
+	public Model get(@PathVariable("id") String id) {
 		logger.info("get id = {}", id);
 		ModelRunnable runnable = modelExecutor.get(id);
 
@@ -57,7 +56,7 @@ public class ModelController {
 	}
 	
 	@RequestMapping(value = "/download/{id}", method = RequestMethod.GET)
-	public ResponseEntity<ByteArrayResource> download(@PathVariable("id") int id) throws IOException {
+	public ResponseEntity<ByteArrayResource> download(@PathVariable("id") String id) throws IOException {
 		logger.info("get id = {}", id);
 		ModelRunnable runnable = modelExecutor.get(id);
 		
@@ -77,8 +76,8 @@ public class ModelController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public List<Project> list() {
 		List<Project> result = new ArrayList<>();
-		for(Map.Entry<Integer, Model> entry : modelDatabase.getAll().entrySet()) {
-			Integer id = entry.getKey();
+		for(Map.Entry<String, Model> entry : modelCollection.getAll().entrySet()) {
+			String id = entry.getKey();
 			Model model = entry.getValue();
 			Project p = toProject(id, model);
 			result.add(p);
@@ -87,53 +86,53 @@ public class ModelController {
 	}
 	
 	@RequestMapping(value = "/stop/{id}", method = RequestMethod.GET)
-	public int stop(@PathVariable("id") int id) {
+	public String stop(@PathVariable("id") String id) {
 		modelExecutor.stop(id);
 		return id;
 	}
 	
 	@RequestMapping(value = "/resume/{id}", method = RequestMethod.GET)
-	public int resume(@PathVariable("id") int id) {
-		Model model = modelDatabase.get(id);
-		modelDatabase.add(id, model);
+	public String resume(@PathVariable("id") String id) {
+		Model model = modelCollection.get(id);
+		modelCollection.update(id, model);
 		modelExecutor.create(model, id);
 		return id;
 	}
 	
 	@RequestMapping(value = "/close/{id}", method = RequestMethod.GET)
-	public int close(@PathVariable("id") int id) {
+	public String close(@PathVariable("id") String id) {
 		logger.info("closing id = {}", id);
 		stop(id);
-		modelDatabase.remove(id);
+		modelCollection.remove(id);
 		return id;
 	}
 
 	@RequestMapping(value = "/item/{id}", method = RequestMethod.GET)
-	public Project getProject(@PathVariable("id") int id) {
+	public Project getProject(@PathVariable("id") String id) {
 		logger.info("get project, id = {}", id);
-		Model model = modelDatabase.get(id);
+		Model model = modelCollection.get(id);
 		Project p = toProject(id, model);
 		return p;
 	}
 	
 	@RequestMapping(value = "/time/{id}", method = RequestMethod.GET)
-	public Timestamp getTime(@PathVariable("id") int id) {
+	public Timestamp getTime(@PathVariable("id") String id) {
 		logger.info("get time, id = {}", id);
 		ModelRunnable runnable = modelExecutor.get(id);
 		return runnable.getModel().getTime();
 	}	
 	
 	@RequestMapping(value = "/snapshot/{id}", method = RequestMethod.GET)
-	public int takeSnapshot(@PathVariable("id") int id) {
+	public String takeSnapshot(@PathVariable("id") String id) {
 		logger.info("create builder, id = {}", id);
 		ModelRunnable runnable = modelExecutor.get(id);
 		Model m = getModelSnapshot(id, runnable);
-		int modelId = modelDatabase.add(m);
+		String modelId = modelCollection.add(m);
 		logger.info("model with id created {}", modelId);
 		return modelId;
 	}
 	
-	protected Project toProject(int id, Model m) {
+	protected Project toProject(String id, Model m) {
 		ModelRunnable runnable = modelExecutor.get(id);
 		boolean isRunning = false;
 		if (runnable != null) {
@@ -179,11 +178,11 @@ public class ModelController {
 		}
 	}
 	
-	protected Model getModelSnapshot(int id, ModelRunnable runnable) {
+	protected Model getModelSnapshot(String id, ModelRunnable runnable) {
 		if (runnable.isRunning()) {
 			Model m = modelExecutor.stop(id);
 			Model result = modelSerializer.clone(m);
-			modelDatabase.add(id, m);
+			modelCollection.update(id, m);
 			modelExecutor.create(m, id);
 			return result;
 		} else {

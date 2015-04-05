@@ -9,17 +9,17 @@ package com.momega.spacesimulator.server.controller;
  */
 public class Builder {
 
-	private int id;
+	private String id;
 	private String name;
 	private String builderClassName;
 	private String fileName;
 	private byte[] data;
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	

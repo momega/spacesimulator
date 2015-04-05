@@ -17,9 +17,9 @@ import com.momega.spacesimulator.service.ModelWorker;
 @Component
 public class ModelExecutor {
 	
-	private Map<Integer, FutureTask<Model>> futures = new HashMap<>();
+	private Map<String, FutureTask<Model>> futures = new HashMap<>();
 	
-	private Map<Integer, ModelRunnable> runnables = new HashMap<>();
+	private Map<String, ModelRunnable> runnables = new HashMap<>();
 
 	@Autowired
 	private ModelWorker modelWorker;
@@ -30,34 +30,34 @@ public class ModelExecutor {
 	@Autowired
 	private HistoryPointService historyPointService;
 	
-	public ModelRunnable create(Model model, int modelId) {
+	public ModelRunnable create(Model model, String modelId) {
 		ModelRunnable runnable = new ModelRunnable(modelWorker, model, 1.0, true);
 		start(modelId, runnable);
 		return runnable;
 	}
 	
-	public ModelRunnable get(int id) {
-		ModelRunnable modelRunnable = runnables.get(Integer.valueOf(id));
+	public ModelRunnable get(String id) {
+		ModelRunnable modelRunnable = runnables.get(id);
 		return modelRunnable;
 	}
 	
-	protected ModelRunnable remove(int id) {
-		ModelRunnable modelRunnable = runnables.remove(Integer.valueOf(id));
+	protected ModelRunnable remove(String id) {
+		ModelRunnable modelRunnable = runnables.remove(id);
 		return modelRunnable;
 	}
 	
-	public Map<Integer, ModelRunnable> getRunnables() {
+	public Map<String, ModelRunnable> getRunnables() {
 		return runnables;
 	}
  	
-	public void start(int id, ModelRunnable runnable) {
+	public void start(String id, ModelRunnable runnable) {
 		FutureTask<Model> task = new FutureTask<>(runnable);
 		taskExecutor.submit(task);
-		runnables.put(Integer.valueOf(id), runnable);
-		futures.put(Integer.valueOf(id), task);
+		runnables.put(id, runnable);
+		futures.put(id, task);
 	}
 	
-	public Model stop(int id) {
+	public Model stop(String id) {
 		final ModelRunnable modelRunnable = remove(id);
 		if (modelRunnable!=null && modelRunnable.isRunning()) {
 			taskExecutor.execute(new Runnable() {
@@ -67,7 +67,7 @@ public class ModelExecutor {
 				}
 			});
 			try {
-				FutureTask<Model> task = futures.remove(Integer.valueOf(id));
+				FutureTask<Model> task = futures.remove(id);
 				Assert.notNull(task);
 				return task.get();
 			} catch (InterruptedException | ExecutionException e) {

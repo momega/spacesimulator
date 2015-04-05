@@ -22,8 +22,7 @@ import com.momega.spacesimulator.builder.AbstractModelBuilder;
 import com.momega.spacesimulator.builder.ByteArrayModelBuilder;
 import com.momega.spacesimulator.builder.ModelBuilder;
 import com.momega.spacesimulator.model.Model;
-import com.momega.spacesimulator.server.data.BuilderDatabase;
-import com.momega.spacesimulator.server.data.ModelDatabase;
+import com.momega.spacesimulator.server.data.Collection;
 import com.momega.spacesimulator.server.data.ModelExecutor;
 import com.momega.spacesimulator.service.ModelBuilderFactory;
 
@@ -39,10 +38,10 @@ public class BuilderController implements InitializingBean {
 	private ApplicationContext applicationContext;
 	
 	@Autowired
-	private ModelDatabase modelDatabase;
+	private Collection<Model> modelCollection;
 	
 	@Autowired
-	private BuilderDatabase builderDatabase;
+	private Collection<Builder> builderCollection;
 	
 	@Autowired
 	private ModelExecutor modelExecutor;
@@ -51,9 +50,9 @@ public class BuilderController implements InitializingBean {
 	private ModelBuilderFactory modelBuilderFactory;
 
 	@RequestMapping(value = "/build/{id}", method = RequestMethod.GET)
-	public int build(@PathVariable(value="id") int id) {
+	public String build(@PathVariable(value="id") String id) {
 		logger.info("builder id = {}", id);
-		Builder builder = builderDatabase.get(id);
+		Builder builder = builderCollection.get(id);
 		ModelBuilder modelBuilder = modelBuilderFactory.createBuilder(BUILDERS_PACKAGE + "." + builder.getBuilderClassName());
 		if (modelBuilder instanceof ByteArrayModelBuilder) {
 			ByteArrayModelBuilder byteArrayModelBuilder = (ByteArrayModelBuilder) modelBuilder;
@@ -61,7 +60,7 @@ public class BuilderController implements InitializingBean {
 		}
 		Model model = modelBuilderFactory.init(modelBuilder);
 		
-		int modelId = modelDatabase.add(model);
+		String modelId = modelCollection.add(model);
 		modelExecutor.create(model, modelId);
 		
 		logger.info("model with id executed {}", modelId);
@@ -70,15 +69,15 @@ public class BuilderController implements InitializingBean {
 	}
 	
 	@RequestMapping(value = "/remove/{id}", method = RequestMethod.GET)
-	public int remove(@PathVariable("id") int id) {
-		builderDatabase.remove(id);
+	public String remove(@PathVariable("id") String id) {
+		builderCollection.remove(id);
 		return id;
 	}
 	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public List<Builder> list() {
 		List<Builder> result = new ArrayList<>();
-		for(Builder b : builderDatabase.getAll().values()) {
+		for(Builder b : builderCollection.getAll().values()) {
 			result.add(b);
 		}
 		return result;
@@ -93,7 +92,7 @@ public class BuilderController implements InitializingBean {
 				b.setName(mb.getName());
 				String className = mb.getClass().getSimpleName();
 				b.setBuilderClassName(className);
-				int id = builderDatabase.add(b);
+				String id = builderCollection.add(b);
 				b.setId(id);
 			}
 		}
@@ -110,7 +109,7 @@ public class BuilderController implements InitializingBean {
 			builder.setData(bytes);
 			builder.setBuilderClassName(ByteArrayModelBuilder.class.getSimpleName());
 			builder.setName("Builder from file " + fileName);
-			int id = builderDatabase.add(builder);
+			String id = builderCollection.add(builder);
 			builder.setId(id);
 			logger.info("Server File Location=" + fileName);
 			return builder;

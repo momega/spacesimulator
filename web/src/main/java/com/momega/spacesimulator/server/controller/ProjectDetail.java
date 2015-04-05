@@ -11,15 +11,15 @@ import com.momega.spacesimulator.model.Timestamp;
  */
 public class ProjectDetail {
 
-	private int id;
+	private String id;
 	private String name;
 	private Timestamp time;
 	private boolean running;
 	
-	public int getId() {
+	public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getName() {

@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.mongodb.DB;
@@ -20,7 +21,7 @@ import com.mongodb.ServerAddress;
  * @author martin
  *
  */
-public class TestClient {
+public class MongoClientTest {
 	
 	@Test
 	public void herokuTest() throws UnknownHostException {
@@ -43,12 +44,13 @@ public class TestClient {
 
 	@Test
 	public void simpleTest() throws UnknownHostException {
-		MongoCredential credential = MongoCredential.createMongoCRCredential("spacesimulator", "spacesimulator", "xmrkva23+".toCharArray());
-		MongoClient mongoClient = new MongoClient(new ServerAddress("ds041651.mongolab.com", 41651), Arrays.asList(credential));
-		DB db = mongoClient.getDB("spacesimulator");
+		MongoClientURI uri= new MongoClientURI("mongodb://spacesimulator:spacesimulator@ds041651.mongolab.com:41651/spacesimulator");
+		MongoClient mongoClient = new MongoClient(uri);
+		DB db = mongoClient.getDB(uri.getDatabase());
 		Set<String> list = db.getCollectionNames();
 		System.out.println(list);
 		DBCollection projects = db.getCollection("projects");
+		Assert.assertNotNull(projects);
 	}
 
 }
