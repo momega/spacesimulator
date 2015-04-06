@@ -3,15 +3,17 @@
  */
 package com.momega.spacesimulator.server.data;
 
+import static com.mongodb.client.model.Filters.eq;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bson.Document;
+import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 
 /**
  * @author martin
@@ -19,49 +21,50 @@ import com.mongodb.DBObject;
  */
 public abstract class AbstractMongoCollection<T> implements Collection<T> {
 
-	private DBCollection dbCollection;
+	private MongoCollection<Document> collection;
 	protected Class<T> clazz;
 	
 	
 	protected AbstractMongoCollection() {
 	}
+	
+	protected Bson id(String id) {
+		return eq("_id", new ObjectId(id));
+	}
 
 	@Override
 	public String add(T item) {
-		DBObject dbo = serialize(item);
-		dbCollection.insert(dbo);
-		ObjectId id = (ObjectId)dbo.get( "_id" );
+		Document document = serialize(item);
+		collection.insertOne(document);
+		ObjectId id = (ObjectId)document.get( "_id" );
 		return id.toString();
 	}
 
 	@Override
 	public void update(String id, T item) {
-		DBObject dbo = serialize(item);
-		BasicDBObject key = new BasicDBObject("_id", new ObjectId(id));
-		dbCollection.update(key, dbo);
+		Document dbo = serialize(item);
+		collection.replaceOne(id(id), dbo);
 	}
 
 	@Override
 	public T get(String id) {
-		BasicDBObject query = new BasicDBObject("_id", new ObjectId(id));
-		DBObject dbo = dbCollection.findOne(query);
+		Document dbo = collection.find(id(id)).first();
 		T result = deserialize(dbo);
 		return result;
 	}
 
 	@Override
 	public void remove(String id) {
-		BasicDBObject query = new BasicDBObject("_id", new ObjectId(id));
-		dbCollection.remove(query);
+		collection.deleteOne(id(id));
 	}
 
 	@Override
 	public Map<String, T> getAll() {
-		DBCursor cursor = dbCollection.find();
+		MongoCursor<Document> cursor = collection.find().iterator();
 		Map<String, T> result = new HashMap<>();
 		try {
 		   while(cursor.hasNext()) {
-		       DBObject dbo = cursor.next();
+		       Document dbo = cursor.next();
 		       T obj = deserialize(dbo);
 		       ObjectId key = (ObjectId) dbo.get("_id");
 		       result.put(key.toString(), obj);
@@ -72,12 +75,12 @@ public abstract class AbstractMongoCollection<T> implements Collection<T> {
 		return result;
 	}
 
-	protected abstract T deserialize(DBObject dbo);
+	protected abstract T deserialize(Document dbo);
 	
-	protected abstract DBObject serialize(T item);
-	
-	public void setDbCollection(DBCollection dbCollection) {
-		this.dbCollection = dbCollection;
+	protected abstract Document serialize(T item);
+
+	public void setCollection(MongoCollection<Document> collection) {
+		this.collection = collection;
 	}
 	
 	public void setClazz(Class<T> clazz) {

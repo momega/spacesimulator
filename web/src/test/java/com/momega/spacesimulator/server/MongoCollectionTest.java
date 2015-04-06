@@ -1,17 +1,15 @@
 package com.momega.spacesimulator.server;
 
 import java.net.UnknownHostException;
-import java.util.Map;
 
-import org.apache.commons.math3.stat.inference.TestUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.momega.spacesimulator.server.data.Collection;
 import com.momega.spacesimulator.server.data.MongoCollectionFactory;
-import com.mongodb.DB;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.MongoDatabase;
 
 public class MongoCollectionTest {
 
@@ -19,7 +17,7 @@ public class MongoCollectionTest {
 	public void saveAndLoadTest() throws UnknownHostException {
 		MongoClientURI uri= new MongoClientURI("mongodb://spacesimulator:spacesimulator@ds041651.mongolab.com:41651/spacesimulator");
 		MongoClient mongoClient = new MongoClient(uri);
-		DB db = mongoClient.getDB(uri.getDatabase());
+		MongoDatabase db = mongoClient.getDatabase(uri.getDatabase());
 		
 		MongoCollectionFactory factory = new MongoCollectionFactory(db);
 		Collection<TestObject> coll = factory.get("test", TestObject.class);
@@ -45,5 +43,6 @@ public class MongoCollectionTest {
 		coll.remove(key);
 		
 		Assert.assertEquals(0, coll.getAll().size());
+		mongoClient.close();
 	}
 }

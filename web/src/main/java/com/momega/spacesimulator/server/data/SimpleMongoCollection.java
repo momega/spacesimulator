@@ -3,8 +3,9 @@
  */
 package com.momega.spacesimulator.server.data;
 
+import org.bson.Document;
+
 import com.google.gson.Gson;
-import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
 
 /**
@@ -16,16 +17,16 @@ public class SimpleMongoCollection<T> extends AbstractMongoCollection<T> {
 	private Gson gson = new Gson();
 	
 	@Override
-	protected T deserialize(DBObject dbo) {
-		String json = JSON.serialize(dbo);
+	protected T deserialize(Document dbo) {
+		String json = dbo.toJson();
 		T result = gson.fromJson(json, clazz);
 		return result;
 	}
 
 	@Override
-	protected DBObject serialize(T item) {
+	protected Document serialize(T item) {
 		String json = gson.toJson(item); 
-		DBObject bson = ( DBObject ) JSON.parse( json );
+		Document bson = Document.parse( json );
 		return bson;
 	}
 

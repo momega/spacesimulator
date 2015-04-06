@@ -3,8 +3,10 @@
  */
 package com.momega.spacesimulator.server.data;
 
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
+import org.bson.Document;
+
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 
 /**
  * @author martin
@@ -12,17 +14,17 @@ import com.mongodb.DBCollection;
  */
 public class MongoCollectionFactory implements CollectionFactory {
 
-	private DB db;
+	private MongoDatabase db;
 
-	public MongoCollectionFactory(DB db) {
+	public MongoCollectionFactory(MongoDatabase db) {
 		this.db = db;
 	}
 
 	@Override
 	public <T> Collection<T> get(String name, Class<T> clazz) {
-		DBCollection dbCollection = db.getCollection(name);
+		MongoCollection<Document> collection = db.getCollection(name);
 		SimpleMongoCollection<T> result = new SimpleMongoCollection<>();
-		result.setDbCollection(dbCollection);
+		result.setCollection(collection);
 		result.setClazz(clazz);
 		return result;
 	}
