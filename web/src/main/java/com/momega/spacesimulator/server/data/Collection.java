@@ -9,14 +9,16 @@ import java.util.Map;
  * @author martin
  */
 public interface Collection<T> {
-
-	public String add(T item);
 	
-	public void update(String id, T item);
+	String add(T item);
 	
-	public T get(String id);
+	void update(String id, T item);
 	
-	public void remove(String id);
+	T get(String id);
 	
-	public Map<String, T> getAll();
+	long size();
+	
+	void remove(String id);
+	
+	Map<String, T> getAll();
 }

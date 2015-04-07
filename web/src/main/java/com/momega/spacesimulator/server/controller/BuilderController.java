@@ -86,14 +86,16 @@ public class BuilderController implements InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		Map<String, ModelBuilder> builders = applicationContext.getParent().getBeansOfType(ModelBuilder.class);
-		for(ModelBuilder mb : builders.values()) {
-			if (mb instanceof AbstractModelBuilder) {
-				Builder b = new Builder();
-				b.setName(mb.getName());
-				String className = mb.getClass().getSimpleName();
-				b.setBuilderClassName(className);
-				String id = builderCollection.add(b);
-				b.setId(id);
+		if (builderCollection.size()==0) {
+			for(ModelBuilder mb : builders.values()) {
+				if (mb instanceof AbstractModelBuilder) {
+					Builder b = new Builder();
+					b.setName(mb.getName());
+					String className = mb.getClass().getSimpleName();
+					b.setBuilderClassName(className);
+					String id = builderCollection.add(b);
+					b.setId(id);
+				}
 			}
 		}
 	}

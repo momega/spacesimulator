@@ -34,6 +34,11 @@ public class MemoryCollection<T> implements Collection<T> {
 		list.remove(id);
 	}
 	
+	@Override
+	public long size() {
+		return list.size();
+	}
+	
 	public Map<String, T> getAll() {
 		return list;
 	}

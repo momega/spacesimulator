@@ -39,9 +39,6 @@ public class ModelController {
 	private Collection<Model> modelCollection;
 	
 	@Autowired
-	private Collection<Builder> builderCollection;
-	
-	@Autowired
 	private ModelExecutor modelExecutor;
 	
 	@Autowired

@@ -18,9 +18,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.momega.spacesimulator.model.Model;
 import com.momega.spacesimulator.server.controller.Builder;
+import com.momega.spacesimulator.server.data.BuilderElementSerializer;
 import com.momega.spacesimulator.server.data.Collection;
 import com.momega.spacesimulator.server.data.CollectionFactory;
 import com.momega.spacesimulator.server.data.MemoryCollectionFactory;
+import com.momega.spacesimulator.server.data.MongoDbCollectionFactory;
 import com.momega.spacesimulator.server.util.ExtendedGsonHttpMessageConverter;
 
 @EnableWebMvc
@@ -66,12 +68,16 @@ public class ControllerConfiguration extends WebMvcConfigurerAdapter {
 	
 	@Bean
 	public CollectionFactory collectionFactory() {
-		return new MemoryCollectionFactory();
+		MongoDbCollectionFactory factory = new MongoDbCollectionFactory();
+		factory.addSerializer(Builder.class, new BuilderElementSerializer());
+		factory.connect();
+		return factory;
 	}
 	
 	@Bean
 	public Collection<Model> modelCollection() {
-		return collectionFactory().get("projects", Model.class);
+		MemoryCollectionFactory f = new MemoryCollectionFactory();
+		return f.get("projects", Model.class);
 	}
 	
 	@Bean

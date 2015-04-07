@@ -1,25 +1,17 @@
 package com.momega.spacesimulator.server;
 
-import java.net.UnknownHostException;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 import com.momega.spacesimulator.server.data.Collection;
-import com.momega.spacesimulator.server.data.MongoCollectionFactory;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-import com.mongodb.client.MongoDatabase;
+import com.momega.spacesimulator.server.data.MongoDbCollectionFactory;
 
 public class MongoCollectionTest {
 
 	@Test
-	public void saveAndLoadTest() throws UnknownHostException {
-		MongoClientURI uri= new MongoClientURI("mongodb://spacesimulator:spacesimulator@ds041651.mongolab.com:41651/spacesimulator");
-		MongoClient mongoClient = new MongoClient(uri);
-		MongoDatabase db = mongoClient.getDatabase(uri.getDatabase());
-		
-		MongoCollectionFactory factory = new MongoCollectionFactory(db);
+	public void saveAndLoadTest() throws Exception {
+		MongoDbCollectionFactory factory = new MongoDbCollectionFactory();
+		factory.connect();
 		Collection<TestObject> coll = factory.get("test", TestObject.class);
 		
 		TestObject testObject = new TestObject();
@@ -43,6 +35,6 @@ public class MongoCollectionTest {
 		coll.remove(key);
 		
 		Assert.assertEquals(0, coll.getAll().size());
-		mongoClient.close();
+		factory.destroy();
 	}
 }

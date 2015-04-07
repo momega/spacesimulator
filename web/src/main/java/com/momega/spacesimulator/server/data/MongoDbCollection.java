@@ -19,25 +19,27 @@ import com.mongodb.client.MongoCursor;
  * @author martin
  *
  */
-public abstract class AbstractMongoCollection<T> implements Collection<T> {
+public class MongoDbCollection<T> implements Collection<T> {
 
 	private MongoCollection<Document> collection;
-	protected Class<T> clazz;
+	private ElementSerializer<T> serializer;
 	
-	
-	protected AbstractMongoCollection() {
-	}
+	private static final String ID = "_id";
 	
 	protected Bson id(String id) {
-		return eq("_id", new ObjectId(id));
+		return eq(ID, new ObjectId(id));
+	}
+	
+	public static String getId(Document document) {
+		ObjectId id = (ObjectId)document.get(ID);
+		return id.toString();
 	}
 
 	@Override
 	public String add(T item) {
 		Document document = serialize(item);
 		collection.insertOne(document);
-		ObjectId id = (ObjectId)document.get( "_id" );
-		return id.toString();
+		return getId(document);
 	}
 
 	@Override
@@ -57,6 +59,11 @@ public abstract class AbstractMongoCollection<T> implements Collection<T> {
 	public void remove(String id) {
 		collection.deleteOne(id(id));
 	}
+	
+	@Override
+	public long size() {
+		return collection.count();
+	}
 
 	@Override
 	public Map<String, T> getAll() {
@@ -64,10 +71,9 @@ public abstract class AbstractMongoCollection<T> implements Collection<T> {
 		Map<String, T> result = new HashMap<>();
 		try {
 		   while(cursor.hasNext()) {
-		       Document dbo = cursor.next();
-		       T obj = deserialize(dbo);
-		       ObjectId key = (ObjectId) dbo.get("_id");
-		       result.put(key.toString(), obj);
+		       Document document = cursor.next();
+		       T obj = deserialize(document);
+		       result.put(getId(document), obj);
 		   }
 		} finally {
 		   cursor.close();
@@ -75,16 +81,20 @@ public abstract class AbstractMongoCollection<T> implements Collection<T> {
 		return result;
 	}
 
-	protected abstract T deserialize(Document dbo);
+	protected T deserialize(Document document) {
+		return serializer.deserialize(document);
+	}
 	
-	protected abstract Document serialize(T item);
+	protected Document serialize(T item) {
+		return serializer.serialize(item);
+	}
 
 	public void setCollection(MongoCollection<Document> collection) {
 		this.collection = collection;
 	}
 	
-	public void setClazz(Class<T> clazz) {
-		this.clazz = clazz;
+	public void setSerializer(ElementSerializer<T> serializer) {
+		this.serializer = serializer;
 	}
 
 }
